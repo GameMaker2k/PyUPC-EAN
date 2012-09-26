@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, re;
+import sys, re, upcean;
 from sys import argv;
 from upcean import *;
 

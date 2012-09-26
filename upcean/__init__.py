@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-import sys, re, validate, convert, getprefix;
+import sys, re, upcean.validate, upcean.convert, upcean.getprefix;
 from sys import argv;
-from validate import *;
-from convert import *;
-from getprefix import *;
+from upcean.validate import *;
+from upcean.convert import *;
+from upcean.getprefix import *;

@@ -16,8 +16,8 @@
     $FileInfo: convert.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
 '''
 
-import sys, re, validate;
-from validate import *;
+import sys, re, upcean.validate;
+from upcean.validate import *;
 
 def convert_upce_to_upca(upc):
 	if(len(upc)==7):

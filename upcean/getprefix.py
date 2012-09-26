@@ -17,8 +17,8 @@
     $FileInfo: getprefix.py - Last Update: 02/13/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
 '''
 
-import sys, re, validate;
-from validate import *;
+import sys, re, upcean.validate;
+from upcean.validate import *;
 
 '''
 // Get GS1 Prefix for EAN-13 EAN-9 barcodes
