@@ -23,7 +23,7 @@ if(sys.argv[1]=="check"):
 	if(len(sys.argv[2])<7):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();
-	if(len(sys.argv[2])>7 and len(sys.argv[2])<12):
+	if(len(sys.argv[2])>7 and len(sys.argv[2])<11):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();
 	if(len(sys.argv[2])>14):
@@ -128,18 +128,17 @@ if(sys.argv[1]=="convert"):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[1]+"\nerror: syntax error missing arguments"));
 		quit();
 
-if(sys.argv[1]=="makevw"):
+if(sys.argv[1]=="mkvw" or sys.argv[1]=="makevw"):
 	if(len(sys.argv)<3):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
 		quit();
 	if(len(sys.argv[2])==5):
-
 		if(len(sys.argv[2])<5 or len(sys.argv[2])>5):
 			print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 			quit();
 		if(len(sys.argv[3])==4):
-			if(len(sys.argv[3])<5 or len(sys.argv[3])>5):
+			if(len(sys.argv[2])<5 or len(sys.argv[2])>5):
 				print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+" "+sys.argv[3]+"\nerror: syntax error missing arguments"));
-			quit();
+				quit();
 			print(str(make_vw_upca(sys.argv[2], sys.argv[3])));
 

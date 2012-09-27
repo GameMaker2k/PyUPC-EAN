@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-PYTHONPATH="$(pwd)/upcean" $(/usr/bin/which python) -c "import upc" $*
+PYTHONPATH="$(pwd)/upcean" $(/usr/bin/which python) -b -B -x -c "import upc" $*
