@@ -26,7 +26,7 @@ from upcean.validate import *;
 '''
 def get_gs1_prefix(upc):
 	if(re.findall("^(\d{12})", upc)):
-		upc = "0".upc;
+		upc = "0"+upc;
 	if(re.findall("^0(\d{3}\d{10})", upc)):
 		fix_ean = re.findall("^0(\d{3}\d{10})", upc);
 		upc = fix_ean[0];
