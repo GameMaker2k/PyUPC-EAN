@@ -62,6 +62,7 @@ def create_ean13(upc,outfile="./upc.png",resize=1,hidecd=False):
 		addonsize = 56;
 	upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 115 + addonsize, 62);
 	upc_img = cairo.Context (upc_preimg);
+	upc_img.set_antialias(cairo.ANTIALIAS_NONE);
 	upc_img.rectangle(0, 0, 115 + addonsize, 62);
 	upc_img.set_source_rgb(256, 256, 256);
 	upc_img.fill();
