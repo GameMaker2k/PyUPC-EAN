@@ -128,6 +128,28 @@ if(sys.argv[1]=="convert"):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[1]+"\nerror: syntax error missing arguments"));
 		quit();
 
+if(sys.argv[1]=="getprefix" or sys.argv[1]=="getgs1"):
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==8):
+		print(str(get_gs1_prefix(convert_upce_to_ean13(argv[2]))));
+	if(len(sys.argv[2])==12):
+		print(str(get_gs1_prefix(convert_upca_to_ean13(argv[2]))));
+	if(len(sys.argv[2])==13):
+		print(str(get_gs1_prefix(argv[2])));
+	if(len(sys.argv[2])==14):
+		print(str(get_gs1_prefix(convert_itf14_to_ean13(argv[2]))));
+	if(len(sys.argv[2])<8):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>8 and len(sys.argv[2])<12):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>14):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
 if(sys.argv[1]=="genvw" or sys.argv[1]=="mkvw" or sys.argv[1]=="makevw"):
 	if(len(sys.argv)<3):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));

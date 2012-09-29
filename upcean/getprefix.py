@@ -30,11 +30,11 @@ def get_gs1_prefix(upc):
 	if(re.findall("^0(\d{3}\d{10})", upc)):
 		fix_ean = re.findall("^0(\d{3}\d{10})", upc);
 		upc = fix_ean[0];
-	if(not re.findall("^(\d{3}\d{5}|\d{3}\d{10})", upc)):
+	if(not re.findall("^(\d{3}\d{5}|\d{3}\d{10})$", upc)):
 		return False;
-	if(re.findall("^(\d{3}\d{10})", upc) and validate_ean13(upc)==False):
+	if(re.findall("^(\d{3}\d{10})$", upc) and validate_ean13(upc)==False):
 		return False;
-	if(re.findall("^(\d{3}\d{5})", upc) and validate_ean8(upc)==False):
+	if(re.findall("^(\d{3}\d{5})$", upc) and validate_ean8(upc)==False):
 		return False;
 	if(re.findall("^(0[0-1][0-9])", upc)):
 		return "United States and Canada";
