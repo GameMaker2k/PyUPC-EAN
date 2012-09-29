@@ -22,18 +22,31 @@ import cairo;
 http://stevehanov.ca/blog/index.php?id=28
 '''
 def snapCoords( ctx, x, y ):
-    (xd, yd) = ctx.user_to_device(x, y);
-    return ( round(x) + 0.5, round(y) + 0.5 );
+	(xd, yd) = ctx.user_to_device(x, y);
+	return ( round(x) + 0.5, round(y) + 0.5 );
 
-def drawLine( ctx, x1, y1, x2, y2 ):    
-    point1 = snapCoords( ctx, x1, y1 );
-    point2 = snapCoords( ctx, x2, y2 );
-    ctx.move_to( point1[0], point1[1] );
-    ctx.line_to( point2[0], point2[1] );
-    ctx.set_line_width( 1.0 );
-    ctx.stroke();
+def drawLine( ctx, x1, y1, x2, y2 ):
+	point1 = snapCoords( ctx, x1, y1 );
+	point2 = snapCoords( ctx, x2, y2 );
+	ctx.move_to( point1[0], point1[1] );
+	ctx.line_to( point2[0], point2[1] );
+	ctx.set_line_width( 1.0 );
+	ctx.stroke();
 
 def drawColorLine( ctx, x1, y1, x2, y2, color ):
-    ctx.set_source_rgb(color[0], color[1], color[2]);
-    drawLine(ctx, x1, y1, x2, y2);
-    ctx.close_path();
+	ctx.set_source_rgb(color[0], color[1], color[2]);
+	drawLine(ctx, x1, y1, x2, y2);
+	ctx.close_path();
+
+def drawText( ctx, size, x, y, text ):
+	point1 = snapCoords( ctx, x, y );
+	ctx.select_font_face( "Monospace" );
+	ctx.set_font_size( size );
+	ctx.move_to( point1[0], point1[1] );
+	ctx.show_text( text );
+	ctx.stroke();
+
+def drawColorText( ctx, size, x, y, text, color ):
+	ctx.set_source_rgb(color[0], color[1], color[2]);
+	drawText(ctx, size, x, y, text);
+    

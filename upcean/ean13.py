@@ -66,6 +66,9 @@ def create_ean13(upc,outfile="./upc.png",resize=1,hidecd=False):
 	upc_img.rectangle(0, 0, 115 + addonsize, 62);
 	upc_img.set_source_rgb(256, 256, 256);
 	upc_img.fill();
+	drawColorText(upc_img, 11, 2, 57, upc_matches[0], [0, 0, 0]);
+	drawColorText(upc_img, 11, 13, 57, upc_matches[1], [0, 0, 0]);
+	drawColorText(upc_img, 11, 59, 57, upc_matches[2], [0, 0, 0]);
 	drawColorLine(upc_img, 0, 10, 0, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 1, 10, 1, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 2, 10, 2, 47, [256, 256, 256]);

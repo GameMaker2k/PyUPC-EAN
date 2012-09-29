@@ -66,6 +66,11 @@ def create_upca(upc,outfile="./upc.png",resize=1,hidecd=False):
 	upc_img.rectangle(0, 0, 113 + addonsize, 62);
 	upc_img.set_source_rgb(256, 256, 256);
 	upc_img.fill();
+	drawColorText(upc_img, 11, 0, 57, upc_matches[0], [0, 0, 0]);
+	drawColorText(upc_img, 11, 18, 57, upc_matches[1], [0, 0, 0]);
+	drawColorText(upc_img, 11, 57, 57, upc_matches[2], [0, 0, 0]);
+	if(hidecd!=None and hidecd!=True):
+		drawColorText(upc_img, 11, 104, 57, upc_matches[3], [0, 0, 0]);
 	drawColorLine(upc_img, 0, 10, 0, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 1, 10, 1, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 2, 10, 2, 47, [256, 256, 256]);
