@@ -17,18 +17,23 @@
 '''
 
 import cairo, re, upcean.precairo, upcean.validate;
+import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 from upcean.validate import *;
+from upcean.ean2 import *;
+from upcean.ean5 import *;
 
 
 def create_upca(upc,outfile="./upc.png",resize=1,hidecd=False):
 	upc_pieces = None; supplement = None;
 	if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
-		upc = upc_pieces[1]; supplement = upc_pieces[3];
+		upc_pieces = upc_pieces[0];
+		upc = upc_pieces[0]; supplement = upc_pieces[2];
 	if(re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc);
-		upc = upc_pieces[1]; supplement = upc_pieces[3];
+		upc_pieces = upc_pieces[0];
+		upc = upc_pieces[0]; supplement = upc_pieces[2];
 	if(len(upc)==8):
 		upc = convert_upce_to_upca(upc);
 	if(len(upc)==13):
@@ -163,5 +168,9 @@ def create_upca(upc,outfile="./upc.png",resize=1,hidecd=False):
 	drawColorLine(upc_img, 110, 10, 110, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 111, 10, 111, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 112, 10, 112, 47, [256, 256, 256]);
+	if(supplement!=None and len(supplement)==2): 
+		create_ean2(supplement,113,upc_img);
+	if(supplement!=None and len(supplement)==5): 
+		create_ean5(supplement,113,upc_img);
 	upc_preimg.write_to_png(outfile);
 	return True;

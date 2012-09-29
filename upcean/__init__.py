@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import sys, re, upcean.validate, upcean.convert, upcean.getprefix, upcean.upca;
+import sys, re, upcean.validate, upcean.convert, upcean.getprefix;
+import upcean.upca;
 from sys import argv;
 from upcean.validate import *;
 from upcean.convert import *;
