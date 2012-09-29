@@ -174,6 +174,16 @@ if(sys.argv[1]=="genupca" or sys.argv[1]=="mkupca" or sys.argv[1]=="makeupca"):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();
 
+if(sys.argv[1]=="genupce" or sys.argv[1]=="mkupce" or sys.argv[1]=="makeupce"):
+	if(len(sys.argv)<4):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==8):
+		create_upce(sys.argv[2],sys.argv[3],"1",False);
+	if(len(sys.argv[2])<8 or len(sys.argv[2])>8):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
 if(sys.argv[1]=="genean13" or sys.argv[1]=="mkean13" or sys.argv[1]=="makeean13"):
 	if(len(sys.argv)<4):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
@@ -181,5 +191,15 @@ if(sys.argv[1]=="genean13" or sys.argv[1]=="mkean13" or sys.argv[1]=="makeean13"
 	if(len(sys.argv[2])==13):
 		create_ean13(sys.argv[2],sys.argv[3],"1",False);
 	if(len(sys.argv[2])<13 or len(sys.argv[2])>13):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="genean8" or sys.argv[1]=="mkean8" or sys.argv[1]=="makeean8"):
+	if(len(sys.argv)<4):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==8):
+		create_ean8(sys.argv[2],sys.argv[3],"1",False);
+	if(len(sys.argv[2])<8 or len(sys.argv[2])>8):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();

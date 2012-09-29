@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: upca.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
 '''
 
 import cairo, re, upcean.precairo, upcean.validate;
@@ -24,7 +24,7 @@ from upcean.ean2 import *;
 from upcean.ean5 import *;
 
 
-def create_upca(upc,outfile="./upc.png",resize=1,hidecd=False):
+def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
 	upc_pieces = None; supplement = None;
 	if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);

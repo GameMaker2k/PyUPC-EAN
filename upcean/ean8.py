@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean13.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
 '''
 
 import cairo, re, upcean.precairo, upcean.validate;
@@ -23,7 +23,7 @@ from upcean.validate import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
+def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
 	upc_pieces = None; supplement = None;
 	if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
@@ -33,42 +33,44 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 		upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc);
 		upc_pieces = upc_pieces[0];
 		upc = upc_pieces[0]; supplement = upc_pieces[2];
-	if(len(upc)==8): 
-		upc = convert_upce_to_ean13(upc);
-	if(len(upc)==12): 
-		upc = convert_upca_to_ean13(upc);
-	if(len(upc)==12 and validate_upca(upc)==True): 
-		upc = "0"+upc;
-	if(len(upc)==12 and validate_upca(upc)==False): 
-		upc = upc+validate_ean13(upc,true);
-	if(len(upc)>13 or len(upc)<13): 
+	if(len(upc)==7):
+		upc = upc+validate_ean8(upc,True);
+	if(len(upc)>8 or len(upc)<8):
 		return False;
 	if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
 		resize = 1;
-	if(validate_ean13(upc)==False): 
-		pre_matches = re.findall("/^(\d{12})/", upc); 
-		upc = pre_matches[0]+validate_ean13(pre_matches[0],True);
-	upc_matches = re.findall("(\d{1})(\d{6})(\d{6})", upc);
-	if(len(upc_matches)<=0): 
-		return False;
+	if(validate_ean8(upc)==False):
+		preg_match("^(\d{7})", upc, pre_matches); 
+		upc = pre_matches[0]+validate_ean8(pre_matches[0],true);
+	upc_matches = re.findall("(\d{4})(\d{4})", upc);
 	upc_matches = upc_matches[0];
-	PrefixDigit = upc_matches[0];
-	LeftDigit = list(upc_matches[1]);
-	RightDigit = list(upc_matches[2]);
+	if(len(upc_matches)<=0):
+		return False;
+	LeftDigit = list(upc_matches[0]);
+	upc_matches_new = re.findall("(\d{2})(\d{2})", upc_matches[0]);
+	upc_matches_new= upc_matches_new[0];
+	LeftLeftDigit = upc_matches_new[0];
+	LeftRightDigit = upc_matches_new[1];
+	RightDigit = list(upc_matches[1]);
+	upc_matches_new = re.findall("(\d{2})(\d{2})", upc_matches[1]);
+	upc_matches_new= upc_matches_new[0];
+	RightLeftDigit = upc_matches_new[0];
+	RightRightDigit = upc_matches_new[1];
 	addonsize = 0;
 	if(supplement!=None and len(supplement)==2): 
 		addonsize = 29;
 	if(supplement!=None and len(supplement)==5): 
 		addonsize = 56;
-	upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 115 + addonsize, 62);
+	upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 83 + addonsize, 62);
 	upc_img = cairo.Context (upc_preimg);
 	upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-	upc_img.rectangle(0, 0, 115 + addonsize, 62);
+	upc_img.rectangle(0, 0, 83 + addonsize, 62);
 	upc_img.set_source_rgb(256, 256, 256);
 	upc_img.fill();
-	drawColorText(upc_img, 11, 2, 57, upc_matches[0], [0, 0, 0]);
-	drawColorText(upc_img, 11, 13, 57, upc_matches[1], [0, 0, 0]);
-	drawColorText(upc_img, 11, 59, 57, upc_matches[2], [0, 0, 0]);
+	drawColorText(upc_img, 11, 9, 57, LeftLeftDigit, [0, 0, 0]);
+	drawColorText(upc_img, 11, 22, 57, LeftRightDigit, [0, 0, 0]);
+	drawColorText(upc_img, 11, 42, 57, RightLeftDigit, [0, 0, 0]);
+	drawColorText(upc_img, 11, 55, 57, RightRightDigit, [0, 0, 0]);
 	drawColorLine(upc_img, 0, 10, 0, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 1, 10, 1, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 2, 10, 2, 47, [256, 256, 256]);
@@ -76,15 +78,11 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 	drawColorLine(upc_img, 4, 10, 4, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 5, 10, 5, 47, [256, 256, 256]);
 	drawColorLine(upc_img, 6, 10, 6, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 7, 10, 7, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 8, 10, 8, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 9, 10, 9, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 10, 10, 10, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 11, 10, 11, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 12, 10, 12, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 13, 10, 13, 53, [0, 0, 0]);
+	drawColorLine(upc_img, 7, 10, 7, 53, [0, 0, 0]);
+	drawColorLine(upc_img, 8, 10, 8, 53, [256, 256, 256]);
+	drawColorLine(upc_img, 9, 10, 9, 53, [0, 0, 0]);
 	NumZero = 0; 
-	LineStart = 14;
+	LineStart = 10;
 	while (NumZero < len(LeftDigit)):
 		LineSize = 47;
 		left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
@@ -120,68 +118,68 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 			left_text_color_l = [0, 0, 0, 1, 0, 1, 1];
 			left_text_color_g = [0, 0, 1, 0, 1, 1, 1];
 		left_text_color = left_text_color_l;
-		if(int(upc_matches[0])==1):
-			if(NumZero==2): 
+		if(int(upc_matches[1])==1):
+			if(NumZero==2):
 				left_text_color = left_text_color_g;
-			if(NumZero==4): 
+			if(NumZero==4):
 				left_text_color = left_text_color_g;
-			if(NumZero==5): 
+			if(NumZero==5):
 				left_text_color = left_text_color_g;
-		if(int(upc_matches[0])==2):
-			if(NumZero==2): 
+		if(int(upc_matches[1])==2):
+			if(NumZero==2):
 				left_text_color = left_text_color_g;
-			if(NumZero==3): 
+			if(NumZero==3):
 				left_text_color = left_text_color_g;
-			if(NumZero==5): 
+			if(NumZero==5):
 				left_text_color = left_text_color_g;
-		if(int(upc_matches[0])==3):
-			if(NumZero==2): 
+		if(int(upc_matches[1])==3):
+			if(NumZero==2):
 				left_text_color = left_text_color_g;
-			if(NumZero==3): 
+			if(NumZero==3):
 				left_text_color = left_text_color_g;
-			if(NumZero==4): 
+			if(NumZero==4):
 				left_text_color = left_text_color_g;
-		if(int(upc_matches[0])==4):
-			if(NumZero==1): 
+		if(int(upc_matches[1])==4):
+			if(NumZero==1):
 				left_text_color = left_text_color_g;
-			if(NumZero==4): 
+			if(NumZero==4):
 				left_text_color = left_text_color_g;
-			if(NumZero==5): 
+			if(NumZero==5):
 				left_text_color = left_text_color_g;
-		if(int(upc_matches[0])==5):
-			if(NumZero==1): 
+		if(int(upc_matches[1])==5):
+			if(NumZero==1):
 				left_text_color = left_text_color_g;
-			if(NumZero==2): 
+			if(NumZero==2):
 				left_text_color = left_text_color_g;
-			if(NumZero==5): 
+			if(NumZero==5):
 				left_text_color = left_text_color_g;
-		if(int(upc_matches[0])==6):
-			if(NumZero==1): 
+		if(int(upc_matches[1])==6):
+			if(NumZero==1):
 				left_text_color = left_text_color_g;
-			if(NumZero==2): 
+			if(NumZero==2):
 				left_text_color = left_text_color_g;
-			if(NumZero==3): 
+			if(NumZero==3):
 				left_text_color = left_text_color_g;
-		if(int(upc_matches[0])==7):
-			if(NumZero==1): 
+		if(int(upc_matches[1])==7):
+			if(NumZero==1):
 				left_text_color = left_text_color_g;
-			if(NumZero==3): 
+			if(NumZero==3):
 				left_text_color = left_text_color_g;
-			if(NumZero==5): 
+			if(NumZero==5):
 				left_text_color = left_text_color_g;
-		if(int(upc_matches[0])==8):
-			if(NumZero==1): 
+		if(int(upc_matches[1])==8):
+			if(NumZero==1):
 				left_text_color = left_text_color_g;
-			if(NumZero==3): 
+			if(NumZero==3):
 				left_text_color = left_text_color_g;
-			if(NumZero==4): 
+			if(NumZero==4):
 				left_text_color = left_text_color_g;
-		if(int(upc_matches[0])==9):
-			if(NumZero==1): 
+		if(int(upc_matches[1])==9):
+			if(NumZero==1):
 				left_text_color = left_text_color_g;
-			if(NumZero==2): 
+			if(NumZero==2):
 				left_text_color = left_text_color_g;
-			if(NumZero==4): 
+			if(NumZero==4):
 				left_text_color = left_text_color_g;
 		InnerUPCNum = 0;
 		while (InnerUPCNum < len(left_text_color)):
@@ -192,13 +190,13 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 			LineStart += 1;
 			InnerUPCNum += 1;
 		NumZero += 1;
-	drawColorLine(upc_img, 56, 10, 56, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 57, 10, 57, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 58, 10, 58, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 59, 10, 59, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 60, 10, 60, 53, [256, 256, 256]);
-	NumZero = 0; 
-	LineStart = 61;
+	drawColorLine(upc_img, 38, 10, 38, 53, [256, 256, 256]);
+	drawColorLine(upc_img, 39, 10, 39, 53, [0, 0, 0]);
+	drawColorLine(upc_img, 40, 10, 40, 53, [256, 256, 256]);
+	drawColorLine(upc_img, 41, 10, 41, 53, [0, 0, 0]);
+	drawColorLine(upc_img, 42, 10, 42, 53, [256, 256, 256]);
+
+	NumZero = 0; LineStart = 43;
 	while (NumZero < len(RightDigit)):
 		LineSize = 47;
 		right_text_color = [0, 0, 0, 0, 0, 0, 0];
@@ -231,21 +229,22 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 			LineStart += 1;
 			InnerUPCNum += 1;
 		NumZero += 1;
-	drawColorLine(upc_img, 103, 10, 103, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 104, 10, 104, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 105, 10, 105, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 106, 10, 106, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 107, 10, 107, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 108, 10, 108, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 109, 10, 109, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 110, 10, 110, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 111, 10, 111, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 112, 10, 112, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 113, 10, 113, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 114, 10, 114, 47, [256, 256, 256]);
+
+	drawColorLine(upc_img, 71, 10, 71, 53, [0, 0, 0]);
+	drawColorLine(upc_img, 72, 10, 72, 53, [256, 256, 256]);
+	drawColorLine(upc_img, 73, 10, 73, 53, [0, 0, 0]);
+	drawColorLine(upc_img, 74, 10, 74, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 75, 10, 75, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 76, 10, 76, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 77, 10, 77, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 78, 10, 78, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 79, 10, 79, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 80, 10, 80, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 81, 10, 81, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 82, 10, 82, 47, [256, 256, 256]);
 	if(supplement!=None and len(supplement)==2):
-		create_ean2(supplement,115,upc_img);
+		create_ean2(supplement,83,upc_img);
 	if(supplement!=None and len(supplement)==5):
-		create_ean5(supplement,115,upc_img);
+		create_ean5(supplement,83,upc_img);
 	upc_preimg.write_to_png(outfile);
 	return True;
