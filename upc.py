@@ -235,3 +235,45 @@ if(sys.argv[1]=="genitf14" or sys.argv[1]=="mkitf14" or sys.argv[1]=="makeitf14"
 	if(len(sys.argv[2]) % 2 or len(sys.argv[2]) < 6):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();
+
+if(sys.argv[1]=="gencode39" or sys.argv[1]=="mkcode39" or sys.argv[1]=="makecode39"):
+	if(sys.argv[4]==None):
+		sys.argv[4] = 1;
+	if(len(sys.argv)<4):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2]) > 1):
+		create_code39(sys.argv[2],sys.argv[3],sys.argv[4],False);
+	if(len(sys.argv[2]) < 1):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="gencode93" or sys.argv[1]=="mkcode93" or sys.argv[1]=="makecode93"):
+	if(sys.argv[4]==None):
+		sys.argv[4] = 1;
+	if(len(sys.argv)<4):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2]) > 1):
+		create_code93(sys.argv[2],sys.argv[3],sys.argv[4],False);
+	if(len(sys.argv[2]) < 1):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="genbarcode" or sys.argv[1]=="mkbarcode" or sys.argv[1]=="makebarcode"):
+	if(sys.argv[4]==None):
+		sys.argv[4] = 1;
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==8 or len(sys.argv[2])==12 or len(sys.argv[2])==13 or len(sys.argv[2])==14):
+		create_barcode(sys.argv[2],sys.argv[3],sys.argv[4],False);
+	if(len(sys.argv[2])<8):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>8 and len(sys.argv[2])<12):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>14):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
