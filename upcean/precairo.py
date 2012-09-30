@@ -38,6 +38,19 @@ def drawColorLine( ctx, x1, y1, x2, y2, color ):
 	drawLine(ctx, x1, y1, x2, y2);
 	ctx.close_path();
 
+def drawRectangle( ctx, x1, y1, x2, y2 ):
+	point1 = snapCoords( ctx, x1, y1 );
+	point2 = snapCoords( ctx, x2, y2 );
+	ctx.move_to( point1[0], point1[1] );
+	ctx.rectangle( point1[0], point1[1], point2[0], point2[1] )
+	ctx.set_line_width( 1.0 );
+	ctx.stroke();
+
+def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
+	ctx.set_source_rgb(color[0], color[1], color[2]);
+	drawRectangle(ctx, x1, y1, x2, y2);
+	ctx.close_path();
+
 def drawText( ctx, size, x, y, text ):
 	point1 = snapCoords( ctx, x, y );
 	ctx.select_font_face( "Monospace" );

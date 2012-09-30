@@ -203,3 +203,23 @@ if(sys.argv[1]=="genean8" or sys.argv[1]=="mkean8" or sys.argv[1]=="makeean8"):
 	if(len(sys.argv[2])<8 or len(sys.argv[2])>8):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();
+
+if(sys.argv[1]=="genitf" or sys.argv[1]=="mkitf" or sys.argv[1]=="makeitf"):
+	if(len(sys.argv)<4):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(not len(sys.argv[2]) % 2 and len(sys.argv[2]) > 6):
+		create_itf(sys.argv[2],sys.argv[3],"1",False);
+	if(len(sys.argv[2]) % 2 or len(sys.argv[2]) < 6):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="genitf14" or sys.argv[1]=="mkitf14" or sys.argv[1]=="makeitf14"):
+	if(len(sys.argv)<4):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(not len(sys.argv[2]) % 2 and len(sys.argv[2]) > 6):
+		create_itf14(sys.argv[2],sys.argv[3],"1",False);
+	if(len(sys.argv[2]) % 2 or len(sys.argv[2]) < 6):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
