@@ -16,6 +16,7 @@
     $FileInfo: itf14.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
 '''
 
+from __future__ import division;
 import cairo, re, upcean.precairo;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
@@ -168,5 +169,15 @@ def create_itf14(upc,outfile="./itf14.png",resize=1,hidecd=False):
 	drawColorRectangle(upc_img, 1, 1, 41 + upc_size_add, 48, [0, 0, 0]);
 	drawColorRectangle(upc_img, 2, 2, 39 + upc_size_add, 46, [0, 0, 0]);
 	drawColorRectangle(upc_img, 3, 3, 37 + upc_size_add, 44, [0, 0, 0]);
-	upc_preimg.write_to_png(outfile);
+	upc_imgpat = cairo.SurfacePattern(upc_preimg);
+	scaler = cairo.Matrix();
+	scaler.scale(1/int(resize),1/int(resize));
+	upc_imgpat.set_matrix(scaler);
+	upc_imgpat.set_filter(cairo.FILTER_BEST);
+	new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (44 + upc_size_add) * int(resize), 62 * int(resize));
+	new_upc_img = cairo.Context(new_upc_preimg);
+	new_upc_img.set_source(upc_imgpat);
+	new_upc_img.paint();
+	del(upc_preimg);
+	new_upc_preimg.write_to_png(outfile);
 	return True;

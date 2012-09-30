@@ -16,6 +16,7 @@
     $FileInfo: ean13.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
 '''
 
+from __future__ import division;
 import cairo, re, upcean.precairo, upcean.validate;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
@@ -247,5 +248,15 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 		create_ean2(supplement,115,upc_img);
 	if(supplement!=None and len(supplement)==5):
 		create_ean5(supplement,115,upc_img);
-	upc_preimg.write_to_png(outfile);
+	upc_imgpat = cairo.SurfacePattern(upc_preimg);
+	scaler = cairo.Matrix();
+	scaler.scale(1/int(resize),1/int(resize));
+	upc_imgpat.set_matrix(scaler);
+	upc_imgpat.set_filter(cairo.FILTER_BEST);
+	new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (115 + addonsize) * int(resize), 62 * int(resize));
+	new_upc_img = cairo.Context(new_upc_preimg);
+	new_upc_img.set_source(upc_imgpat);
+	new_upc_img.paint();
+	del(upc_preimg);
+	new_upc_preimg.write_to_png(outfile);
 	return True;
