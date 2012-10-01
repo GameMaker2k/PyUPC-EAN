@@ -47,8 +47,8 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 	if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
 		resize = 1;
 	if(validate_ean13(upc)==False): 
-		pre_matches = re.findall("/^(\d{12})/", upc); 
-		upc = pre_matches[0]+validate_ean13(pre_matches[0],True);
+		pre_matches = re.findall("^(\d{12})", upc); 
+		upc = pre_matches[0]+str(validate_ean13(pre_matches[0],True));
 	upc_matches = re.findall("(\d{1})(\d{6})(\d{6})", upc);
 	if(len(upc_matches)<=0): 
 		return False;
