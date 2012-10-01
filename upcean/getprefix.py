@@ -374,7 +374,8 @@ def get_gs1_prefix(upc):
 // Source: http://www.computalabel.com/aboutupc.htm
 '''
 def get_upca_ns(upc):
-	if(re.findall("^0(\d{12})", upc, upc_matches)):
+	if(re.findall("^0(\d{12})", upc)):
+		upc_matches = re.findall("^0(\d{12})", upc);
 		upc = upc_matches[1];
 	if(not re.findall("^(\d{12})", upc)):
 		return False;
@@ -434,7 +435,8 @@ def get_itf14_type(upc):
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 '''
 def get_upca_vw_info(upc):
-	if(re.findall("^0(\d{12})", upc, upc_matches)):
+	if(re.findall("^0(\d{12})", upc)):
+		upc_matches = re.findall("^0(\d{12})", upc);
 		upc = upc_matches[1];
 	if(not re.findall("^(\d{12})", upc)):
 		return False;
@@ -464,7 +466,8 @@ def get_upca_vw_pricecs(upc):
 // Source: http://divagirlusa-ivil.tripod.com/austinitecouponers/id29.html
 '''
 def get_upca_coupon_info(upc):
-	if(re.findall("^0(\d{12})", upc, upc_matches)):
+	if(re.findall("^0(\d{12})", upc)):
+		upc_matches = re.findall("^0(\d{12})", upc);
 		upc = upc_matches[1];
 	if(not re.findall("^(\d{12})", upc)):
 		return False;
@@ -497,13 +500,13 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(02)", vcode)):
 		return "Buy 4 Get 1 Free";
 	if(re.findall("^(03)", vcode)):
-		return "\$1.10";
+		return "$1.10";
 	if(re.findall("^(04)", vcode)):
-		return "\$1.35";
+		return "$1.35";
 	if(re.findall("^(05)", vcode)):
-		return "\$1.40";
+		return "$1.40";
 	if(re.findall("^(06)", vcode)):
-		return "\$1.60";
+		return "$1.60";
 	if(re.findall("^(07)", vcode)):
 		return "Buy 3 For $1.50";
 	if(re.findall("^(08)", vcode)):
@@ -511,27 +514,27 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(09)", vcode)):
 		return "Buy 3 For $2.00";
 	if(re.findall("^(10)", vcode)):
-		return "\$0.10";
+		return "$0.10";
 	if(re.findall("^(11)", vcode)):
-		return "\$1.85";
+		return "$1.85";
 	if(re.findall("^(12)", vcode)):
-		return "\$0.12";
+		return "$0.12";
 	if(re.findall("^(13)", vcode)):
 		return "Buy 4 For $1.00";
 	if(re.findall("^(14)", vcode)):
 		return "Buy 1 Get 1 Free";
 	if(re.findall("^(15)", vcode)):
-		return "\$0.15";
+		return "$0.15";
 	if(re.findall("^(16)", vcode)):
 		return "Buy 2 Get 1 Free";
 	if(re.findall("^(17)", vcode)):
 		return "Reserved for future use";
 	if(re.findall("^(18)", vcode)):
-		return "\$2.60";
+		return "$2.60";
 	if(re.findall("^(19)", vcode)):
 		return "Buy 3 Get 1 Free";
 	if(re.findall("^(20)", vcode)):
-		return "\$0.20";
+		return "$0.20";
 	if(re.findall("^(21)", vcode)):
 		return "Buy 2 For $0.35";
 	if(re.findall("^(22)", vcode)):
@@ -541,17 +544,17 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(24)", vcode)):
 		return "Buy 2 For $0.50";
 	if(re.findall("^(25)", vcode)):
-		return "\$0.25";
+		return "$0.25";
 	if(re.findall("^(26)", vcode)):
-		return "\$2.85";
+		return "$2.85";
 	if(re.findall("^(27)", vcode)):
 		return "Reserved for future use";
 	if(re.findall("^(28)", vcode)):
 		return "Buy 2 For $0.55";
 	if(re.findall("^(29)", vcode)):
-		return "\$0.29";
+		return "$0.29";
 	if(re.findall("^(30)", vcode)):
-		return "\$0.30";
+		return "$0.30";
 	if(re.findall("^(31)", vcode)):
 		return "Buy 2 For $0.60";
 	if(re.findall("^(32)", vcode)):
@@ -561,7 +564,7 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(34)", vcode)):
 		return "Buy 2 For $1.25";
 	if(re.findall("^(35)", vcode)):
-		return "\$0.35";
+		return "$0.35";
 	if(re.findall("^(36)", vcode)):
 		return "Buy 2 For $1.50";
 	if(re.findall("^(37)", vcode)):
@@ -569,9 +572,9 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(38)", vcode)):
 		return "Buy 3 For $0.30";
 	if(re.findall("^(39)", vcode)):
-		return "\$0.39";
+		return "$0.39";
 	if(re.findall("^(40)", vcode)):
-		return "\$0.40";
+		return "$0.40";
 	if(re.findall("^(41)", vcode)):
 		return "Buy 3 For $0.50";
 	if(re.findall("^(42)", vcode)):
@@ -581,7 +584,7 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(44)", vcode)):
 		return "Buy 2 For $1.35";
 	if(re.findall("^(45)", vcode)):
-		return "\$0.45";
+		return "$0.45";
 	if(re.findall("^(46)", vcode)):
 		return "Buy 2 For $1.60";
 	if(re.findall("^(47)", vcode)):
@@ -589,9 +592,9 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(48)", vcode)):
 		return "Buy 2 For $1.85";
 	if(re.findall("^(49)", vcode)):
-		return "\$0.49";
+		return "$0.49";
 	if(re.findall("^(50)", vcode)):
-		return "\$0.50";
+		return "$0.50";
 	if(re.findall("^(51)", vcode)):
 		return "Buy 2 For $2.00";
 	if(re.findall("^(52)", vcode)):
@@ -601,7 +604,7 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(54)", vcode)):
 		return "Buy 2 For $0.15";
 	if(re.findall("^(55)", vcode)):
-		return "\$0.55";
+		return "$0.55";
 	if(re.findall("^(56)", vcode)):
 		return "Buy 2 For $0.20";
 	if(re.findall("^(57)", vcode)):
@@ -609,85 +612,85 @@ def get_upca_coupon_value_code(vcode):
 	if(re.findall("^(58)", vcode)):
 		return "Buy 2 For $0.30";
 	if(re.findall("^(59)", vcode)):
-		return "\$0.59";
+		return "$0.59";
 	if(re.findall("^(60)", vcode)):
-		return "\$0.60";
+		return "$0.60";
 	if(re.findall("^(61)", vcode)):
-		return "\$10.00";
+		return "$10.00";
 	if(re.findall("^(62)", vcode)):
-		return "\$9.50";
+		return "$9.50";
 	if(re.findall("^(63)", vcode)):
-		return "\$9.00";
+		return "$9.00";
 	if(re.findall("^(64)", vcode)):
-		return "\$8.50";
+		return "$8.50";
 	if(re.findall("^(65)", vcode)):
-		return "\$0.65";
+		return "$0.65";
 	if(re.findall("^(66)", vcode)):
-		return "\$8.00";
+		return "$8.00";
 	if(re.findall("^(67)", vcode)):
-		return "\$7.50";
+		return "$7.50";
 	if(re.findall("^(68)", vcode)):
-		return "\$7.00";
+		return "$7.00";
 	if(re.findall("^(69)", vcode)):
-		return "\$0.69";
+		return "$0.69";
 	if(re.findall("^(70)", vcode)):
-		return "\$0.70";
+		return "$0.70";
 	if(re.findall("^(71)", vcode)):
-		return "\$6.50";
+		return "$6.50";
 	if(re.findall("^(72)", vcode)):
-		return "\$6.00";
+		return "$6.00";
 	if(re.findall("^(73)", vcode)):
-		return "\$5.50";
+		return "$5.50";
 	if(re.findall("^(74)", vcode)):
-		return "\$5.00";
+		return "$5.00";
 	if(re.findall("^(75)", vcode)):
-		return "\$0.75";
+		return "$0.75";
 	if(re.findall("^(76)", vcode)):
-		return "\$1.00";
+		return "$1.00";
 	if(re.findall("^(77)", vcode)):
-		return "\$1.25";
+		return "$1.25";
 	if(re.findall("^(78)", vcode)):
-		return "\$1.50";
+		return "$1.50";
 	if(re.findall("^(79)", vcode)):
-		return "\$0.79";
+		return "$0.79";
 	if(re.findall("^(80)", vcode)):
-		return "\$0.80";
+		return "$0.80";
 	if(re.findall("^(81)", vcode)):
-		return "\$1.75";
+		return "$1.75";
 	if(re.findall("^(82)", vcode)):
-		return "\$2.00";
+		return "$2.00";
 	if(re.findall("^(83)", vcode)):
-		return "\$2.25";
+		return "$2.25";
 	if(re.findall("^(84)", vcode)):
-		return "\$2.50";
+		return "$2.50";
 	if(re.findall("^(85)", vcode)):
-		return "\$0.85";
+		return "$0.85";
 	if(re.findall("^(86)", vcode)):
-		return "\$2.75";
+		return "$2.75";
 	if(re.findall("^(87)", vcode)):
-		return "\$3.00";
+		return "$3.00";
 	if(re.findall("^(88)", vcode)):
-		return "\$3.25";
+		return "$3.25";
 	if(re.findall("^(89)", vcode)):
-		return "\$0.89";
+		return "$0.89";
 	if(re.findall("^(90)", vcode)):
-		return "\$0.90";
+		return "$0.90";
 	if(re.findall("^(91)", vcode)):
-		return "\$3.50";
+		return "$3.50";
 	if(re.findall("^(92)", vcode)):
-		return "\$3.75";
+		return "$3.75";
 	if(re.findall("^(93)", vcode)):
-		return "\$4.00";
+		return "$4.00";
 	if(re.findall("^(94)", vcode)):
 		return "Reserved for future use";
 	if(re.findall("^(95)", vcode)):
-		return "\$0.95";
+		return "$0.95";
 	if(re.findall("^(96)", vcode)):
-		return "\$4.50";
+		return "$4.50";
 	if(re.findall("^(97)", vcode)):
 		return "Reserved for future use";
 	if(re.findall("^(98)", vcode)):
 		return "Buy 2 For $0.65";
 	if(re.findall("^(99)", vcode)):
-		return "\$0.99";
+		return "$0.99";
 	return False;

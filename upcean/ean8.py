@@ -68,24 +68,26 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
 	upc_img.rectangle(0, 0, 83 + addonsize, 62);
 	upc_img.set_source_rgb(256, 256, 256);
 	upc_img.fill();
-	drawColorText(upc_img, 11, 9, 57, LeftLeftDigit, [0, 0, 0]);
-	drawColorText(upc_img, 11, 22, 57, LeftRightDigit, [0, 0, 0]);
-	drawColorText(upc_img, 11, 42, 57, RightLeftDigit, [0, 0, 0]);
-	drawColorText(upc_img, 11, 55, 57, RightRightDigit, [0, 0, 0]);
-	drawColorLine(upc_img, 0, 10, 0, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 1, 10, 1, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 2, 10, 2, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 3, 10, 3, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 4, 10, 4, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 5, 10, 5, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 6, 10, 6, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 7, 10, 7, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 8, 10, 8, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 9, 10, 9, 53, [0, 0, 0]);
+	text_color = [0, 0, 0];
+	alt_text_color = [256, 256, 256];
+	drawColorText(upc_img, 10, 10, 56, LeftLeftDigit, text_color);
+	drawColorText(upc_img, 10, 23, 56, LeftRightDigit, text_color);
+	drawColorText(upc_img, 10, 42, 56, RightLeftDigit, text_color);
+	drawColorText(upc_img, 10, 55, 56, RightRightDigit, text_color);
+	drawColorLine(upc_img, 0, 10, 0, 48, alt_text_color);
+	drawColorLine(upc_img, 1, 10, 1, 48, alt_text_color);
+	drawColorLine(upc_img, 2, 10, 2, 48, alt_text_color);
+	drawColorLine(upc_img, 3, 10, 3, 48, alt_text_color);
+	drawColorLine(upc_img, 4, 10, 4, 48, alt_text_color);
+	drawColorLine(upc_img, 5, 10, 5, 48, alt_text_color);
+	drawColorLine(upc_img, 6, 10, 6, 48, alt_text_color);
+	drawColorLine(upc_img, 7, 10, 7, 54, text_color);
+	drawColorLine(upc_img, 8, 10, 8, 54, alt_text_color);
+	drawColorLine(upc_img, 9, 10, 9, 54, text_color);
 	NumZero = 0; 
 	LineStart = 10;
 	while (NumZero < len(LeftDigit)):
-		LineSize = 47;
+		LineSize = 48;
 		left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
 		left_text_color_g = [1, 1, 1, 1, 1, 1, 1];
 		if(int(LeftDigit[NumZero])==0): 
@@ -185,21 +187,21 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
 		InnerUPCNum = 0;
 		while (InnerUPCNum < len(left_text_color)):
 			if(left_text_color[InnerUPCNum]==1):
-				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, [0, 0, 0]);
+				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
 			if(left_text_color[InnerUPCNum]==0):
-				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, [256, 256, 256]);
+				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, alt_text_color);
 			LineStart += 1;
 			InnerUPCNum += 1;
 		NumZero += 1;
-	drawColorLine(upc_img, 38, 10, 38, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 39, 10, 39, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 40, 10, 40, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 41, 10, 41, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 42, 10, 42, 53, [256, 256, 256]);
+	drawColorLine(upc_img, 38, 10, 38, 54, alt_text_color);
+	drawColorLine(upc_img, 39, 10, 39, 54, text_color);
+	drawColorLine(upc_img, 40, 10, 40, 54, alt_text_color);
+	drawColorLine(upc_img, 41, 10, 41, 54, text_color);
+	drawColorLine(upc_img, 42, 10, 42, 54, alt_text_color);
 
 	NumZero = 0; LineStart = 43;
 	while (NumZero < len(RightDigit)):
-		LineSize = 47;
+		LineSize = 48;
 		right_text_color = [0, 0, 0, 0, 0, 0, 0];
 		if(int(RightDigit[NumZero])==0): 
 			right_text_color = [1, 1, 1, 0, 0, 1, 0];
@@ -224,25 +226,25 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
 		InnerUPCNum = 0;
 		while (InnerUPCNum < len(right_text_color)):
 			if(right_text_color[InnerUPCNum]==1):
-				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, [0, 0, 0]);
+				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
 			if(right_text_color[InnerUPCNum]==0):
-				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, [256, 256, 256]);
+				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, alt_text_color);
 			LineStart += 1;
 			InnerUPCNum += 1;
 		NumZero += 1;
 
-	drawColorLine(upc_img, 71, 10, 71, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 72, 10, 72, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 73, 10, 73, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 74, 10, 74, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 75, 10, 75, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 76, 10, 76, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 77, 10, 77, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 78, 10, 78, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 79, 10, 79, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 80, 10, 80, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 81, 10, 81, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 82, 10, 82, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 71, 10, 71, 54, text_color);
+	drawColorLine(upc_img, 72, 10, 72, 54, alt_text_color);
+	drawColorLine(upc_img, 73, 10, 73, 54, text_color);
+	drawColorLine(upc_img, 74, 10, 74, 48, alt_text_color);
+	drawColorLine(upc_img, 75, 10, 75, 48, alt_text_color);
+	drawColorLine(upc_img, 76, 10, 76, 48, alt_text_color);
+	drawColorLine(upc_img, 77, 10, 77, 48, alt_text_color);
+	drawColorLine(upc_img, 78, 10, 78, 48, alt_text_color);
+	drawColorLine(upc_img, 79, 10, 79, 48, alt_text_color);
+	drawColorLine(upc_img, 80, 10, 80, 48, alt_text_color);
+	drawColorLine(upc_img, 81, 10, 81, 48, alt_text_color);
+	drawColorLine(upc_img, 82, 10, 82, 48, alt_text_color);
 	if(supplement!=None and len(supplement)==2):
 		create_ean2(supplement,83,upc_img);
 	if(supplement!=None and len(supplement)==5):

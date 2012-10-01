@@ -67,30 +67,32 @@ def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
 	upc_img.rectangle(0, 0, 113 + addonsize, 62);
 	upc_img.set_source_rgb(256, 256, 256);
 	upc_img.fill();
-	drawColorText(upc_img, 11, 0, 57, upc_matches[0], [0, 0, 0]);
-	drawColorText(upc_img, 11, 18, 57, upc_matches[1], [0, 0, 0]);
-	drawColorText(upc_img, 11, 57, 57, upc_matches[2], [0, 0, 0]);
+	text_color = [0, 0, 0];
+	alt_text_color = [256, 256, 256];
+	drawColorText(upc_img, 10, 0, 56, upc_matches[0], text_color);
+	drawColorText(upc_img, 10, 20, 56, upc_matches[1], text_color);
+	drawColorText(upc_img, 10, 59, 56, upc_matches[2], text_color);
 	if(hidecd!=None and hidecd!=True):
-		drawColorText(upc_img, 11, 104, 57, upc_matches[3], [0, 0, 0]);
-	drawColorLine(upc_img, 0, 10, 0, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 1, 10, 1, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 2, 10, 2, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 3, 10, 3, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 4, 10, 4, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 5, 10, 5, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 6, 10, 6, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 7, 10, 7, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 8, 10, 8, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 9, 10, 9, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 10, 10, 10, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 11, 10, 11, 53, [0, 0, 0]);
+		drawColorText(upc_img, 10, 104, 56, upc_matches[3], text_color);
+	drawColorLine(upc_img, 0, 10, 0, 48, alt_text_color);
+	drawColorLine(upc_img, 1, 10, 1, 48, alt_text_color);
+	drawColorLine(upc_img, 2, 10, 2, 48, alt_text_color);
+	drawColorLine(upc_img, 3, 10, 3, 48, alt_text_color);
+	drawColorLine(upc_img, 4, 10, 4, 48, alt_text_color);
+	drawColorLine(upc_img, 5, 10, 5, 48, alt_text_color);
+	drawColorLine(upc_img, 6, 10, 6, 48, alt_text_color);
+	drawColorLine(upc_img, 7, 10, 7, 48, alt_text_color);
+	drawColorLine(upc_img, 8, 10, 8, 48, alt_text_color);
+	drawColorLine(upc_img, 9, 10, 9, 54, text_color);
+	drawColorLine(upc_img, 10, 10, 10, 54, alt_text_color);
+	drawColorLine(upc_img, 11, 10, 11, 54, text_color);
 	NumZero = 0; 
 	LineStart = 12;
 	while (NumZero < len(LeftDigit)):
 		if(NumZero!=0): 
-			LineSize = 47;
+			LineSize = 48;
 		if(NumZero==0): 
-			LineSize = 53;
+			LineSize = 54;
 		left_text_color = [0, 0, 0, 0, 0, 0, 0];
 		if(int(LeftDigit[NumZero])==0): 
 			left_text_color = [0, 0, 0, 1, 1, 0, 1];
@@ -115,24 +117,24 @@ def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
 		InnerUPCNum = 0;
 		while (InnerUPCNum < len(left_text_color)):
 			if(left_text_color[InnerUPCNum]==1):
-				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, [0, 0, 0]);
+				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
 			if(left_text_color[InnerUPCNum]==0):
-				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, [256, 256, 256]);
+				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, alt_text_color);
 			LineStart += 1;
 			InnerUPCNum += 1;
 		NumZero += 1;
-	drawColorLine(upc_img, 54, 10, 54, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 55, 10, 55, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 56, 10, 56, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 57, 10, 57, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 58, 10, 58, 53, [256, 256, 256]);
+	drawColorLine(upc_img, 54, 10, 54, 54, alt_text_color);
+	drawColorLine(upc_img, 55, 10, 55, 54, text_color);
+	drawColorLine(upc_img, 56, 10, 56, 54, alt_text_color);
+	drawColorLine(upc_img, 57, 10, 57, 54, text_color);
+	drawColorLine(upc_img, 58, 10, 58, 54, alt_text_color);
 	NumZero = 0; 
 	LineStart = 59;
 	while (NumZero < len(RightDigit)):
 		if(NumZero!=5): 
-			LineSize = 47;
+			LineSize = 48;
 		if(NumZero==5): 
-			LineSize = 53;
+			LineSize = 54;
 		right_text_color = [0, 0, 0, 0, 0, 0, 0];
 		if(int(RightDigit[NumZero])==0): 
 			right_text_color = [1, 1, 1, 0, 0, 1, 0];
@@ -157,24 +159,24 @@ def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
 		InnerUPCNum = 0;
 		while (InnerUPCNum < len(right_text_color)):
 			if(right_text_color[InnerUPCNum]==1):
-				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, [0, 0, 0]);
+				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
 			if(right_text_color[InnerUPCNum]==0):
-				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, [256, 256, 256]);
+				drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, alt_text_color);
 			LineStart += 1;
 			InnerUPCNum += 1;
 		NumZero += 1;
-	drawColorLine(upc_img, 101, 10, 101, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 102, 10, 102, 53, [256, 256, 256]);
-	drawColorLine(upc_img, 103, 10, 103, 53, [0, 0, 0]);
-	drawColorLine(upc_img, 104, 10, 104, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 105, 10, 105, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 106, 10, 106, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 107, 10, 107, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 108, 10, 108, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 109, 10, 109, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 110, 10, 110, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 111, 10, 111, 47, [256, 256, 256]);
-	drawColorLine(upc_img, 112, 10, 112, 47, [256, 256, 256]);
+	drawColorLine(upc_img, 101, 10, 101, 54, text_color);
+	drawColorLine(upc_img, 102, 10, 102, 54, alt_text_color);
+	drawColorLine(upc_img, 103, 10, 103, 54, text_color);
+	drawColorLine(upc_img, 104, 10, 104, 48, alt_text_color);
+	drawColorLine(upc_img, 105, 10, 105, 48, alt_text_color);
+	drawColorLine(upc_img, 106, 10, 106, 48, alt_text_color);
+	drawColorLine(upc_img, 107, 10, 107, 48, alt_text_color);
+	drawColorLine(upc_img, 108, 10, 108, 48, alt_text_color);
+	drawColorLine(upc_img, 109, 10, 109, 48, alt_text_color);
+	drawColorLine(upc_img, 110, 10, 110, 48, alt_text_color);
+	drawColorLine(upc_img, 111, 10, 111, 48, alt_text_color);
+	drawColorLine(upc_img, 112, 10, 112, 48, alt_text_color);
 	if(supplement!=None and len(supplement)==2): 
 		create_ean2(supplement,113,upc_img);
 	if(supplement!=None and len(supplement)==5): 

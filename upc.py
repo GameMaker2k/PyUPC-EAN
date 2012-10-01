@@ -156,6 +156,112 @@ if(sys.argv[1]=="getprefix" or sys.argv[1]=="getgs1"):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();
 
+if(sys.argv[1]=="getnsprefix" or sys.argv[1]=="getns"):
+	taskfound=True;
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==8):
+		print(str(get_upca_ns(convert_upce_to_upca(argv[2]))));
+	if(len(sys.argv[2])==12):
+		print(str(get_upca_ns(argv[2])));
+	if(len(sys.argv[2])==13):
+		print(str(get_upca_ns(convert_ean13_to_upca(argv[2]))));
+	if(len(sys.argv[2])==14):
+		print(str(get_upca_ns(convert_itf14_to_upca(argv[2]))));
+	if(len(sys.argv[2])<8):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>8 and len(sys.argv[2])<12):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>14):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="getitf14type" or sys.argv[1]=="itf14type"):
+	taskfound=True;
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==8):
+		print(str(get_itf14_type(convert_upce_to_itf14(argv[2]))));
+	if(len(sys.argv[2])==12):
+		print(str(get_itf14_type(convert_upca_to_itf14(argv[2]))));
+	if(len(sys.argv[2])==13):
+		print(str(get_itf14_type(convert_ean13_to_itf14(argv[2]))));
+	if(len(sys.argv[2])==14):
+		print(str(get_itf14_type(argv[2])));
+	if(len(sys.argv[2])<8):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>8 and len(sys.argv[2])<12):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>14):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="getvw" or sys.argv[1]=="getvwinfo"):
+	taskfound=True;
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==12):
+		vwinfo = get_upca_vw_info(argv[2]);
+		print("Code: "+vwinfo['code']);
+		print("Price: "+vwinfo['price']);
+	if(len(sys.argv[2])==13):
+		vwinfo = get_upca_vw_info(convert_ean13_to_upca(argv[2]));
+		print("Code: "+vwinfo['code']);
+		print("Price: "+vwinfo['price']);
+	if(len(sys.argv[2])==14):
+		vwinfo = get_upca_vw_info(convert_itf14_to_upca(argv[2]));
+		print("Code: "+vwinfo['code']);
+		print("Price: "+vwinfo['price']);
+	if(len(sys.argv[2])<12):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>12 and len(sys.argv[2])<12):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>14):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="getcoupon" or sys.argv[1]=="getcouponinfo"):
+	taskfound=True;
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==12):
+		couponinfo = get_upca_coupon_info(argv[2]);
+		print("Manufacturer: "+couponinfo['manufacturer']);
+		print("Family: "+couponinfo['family']);
+		print("Value 1: "+couponinfo['value']);
+		print("Value 2: "+get_upca_coupon_value_code(couponinfo['value']));
+	if(len(sys.argv[2])==13):
+		couponinfo = get_upca_coupon_info(convert_ean13_to_upca(argv[2]));
+		print("Manufacturer: "+couponinfo['manufacturer']);
+		print("Family: "+couponinfo['family']);
+		print("Value 1: "+couponinfo['value']);
+		print("Value 2: "+get_upca_coupon_value_code(couponinfo['value']));
+	if(len(sys.argv[2])==14):
+		couponinfo = get_upca_coupon_info(convert_itf14_to_upca(argv[2]));
+		print("Manufacturer: "+couponinfo['manufacturer']);
+		print("Family: "+couponinfo['family']);
+		print("Value 1: "+couponinfo['value']);
+		print("Value 2: "+get_upca_coupon_value_code(couponinfo['value']));
+	if(len(sys.argv[2])<12):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>12 and len(sys.argv[2])<12):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])>14):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
 if(sys.argv[1]=="genvw" or sys.argv[1]=="mkvw" or sys.argv[1]=="makevw"):
 	taskfound=True;
 	if(len(sys.argv)<3):
@@ -170,6 +276,32 @@ if(sys.argv[1]=="genvw" or sys.argv[1]=="mkvw" or sys.argv[1]=="makevw"):
 				print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+" "+sys.argv[3]+"\nerror: syntax error missing arguments"));
 				quit();
 			print(str(make_vw_upca(sys.argv[2], sys.argv[3])));
+
+if(sys.argv[1]=="gencoupon" or sys.argv[1]=="mkcoupon" or sys.argv[1]=="makecoupon"):
+	taskfound=True;
+	if(len(sys.argv)<5):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])<1 or len(sys.argv[2])>1):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(int(sys.argv[2])!=5 and int(sys.argv[2])!=9):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[3])<5 or len(sys.argv[3])>5):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+" "+sys.argv[3]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[4])<3 or len(sys.argv[4])> 3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+" "+sys.argv[3]+" "+sys.argv[4]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[5])<2 or len(sys.argv[5])>2):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+" "+sys.argv[3]+" "+sys.argv[4]+" "+sys.argv[5]+"\nerror: syntax error missing arguments"));
+		quit();
+	if(len(sys.argv[2])==1):
+		if(len(sys.argv[3])==5):
+			if(len(sys.argv[4])==3):
+				if(len(sys.argv[5])==2):
+					print(str(make_coupon_upca(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])));
 
 if(sys.argv[1]=="genupca" or sys.argv[1]=="mkupca" or sys.argv[1]=="makeupca"):
 	taskfound=True;
@@ -305,6 +437,46 @@ if(sys.argv[1]=="genbarcode" or sys.argv[1]=="mkbarcode" or sys.argv[1]=="makeba
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();
 	if(len(sys.argv[2])>14):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="genissn13" or sys.argv[1]=="mkissn13" or sys.argv[1]=="makeissn13"):
+	taskfound=True;
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	sys.argv[2] = sys.argv[2].replace("-", "");
+	sys.argv[2] = sys.argv[2].replace(" ", "");
+	if(len(sys.argv[2])==8):
+		print(str(convert_issn8_to_issn13(argv[2])));
+	if(len(sys.argv[2])>8 and len(sys.argv[2])<8):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="genisbn13" or sys.argv[1]=="mkisbn13" or sys.argv[1]=="makeisbn13"):
+	taskfound=True;
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	sys.argv[2] = sys.argv[2].replace("-", "");
+	sys.argv[2] = sys.argv[2].replace(" ", "");
+	if(len(sys.argv[2])==10):
+		print(str(convert_isbn10_to_isbn13(argv[2])));
+	if(len(sys.argv[2])>10 and len(sys.argv[2])<10):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+		quit();
+
+if(sys.argv[1]=="genismn13" or sys.argv[1]=="mkismn13" or sys.argv[1]=="makeismn13"):
+	taskfound=True;
+	if(len(sys.argv)<3):
+		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+		quit();
+	sys.argv[2] = sys.argv[2].replace("M", "");
+	sys.argv[2] = sys.argv[2].replace("-", "");
+	sys.argv[2] = sys.argv[2].replace(" ", "");
+	if(len(sys.argv[2])==9):
+		print(str(convert_ismn10_to_ismn13(argv[2])));
+	if(len(sys.argv[2])>9 and len(sys.argv[2])<9):
 		print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
 		quit();
 

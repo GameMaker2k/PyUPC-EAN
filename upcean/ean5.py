@@ -28,15 +28,22 @@ def create_ean5(upc,offsetadd,imgres):
 	LeftDigit = list(upc_matches[0]);
 	CheckSum = (int(LeftDigit[0]) * 3) + (int(LeftDigit[1]) * 9) + (int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3);
 	CheckSum = CheckSum % 10;
-	drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, 47, [256, 256, 256]);
-	drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, 47, [0, 0, 0]);
-	drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, 47, [256, 256, 256]);
-	drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, 47, [0, 0, 0]);
-	drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, 47, [0, 0, 0]);
+	text_color = [0, 0, 0];
+	alt_text_color = [256, 256, 256];
+	drawColorText(imgres, 10, 5 + offsetadd, 56, LeftDigit[0], text_color);
+	drawColorText(imgres, 10, 14 + offsetadd, 56, LeftDigit[1], text_color);
+	drawColorText(imgres, 10, 22 + offsetadd, 56, LeftDigit[2], text_color);
+	drawColorText(imgres, 10, 30 + offsetadd, 56, LeftDigit[3], text_color);
+	drawColorText(imgres, 10, 38 + offsetadd, 56, LeftDigit[4], text_color);
+	drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, 48, alt_text_color);
+	drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, 48, text_color);
+	drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, 48, alt_text_color);
+	drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, 48, text_color);
+	drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, 48, text_color);
 	NumZero = 0; 
 	LineStart = 5 + offsetadd;
 	while (NumZero < len(LeftDigit)):
-		LineSize = 47;
+		LineSize = 48;
 		left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
 		left_text_color_g = [1, 1, 1, 1, 1, 1, 1];
 		if(int(LeftDigit[NumZero])==0): 
@@ -173,15 +180,15 @@ def create_ean5(upc,offsetadd,imgres):
 		InnerUPCNum = 0;
 		while (InnerUPCNum < len(left_text_color)):
 			if(left_text_color[InnerUPCNum]==1):
-				drawColorLine(imgres, LineStart, 10, LineStart, LineSize, [0, 0, 0]);
+				drawColorLine(imgres, LineStart, 10, LineStart, LineSize, text_color);
 			if(left_text_color[InnerUPCNum]==0):
-				drawColorLine(imgres, LineStart, 10, LineStart, LineSize, [256, 256, 256]);
+				drawColorLine(imgres, LineStart, 10, LineStart, LineSize, alt_text_color);
 			LineStart += 1;
 			InnerUPCNum += 1;
 		if(NumZero < 5):
-			drawColorLine(imgres, LineStart, 10, LineStart, LineSize, [256, 256, 256]);
+			drawColorLine(imgres, LineStart, 10, LineStart, LineSize, alt_text_color);
 			LineStart += 1;
-			drawColorLine(imgres, LineStart, 10, LineStart, LineSize, [0, 0, 0]);
+			drawColorLine(imgres, LineStart, 10, LineStart, LineSize, text_color);
 			LineStart += 1;
 		NumZero += 1;
 	return True;

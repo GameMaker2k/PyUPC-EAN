@@ -270,6 +270,64 @@ def convert_itf14_to_ean8(upc):
 	return convert_ean13_to_ean8(convert_itf14_to_ean13(upc));
 
 '''
+ISSN (International Standard Serial Number)
+http://en.wikipedia.org/wiki/International_Standard_Serial_Number
+'''
+def convert_issn8_to_issn13(upc):
+	upc = upc.replace("-", "");
+	upc = upc.replace(" ", "");
+	upc = upc.replace("X", "");
+	if(validate_issn8(upc)==False): 
+		return False;
+	if(len(upc)>7): 
+		fix_matches = re.findall("^(\d{7})", upc); 
+		upc = fix_matches[0];
+	issn13 = "977"+upc+"00"+str(validate_ean13("977"+upc+"00",True)); 
+	return issn13;
+def convert_issn13_to_issn8(upc):
+	upc = upc.replace("-", "");
+	upc = upc.replace(" ", "");
+	upc = upc.replace("X", "");
+	if(validate_ean13(upc)==False): 
+		return False;
+	if(not re.findall("/^977(\d{7})/", upc)):
+		return False;
+	if(re.findall("^977(\d{7})", upc)):
+		upc_matches = re.findall("^977(\d{7})", upc);
+		issn8 = upc_matches[1]+validate_issn8(upc_matches[1],True);
+	return issn8;
+def print_issn8(upc):
+	if(len(upc)>8): 
+		fix_matches = re.findall("^(\d{8})", upc); 
+		upc = fix_matches[1];
+	if(len(upc)>8 or strlen(upc)<8): 
+		return False;
+	if(not re.findall("^(\d{4})(\d{4})", upc)):
+		return False;
+	issn_matches = re.findall("^(\d{4})(\d{4})", upc);
+	issn_matches = issn_matches[0];
+	issn8 = issn_matches[0]+"-"+issn_matches[1];
+	return issn8;
+def print_issn13(upc):
+	if(len(upc)>13): 
+		re.findall("^(\d{13})", upc, fix_matches); 
+		upc = fix_matches[1];
+	if(len(upc)>13 or len(upc)<13): 
+		return False;
+	if(not re.findall("^(\d{3})(\d{4})(\d{4})(\d{2})", upc, issn_matches)):
+		return False;
+	issn_matches = re.findall("^(\d{3})(\d{4})(\d{4})(\d{2})", upc);
+	issn_matches = issn_matches[0];
+	issn13 = issn_matches[0]+"-"+issn_matches[1]+"-"+issn_matches[2]+"-"+issn_matches[3];
+	return issn13;
+def print_convert_issn8_to_issn13(upc):
+	issn13 = print_issn13(convert_issn8_to_issn13(upc));
+	return issn13;
+def print_convert_issn13_to_issn8(upc):
+	issn8 = print_issn8(convert_issn13_to_issn8(upc));
+	return issn8;
+
+'''
 ISBN (International Standard Book Number)
 http://en.wikipedia.org/wiki/ISBN
 '''
