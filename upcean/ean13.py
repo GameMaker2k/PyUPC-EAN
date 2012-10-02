@@ -24,7 +24,7 @@ from upcean.validate import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
+def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False,hidetext=False):
 	upc_pieces = None; supplement = None;
 	if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
@@ -69,9 +69,10 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 	upc_img.fill();
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
-	drawColorText(upc_img, 10, 2, 56, upc_matches[0], text_color);
-	drawColorText(upc_img, 10, 16, 56, upc_matches[1], text_color);
-	drawColorText(upc_img, 10, 62, 56, upc_matches[2], text_color);
+	if(hidetext==False):
+		drawColorText(upc_img, 10, 2, 56, upc_matches[0], text_color);
+		drawColorText(upc_img, 10, 16, 56, upc_matches[1], text_color);
+		drawColorText(upc_img, 10, 62, 56, upc_matches[2], text_color);
 	drawColorLine(upc_img, 0, 10, 0, 48, alt_text_color);
 	drawColorLine(upc_img, 1, 10, 1, 48, alt_text_color);
 	drawColorLine(upc_img, 2, 10, 2, 48, alt_text_color);
@@ -90,6 +91,8 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 	LineStart = 14;
 	while (NumZero < len(LeftDigit)):
 		LineSize = 48;
+		if(hidetext==True):
+			LineSize = 54;
 		left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
 		left_text_color_g = [1, 1, 1, 1, 1, 1, 1];
 		if(int(LeftDigit[NumZero])==0): 
@@ -204,6 +207,8 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 	LineStart = 61;
 	while (NumZero < len(RightDigit)):
 		LineSize = 48;
+		if(hidetext==True):
+			LineSize = 54;
 		right_text_color = [0, 0, 0, 0, 0, 0, 0];
 		if(int(RightDigit[NumZero])==0): 
 			right_text_color = [1, 1, 1, 0, 0, 1, 0];
@@ -247,9 +252,9 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False):
 	drawColorLine(upc_img, 113, 10, 113, 48, alt_text_color);
 	drawColorLine(upc_img, 114, 10, 114, 48, alt_text_color);
 	if(supplement!=None and len(supplement)==2):
-		create_ean2(supplement,115,upc_img);
+		create_ean2(supplement,115,upc_img,hidetext);
 	if(supplement!=None and len(supplement)==5):
-		create_ean5(supplement,115,upc_img);
+		create_ean5(supplement,115,upc_img,hidetext);
 	upc_imgpat = cairo.SurfacePattern(upc_preimg);
 	scaler = cairo.Matrix();
 	scaler.scale(1/int(resize),1/int(resize));

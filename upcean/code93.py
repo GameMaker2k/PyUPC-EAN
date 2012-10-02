@@ -21,7 +21,7 @@ import cairo, re, upcean.precairo;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 
-def create_code93(upc,outfile="./itf14.png",resize=1,hidecd=False):
+def create_code93(upc,outfile="./itf14.png",resize=1,hidecd=False,hidetext=False):
 	if(len(upc) < 1): 
 		return False;
 	if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
@@ -68,33 +68,36 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hidecd=False):
 	upc_img.fill();
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
-	NumTxtZero = 0; 
-	LineTxtStart = 16;
-	while (NumTxtZero < len(upc_print)):
-		drawColorText(upc_img, 10, LineTxtStart, 57, upc_print[NumTxtZero], text_color);
-		LineTxtStart += 9;
-		NumTxtZero += 1;
-	drawColorLine(upc_img, 0, 4, 0, 48, alt_text_color);
-	drawColorLine(upc_img, 1, 4, 1, 48, alt_text_color);
-	drawColorLine(upc_img, 2, 4, 2, 48, alt_text_color);
-	drawColorLine(upc_img, 3, 4, 3, 48, alt_text_color);
-	drawColorLine(upc_img, 4, 4, 4, 48, alt_text_color);
-	drawColorLine(upc_img, 5, 4, 5, 48, alt_text_color);
-	drawColorLine(upc_img, 6, 4, 6, 48, alt_text_color);
-	drawColorLine(upc_img, 7, 4, 7, 48, alt_text_color);
-	drawColorLine(upc_img, 8, 4, 8, 48, alt_text_color);
-	drawColorLine(upc_img, 9, 4, 9, 48, text_color);
-	drawColorLine(upc_img, 10, 4, 10, 48, alt_text_color);
-	drawColorLine(upc_img, 11, 4, 11, 48, text_color);
-	drawColorLine(upc_img, 12, 4, 12, 48, alt_text_color);
-	drawColorLine(upc_img, 13, 4, 13, 48, text_color);
-	drawColorLine(upc_img, 14, 4, 14, 48, text_color);
-	drawColorLine(upc_img, 15, 4, 15, 48, text_color);
-	drawColorLine(upc_img, 16, 4, 16, 48, text_color);
-	drawColorLine(upc_img, 17, 4, 17, 48, alt_text_color);
+	if(hidetext==False):
+		NumTxtZero = 0; 
+		LineTxtStart = 16;
+		while (NumTxtZero < len(upc_print)):
+			drawColorText(upc_img, 10, LineTxtStart, 57, upc_print[NumTxtZero], text_color);
+			LineTxtStart += 9;
+			NumTxtZero += 1;
+	LineSize = 48;
+	if(hidetext==True):
+		LineSize = 54;
+	drawColorLine(upc_img, 0, 4, 0, LineSize, alt_text_color);
+	drawColorLine(upc_img, 1, 4, 1, LineSize, alt_text_color);
+	drawColorLine(upc_img, 2, 4, 2, LineSize, alt_text_color);
+	drawColorLine(upc_img, 3, 4, 3, LineSize, alt_text_color);
+	drawColorLine(upc_img, 4, 4, 4, LineSize, alt_text_color);
+	drawColorLine(upc_img, 5, 4, 5, LineSize, alt_text_color);
+	drawColorLine(upc_img, 6, 4, 6, LineSize, alt_text_color);
+	drawColorLine(upc_img, 7, 4, 7, LineSize, alt_text_color);
+	drawColorLine(upc_img, 8, 4, 8, LineSize, alt_text_color);
+	drawColorLine(upc_img, 9, 4, 9, LineSize, text_color);
+	drawColorLine(upc_img, 10, 4, 10, LineSize, alt_text_color);
+	drawColorLine(upc_img, 11, 4, 11, LineSize, text_color);
+	drawColorLine(upc_img, 12, 4, 12, LineSize, alt_text_color);
+	drawColorLine(upc_img, 13, 4, 13, LineSize, text_color);
+	drawColorLine(upc_img, 14, 4, 14, LineSize, text_color);
+	drawColorLine(upc_img, 15, 4, 15, LineSize, text_color);
+	drawColorLine(upc_img, 16, 4, 16, LineSize, text_color);
+	drawColorLine(upc_img, 17, 4, 17, LineSize, alt_text_color);
 	NumZero = 0; 
 	LineStart = 18; 
-	LineSize = 48;
 	while (NumZero < len(upc_matches)):
 		left_text_color = [1, 0, 0, 0, 1, 0, 1, 0, 0];
 		if(upc_matches[NumZero]=="0"):
@@ -200,25 +203,25 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hidecd=False):
 			LineStart += 1;
 			InnerUPCNum += 1;
 		NumZero += 1;	
-	drawColorLine(upc_img, 18 + upc_size_add, 4, 18 + upc_size_add, 48, text_color);
-	drawColorLine(upc_img, 19 + upc_size_add, 4, 19 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 20 + upc_size_add, 4, 20 + upc_size_add, 48, text_color);
-	drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, 48, text_color);
-	drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, 48, text_color);
-	drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, 48, text_color);
-	drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, 48, text_color);
-	drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 27 + upc_size_add, 4, 27+ upc_size_add, 48, text_color);
-	drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 31 + upc_size_add, 4, 31 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 32 + upc_size_add, 4, 32 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 33 + upc_size_add, 4, 33 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 34 + upc_size_add, 4, 34 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 35 + upc_size_add, 4, 35 + upc_size_add, 48, alt_text_color);
-	drawColorLine(upc_img, 36 + upc_size_add, 4, 36 + upc_size_add, 48, alt_text_color);
+	drawColorLine(upc_img, 18 + upc_size_add, 4, 18 + upc_size_add, LineSize, text_color);
+	drawColorLine(upc_img, 19 + upc_size_add, 4, 19 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 20 + upc_size_add, 4, 20 + upc_size_add, LineSize, text_color);
+	drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, text_color);
+	drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, text_color);
+	drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, text_color);
+	drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, text_color);
+	drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 27 + upc_size_add, 4, 27+ upc_size_add, LineSize, text_color);
+	drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 31 + upc_size_add, 4, 31 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 32 + upc_size_add, 4, 32 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 33 + upc_size_add, 4, 33 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 34 + upc_size_add, 4, 34 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 35 + upc_size_add, 4, 35 + upc_size_add, LineSize, alt_text_color);
+	drawColorLine(upc_img, 36 + upc_size_add, 4, 36 + upc_size_add, LineSize, alt_text_color);
 	upc_imgpat = cairo.SurfacePattern(upc_preimg);
 	scaler = cairo.Matrix();
 	scaler.scale(1/int(resize),1/int(resize));

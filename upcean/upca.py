@@ -25,7 +25,7 @@ from upcean.ean2 import *;
 from upcean.ean5 import *;
 
 
-def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
+def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False,hidetext=False):
 	upc_pieces = None; supplement = None;
 	if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
@@ -69,11 +69,12 @@ def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
 	upc_img.fill();
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
-	drawColorText(upc_img, 10, 0, 56, upc_matches[0], text_color);
-	drawColorText(upc_img, 10, 20, 56, upc_matches[1], text_color);
-	drawColorText(upc_img, 10, 59, 56, upc_matches[2], text_color);
-	if(hidecd!=None and hidecd!=True):
-		drawColorText(upc_img, 10, 104, 56, upc_matches[3], text_color);
+	if(hidetext==False):
+		drawColorText(upc_img, 10, 0, 56, upc_matches[0], text_color);
+		drawColorText(upc_img, 10, 20, 56, upc_matches[1], text_color);
+		drawColorText(upc_img, 10, 59, 56, upc_matches[2], text_color);
+		if(hidecd!=None and hidecd!=True):
+			drawColorText(upc_img, 10, 104, 56, upc_matches[3], text_color);
 	drawColorLine(upc_img, 0, 10, 0, 48, alt_text_color);
 	drawColorLine(upc_img, 1, 10, 1, 48, alt_text_color);
 	drawColorLine(upc_img, 2, 10, 2, 48, alt_text_color);
@@ -92,6 +93,8 @@ def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
 		if(NumZero!=0): 
 			LineSize = 48;
 		if(NumZero==0): 
+			LineSize = 54;
+		if(hidetext==True):
 			LineSize = 54;
 		left_text_color = [0, 0, 0, 0, 0, 0, 0];
 		if(int(LeftDigit[NumZero])==0): 
@@ -134,6 +137,8 @@ def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
 		if(NumZero!=5): 
 			LineSize = 48;
 		if(NumZero==5): 
+			LineSize = 54;
+		if(hidetext==True):
 			LineSize = 54;
 		right_text_color = [0, 0, 0, 0, 0, 0, 0];
 		if(int(RightDigit[NumZero])==0): 
@@ -178,9 +183,9 @@ def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False):
 	drawColorLine(upc_img, 111, 10, 111, 48, alt_text_color);
 	drawColorLine(upc_img, 112, 10, 112, 48, alt_text_color);
 	if(supplement!=None and len(supplement)==2): 
-		create_ean2(supplement,113,upc_img);
+		create_ean2(supplement,113,upc_img,hidetext);
 	if(supplement!=None and len(supplement)==5): 
-		create_ean5(supplement,113,upc_img);
+		create_ean5(supplement,113,upc_img,hidetext);
 	upc_imgpat = cairo.SurfacePattern(upc_preimg);
 	scaler = cairo.Matrix();
 	scaler.scale(1/int(resize),1/int(resize));

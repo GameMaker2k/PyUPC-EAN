@@ -19,7 +19,7 @@
 import cairo, re, upcean.precairo;
 from upcean.precairo import *;
 
-def create_ean2(upc,offsetadd,imgres):
+def create_ean2(upc,offsetadd,imgres,hidetext=False):
 	if(len(upc)>2 or len(upc)<2): 
 		return False;
 	upc_matches = re.findall("(\d{2})", upc);
@@ -29,17 +29,26 @@ def create_ean2(upc,offsetadd,imgres):
 	LeftDigit = list(upc_matches[0]);
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
-	drawColorText(imgres, 10, 3 + offsetadd, 56, LeftDigit[0], text_color);
-	drawColorText(imgres, 10, 11 + offsetadd, 56, LeftDigit[1], text_color);
-	drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, 48, alt_text_color);
-	drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, 48, text_color);
-	drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, 48, alt_text_color);
-	drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, 48, text_color);
-	drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, 48, text_color);
+	if(hidetext==False):
+		drawColorText(imgres, 10, 3 + offsetadd, 56, LeftDigit[0], text_color);
+		drawColorText(imgres, 10, 11 + offsetadd, 56, LeftDigit[1], text_color);
+		drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, 48, alt_text_color);
+		drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, 48, text_color);
+		drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, 48, alt_text_color);
+		drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, 48, text_color);
+		drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, 48, text_color);
+	if(hidetext==True):
+		drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, 54, alt_text_color);
+		drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, 54, text_color);
+		drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, 54, alt_text_color);
+		drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, 54, text_color);
+		drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, 54, text_color);
 	NumZero = 0; 
 	LineStart = 5 + offsetadd;
 	while (NumZero < len(LeftDigit)):
 		LineSize = 48;
+		if(hidetext==True):
+			LineSize = 54;
 		left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
 		left_text_color_g = [1, 1, 1, 1, 1, 1, 1];
 		if(int(LeftDigit[NumZero])==0): 

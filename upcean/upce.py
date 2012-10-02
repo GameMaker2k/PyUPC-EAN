@@ -25,7 +25,7 @@ from upcean.ean2 import *;
 from upcean.ean5 import *;
 
 
-def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False):
+def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False,hidetext=False):
 	upc_pieces = None; supplement = None;
 	if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
@@ -72,10 +72,11 @@ def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False):
 	upc_img.fill();
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
-	drawColorText(upc_img, 10, 0, 56, upc_matches[0], text_color);
-	drawColorText(upc_img, 10, 14, 56, upc_matches[1], text_color);
-	if(hidecd!=None and hidecd!=True):
-		drawColorText(upc_img, 10, 60, 56, upc_matches[2], text_color);
+	if(hidetext==False):
+		drawColorText(upc_img, 10, 0, 56, upc_matches[0], text_color);
+		drawColorText(upc_img, 10, 14, 56, upc_matches[1], text_color);
+		if(hidecd!=None and hidecd!=True):
+			drawColorText(upc_img, 10, 60, 56, upc_matches[2], text_color);
 	drawColorLine(upc_img, 0, 10, 0, 48, alt_text_color);
 	drawColorLine(upc_img, 1, 10, 1, 48, alt_text_color);
 	drawColorLine(upc_img, 2, 10, 2, 48, alt_text_color);
@@ -92,6 +93,8 @@ def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False):
 	LineStart = 12;
 	while (NumZero < len(LeftDigit)):
 		LineSize = 48;
+		if(hidetext==True):
+			LineSize = 54;
 		left_text_color = [0, 0, 0, 0, 0, 0, 0];
 		left_text_color_odd = [0, 0, 0, 0, 0, 0, 0];
 		left_text_color_even = [0, 0, 0, 0, 0, 0, 0];
@@ -291,9 +294,9 @@ def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False):
 	drawColorLine(upc_img, 67, 10, 67, 48, alt_text_color);
 	drawColorLine(upc_img, 68, 10, 68, 48, alt_text_color);
 	if(supplement!=None and len(supplement)==2):
-		create_ean2(supplement,69,upc_img);
+		create_ean2(supplement,69,upc_img,hidetext);
 	if(supplement!=None and len(supplement)==5):
-		create_ean5(supplement,69,upc_img);
+		create_ean5(supplement,69,upc_img,hidetext);
 	upc_imgpat = cairo.SurfacePattern(upc_preimg);
 	scaler = cairo.Matrix();
 	scaler.scale(1/int(resize),1/int(resize));

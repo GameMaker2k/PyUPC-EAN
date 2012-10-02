@@ -21,7 +21,7 @@ import cairo, re, upcean.precairo;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 
-def create_itf14(upc,outfile="./itf14.png",resize=1,hidecd=False):
+def create_itf14(upc,outfile="./itf14.png",resize=1,hidecd=False,hidetext=False):
 	if(len(upc) % 2):
 		return False;
 	if(len(upc) < 6):
@@ -47,15 +47,16 @@ def create_itf14(upc,outfile="./itf14.png",resize=1,hidecd=False):
 	upc_img.fill();
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
-	NumTxtZero = 0; 
-	LineTxtStart = 21;
-	while (NumTxtZero < len(upc_matches)):
-		ArrayDigit = list(upc_matches[NumTxtZero]);
-		drawColorText(upc_img, 10, LineTxtStart, 59, ArrayDigit[0], text_color);
-		LineTxtStart += 9;
-		drawColorText(upc_img, 10, LineTxtStart, 59, ArrayDigit[1], text_color);
-		LineTxtStart += 9;
-		NumTxtZero += 1;
+	if(hidetext==False):
+		NumTxtZero = 0; 
+		LineTxtStart = 21;
+		while (NumTxtZero < len(upc_matches)):
+			ArrayDigit = list(upc_matches[NumTxtZero]);
+			drawColorText(upc_img, 10, LineTxtStart, 59, ArrayDigit[0], text_color);
+			LineTxtStart += 9;
+			drawColorText(upc_img, 10, LineTxtStart, 59, ArrayDigit[1], text_color);
+			LineTxtStart += 9;
+			NumTxtZero += 1;
 	drawColorLine(upc_img, 4, 4, 4, 48, alt_text_color);
 	drawColorLine(upc_img, 5, 4, 5, 48, alt_text_color);
 	drawColorLine(upc_img, 6, 4, 6, 48, alt_text_color);

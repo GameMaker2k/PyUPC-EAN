@@ -24,7 +24,7 @@ from upcean.validate import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
+def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False,hidetext=False):
 	upc_pieces = None; supplement = None;
 	if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
@@ -70,10 +70,11 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
 	upc_img.fill();
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
-	drawColorText(upc_img, 10, 10, 56, LeftLeftDigit, text_color);
-	drawColorText(upc_img, 10, 23, 56, LeftRightDigit, text_color);
-	drawColorText(upc_img, 10, 42, 56, RightLeftDigit, text_color);
-	drawColorText(upc_img, 10, 55, 56, RightRightDigit, text_color);
+	if(hidetext==False):
+		drawColorText(upc_img, 10, 10, 56, LeftLeftDigit, text_color);
+		drawColorText(upc_img, 10, 23, 56, LeftRightDigit, text_color);
+		drawColorText(upc_img, 10, 42, 56, RightLeftDigit, text_color);
+		drawColorText(upc_img, 10, 55, 56, RightRightDigit, text_color);
 	drawColorLine(upc_img, 0, 10, 0, 48, alt_text_color);
 	drawColorLine(upc_img, 1, 10, 1, 48, alt_text_color);
 	drawColorLine(upc_img, 2, 10, 2, 48, alt_text_color);
@@ -88,6 +89,8 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
 	LineStart = 10;
 	while (NumZero < len(LeftDigit)):
 		LineSize = 48;
+		if(hidetext==True):
+			LineSize = 54;
 		left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
 		left_text_color_g = [1, 1, 1, 1, 1, 1, 1];
 		if(int(LeftDigit[NumZero])==0): 
@@ -198,10 +201,11 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
 	drawColorLine(upc_img, 40, 10, 40, 54, alt_text_color);
 	drawColorLine(upc_img, 41, 10, 41, 54, text_color);
 	drawColorLine(upc_img, 42, 10, 42, 54, alt_text_color);
-
 	NumZero = 0; LineStart = 43;
 	while (NumZero < len(RightDigit)):
 		LineSize = 48;
+		if(hidetext==True):
+			LineSize = 54;
 		right_text_color = [0, 0, 0, 0, 0, 0, 0];
 		if(int(RightDigit[NumZero])==0): 
 			right_text_color = [1, 1, 1, 0, 0, 1, 0];
@@ -246,9 +250,9 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False):
 	drawColorLine(upc_img, 81, 10, 81, 48, alt_text_color);
 	drawColorLine(upc_img, 82, 10, 82, 48, alt_text_color);
 	if(supplement!=None and len(supplement)==2):
-		create_ean2(supplement,83,upc_img);
+		create_ean2(supplement,83,upc_img,hidetext);
 	if(supplement!=None and len(supplement)==5):
-		create_ean5(supplement,83,upc_img);
+		create_ean5(supplement,83,upc_img,hidetext);
 	upc_imgpat = cairo.SurfacePattern(upc_preimg);
 	scaler = cairo.Matrix();
 	scaler.scale(1/int(resize),1/int(resize));
