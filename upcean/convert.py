@@ -300,7 +300,7 @@ def print_issn8(upc):
 	if(len(upc)>8): 
 		fix_matches = re.findall("^(\d{8})", upc); 
 		upc = fix_matches[1];
-	if(len(upc)>8 or strlen(upc)<8): 
+	if(len(upc)>8 or len(upc)<8): 
 		return False;
 	if(not re.findall("^(\d{4})(\d{4})", upc)):
 		return False;

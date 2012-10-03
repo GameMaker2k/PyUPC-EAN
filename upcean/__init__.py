@@ -45,16 +45,16 @@ def fix_barcode_checksum(upc):
 	if(len(upc)==13): 
 		return upc+validate_itf14(upc,true);
 	return False;
-def create_barcode(upc,outfile="./barcode.png",resize=1,hidecd=False,hidetext=False):
+def create_barcode(upc,outfile="./barcode.png",resize=1,hidecd=False,hidetext=False,barheight=[48, 54]):
 	if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
 		resize = 1;
 	if(len(upc)==7 or len(upc)==8):
-		return create_upce(upc,outfile,resize,hidecd,hidetext);
+		return create_upce(upc,outfile,resize,hidecd,hidetext,barheight);
 	if(len(upc)==11 or len(upc)==12):
-		return create_upca(upc,outfile,resize,hidecd,hidetext);
+		return create_upca(upc,outfile,resize,hidecd,hidetext,barheight);
 	if(len(upc)==13): 
-		return create_ean13(upc,outfile,resize,hidecd,hidetext);
+		return create_ean13(upc,outfile,resize,hidecd,hidetext,barheight);
 	if(len(upc)==14): 
-		return create_itf14(upc,outfile,resize,hidecd,hidetext);
+		return create_itf14(upc,outfile,resize,hidecd,hidetext,barheight);
 	return False;
 

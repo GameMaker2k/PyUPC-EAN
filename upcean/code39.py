@@ -21,7 +21,7 @@ import cairo, re, upcean.precairo;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 
-def create_code39(upc,outfile="./itf14.png",resize=1,hidecd=False,hidetext=False):
+def create_code39(upc,outfile="./itf14.png",resize=1,hidecd=False,hidetext=False,barheight=[48, 54]):
 	if(len(upc) < 1): 
 		return False;
 	if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
@@ -33,27 +33,27 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hidecd=False,hidetext=False
 	upc_size_add = (len(upc_matches) * 15) + (len(upc_matches) + 1);
 	if(len(upc_matches)<=0):
 		return False;
-	upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 48 + upc_size_add, 62);
+	upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 48 + upc_size_add, barheight[1] + 8);
 	upc_img = cairo.Context (upc_preimg);
 	upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-	upc_img.rectangle(0, 0, 48 + upc_size_add, 62);
+	upc_img.rectangle(0, 0, 48 + upc_size_add, barheight[1] + 8);
 	upc_img.set_source_rgb(256, 256, 256);
 	upc_img.fill();
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
 	if(hidetext==False):
-		drawColorText(upc_img, 10, 12, 58, "*", text_color);
+		drawColorText(upc_img, 10, 12, barheight[1] + 4, "*", text_color);
 		NumTxtZero = 0; 
 		LineTxtStart = 28;
 		while (NumTxtZero < len(upc_matches)):
-			drawColorText(upc_img, 10, LineTxtStart, 57, upc_matches[NumTxtZero], text_color);
+			drawColorText(upc_img, 10, LineTxtStart, barheight[1] + 3, upc_matches[NumTxtZero], text_color);
 			LineTxtStart += 16;
 			NumTxtZero += 1;
-	LineSize = 48;
+	LineSize = barheight[0];
 	if(hidetext==True):
-		LineSize = 54;
+		LineSize = barheight[1];
 	if(hidetext==False):
-		drawColorText(upc_img, 10, LineTxtStart, 58, "*", text_color);
+		drawColorText(upc_img, 10, LineTxtStart, barheight[1] + 4, "*", text_color);
 	drawColorLine(upc_img, 0, 4, 0, LineSize, alt_text_color);
 	drawColorLine(upc_img, 1, 4, 1, LineSize, alt_text_color);
 	drawColorLine(upc_img, 2, 4, 2, LineSize, alt_text_color);
@@ -225,7 +225,7 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hidecd=False,hidetext=False
 	scaler.scale(1/int(resize),1/int(resize));
 	upc_imgpat.set_matrix(scaler);
 	upc_imgpat.set_filter(cairo.FILTER_BEST);
-	new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 + upc_size_add) * int(resize), 62 * int(resize));
+	new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 + upc_size_add) * int(resize), (barheight[1] + 8) * int(resize));
 	new_upc_img = cairo.Context(new_upc_preimg);
 	new_upc_img.set_source(upc_imgpat);
 	new_upc_img.paint();

@@ -17,15 +17,16 @@
 '''
 
 from __future__ import division;
-import cairo, re, upcean.precairo, upcean.validate;
+import cairo, re, upcean.precairo, upcean.validate, upcean.convert;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 from upcean.validate import *;
+from upcean.convert import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
 
-def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False,hidetext=False):
+def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False,hidetext=False,barheight=[48, 54]):
 	upc_pieces = None; supplement = None;
 	if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
 		upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
@@ -64,37 +65,37 @@ def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False,hidetext=False):
 		addonsize = 29;
 	if(supplement!=None and len(supplement)==5): 
 		addonsize = 56;
-	upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 69 + addonsize, 62);
+	upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 69 + addonsize, barheight[1] + 8);
 	upc_img = cairo.Context (upc_preimg);
 	upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-	upc_img.rectangle(0, 0, 69 + addonsize, 62);
+	upc_img.rectangle(0, 0, 69 + addonsize, barheight[1] + 8);
 	upc_img.set_source_rgb(256, 256, 256);
 	upc_img.fill();
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
 	if(hidetext==False):
-		drawColorText(upc_img, 10, 0, 56, upc_matches[0], text_color);
-		drawColorText(upc_img, 10, 14, 56, upc_matches[1], text_color);
+		drawColorText(upc_img, 10, 0, barheight[1] + 2, upc_matches[0], text_color);
+		drawColorText(upc_img, 10, 14, barheight[1] + 2, upc_matches[1], text_color);
 		if(hidecd!=None and hidecd!=True):
-			drawColorText(upc_img, 10, 60, 56, upc_matches[2], text_color);
-	drawColorLine(upc_img, 0, 10, 0, 48, alt_text_color);
-	drawColorLine(upc_img, 1, 10, 1, 48, alt_text_color);
-	drawColorLine(upc_img, 2, 10, 2, 48, alt_text_color);
-	drawColorLine(upc_img, 3, 10, 3, 48, alt_text_color);
-	drawColorLine(upc_img, 4, 10, 4, 48, alt_text_color);
-	drawColorLine(upc_img, 5, 10, 5, 48, alt_text_color);
-	drawColorLine(upc_img, 6, 10, 6, 48, alt_text_color);
-	drawColorLine(upc_img, 7, 10, 7, 48, alt_text_color);
-	drawColorLine(upc_img, 8, 10, 8, 48, alt_text_color);
-	drawColorLine(upc_img, 9, 10, 9, 54, text_color);
-	drawColorLine(upc_img, 10, 10, 10, 54, alt_text_color);
-	drawColorLine(upc_img, 11, 10, 11, 54, text_color);
+			drawColorText(upc_img, 10, 60, barheight[1] + 2, upc_matches[2], text_color);
+	drawColorLine(upc_img, 0, 10, 0, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 1, 10, 1, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 2, 10, 2, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 3, 10, 3, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 4, 10, 4, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 5, 10, 5, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 6, 10, 6, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 7, 10, 7, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 8, 10, 8, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 9, 10, 9, barheight[1], text_color);
+	drawColorLine(upc_img, 10, 10, 10, barheight[1], alt_text_color);
+	drawColorLine(upc_img, 11, 10, 11, barheight[1], text_color);
 	NumZero = 0; 
 	LineStart = 12;
 	while (NumZero < len(LeftDigit)):
-		LineSize = 48;
+		LineSize = barheight[0];
 		if(hidetext==True):
-			LineSize = 54;
+			LineSize = barheight[1];
 		left_text_color = [0, 0, 0, 0, 0, 0, 0];
 		left_text_color_odd = [0, 0, 0, 0, 0, 0, 0];
 		left_text_color_even = [0, 0, 0, 0, 0, 0, 0];
@@ -278,31 +279,31 @@ def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False,hidetext=False):
 			LineStart += 1;
 			InnerUPCNum += 1;
 		NumZero += 1;
-	drawColorLine(upc_img, 54, 10, 54, 54, alt_text_color);
-	drawColorLine(upc_img, 55, 10, 55, 54, text_color);
-	drawColorLine(upc_img, 56, 10, 56, 54, alt_text_color);
-	drawColorLine(upc_img, 57, 10, 57, 54, text_color);
-	drawColorLine(upc_img, 58, 10, 58, 54, alt_text_color);
-	drawColorLine(upc_img, 59, 10, 59, 54, text_color);
-	drawColorLine(upc_img, 60, 10, 60, 48, alt_text_color);
-	drawColorLine(upc_img, 61, 10, 61, 48, alt_text_color);
-	drawColorLine(upc_img, 62, 10, 62, 48, alt_text_color);
-	drawColorLine(upc_img, 63, 10, 63, 48, alt_text_color);
-	drawColorLine(upc_img, 64, 10, 64, 48, alt_text_color);
-	drawColorLine(upc_img, 65, 10, 65, 48, alt_text_color);
-	drawColorLine(upc_img, 66, 10, 66, 48, alt_text_color);
-	drawColorLine(upc_img, 67, 10, 67, 48, alt_text_color);
-	drawColorLine(upc_img, 68, 10, 68, 48, alt_text_color);
+	drawColorLine(upc_img, 54, 10, 54, barheight[1], alt_text_color);
+	drawColorLine(upc_img, 55, 10, 55, barheight[1], text_color);
+	drawColorLine(upc_img, 56, 10, 56, barheight[1], alt_text_color);
+	drawColorLine(upc_img, 57, 10, 57, barheight[1], text_color);
+	drawColorLine(upc_img, 58, 10, 58, barheight[1], alt_text_color);
+	drawColorLine(upc_img, 59, 10, 59, barheight[1], text_color);
+	drawColorLine(upc_img, 60, 10, 60, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 61, 10, 61, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 62, 10, 62, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 63, 10, 63, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 64, 10, 64, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 65, 10, 65, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 66, 10, 66, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 67, 10, 67, barheight[0], alt_text_color);
+	drawColorLine(upc_img, 68, 10, 68, barheight[0], alt_text_color);
 	if(supplement!=None and len(supplement)==2):
-		create_ean2(supplement,69,upc_img,hidetext);
+		create_ean2(supplement,69,upc_img,hidetext,barheight);
 	if(supplement!=None and len(supplement)==5):
-		create_ean5(supplement,69,upc_img,hidetext);
+		create_ean5(supplement,69,upc_img,hidetext,barheight);
 	upc_imgpat = cairo.SurfacePattern(upc_preimg);
 	scaler = cairo.Matrix();
 	scaler.scale(1/int(resize),1/int(resize));
 	upc_imgpat.set_matrix(scaler);
 	upc_imgpat.set_filter(cairo.FILTER_BEST);
-	new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (69 + addonsize) * int(resize), 62 * int(resize));
+	new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (69 + addonsize) * int(resize), (barheight[1] + 8) * int(resize));
 	new_upc_img = cairo.Context(new_upc_preimg);
 	new_upc_img.set_source(upc_imgpat);
 	new_upc_img.paint();

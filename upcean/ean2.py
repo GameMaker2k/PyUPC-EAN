@@ -30,25 +30,22 @@ def create_ean2(upc,offsetadd,imgres,hidetext=False):
 	text_color = [0, 0, 0];
 	alt_text_color = [256, 256, 256];
 	if(hidetext==False):
-		drawColorText(imgres, 10, 3 + offsetadd, 56, LeftDigit[0], text_color);
-		drawColorText(imgres, 10, 11 + offsetadd, 56, LeftDigit[1], text_color);
-		drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, 48, alt_text_color);
-		drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, 48, text_color);
-		drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, 48, alt_text_color);
-		drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, 48, text_color);
-		drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, 48, text_color);
+		drawColorText(imgres, 10, 3 + offsetadd, barheight[1] + 2, LeftDigit[0], text_color);
+		drawColorText(imgres, 10, 11 + offsetadd, barheight[1] + 2, LeftDigit[1], text_color);
+	LineSize = barheight[0];
 	if(hidetext==True):
-		drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, 54, alt_text_color);
-		drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, 54, text_color);
-		drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, 54, alt_text_color);
-		drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, 54, text_color);
-		drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, 54, text_color);
+		LineSize = barheight[1];
+	drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, LineSize, alt_text_color);
+	drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, LineSize, text_color);
+	drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, LineSize, alt_text_color);
+	drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, LineSize, text_color);
+	drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, LineSize, text_color);
 	NumZero = 0; 
 	LineStart = 5 + offsetadd;
 	while (NumZero < len(LeftDigit)):
-		LineSize = 48;
+		LineSize = barheight[0];
 		if(hidetext==True):
-			LineSize = 54;
+			LineSize = barheight[1];
 		left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
 		left_text_color_g = [1, 1, 1, 1, 1, 1, 1];
 		if(int(LeftDigit[NumZero])==0): 
