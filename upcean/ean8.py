@@ -43,7 +43,7 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hidecd=False,hidetext=False,ba
 		resize = 1;
 	if(validate_ean8(upc)==False):
 		pre_matches = preg_match("^(\d{7})", upc); 
-		upc = pre_matches[0]+validate_ean8(pre_matches[0],true);
+		upc = pre_matches[0]+str(validate_ean8(pre_matches[0],true));
 	upc_matches = re.findall("(\d{4})(\d{4})", upc);
 	upc_matches = upc_matches[0];
 	if(len(upc_matches)<=0):

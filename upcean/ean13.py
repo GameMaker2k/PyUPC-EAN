@@ -42,7 +42,7 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hidecd=False,hidetext=False,
 	if(len(upc)==12 and validate_upca(upc)==True): 
 		upc = "0"+upc;
 	if(len(upc)==12 and validate_upca(upc)==False): 
-		upc = upc+validate_ean13(upc,true);
+		upc = upc+str(validate_ean13(upc,true));
 	if(len(upc)>13 or len(upc)<13): 
 		return False;
 	if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
