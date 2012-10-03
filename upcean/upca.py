@@ -47,8 +47,8 @@ def create_upca(upc,outfile="./upca.png",resize=1,hidecd=False,hidetext=False,ba
 	if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
 		resize = 1;
 	if(validate_upca(upc)==False):
-		pre_matches = re.findall("/^(\d{11})/", upc); 
-		upc = pre_matches[1]+validate_upca(pre_matches[1],True);
+		pre_matches = re.findall("^(\d{11})", upc); 
+		upc = pre_matches[0]+validate_upca(pre_matches[0],True);
 	upc_matches = re.findall("(\d{1})(\d{5})(\d{5})(\d{1})", upc);
 	if(len(upc_matches)<=0):
 		return False;
