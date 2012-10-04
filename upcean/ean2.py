@@ -19,7 +19,7 @@
 import cairo, re, upcean.precairo;
 from upcean.precairo import *;
 
-def create_ean2(upc,offsetadd,imgres,hidetext=False):
+def create_ean2(upc,offsetadd,imgres,hidetext=False,barheight=(48, 54)):
  upc = str(upc);
  if(len(upc)>2 or len(upc)<2): 
   return False;
