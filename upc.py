@@ -29,9 +29,11 @@ if(len(sys.argv)<2):
  while(True):
   if(sys.version_info[0]==2):
    cmdinput = raw_input(ps1);
+   pycode = {};
+   exec(str(cmdinput)) in pycode;
   if(sys.version_info[0]==3):
    cmdinput = input(ps1);
-  exec(str(cmdinput));
+   exec(str(cmdinput));
  sys.exit(0);
 
 if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[1]=="pyshell" or sys.argv[1]=="python"):
@@ -42,9 +44,11 @@ if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[
  while(True):
   if(sys.version_info[0]==2):
    cmdinput = raw_input(ps1);
+   pycode = {};
+   exec(str(cmdinput)) in pycode;
   if(sys.version_info[0]==3):
    cmdinput = input(ps1);
-  exec(str(cmdinput));
+   exec(str(cmdinput));
  sys.exit(0);
 
 if(sys.argv[1]=="shebang" or sys.argv[1]=="shabang" or sys.argv[1]=="hashbang" or sys.argv[1]=="poundbang" or sys.argv[1]=="hashexclam" or sys.argv[1]=="hashpling"):
@@ -53,7 +57,11 @@ if(sys.argv[1]=="shebang" or sys.argv[1]=="shabang" or sys.argv[1]=="hashbang" o
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   sys.exit(0);
  shebang = "".join(open(sys.argv[2], "r").readlines());
- exec(str(shebang));
+ if(sys.version_info[0]==2):
+  pycode = {};
+  exec(str(shebang)) in pycode;
+ if(sys.version_info[0]==3):
+  exec(str(shebang));
  sys.exit(0);
 
 if(sys.argv[1]=="check"):
