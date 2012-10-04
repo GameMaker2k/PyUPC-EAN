@@ -23,25 +23,27 @@ from upcean import *;
 taskfound=False;
 if(len(sys.argv)<2):
  taskfound=True;
+ ps1="PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ";
  cmdinput=None;
  print("PyShell "+sys.version+" on "+sys.platform+"\nLoaded Python module upcean "+upcean.__version__+"\n");
  while(True):
   if(sys.version_info[0]==2):
-   cmdinput = raw_input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
+   cmdinput = raw_input(ps1);
   if(sys.version_info[0]==3):
-   cmdinput = input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
+   cmdinput = input(ps1);
   exec(str(cmdinput));
  sys.exit(0);
 
 if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[1]=="pyshell" or sys.argv[1]=="python"):
  taskfound=True;
+ ps1="PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ";
  cmdinput=None;
  print("PyShell "+sys.version+" on "+sys.platform+"\nLoaded Python module upcean "+upcean.__version__+"\n");
  while(True):
   if(sys.version_info[0]==2):
-   cmdinput = raw_input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
+   cmdinput = raw_input(ps1);
   if(sys.version_info[0]==3):
-   cmdinput = input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
+   cmdinput = input(ps1);
   exec(str(cmdinput));
  sys.exit(0);
 
