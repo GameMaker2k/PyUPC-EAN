@@ -30,12 +30,6 @@ if(len(sys.argv)<2):
    cmdinput = raw_input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
   if(sys.version_info[0]==3):
    cmdinput = input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
-  if(str(cmdinput)=="quit" or str(cmdinput)=="exit" or str(cmdinput)=="end"):
-   break;
-  if(str(cmdinput)=="quit()" or str(cmdinput)=="exit()" or str(cmdinput)=="end()"):
-   break;
-  if(str(cmdinput)=="quit();" or str(cmdinput)=="exit();" or str(cmdinput)=="end();"):
-   break;
   exec(str(cmdinput));
  sys.exit(0);
 
@@ -48,12 +42,6 @@ if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[
    cmdinput = raw_input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
   if(sys.version_info[0]==3):
    cmdinput = input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
-  if(str(cmdinput)=="quit" or str(cmdinput)=="exit"):
-   break;
-  if(str(cmdinput)=="quit()" or str(cmdinput)=="exit()"):
-   break;
-  if(str(cmdinput)=="sys.exit(0);" or str(cmdinput)=="exit();"):
-   break;
   exec(str(cmdinput));
  sys.exit(0);
 
