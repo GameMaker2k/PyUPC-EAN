@@ -13,10 +13,11 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
+__version__ = "2.0.0";
 import sys, re, upcean.validate, upcean.convert, upcean.getprefix;
 import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code39, upcean.code93;
 '''
@@ -61,16 +62,16 @@ def fix_barcode_checksum(upc):
  if(len(upc)==13): 
   return upc+validate_itf14(upc,true);
  return False;
-def create_barcode(upc,outfile="./barcode.png",resize=1,hidecd=False,hidetext=False,barheight=[48, 54]):
+def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(len(upc)==7 or len(upc)==8):
-  return create_upce(upc,outfile,resize,hidecd,hidetext,barheight);
+  return create_upce(upc,outfile,resize,hideinfo,barheight);
  if(len(upc)==11 or len(upc)==12):
-  return create_upca(upc,outfile,resize,hidecd,hidetext,barheight);
+  return create_upca(upc,outfile,resize,hideinfo,barheight);
  if(len(upc)==13): 
-  return create_ean13(upc,outfile,resize,hidecd,hidetext,barheight);
+  return create_ean13(upc,outfile,resize,hideinfo,barheight);
  if(len(upc)==14): 
-  return create_itf14(upc,outfile,resize,hidecd,hidetext,barheight);
+  return create_itf14(upc,outfile,resize,hideinfo,barheight);
  return False;
 

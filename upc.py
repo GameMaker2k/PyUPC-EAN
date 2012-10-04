@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: upc.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 import sys, re, upcean;
@@ -321,8 +321,8 @@ if(sys.argv[1]=="gencoupon" or sys.argv[1]=="mkcoupon" or sys.argv[1]=="makecoup
 
 if(sys.argv[1]=="genupca" or sys.argv[1]=="mkupca" or sys.argv[1]=="makeupca" or sys.argv[1]=="genupc" or sys.argv[1]=="mkupc" or sys.argv[1]=="makeupc"):
  taskfound=True;
- if(sys.argv[4]==None):
-  sys.argv[4] = 1;
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
  if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
@@ -331,15 +331,15 @@ if(sys.argv[1]=="genupca" or sys.argv[1]=="mkupca" or sys.argv[1]=="makeupca" or
  if(len(sys.argv[2])==11):
   sys.argv[2] = fix_upca_checksum(argv[2]);
  if(len(sys.argv[2])==12):
-  create_upca(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_upca(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2])<12 or len(sys.argv[2])>12):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
 
 if(sys.argv[1]=="genupce" or sys.argv[1]=="mkupce" or sys.argv[1]=="makeupce"):
  taskfound=True;
- if(sys.argv[4]==None):
-  sys.argv[4] = 1;
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
  if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
@@ -348,15 +348,15 @@ if(sys.argv[1]=="genupce" or sys.argv[1]=="mkupce" or sys.argv[1]=="makeupce"):
  if(len(sys.argv[2])==7):
   sys.argv[2] = fix_upce_checksum(argv[2]);
  if(len(sys.argv[2])==8):
-  create_upce(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_upce(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2])<8 or len(sys.argv[2])>8):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
 
 if(sys.argv[1]=="genean13" or sys.argv[1]=="mkean13" or sys.argv[1]=="makeean13" or sys.argv[1]=="genean" or sys.argv[1]=="mkean" or sys.argv[1]=="makeean"):
  taskfound=True;
- if(sys.argv[4]==None):
-  sys.argv[4] = 1;
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
  if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
@@ -365,35 +365,35 @@ if(sys.argv[1]=="genean13" or sys.argv[1]=="mkean13" or sys.argv[1]=="makeean13"
  if(len(sys.argv[2])==12):
   sys.argv[2] = fix_ean13_checksum(argv[2]);
  if(len(sys.argv[2])==13):
-  create_ean13(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_ean13(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2])<13 or len(sys.argv[2])>13):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
 
 if(sys.argv[1]=="genean8" or sys.argv[1]=="mkean8" or sys.argv[1]=="makeean8"):
  taskfound=True;
- if(sys.argv[4]==None):
-  sys.argv[4] = 1;
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
  if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
  if(len(sys.argv[2])==13):
   sys.argv[2] = fix_itf14_checksum(argv[2]);
  if(len(sys.argv[2])==8):
-  create_ean8(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_ean8(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2])<8 or len(sys.argv[2])>8):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
 
 if(sys.argv[1]=="genitf" or sys.argv[1]=="mkitf" or sys.argv[1]=="makeitf"):
  taskfound=True;
- if(sys.argv[4]==None):
-  sys.argv[4] = 1;
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
  if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
  if(not len(sys.argv[2]) % 2 and len(sys.argv[2]) > 6):
-  create_itf(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_itf(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2]) % 2 or len(sys.argv[2]) < 6):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
@@ -401,51 +401,51 @@ if(sys.argv[1]=="genitf" or sys.argv[1]=="mkitf" or sys.argv[1]=="makeitf"):
 if(sys.argv[1]=="genitf14" or sys.argv[1]=="mkitf14" or sys.argv[1]=="makeitf14"):
  taskfound=True;
  if(sys.argv[4]==None):
-  sys.argv[4] = 1;
+  sys.argv.append(1);
  if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
  if(not len(sys.argv[2]) % 2 and len(sys.argv[2]) > 6):
-  create_itf14(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_itf14(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2]) % 2 or len(sys.argv[2]) < 6):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
 
 if(sys.argv[1]=="gencode39" or sys.argv[1]=="mkcode39" or sys.argv[1]=="makecode39"):
  taskfound=True;
- if(sys.argv[4]==None):
-  sys.argv[4] = 1;
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
  if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
  if(len(sys.argv[2]) > 1):
-  create_code39(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_code39(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2]) < 1):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
 
 if(sys.argv[1]=="gencode93" or sys.argv[1]=="mkcode93" or sys.argv[1]=="makecode93"):
  taskfound=True;
- if(sys.argv[4]==None):
-  sys.argv[4] = 1;
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
  if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
  if(len(sys.argv[2]) > 1):
-  create_code93(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_code93(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2]) < 1):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
 
 if(sys.argv[1]=="genbarcode" or sys.argv[1]=="mkbarcode" or sys.argv[1]=="makebarcode"):
  taskfound=True;
- if(sys.argv[4]==None):
-  sys.argv[4] = 1;
- if(len(sys.argv)<3):
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
+ if(len(sys.argv)<4):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
   quit();
  if(len(sys.argv[2])==8 or len(sys.argv[2])==12 or len(sys.argv[2])==13 or len(sys.argv[2])==14):
-  create_barcode(sys.argv[2],sys.argv[3],sys.argv[4],False,False,[48, 54]);
+  create_barcode(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
  if(len(sys.argv[2])<8):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
@@ -495,6 +495,16 @@ if(sys.argv[1]=="genismn13" or sys.argv[1]=="mkismn13" or sys.argv[1]=="makeismn
  if(len(sys.argv[2])>9 and len(sys.argv[2])<9):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   quit();
+
+if(sys.argv[1]=="exec" or sys.argv[1]=="run" or sys.argv[1]=="execute"):
+ taskfound=True;
+ argcmd = list(sys.argv);
+ argcmd[0:1] = [];
+ argcmd = list(argcmd);
+ argcmd[0:1] = [];
+ argcmd = list(argcmd);
+ argcmd = " ".join(argcmd);
+ exec(argcmd);
 
 if(taskfound==False):
  print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));

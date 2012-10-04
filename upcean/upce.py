@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upce.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: upce.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -26,7 +26,11 @@ from upcean.ean2 import *;
 from upcean.ean5 import *;
 
 
-def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False,hidetext=False,barheight=[48, 54]):
+def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ upc = str(upc);
+ hidesn = hideinfo[0];
+ hidecd = hideinfo[1];
+ hidetext = hideinfo[2];
  upc_pieces = None; supplement = None;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
@@ -71,10 +75,11 @@ def create_upce(upc,outfile="./upce.png",resize=1,hidecd=False,hidetext=False,ba
  upc_img.rectangle(0, 0, 69 + addonsize, barheight[1] + 8);
  upc_img.set_source_rgb(256, 256, 256);
  upc_img.fill();
- text_color = [0, 0, 0];
- alt_text_color = [256, 256, 256];
+ text_color = (0, 0, 0);
+ alt_text_color = (256, 256, 256);
  if(hidetext==False):
-  drawColorText(upc_img, 10, 0, barheight[1] + 2, upc_matches[0], text_color);
+  if(hidesn!=None and hidesn!=True):
+   drawColorText(upc_img, 10, 0, barheight[1] + 2, upc_matches[0], text_color);
   drawColorText(upc_img, 10, 14, barheight[1] + 2, upc_matches[1], text_color);
   if(hidecd!=None and hidecd!=True):
    drawColorText(upc_img, 10, 60, barheight[1] + 2, upc_matches[2], text_color);

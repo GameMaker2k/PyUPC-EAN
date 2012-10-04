@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -21,7 +21,11 @@ import cairo, re, upcean.precairo;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 
-def create_code39(upc,outfile="./itf14.png",resize=1,hidecd=False,hidetext=False,barheight=[48, 54]):
+def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ upc = str(upc);
+ hidesn = hideinfo[0];
+ hidecd = hideinfo[1];
+ hidetext = hideinfo[2];
  if(len(upc) < 1): 
   return False;
  if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
@@ -39,8 +43,8 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hidecd=False,hidetext=False
  upc_img.rectangle(0, 0, 48 + upc_size_add, barheight[1] + 8);
  upc_img.set_source_rgb(256, 256, 256);
  upc_img.fill();
- text_color = [0, 0, 0];
- alt_text_color = [256, 256, 256];
+ text_color = (0, 0, 0);
+ alt_text_color = (256, 256, 256);
  if(hidetext==False):
   drawColorText(upc_img, 10, 12, barheight[1] + 4, "*", text_color);
   NumTxtZero = 0; 

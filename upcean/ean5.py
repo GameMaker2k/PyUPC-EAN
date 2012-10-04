@@ -13,13 +13,14 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    FileInfo: ean5.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k 
+    FileInfo: ean5.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k 
 '''
 
 import cairo, re, upcean.precairo;
 from upcean.precairo import *;
 
-def create_ean5(upc,offsetadd,imgres,hidetext=False,barheight=[48, 54]):
+def create_ean5(upc,offsetadd,imgres,hidetext=False,barheight=(48, 54)):
+ upc = str(upc);
  if(len(upc)>5 or len(upc)<5): 
   return False;
  upc_matches = re.findall("(\d{5})", upc);
@@ -28,8 +29,8 @@ def create_ean5(upc,offsetadd,imgres,hidetext=False,barheight=[48, 54]):
  LeftDigit = list(upc_matches[0]);
  CheckSum = (int(LeftDigit[0]) * 3) + (int(LeftDigit[1]) * 9) + (int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3);
  CheckSum = CheckSum % 10;
- text_color = [0, 0, 0];
- alt_text_color = [256, 256, 256];
+ text_color = (0, 0, 0);
+ alt_text_color = (256, 256, 256);
  if(hidetext==False):
   drawColorText(imgres, 10, 5 + offsetadd, barheight[1] + 2, LeftDigit[0], text_color);
   drawColorText(imgres, 10, 14 + offsetadd, barheight[1] + 2, LeftDigit[1], text_color);
