@@ -16,7 +16,7 @@
     $FileInfo: upc.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
-import sys, re, upcean;
+import sys, re, readline, upcean;
 from sys import argv;
 from upcean import *;
 
@@ -38,6 +38,34 @@ if(len(sys.argv)<2):
    break;
   exec(str(cmdinput));
  quit();
+
+if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[1]=="pyshell" or sys.argv[1]=="python"):
+ taskfound=True;
+ cmdinput=None;
+ print("PyShell "+sys.version+" on "+sys.platform+"\nLoaded Python module upcean "+upcean.__version__+"\n");
+ while(True):
+  if(sys.version_info[0]==2):
+   cmdinput = raw_input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
+  if(sys.version_info[0]==3):
+   cmdinput = input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
+  if(str(cmdinput)=="quit" or str(cmdinput)=="exit"):
+   break;
+  if(str(cmdinput)=="quit()" or str(cmdinput)=="exit()"):
+   break;
+  if(str(cmdinput)=="quit();" or str(cmdinput)=="exit();"):
+   break;
+  exec(str(cmdinput));
+ quit();
+
+if(sys.argv[1]=="shebang" or sys.argv[1]=="shabang" or sys.argv[1]=="hashbang" or sys.argv[1]=="poundbang" or sys.argv[1]=="hashexclam" or sys.argv[1]=="hashpling"):
+ taskfound=True;
+ if(len(sys.argv)<3):
+  print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+  quit();
+ shebang = "".join(open(sys.argv[2], "r").readlines());
+ exec(str(shebang));
+ quit();
+
 if(sys.argv[1]=="check"):
  taskfound=True;
  if(len(sys.argv)<3):
@@ -518,24 +546,6 @@ if(sys.argv[1]=="exec" or sys.argv[1]=="run" or sys.argv[1]=="execute"):
  argcmd = list(argcmd);
  argcmd = " ".join(argcmd);
  exec(argcmd);
-
-if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[1]=="pyshell" or sys.argv[1]=="python"):
- taskfound=True;
- cmdinput=None;
- print("PyShell "+sys.version+" on "+sys.platform+"\nLoaded Python module upcean "+upcean.__version__+"\n");
- while(True):
-  if(sys.version_info[0]==2):
-   cmdinput = raw_input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
-  if(sys.version_info[0]==3):
-   cmdinput = input("PyShell "+str(sys.version_info[0])+"."+str(sys.version_info[1])+"."+str(sys.version_info[2])+"> ");
-  if(str(cmdinput)=="quit" or str(cmdinput)=="exit"):
-   break;
-  if(str(cmdinput)=="quit()" or str(cmdinput)=="exit()"):
-   break;
-  if(str(cmdinput)=="quit();" or str(cmdinput)=="exit();"):
-   break;
-  exec(str(cmdinput));
- quit();
 
 if(taskfound==False):
  print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
