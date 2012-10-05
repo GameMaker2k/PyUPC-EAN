@@ -27,26 +27,15 @@ if(len(sys.argv)<2):
  cmdinput=None;
  print("PyShell "+sys.version+" on "+sys.platform+"\nLoaded Python module upcean "+upcean.__version__+"\n");
  while(True):
-  if(sys.version_info[0]==2):
-   try:
-    cmdinput = raw_input(ps1);
-   except KeyboardInterrupt:
-    print("\nKeyboardInterrupt");
-   except EOFError:
-    print("");
-    sys.exit(0);
-   except Exception:
-    traceback.print_exc();
-  if(sys.version_info[0]==3):
-   try:
-    cmdinput = input(ps1);
-   except KeyboardInterrupt:
-    print("\nKeyboardInterrupt");
-   except EOFError:
-    print("");
-    sys.exit(0);
-   except Exception:
-    traceback.print_exc();
+  try:
+   cmdinput = code.InteractiveConsole().raw_input(ps1);
+  except KeyboardInterrupt:
+   print("\nKeyboardInterrupt");
+  except EOFError:
+   print("");
+   sys.exit(0);
+  except Exception:
+   traceback.print_exc();
   ## exec(str(cmdinput));
   try:
    exec(code.compile_command(str(cmdinput)));
@@ -60,26 +49,15 @@ if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[
  cmdinput=None;
  print("PyShell "+sys.version+" on "+sys.platform+"\nLoaded Python module upcean "+upcean.__version__+"\n");
  while(True):
-  if(sys.version_info[0]==2):
-   try:
-    cmdinput = raw_input(ps1);
-   except KeyboardInterrupt:
-    print("\nKeyboardInterrupt");
-   except EOFError:
-    print("");
-    sys.exit(0);
-   except Exception:
-    traceback.print_exc();
-  if(sys.version_info[0]==3):
-   try:
-    cmdinput = input(ps1);
-   except KeyboardInterrupt:
-    print("\nKeyboardInterrupt");
-   except EOFError:
-    print("");
-    sys.exit(0);
-   except Exception:
-    traceback.print_exc();
+  try:
+   cmdinput = code.InteractiveConsole().raw_input(ps1);
+  except KeyboardInterrupt:
+   print("\nKeyboardInterrupt");
+  except EOFError:
+   print("");
+   sys.exit(0);
+  except Exception:
+   traceback.print_exc();
   ## exec(str(cmdinput));
   try:
    exec(code.compile_command(str(cmdinput)));
