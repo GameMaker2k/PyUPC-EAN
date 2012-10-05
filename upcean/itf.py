@@ -17,7 +17,7 @@
 '''
 
 from __future__ import division;
-import cairo, re, upcean.precairo;
+import cairo, re, sys, upcean.precairo;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 
@@ -182,5 +182,10 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  del(upc_preimg);
- new_upc_preimg.write_to_png(outfile);
+ if(outfile=="-" and sys.version[0]=="2"):
+  new_upc_preimg.write_to_png(sys.stdout);
+ if(outfile=="-" and sys.version[0]=="3"):
+  new_upc_preimg.write_to_png(outfile);
+ if(outfile!="-"):
+  new_upc_preimg.write_to_png(outfile);
  return True;

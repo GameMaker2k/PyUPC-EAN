@@ -17,7 +17,7 @@
 '''
 
 from __future__ import division;
-import cairo, re, upcean.precairo, upcean.validate, upcean.convert;
+import cairo, re, sys, upcean.precairo, upcean.validate, upcean.convert;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 from upcean.validate import *;
@@ -271,5 +271,10 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  del(upc_preimg);
- new_upc_preimg.write_to_png(outfile);
+ if(outfile=="-" and sys.version[0]=="2"):
+  new_upc_preimg.write_to_png(sys.stdout);
+ if(outfile=="-" and sys.version[0]=="3"):
+  new_upc_preimg.write_to_png(outfile);
+ if(outfile!="-"):
+  new_upc_preimg.write_to_png(outfile);
  return True;
