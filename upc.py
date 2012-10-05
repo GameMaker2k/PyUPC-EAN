@@ -16,7 +16,7 @@
     $FileInfo: upc.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
-import sys, code, re, readline, upcean;
+import sys, traceback, code, re, readline, upcean;
 from sys import argv;
 from upcean import *;
 
@@ -28,11 +28,30 @@ if(len(sys.argv)<2):
  print("PyShell "+sys.version+" on "+sys.platform+"\nLoaded Python module upcean "+upcean.__version__+"\n");
  while(True):
   if(sys.version_info[0]==2):
-   cmdinput = raw_input(ps1);
+   try:
+    cmdinput = raw_input(ps1);
+   except KeyboardInterrupt:
+    print("\nKeyboardInterrupt");
+   except EOFError:
+    print("");
+    sys.exit(0);
+   except Exception:
+    traceback.print_exc();
   if(sys.version_info[0]==3):
-   cmdinput = input(ps1);
+   try:
+    cmdinput = input(ps1);
+   except KeyboardInterrupt:
+    print("\nKeyboardInterrupt");
+   except EOFError:
+    print("");
+    sys.exit(0);
+   except Exception:
+    traceback.print_exc();
   ## exec(str(cmdinput));
-  exec(code.compile_command(str(cmdinput)));
+  try:
+   exec(code.compile_command(str(cmdinput)));
+  except Exception:
+   traceback.print_exc();
  sys.exit(0);
 
 if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[1]=="pyshell" or sys.argv[1]=="python"):
@@ -42,11 +61,30 @@ if(sys.argv[1]=="sh" or sys.argv[1]=="shell" or sys.argv[1]=="pysh" or sys.argv[
  print("PyShell "+sys.version+" on "+sys.platform+"\nLoaded Python module upcean "+upcean.__version__+"\n");
  while(True):
   if(sys.version_info[0]==2):
-   cmdinput = raw_input(ps1);
+   try:
+    cmdinput = raw_input(ps1);
+   except KeyboardInterrupt:
+    print("\nKeyboardInterrupt");
+   except EOFError:
+    print("");
+    sys.exit(0);
+   except Exception:
+    traceback.print_exc();
   if(sys.version_info[0]==3):
-   cmdinput = input(ps1);
+   try:
+    cmdinput = input(ps1);
+   except KeyboardInterrupt:
+    print("\nKeyboardInterrupt");
+   except EOFError:
+    print("");
+    sys.exit(0);
+   except Exception:
+    traceback.print_exc();
   ## exec(str(cmdinput));
-  exec(code.compile_command(str(cmdinput)));
+  try:
+   exec(code.compile_command(str(cmdinput)));
+  except Exception:
+   traceback.print_exc();
  sys.exit(0);
 
 if(sys.argv[1]=="shebang" or sys.argv[1]=="shabang" or sys.argv[1]=="hashbang" or sys.argv[1]=="poundbang" or sys.argv[1]=="hashexclam" or sys.argv[1]=="hashpling"):
