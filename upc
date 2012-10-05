@@ -1,3 +1,19 @@
 #!/usr/bin/env sh
 
-PYTHONDONTWRITEBYTECODE="x" PYTHONPATH="$(pwd)/upcean" $(/usr/bin/which python) -b -B -x "./upc.py" "$@"
+if [ "$1" == "setup" ] || [ "$1" == "install" ]; then
+ if [ "$(whoami)" != "root" ]; then
+  echo "Run this command again as root to install.";
+  exit;
+ fi
+ PYPath="$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib());")/upcean";
+ echo $PYPath;
+ if [ ! -d "$PYPath" ]; then
+  mkdir "$PYPath";
+ fi
+ cp ./upcean/*.py $PYPath;
+ cd $PYPath/..
+ python -c "import upcean"
+else
+ PYTHONDONTWRITEBYTECODE="x" PYTHONPATH="$(pwd)/upcean" $(/usr/bin/which python) -b -B -x "./upc.py" "$@"
+fi
+

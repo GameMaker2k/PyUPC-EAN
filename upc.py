@@ -74,6 +74,11 @@ if(sys.argv[1]=="shebang" or sys.argv[1]=="shabang" or sys.argv[1]=="hashbang" o
  exec(compile(str(shebang), "", "exec"));
  sys.exit(0);
 
+if(sys.argv[1]=="version" or sys.argv[1]=="ver" or sys.argv[1]=="getversion" or sys.argv[1]=="getver"):
+ taskfound=True;
+ print(upcean.__version__);
+ sys.exit(0);
+
 if(sys.argv[1]=="check"):
  taskfound=True;
  if(len(sys.argv)<3):
