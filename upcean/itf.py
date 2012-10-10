@@ -32,14 +32,7 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- upc_matches = list(upc);
- upci = 0;
- new_upc_matches = [];
- while (upci < len(upc_matches) / 2):
-  new_upc_matches.append(upc_matches[upci*2]+upc_matches[(upci*2)+1]);
-  upci += 1;
- upc_matches = new_upc_matches;
- del(new_upc_matches);
+ upc_matches = re.findall("([0-9]{2})", upc);
  upc_size_add = len(upc_matches) * 18;
  if(len(upc_matches)<=0):
   return False;
