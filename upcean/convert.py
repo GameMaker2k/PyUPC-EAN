@@ -470,10 +470,14 @@ def print_convert_ismn13_to_ismn10(upc):
 // Source: http://barcodes.gs1us.org/GS1%20US%20BarCodes%20and%20eCom%20-%20The%20Global%20Language%20of%20Business.htm
 '''
 def make_vw_upca(code, price):
- if(len(price)>5):
+ if(len(code)>5):
   if(re.findall("^(\d{5})", code)):
    code_matches = re.findall("^(\d{5})", code);
    code = code_matches[0];
+ if(len(price)>4):
+  if(re.findall("^(\d{4})", price)):
+   price_matches = re.findall("^(\d{4})", price);
+   price = price_matches[0];
  pricecs = str(get_vw_price_checksum(price));
  vwupc = "2"+code+pricecs+price;
  vwupc = vwupc+str(validate_upca(vwupc, True));
