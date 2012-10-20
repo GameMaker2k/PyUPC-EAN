@@ -440,6 +440,19 @@ if(sys.argv[1]=="genean8" or sys.argv[1]=="mkean8" or sys.argv[1]=="makeean8"):
   print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
   sys.exit(0);
 
+if(sys.argv[1]=="genstf" or sys.argv[1]=="mkstf" or sys.argv[1]=="makestf"):
+ taskfound=True;
+ if(len(sys.argv)<5 or sys.argv[4]==None):
+  sys.argv.append(1);
+ if(len(sys.argv)<4):
+  print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+"\nerror: syntax error missing arguments"));
+  sys.exit(0);
+ if(len(sys.argv[2]) > 0):
+  create_stf(sys.argv[2],sys.argv[3],sys.argv[4],(False, False, False),(48, 54));
+ if(len(sys.argv[2]) < 1):
+  print(str("command: "+sys.argv[0]+"\narguments: "+sys.argv[1]+" "+sys.argv[2]+"\nerror: syntax error missing arguments"));
+  sys.exit(0);
+
 if(sys.argv[1]=="genitf" or sys.argv[1]=="mkitf" or sys.argv[1]=="makeitf"):
  taskfound=True;
  if(len(sys.argv)<5 or sys.argv[4]==None):

@@ -35,6 +35,7 @@ from upcean.upca import *;
 from upcean.upce import *;
 from upcean.ean13 import *;
 from upcean.ean8 import *;
+from upcean.stf import *;
 from upcean.itf import *;
 from upcean.itf14 import *;
 from upcean.code39 import *;
