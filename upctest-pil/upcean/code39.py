@@ -17,7 +17,7 @@
 '''
 
 from __future__ import division;
-import Image, ImageDraw, re, sys, upcean.prepil;
+import Image, ImageDraw, re, os, sys, upcean.prepil;
 import upcean.ean2, upcean.ean5;
 from upcean.prepil import *;
 
@@ -232,11 +232,18 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  '''
+ new_upc_img = upc_preimg.resize(((48 + upc_size_add) * int(resize), (barheight[1] + 8) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
+ '''
+ new_upc_img = upc_preimg.resize(((48 + upc_size_add) * int(resize), (barheight[1] + 8) * int(resize)), Image.NEAREST) # use nearest neighbour
+ new_upc_img = upc_preimg.resize(((48 + upc_size_add) * int(resize), (barheight[1] + 8) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
+ new_upc_img = upc_preimg.resize(((48 + upc_size_add) * int(resize), (barheight[1] + 8) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
+ '''
  del(upc_img);
+ del(upc_preimg);
  if(outfile=="-" and sys.version[0]=="2"):
-  upc_preimg.save(sys.stdout, "PNG");
+  new_upc_img.save(sys.stdout, "PNG");
  if(outfile=="-" and sys.version[0]=="3"):
-  upc_preimg.save(outfile, "PNG");
+  new_upc_img.save(outfile, re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper());
  if(outfile!="-"):
-  upc_preimg.save(outfile, "PNG");
+  new_upc_img.save(outfile, re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper());
  return True;
