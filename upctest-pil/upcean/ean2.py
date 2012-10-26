@@ -16,10 +16,10 @@
     $FileInfo: ean2.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
-import Image, ImageDraw, re, upcean.prepil;
+import Image, ImageDraw, ImageFont, re, upcean.prepil;
 from upcean.prepil import *;
 
-def create_ean2(upc,offsetadd,imgres,hidetext=False,barheight=(48, 54)):
+def create_ean2(upc,offsetadd,imgres,hidetext=False,barheight=(47, 53)):
  upc = str(upc);
  if(len(upc)>2 or len(upc)<2): 
   return False;
@@ -31,8 +31,8 @@ def create_ean2(upc,offsetadd,imgres,hidetext=False,barheight=(48, 54)):
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
  if(hidetext==False):
-  drawColorText(imgres, 10, 5 + offsetadd, barheight[1] - 4, LeftDigit[0], text_color);
-  drawColorText(imgres, 10, 13 + offsetadd, barheight[1] - 4, LeftDigit[1], text_color);
+  drawColorText(imgres, 10, 5 + offsetadd, barheight[0], LeftDigit[0], text_color);
+  drawColorText(imgres, 10, 13 + offsetadd, barheight[0], LeftDigit[1], text_color);
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];

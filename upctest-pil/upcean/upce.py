@@ -17,7 +17,7 @@
 '''
 
 from __future__ import division;
-import Image, ImageDraw, re, os, sys, upcean.prepil, upcean.validate, upcean.convert;
+import Image, ImageDraw, ImageFont, re, os, sys, upcean.prepil, upcean.validate, upcean.convert;
 import upcean.ean2, upcean.ean5;
 from upcean.prepil import *;
 from upcean.validate import *;
@@ -26,7 +26,7 @@ from upcean.ean2 import *;
 from upcean.ean5 import *;
 
 
-def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -69,17 +69,17 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
   addonsize = 29;
  if(supplement!=None and len(supplement)==5): 
   addonsize = 56;
- upc_preimg = Image.new("RGB", (69 + addonsize, barheight[1] + 8));
+ upc_preimg = Image.new("RGB", (69 + addonsize, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (69 + addonsize, barheight[1] + 8)], fill=(256, 256, 256));
+ upc_img.rectangle([(0, 0), (69 + addonsize, barheight[1] + 9)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
  if(hidetext==False):
   if(hidesn!=None and hidesn!=True):
-   drawColorText(upc_img, 10, 2, barheight[1] - 4, upc_matches[0], text_color);
-  drawColorText(upc_img, 10, 16, barheight[1] - 4, upc_matches[1], text_color);
+   drawColorText(upc_img, 10, 2, barheight[0], upc_matches[0], text_color);
+  drawColorText(upc_img, 10, 16, barheight[0], upc_matches[1], text_color);
   if(hidecd!=None and hidecd!=True):
-   drawColorText(upc_img, 10, 62, barheight[1] - 4, upc_matches[2], text_color);
+   drawColorText(upc_img, 10, 62, barheight[0], upc_matches[2], text_color);
  drawColorLine(upc_img, 0, 10, 0, barheight[0], alt_text_color);
  drawColorLine(upc_img, 1, 10, 1, barheight[0], alt_text_color);
  drawColorLine(upc_img, 2, 10, 2, barheight[0], alt_text_color);
@@ -306,16 +306,18 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
  scaler.scale(1/int(resize),1/int(resize));
  upc_imgpat.set_matrix(scaler);
  upc_imgpat.set_filter(cairo.FILTER_BEST);
- new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (69 + addonsize) * int(resize), (barheight[1] + 8) * int(resize));
+ new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize));
  new_upc_img = cairo.Context(new_upc_preimg);
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  '''
- new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 8) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
  '''
- new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 8) * int(resize)), Image.NEAREST) # use nearest neighbour
- new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 8) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
- new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 8) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
+ new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
+ '''
+ new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST) # use nearest neighbour
+ '''
+ new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
+ new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
  '''
  del(upc_img);
  del(upc_preimg);

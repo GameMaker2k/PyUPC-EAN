@@ -17,11 +17,11 @@
 '''
 
 from __future__ import division;
-import Image, ImageDraw, re, os, sys, upcean.prepil;
+import Image, ImageDraw, ImageFont, re, os, sys, upcean.prepil;
 import upcean.ean2, upcean.ean5;
 from upcean.prepil import *;
 
-def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -32,16 +32,16 @@ def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),b
  upc_size_add = len(upc_matches) * 14;
  if(len(upc_matches)<=0):
   return False;
- upc_preimg = Image.new("RGB", (46 + upc_size_add, barheight[0] + 14));
+ upc_preimg = Image.new("RGB", (46 + upc_size_add, barheight[0] + 15));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (46 + upc_size_add, barheight[0] + 14)], fill=(256, 256, 256));
+ upc_img.rectangle([(0, 0), (46 + upc_size_add, barheight[0] + 15)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
  if(hidetext==False):
   NumTxtZero = 0; 
   LineTxtStart = 24;
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10, LineTxtStart, (barheight[0] + 14) - 11, upc_matches[NumTxtZero], text_color);
+   drawColorText(upc_img, 10, LineTxtStart, barheight[0] + 1, upc_matches[NumTxtZero], text_color);
    LineTxtStart += 14;
    NumTxtZero += 1;
  drawColorLine(upc_img, 0, 4, 0, barheight[0], alt_text_color);
@@ -139,16 +139,18 @@ def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),b
  scaler.scale(1/int(resize),1/int(resize));
  upc_imgpat.set_matrix(scaler);
  upc_imgpat.set_filter(cairo.FILTER_BEST);
- new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (46 + upc_size_add) * int(resize), (barheight[0] + 14) * int(resize));
+ new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (46 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize));
  new_upc_img = cairo.Context(new_upc_preimg);
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  '''
- new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 14) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
  '''
- new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 14) * int(resize)), Image.NEAREST) # use nearest neighbour
- new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 14) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
- new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 14) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
+ new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
+ '''
+ new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST) # use nearest neighbour
+ '''
+ new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
+ new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
  '''
  del(upc_img);
  del(upc_preimg);

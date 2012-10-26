@@ -94,7 +94,7 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  NumZero = 0; 
  LineStart = 10;
  while (NumZero < len(LeftDigit)):
-  LineSize = 48;
+  LineSize = barheight[0];
   if(hidetext==True):
    LineSize = barheight[1];
   left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
@@ -209,7 +209,7 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 42, 10, 42, barheight[1], alt_text_color);
  NumZero = 0; LineStart = 43;
  while (NumZero < len(RightDigit)):
-  LineSize = 48;
+  LineSize = barheight[0];
   if(hidetext==True):
    LineSize = barheight[1];
   right_text_color = [0, 0, 0, 0, 0, 0, 0];

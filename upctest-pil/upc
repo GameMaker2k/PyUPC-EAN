@@ -14,6 +14,6 @@ if [ "$1" == "setup" ] || [ "$1" == "install" ]; then
  cd $PYPath/..
  python -c "import upcean"
 else
- PYTHONDONTWRITEBYTECODE="x" PYTHONPATH="$(pwd)/upcean" $(/usr/bin/which python) -b -B -x "./upc.py" "$@"
+ PYTHONDONTWRITEBYTECODE="x" PYTHONPATH="$(pwd)/upcean" $(/usr/bin/which python2) -b -B -x "./upc.py" "$@"
 fi
 

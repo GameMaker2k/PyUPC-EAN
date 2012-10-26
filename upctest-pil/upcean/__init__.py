@@ -67,7 +67,7 @@ def fix_barcode_checksum(upc):
  if(len(upc)==13): 
   return upc+validate_itf14(upc,true);
  return False;
-def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(len(upc)==7 or len(upc)==8):

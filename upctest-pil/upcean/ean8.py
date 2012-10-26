@@ -17,7 +17,7 @@
 '''
 
 from __future__ import division;
-import Image, ImageDraw, re, os, sys, upcean.prepil, upcean.validate, upcean.convert;
+import Image, ImageDraw, ImageFont, re, os, sys, upcean.prepil, upcean.validate, upcean.convert;
 import upcean.ean2, upcean.ean5;
 from upcean.prepil import *;
 from upcean.validate import *;
@@ -25,7 +25,7 @@ from upcean.convert import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -67,17 +67,17 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
   addonsize = 29;
  if(supplement!=None and len(supplement)==5): 
   addonsize = 56;
- upc_preimg = Image.new("RGB", (83 + addonsize, barheight[1] + 8));
+ upc_preimg = Image.new("RGB", (83 + addonsize, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (83 + addonsize, barheight[1] + 8)], fill=(256, 256, 256));
+ upc_img.rectangle([(0, 0), (83 + addonsize, barheight[1] + 9)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
  if(hidetext==False):
   if(hidesn!=None and hidesn!=True):
-   drawColorText(upc_img, 10, 12, barheight[1] - 4, LeftLeftDigit, text_color);
-  drawColorText(upc_img, 10, 25, barheight[1] - 4, LeftRightDigit, text_color);
-  drawColorText(upc_img, 10, 44, barheight[1] - 4, RightLeftDigit, text_color);
-  drawColorText(upc_img, 10, 57, barheight[1] - 4, RightRightDigit, text_color);
+   drawColorText(upc_img, 10, 12, barheight[0], LeftLeftDigit, text_color);
+  drawColorText(upc_img, 10, 25, barheight[0], LeftRightDigit, text_color);
+  drawColorText(upc_img, 10, 44, barheight[0], RightLeftDigit, text_color);
+  drawColorText(upc_img, 10, 57, barheight[0], RightRightDigit, text_color);
  drawColorLine(upc_img, 0, 10, 0, barheight[0], alt_text_color);
  drawColorLine(upc_img, 1, 10, 1, barheight[0], alt_text_color);
  drawColorLine(upc_img, 2, 10, 2, barheight[0], alt_text_color);
@@ -91,7 +91,7 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  NumZero = 0; 
  LineStart = 10;
  while (NumZero < len(LeftDigit)):
-  LineSize = 48;
+  LineSize = barheight[0];
   if(hidetext==True):
    LineSize = barheight[1];
   left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
@@ -206,7 +206,7 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 42, 10, 42, barheight[1], alt_text_color);
  NumZero = 0; LineStart = 43;
  while (NumZero < len(RightDigit)):
-  LineSize = 48;
+  LineSize = barheight[0];
   if(hidetext==True):
    LineSize = barheight[1];
   right_text_color = [0, 0, 0, 0, 0, 0, 0];
@@ -262,16 +262,18 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  scaler.scale(1/int(resize),1/int(resize));
  upc_imgpat.set_matrix(scaler);
  upc_imgpat.set_filter(cairo.FILTER_BEST);
- new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (83 + addonsize) * int(resize), (barheight[1] + 8) * int(resize));
+ new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize));
  new_upc_img = cairo.Context(new_upc_preimg);
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  '''
- new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 8) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
  '''
- new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 8) * int(resize)), Image.NEAREST) # use nearest neighbour
- new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 8) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
- new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 8) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
+ new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
+ '''
+ new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST) # use nearest neighbour
+ '''
+ new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
+ new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
  '''
  del(upc_img);
  del(upc_preimg);

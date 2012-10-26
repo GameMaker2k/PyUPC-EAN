@@ -96,7 +96,7 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
  NumZero = 0; 
  LineStart = 14;
  while (NumZero < len(LeftDigit)):
-  LineSize = 48;
+  LineSize = barheight[0];
   if(hidetext==True):
    LineSize = barheight[1];
   left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
@@ -212,7 +212,7 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
  NumZero = 0; 
  LineStart = 61;
  while (NumZero < len(RightDigit)):
-  LineSize = 48;
+  LineSize = barheight[0];
   if(hidetext==True):
    LineSize = barheight[1];
   right_text_color = [0, 0, 0, 0, 0, 0, 0];
