@@ -192,7 +192,7 @@ def create_ean5(upc,offsetadd,imgres,hidetext=False,barheight=(47, 53)):
     drawColorLine(imgres, LineStart, 10, LineStart, LineSize, alt_text_color);
    LineStart += 1;
    InnerUPCNum += 1;
-  if(NumZero < 5):
+  if(NumZero < 4):
    drawColorLine(imgres, LineStart, 10, LineStart, LineSize, alt_text_color);
    LineStart += 1;
    drawColorLine(imgres, LineStart, 10, LineStart, LineSize, text_color);
