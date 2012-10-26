@@ -169,7 +169,7 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
  scaler = cairo.Matrix();
  scaler.scale(1/int(resize),1/int(resize));
  upc_imgpat.set_matrix(scaler);
- upc_imgpat.set_filter(cairo.FILTER_BEST);
+ upc_imgpat.set_filter(cairo.FILTER_NEAREST);
  new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (39 + upc_size_add) * int(resize), (barheight[0] + 14) * int(resize));
  new_upc_img = cairo.Context(new_upc_preimg);
  new_upc_img.set_source(upc_imgpat);
