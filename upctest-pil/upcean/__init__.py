@@ -23,7 +23,7 @@ if(version_info[3]!=None):
 if(version_info[3]==None):
  __version__ = str(version_info[0])+"."+str(version_info[1])+"."+str(version_info[2]);
 import sys, re, upcean.validate, upcean.convert, upcean.getprefix;
-import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code39, upcean.code93;
+import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93;
 '''
 import upcean.cuecat;
 '''
@@ -38,6 +38,7 @@ from upcean.ean8 import *;
 from upcean.stf import *;
 from upcean.itf import *;
 from upcean.itf14 import *;
+from upcean.code11 import *;
 from upcean.code39 import *;
 from upcean.code93 import *;
 '''

@@ -57,7 +57,7 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  UPC_Weight = 1; 
  UPC_Sum = 0;
  while (UPC_Count < len(upc_reverse)):
-  if(UPC_Weight>20):
+  if(UPC_Weight>15):
    UPC_Weight = 1;
   UPC_Sum = UPC_Sum + (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])]);
   UPC_Count += 1; 
@@ -216,7 +216,7 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, text_color);
  drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, text_color);
  drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 27 + upc_size_add, 4, 27+ upc_size_add, LineSize, text_color);
+ drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, text_color);
  drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, alt_text_color);
  drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, alt_text_color);
  drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, alt_text_color);
