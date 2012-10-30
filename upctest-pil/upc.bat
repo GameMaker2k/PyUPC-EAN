@@ -1,10 +1,10 @@
 @echo off
 set PYTHONPATH=%CD%\upcean
 set PYTHONDONTWRITEBYTECODE=x
-set PYTHONEXEC=C:\Python27
-set PYTHONEXEC=C:\Python33
+set PyVer=3.3
+set PyVer=2.7
 set OLDPATH=%PATH%;
-set PATH=%PATH%;%PYTHONEXEC%;
+FOR /f "tokens=3* delims=	" %%! in ('REG.EXE QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Python\PythonCore\%PyVer%\InstallPath" /ve ^| Findstr.exe /ri "\<NO NAME\>"') DO set PATH=%PATH%;%%!;
 python -b -B -x "./upc.py" %*
 set PATH=%OLDPATH%
 
