@@ -236,10 +236,10 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  del(upc_preimg);
- if(outfile=="-" and sys.version[0]=="2"):
+ if((outfile=="-" or outfile=="" or outfile==" ") and sys.version[0]=="2"):
   new_upc_preimg.write_to_png(sys.stdout);
- if(outfile=="-" and sys.version[0]=="3"):
-  new_upc_preimg.write_to_png(outfile);
- if(outfile!="-"):
+ if((outfile=="-" or outfile=="" or outfile==" ") and sys.version[0]=="3"):
+  new_upc_preimg.write_to_png(sys.stdout.buffer);
+ if(outfile!="-" and outfile!="" and outfile!=" "):
   new_upc_preimg.write_to_png(outfile);
  return True;
