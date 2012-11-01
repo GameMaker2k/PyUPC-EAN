@@ -191,10 +191,12 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST) # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
- if((outfile=="-" or outfile=="" or outfile==" ") and sys.version[0]=="2"):
-  new_upc_img.save(sys.stdout, "PNG");
- if((outfile=="-" or outfile=="" or outfile==" ") and sys.version[0]=="2"):
-  new_upc_img.save(sys.stdout.buffer, "PNG");
+ if(sys.version[0]=="2"):
+  if(outfile=="-" or outfile=="" or outfile==" "):
+   new_upc_img.save(sys.stdout, "PNG");
+ if(sys.version[0]=="2"):
+  if(outfile=="-" or outfile=="" or outfile==" "):
+   new_upc_img.save(sys.stdout.buffer, "PNG");
  if(outfile!="-" and outfile!="" and outfile!=" "):
   new_upc_img.save(outfile, re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper());
  return True;

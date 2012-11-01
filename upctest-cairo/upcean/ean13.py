@@ -271,10 +271,12 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  del(upc_preimg);
- if((outfile=="-" or outfile=="" or outfile==" ") and sys.version[0]=="2"):
-  new_upc_preimg.write_to_png(sys.stdout);
- if((outfile=="-" or outfile=="" or outfile==" ") and sys.version[0]=="3"):
-  new_upc_preimg.write_to_png(sys.stdout.buffer);
+ if(sys.version[0]=="2"):
+  if(outfile=="-" or outfile=="" or outfile==" "):
+   new_upc_preimg.write_to_png(sys.stdout);
+ if(sys.version[0]=="2"):
+  if(outfile=="-" or outfile=="" or outfile==" "):
+   new_upc_preimg.write_to_png(sys.stdout.buffer);
  if(outfile!="-" and outfile!="" and outfile!=" "):
   new_upc_preimg.write_to_png(outfile);
  return True;
