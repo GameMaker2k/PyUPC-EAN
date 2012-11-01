@@ -170,7 +170,7 @@ def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" "):
    new_upc_preimg.write_to_png(sys.stdout);
- if(sys.version[0]=="2"):
+ if(sys.version[0]=="3"):
   if(outfile=="-" or outfile=="" or outfile==" "):
    new_upc_preimg.write_to_png(sys.stdout.buffer);
  if(outfile!="-" and outfile!="" and outfile!=" "):

@@ -229,7 +229,7 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" "):
    new_upc_img.save(sys.stdout, "PNG");
- if(sys.version[0]=="2"):
+ if(sys.version[0]=="3"):
   if(outfile=="-" or outfile=="" or outfile==" "):
    new_upc_img.save(sys.stdout.buffer, "PNG");
  if(outfile!="-" and outfile!="" and outfile!=" "):

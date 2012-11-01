@@ -272,7 +272,7 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" "):
    new_upc_preimg.write_to_png(sys.stdout);
- if(sys.version[0]=="2"):
+ if(sys.version[0]=="3"):
   if(outfile=="-" or outfile=="" or outfile==" "):
    new_upc_preimg.write_to_png(sys.stdout.buffer);
  if(outfile!="-" and outfile!="" and outfile!=" "):
