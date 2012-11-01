@@ -25,7 +25,6 @@ from upcean.convert import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-
 def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  upc = str(upc);
  hidesn = hideinfo[0];

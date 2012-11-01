@@ -162,25 +162,7 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
  drawColorLine(upc_img, 37 + upc_size_add, 4, 37 + upc_size_add, barheight[0], alt_text_color);
  drawColorLine(upc_img, 38 + upc_size_add, 4, 38 + upc_size_add, barheight[0], alt_text_color);
  drawColorLine(upc_img, 39 + upc_size_add, 4, 39 + upc_size_add, barheight[0], alt_text_color);
- '''
- upc_imgpat = cairo.SurfacePattern(upc_preimg);
- scaler = cairo.Matrix();
- scaler.scale(1/int(resize),1/int(resize));
- upc_imgpat.set_matrix(scaler);
- upc_imgpat.set_filter(cairo.FILTER_BEST);
- new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize));
- new_upc_img = cairo.Context(new_upc_preimg);
- new_upc_img.set_source(upc_imgpat);
- new_upc_img.paint();
- '''
- '''
- new_upc_img = upc_preimg.resize(((39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
- '''
  new_upc_img = upc_preimg.resize(((39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST) # use nearest neighbour
- '''
- new_upc_img = upc_preimg.resize(((39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
- new_upc_img = upc_preimg.resize(((39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
- '''
  del(upc_img);
  del(upc_preimg);
  if(outfile=="-" and sys.version[0]=="2"):

@@ -25,7 +25,6 @@ from upcean.convert import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-
 def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
  hidesn = hideinfo[0];
@@ -300,25 +299,7 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
   create_ean2(supplement,69,upc_img,hidetext,barheight);
  if(supplement!=None and len(supplement)==5):
   create_ean5(supplement,69,upc_img,hidetext,barheight);
- '''
- upc_imgpat = cairo.SurfacePattern(upc_preimg);
- scaler = cairo.Matrix();
- scaler.scale(1/int(resize),1/int(resize));
- upc_imgpat.set_matrix(scaler);
- upc_imgpat.set_filter(cairo.FILTER_BEST);
- new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize));
- new_upc_img = cairo.Context(new_upc_preimg);
- new_upc_img.set_source(upc_imgpat);
- new_upc_img.paint();
- '''
- '''
- new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.BILINEAR) # linear interpolation in a 2x2 environment
- '''
  new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST) # use nearest neighbour
- '''
- new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.BICUBIC) # cubic spline interpolation in a 4x4 environment
- new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.ANTIALIAS) # best down-sizing filter
- '''
  del(upc_img);
  del(upc_preimg);
  if(outfile=="-" and sys.version[0]=="2"):
