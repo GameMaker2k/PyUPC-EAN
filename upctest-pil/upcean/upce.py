@@ -49,7 +49,7 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^0", upc)):
+ if(not re.findall("^(0|1)", upc)):
   return False;
  if(validate_upce(upc)==False):
   pre_matches = re.findall("^(\d{7})", upc); 

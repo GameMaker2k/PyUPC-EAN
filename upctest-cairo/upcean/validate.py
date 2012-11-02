@@ -152,7 +152,7 @@ def validate_upce(upc,return_check=False):
   upc = fix_matches[0];
  if(len(upc)>8 or len(upc)<7):
   return False;
- if(not re.findall("^0", upc)):
+ if(not re.findall("^(0|1)", upc)):
   return False;
  CheckDigit = None;
  if(len(upc)==8 and re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc)):
@@ -178,22 +178,22 @@ def validate_upce(upc,return_check=False):
   upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
   upc_matches=upc_matches[0];
   if(int(upc_matches[6])==4):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[5]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[5]) * 3;
    EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]);
   if(int(upc_matches[6])==5):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
    EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]);
   if(int(upc_matches[6])==6):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
    EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]);
   if(int(upc_matches[6])==7):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
    EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]);
   if(int(upc_matches[6])==8):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
    EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]);
   if(int(upc_matches[6])==9):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
    EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]);
  AllSum = OddSum + EvenSum;
  CheckSum = AllSum % 10;

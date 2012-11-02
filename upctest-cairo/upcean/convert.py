@@ -24,36 +24,36 @@ def convert_upce_to_upca(upc):
   upc = upc+str(validate_upce(upc,True));
  if(len(upc)>8 or len(upc)<8):
   return False;
- if(not re.findall("^0", upc)):
+ if(not re.findall("^(0|1)", upc)):
   return False;
  if(validate_upce(upc)==False):
   return False;
- if(re.findall("0(\d{5})([0-3])(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
+ if(re.findall("(0|1)(\d{5})([0-3])(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
   upc_matches = upc_matches[0];
-  if(int(upc_matches[5])==0):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[5]+"0000"+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[6];
-  if(int(upc_matches[5])==1):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[5]+"0000"+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[6];
-  if(int(upc_matches[5])==2):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[5]+"0000"+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[6];
-  if(int(upc_matches[5])==3):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[2]+"00000"+upc_matches[3]+upc_matches[4]+upc_matches[6]; 
- if(re.findall("0(\d{5})([4-9])(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
+  if(int(upc_matches[6])==0):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[6]+"0000"+upc_matches[3]+upc_matches[4]+upc_matches[5]+upc_matches[7];
+  if(int(upc_matches[6])==1):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[6]+"0000"+upc_matches[3]+upc_matches[4]+upc_matches[5]+upc_matches[7];
+  if(int(upc_matches[6])==2):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[6]+"0000"+upc_matches[3]+upc_matches[4]+upc_matches[5]+upc_matches[7];
+  if(int(upc_matches[6])==3):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+"00000"+upc_matches[4]+upc_matches[5]+upc_matches[7]; 
+ if(re.findall("(0|1)(\d{5})([4-9])(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
   upc_matches = upc_matches[0];
-  if(int(upc_matches[5])==4):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+"00000"+upc_matches[4]+upc_matches[6];
-  if(int(upc_matches[5])==5):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+"0000"+upc_matches[5]+upc_matches[6];
-  if(int(upc_matches[5])==6):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+"0000"+upc_matches[5]+upc_matches[6];
-  if(int(upc_matches[5])==7):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+"0000"+upc_matches[5]+upc_matches[6];
-  if(int(upc_matches[5])==8):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+"0000"+upc_matches[5]+upc_matches[6];
-  if(int(upc_matches[5])==9):
-   upce = "0"+upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+"0000"+upc_matches[5]+upc_matches[6];
+  if(int(upc_matches[6])==4):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+"00000"+upc_matches[5]+upc_matches[7];
+  if(int(upc_matches[6])==5):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[5]+"0000"+upc_matches[6]+upc_matches[7];
+  if(int(upc_matches[6])==6):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[5]+"0000"+upc_matches[6]+upc_matches[7];
+  if(int(upc_matches[6])==7):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[5]+"0000"+upc_matches[6]+upc_matches[7];
+  if(int(upc_matches[6])==8):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[5]+"0000"+upc_matches[6]+upc_matches[7];
+  if(int(upc_matches[6])==9):
+   upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[5]+"0000"+upc_matches[6]+upc_matches[7];
  return upce;
 def convert_upca_to_ean13(upc):
  if(len(upc)==11):
@@ -121,68 +121,68 @@ def convert_upca_to_upce(upc):
   return False;
  if(validate_upca(upc)==False):
   return False;
- if(not re.findall("0(\d{11})", upc)):
+ if(not re.findall("(0|1)(\d{11})", upc)):
   return False;
  upce = None;
- if(re.findall("0(\d{2})00000(\d{3})(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{2})00000(\d{3})(\d{1})", upc);
+ if(re.findall("(0|1)(\d{2})00000(\d{3})(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{2})00000(\d{3})(\d{1})", upc);
   upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+upc_matches[1]+"0";
+  upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"0";
+  upce = upce+upc_matches[3]; 
+  return upce;
+ if(re.findall("(0|1)(\d{2})10000(\d{3})(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{2})10000(\d{3})(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"1";
+  upce = upce+upc_matches[3]; 
+  return upce;
+ if(re.findall("(0|1)(\d{2})20000(\d{3})(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{2})20000(\d{3})(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"2";
+  upce = upce+upc_matches[3]; 
+  return upce;
+ if(re.findall("(0|1)(\d{3})00000(\d{2})(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{3})00000(\d{2})(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"3";
+  upce = upce+upc_matches[3]; 
+  return upce;
+ if(re.findall("(0|1)(\d{4})00000(\d{1})(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{4})00000(\d{1})(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"4";
+  upce = upce+upc_matches[3]; 
+  return upce;
+ if(re.findall("(0|1)(\d{5})00005(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})00005(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  upce = upc_matches[0]+upc_matches[1]+"5";
   upce = upce+upc_matches[2]; 
   return upce;
- if(re.findall("0(\d{2})10000(\d{3})(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{2})10000(\d{3})(\d{1})", upc);
+ if(re.findall("(0|1)(\d{5})00006(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})00006(\d{1})", upc);
   upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+upc_matches[1]+"1";
+  upce = upc_matches[0]+upc_matches[1]+"6";
   upce = upce+upc_matches[2]; 
   return upce;
- if(re.findall("0(\d{2})20000(\d{3})(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{2})20000(\d{3})(\d{1})", upc);
+ if(re.findall("(0|1)(\d{5})00007(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})00007(\d{1})", upc);
   upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+upc_matches[1]+"2";
+  upce = upc_matches[0]+upc_matches[1]+"7";
   upce = upce+upc_matches[2]; 
   return upce;
- if(re.findall("0(\d{3})00000(\d{2})(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{3})00000(\d{2})(\d{1})", upc);
+ if(re.findall("(0|1)(\d{5})00008(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})00008(\d{1})", upc);
   upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+upc_matches[1]+"3";
+  upce = upc_matches[0]+upc_matches[1]+"8";
   upce = upce+upc_matches[2]; 
   return upce;
- if(re.findall("0(\d{4})00000(\d{1})(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{4})00000(\d{1})(\d{1})", upc);
+ if(re.findall("(0|1)(\d{5})00009(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})00009(\d{1})", upc);
   upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+upc_matches[1]+"4";
+  upce = upc_matches[0]+upc_matches[1]+"9";
   upce = upce+upc_matches[2]; 
-  return upce;
- if(re.findall("0(\d{5})00005(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{5})00005(\d{1})", upc);
-  upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+"5";
-  upce = upce+upc_matches[1]; 
-  return upce;
- if(re.findall("0(\d{5})00006(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{5})00006(\d{1})", upc);
-  upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+"6";
-  upce = upce+upc_matches[1]; 
-  return upce;
- if(re.findall("0(\d{5})00007(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{5})00007(\d{1})", upc);
-  upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+"7";
-  upce = upce+upc_matches[1]; 
-  return upce;
- if(re.findall("0(\d{5})00008(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{5})00008(\d{1})", upc);
-  upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+"8";
-  upce = upce+upc_matches[1]; 
-  return upce;
- if(re.findall("0(\d{5})00009(\d{1})", upc)):
-  upc_matches = re.findall("0(\d{5})00009(\d{1})", upc);
-  upc_matches = upc_matches[0];
-  upce = "0"+upc_matches[0]+"9";
-  upce = upce+upc_matches[1]; 
   return upce;
  if(upce==None):
   return False;
