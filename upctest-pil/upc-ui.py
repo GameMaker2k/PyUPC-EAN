@@ -30,8 +30,10 @@ updateimg = False;
 rootwin = Tkinter.Tk();
 rootwin.wm_title("PyUPC Test GUI");
 rootwin.geometry(("%dx%d") % (350, 300));
-# Code to add widgets will go here...
-
+rootwin.resizable(0,0);
+def exit_ui(event):
+ rootwin.quit();
+rootwin.bind("<Escape>", exit_ui);
 entry1 = Entry(rootwin);
 entry1.place(x=40, y=132);
 labeltxt1 = StringVar();
@@ -52,7 +54,6 @@ labeltxt3 = StringVar();
 label3 = Label(rootwin, textvariable=labeltxt3);
 labeltxt3.set("Magnify:");
 label3.place(x=0, y=197);
-
 entrytxt2 = StringVar();
 entry2 = Entry(rootwin, textvariable=entrytxt2);
 entrytxt2.set("48");
@@ -61,7 +62,6 @@ labeltxt4 = StringVar();
 label4 = Label( rootwin, textvariable=labeltxt4);
 labeltxt4.set("Bar 1 Height:");
 label4.place(x=0, y=223);
-
 entrytxt3 = StringVar();
 entry3 = Entry(rootwin, textvariable=entrytxt3);
 entrytxt3.set("54");
@@ -70,7 +70,6 @@ labeltxt5 = StringVar();
 label5 = Label( rootwin, textvariable=labeltxt5);
 labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
-
 def GenerateBarcode():
  global updateimg, panel1, faddonsize;
  if(updateimg==True):
@@ -98,27 +97,35 @@ def GenerateBarcode():
   updateimg = True;
  os.close(tmpfd);
  os.remove(tmpfilename);
-
+def GenerateBarcodeAlt(event):
+ GenerateBarcode();
 def SaveGeneratedBarcode():
  savefname=tkFileDialog.asksaveasfilename(parent=rootwin,title='Choose a file',filetypes=[('Windows Bitmap','*.bmp'), ('Portable Network Graphics','*.png'), ('JPEG / JFIF','*.jpg'), ('CompuServer GIF','*.gif')]);
- if(listboxtxt1.get()=="Detect"):
+ if(listboxtxt1.get()=="Detect" and savefname!=""):
   create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="UPC-A"):
+ if(listboxtxt1.get()=="UPC-A" and savefname!=""):
   create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="UPC-E"):
+ if(listboxtxt1.get()=="UPC-E" and savefname!=""):
   create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="EAN-13"):
+ if(listboxtxt1.get()=="EAN-13" and savefname!=""):
   create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="EAN-8"):
+ if(listboxtxt1.get()=="EAN-8" and savefname!=""):
   create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="ITF"):
+ if(listboxtxt1.get()=="ITF" and savefname!=""):
   create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="ITF-14"):
+ if(listboxtxt1.get()=="ITF-14" and savefname!=""):
   create_itf14(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
-
+def SaveGeneratedBarcodeAlt(event):
+ SaveGeneratedBarcode();
+entry1.bind("<Return>", GenerateBarcodeAlt);
+listbox1.bind("<Return>", GenerateBarcodeAlt);
+magnify.bind("<Return>", GenerateBarcodeAlt);
+entry2.bind("<Return>", GenerateBarcodeAlt);
+entry3.bind("<Return>", GenerateBarcodeAlt);
 button1 = Tkinter.Button(rootwin, text="Generate", command = GenerateBarcode);
 button1.place(x=0, y=274);
 button2 = Tkinter.Button(rootwin, text="Save As", command = SaveGeneratedBarcode);
 button2.place(x=60, y=274);
-
+button1.bind("<Return>", GenerateBarcodeAlt);
+button2.bind("<Return>", SaveGeneratedBarcodeAlt);
 rootwin.mainloop();
