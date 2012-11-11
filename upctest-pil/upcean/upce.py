@@ -53,7 +53,7 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
   return False;
  if(validate_upce(upc)==False):
   pre_matches = re.findall("^(\d{7})", upc); 
-  upc = pre_matches[1]+str(validate_upce(pre_matches[1],True));
+  upc = pre_matches[0]+str(validate_upce(pre_matches[0],True));
  upc_matches = re.findall("(\d{1})(\d{6})(\d{1})", upc);
  upc_matches = upc_matches[0];
  if(len(upc_matches)<=0):
