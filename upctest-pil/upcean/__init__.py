@@ -60,13 +60,13 @@ def validate_barcode(upc,return_check=False):
  return False;
 def fix_barcode_checksum(upc):
  if(len(upc)==7): 
-  return upc+validate_upce(upc,true);
+  return upc+validate_upce(upc,True);
  if(len(upc)==11): 
-  return upc+validate_upca(upc,true);
+  return upc+validate_upca(upc,True);
  if(len(upc)==12): 
-  return upc+validate_ean13(upc,true);
+  return upc+validate_ean13(upc,True);
  if(len(upc)==13): 
-  return upc+validate_itf14(upc,true);
+  return upc+validate_itf14(upc,True);
  return False;
 def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
