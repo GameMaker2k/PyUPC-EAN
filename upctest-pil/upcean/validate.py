@@ -19,6 +19,7 @@
 import sys, re;
 
 def validate_upca(upc,return_check=False): 
+ upc = str(upc);
  if(len(upc)>12):
   fix_matches = re.findall("^(\d{12})", upc);
   upc = fix_matches[0];
@@ -41,16 +42,18 @@ def validate_upca(upc,return_check=False):
   if(CheckSum==int(upc_matches[11])):
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(upc)==11):
-  return CheckSum;
+  return str(CheckSum);
 def fix_upca_checksum(upc):
+ upc = str(upc);
  if(len(upc)>11):
   fix_matches = re.findall("^(\d{11})", upc); 
   upc = fix_matches[0];
  return upc+str(validate_upca(upc,True));
 
 def validate_ean13(upc,return_check=False):
+ upc = str(upc);
  if(len(upc)>13):
   fix_matches = re.findall("^(\d{13})", upc);
   upc = fix_matches[0];
@@ -73,16 +76,18 @@ def validate_ean13(upc,return_check=False):
   if(CheckSum==int(upc_matches[12])):
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(upc)==12):
-  return CheckSum;
+  return str(CheckSum);
 def fix_ean13_checksum(upc):
+ upc = str(upc);
  if(len(upc)>12):
   fix_matches = re.findall("^(\d{12})", upc); 
   upc = fix_matches[0];
  return upc+str(validate_ean13(upc,True));
 
 def validate_itf14(upc,return_check=False):
+ upc = str(upc);
  if(len(upc)>14):
   fix_matches = re.findall("^(\d{14})", upc); 
   upc = fix_matches[0];
@@ -105,16 +110,18 @@ def validate_itf14(upc,return_check=False):
   if(CheckSum==int(upc_matches[13])):
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(upc)==13):
-  return CheckSum;
+  return str(CheckSum);
 def fix_itf14_checksum(upc):
+ upc = str(upc);
  if(len(upc)>13):
   fix_matches = re.findall("^(\d{13})", upc); 
   upc = fix_matches[0];
  return upc+str(validate_itf14(upc,True));
 
 def validate_ean8(upc,return_check=False):
+ upc = str(upc);
  if(len(upc)>8):
   fix_matches = re.findall("^(\d{8})", upc); 
   upc = fix_matches[0];
@@ -137,16 +144,18 @@ def validate_ean8(upc,return_check=False):
   if(CheckSum==int(upc_matches[7])): 
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(upc)==7):
-  return CheckSum;
+  return str(CheckSum);
 def fix_ean8_checksum(upc):
+ upc = str(upc);
  if(len(upc)>7):
   fix_matches = re.findall("^(\d{7})", upc); 
   upc = fix_matches[0];
  return upc+str(validate_ean8(upc,True));
 
 def validate_upce(upc,return_check=False):
+ upc = str(upc);
  if(len(upc)>8):
   fix_matches = re.findall("/^(\d{8})/", upc); 
   upc = fix_matches[0];
@@ -205,10 +214,11 @@ def validate_upce(upc,return_check=False):
   if(CheckSum==int(CheckDigit)):
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(upc)==7):
-  return CheckSum;
+  return str(CheckSum);
 def fix_upce_checksum(upc):
+ upc = str(upc);
  if(len(upc)>7):
   fix_matches = re.findall("^(\d{7})", upc); 
   upc = fix_matches[0];
@@ -219,6 +229,7 @@ ISSN (International Standard Serial Number)
 http://en.wikipedia.org/wiki/International_Standard_Serial_Number
 '''
 def validate_issn8(upc,return_check=False):
+ upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>8):
@@ -241,10 +252,11 @@ def validate_issn8(upc,return_check=False):
   if(CheckSum==int(upc_matches[7])):
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(upc)==7):
-  return CheckSum;
+  return str(CheckSum);
 def fix_issn8_checksum(upc):
+ upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>7):
@@ -252,11 +264,13 @@ def fix_issn8_checksum(upc):
   upc = fix_matches[0];
  return upc+str(validate_issn8(upc,True));
 def validate_issn13(upc,return_check=False):
+ upc = str(upc);
  if(not re.findall("^977(\d{9})", upc)):
   return False;
  if(re.findall("^977(\d{9})", upc)):
   return validate_ean13(upc,return_check);
 def fix_issn13_checksum(upc):
+ upc = str(upc);
  if(not re.findall("^977(\d{9})", upc)):
   return False;
  if(re.findall("^977(\d{9})", upc)):
@@ -267,6 +281,7 @@ ISBN (International Standard Book Number)
 http://en.wikipedia.org/wiki/ISBN
 '''
 def validate_isbn10(upc,return_check=False):
+ upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>10):
@@ -291,10 +306,11 @@ def validate_isbn10(upc,return_check=False):
   if(str(CheckSum)==upc_matches[9]):
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(upc)==9):
-  return CheckSum;
+  return str(CheckSum);
 def fix_isbn10_checksum(upc):
+ upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>9):
@@ -302,11 +318,13 @@ def fix_isbn10_checksum(upc):
   upc = fix_matches[1];
  return upc+str(validate_isbn10(upc,True));
 def validate_isbn13(upc,return_check=False):
+ upc = str(upc);
  if(not re.findall("^978(\d{9})", upc)):
   return False;
  if(re.findall("^978(\d{9})", upc)):
   return validate_ean13(upc,return_check);
 def fix_isbn13_checksum(upc):
+ upc = str(upc);
  if(not re.findall("^978(\d{9})", upc)):
   return False;
  if(re.findall("^978(\d{9})", upc)):
@@ -319,6 +337,7 @@ http://www.ismn-international.org/whatis.html
 http://www.ismn-international.org/manual_1998/chapter2.html
 '''
 def validate_ismn10(upc,return_check=False):
+ upc = str(upc);
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
@@ -342,10 +361,11 @@ def validate_ismn10(upc,return_check=False):
   if(CheckSum==int(upc_matches[8])):
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(upc)==8):
-  return CheckSum;
+  return str(CheckSum);
 def fix_ismn10_checksum(upc):
+ upc = str(upc);
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
@@ -354,11 +374,13 @@ def fix_ismn10_checksum(upc):
   upc = fix_matches[1];
  return upc+str(validate_ismn10(upc,True));
 def validate_ismn13(upc,return_check=False):
+ upc = str(upc);
  if(not re.findall("^9790(\d{8})", upc)):
   return False;
  if(re.findall("^9790(\d{8})", upc)):
   return validate_ean13(upc,return_check);
 def fix_ismn13_checksum(upc):
+ upc = str(upc);
  if(not re.findall("^9790(\d{8})", upc)):
   return False;
  if(re.findall("^9790(\d{8})", upc)):
@@ -371,6 +393,7 @@ def fix_ismn13_checksum(upc):
 // Source: http://barcodes.gs1us.org/GS1%20US%20BarCodes%20and%20eCom%20-%20The%20Global%20Language%20of%20Business.htm
 '''
 def get_vw_price_checksum(price,return_check=False):
+ price = str(price);
  if(len(price)==1):
   price = "000".price;
  if(len(price)==2):
@@ -404,11 +427,12 @@ def get_vw_price_checksum(price,return_check=False):
   if(CheckSum==int(price_split[0])):
    return True;
  if(return_check==True):
-  return CheckSum;
+  return str(CheckSum);
  if(len(price)==4):
-  return CheckSum;
- return CheckSum;
+  return str(CheckSum);
+ return str(CheckSum);
 def fix_vw_price_checksum(price):
+ price = str(price);
  if(len(price)==5):
   fix_matches = re.findall("^(\d{1})(\d{4})", price); 
   fix_matches = fix_matches[0];

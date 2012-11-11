@@ -20,6 +20,7 @@ import sys, re, upcean.validate;
 from upcean.validate import *;
 
 def convert_upce_to_upca(upc):
+ upc = str(upc);
  if(len(upc)==7):
   upc = upc+str(validate_upce(upc,True));
  if(len(upc)>8 or len(upc)<8):
@@ -56,6 +57,7 @@ def convert_upce_to_upca(upc):
    upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3]+upc_matches[4]+upc_matches[5]+"0000"+upc_matches[6]+upc_matches[7];
  return upce;
 def convert_upca_to_ean13(upc):
+ upc = str(upc);
  if(len(upc)==11):
   upc = upc+str(validate_upca(upc,True));
  if(len(upc)>13 or len(upc)<12):
@@ -68,6 +70,7 @@ def convert_upca_to_ean13(upc):
   ean13 = upc;
  return ean13;
 def convert_ean13_to_itf14(upc):
+ upc = str(upc);
  if(len(upc)==11):
   upc = upc+str(validate_upca(upc,True));
  if(len(upc)==12):
@@ -82,12 +85,16 @@ def convert_ean13_to_itf14(upc):
   itf14 = upc;
  return itf14;
 def convert_upce_to_ean13(upc):
+ upc = str(upc);
  return convert_upca_to_ean13(convert_upce_to_upca(upc));
 def convert_upce_to_itf14(upc):
+ upc = str(upc);
  return convert_ean13_to_itf14(convert_upce_to_ean13(upc));
 def convert_upca_to_itf14(upc):
+ upc = str(upc);
  return convert_ean13_to_itf14(convert_upca_to_ean13(upc));
 def convert_ean13_to_upca(upc):
+ upc = str(upc);
  if(len(upc)==12):
   upc = "0"+upc;
  if(len(upc)>13 or len(upc)<13):
@@ -101,6 +108,7 @@ def convert_ean13_to_upca(upc):
   upca = upc_matches[0];
  return upca;
 def convert_itf14_to_ean13(upc):
+ upc = str(upc);
  if(len(upc)==13):
   upc = "0"+upc;
  if(len(upc)>14 or len(upc)<14): 
@@ -115,6 +123,7 @@ def convert_itf14_to_ean13(upc):
   ean13 = upc_matches[1]+str(validate_ean13(upc_matches[1], True));
  return ean13;
 def convert_upca_to_upce(upc):
+ upc = str(upc);
  if(len(upc)==11):
   upc = upc+str(validate_upca(upc,True));
  if(len(upc)>12 or len(upc)<12):
@@ -188,12 +197,16 @@ def convert_upca_to_upce(upc):
   return False;
  return upce;
 def convert_ean13_to_upce(upc):
+ upc = str(upc);
  return convert_upca_to_upce(convert_ean13_to_upca(upc));
 def convert_itf14_to_upca(upc):
+ upc = str(upc);
  return convert_ean13_to_upca(convert_itf14_to_ean13(upc));
 def convert_itf14_to_upce(upc):
+ upc = str(upc);
  return convert_upca_to_upce(convert_itf14_to_upca(upc));
 def convert_any_to_upca(upc):
+ upc = str(upc);
  if(len(upc)==8):
   return convert_upce_to_upca(upc);
  if(len(upc)==13):
@@ -202,6 +215,7 @@ def convert_any_to_upca(upc):
   return convert_itf14_to_upce(upc);
  return False;
 def convert_any_to_upce(upc):
+ upc = str(upc);
  if(len(upc)==12):
   return convert_upca_to_upce(upc);
  if(len(upc)==13):
@@ -210,6 +224,7 @@ def convert_any_to_upce(upc):
   return convert_itf14_to_upca(upc);
  return False;
 def convert_any_to_ean13(upc):
+ upc = str(upc);
  if(len(upc)==8):
   return convert_upce_to_ean13(upc);
  if(len(upc)==12):
@@ -218,6 +233,7 @@ def convert_any_to_ean13(upc):
   return convert_itf14_to_ean13(upc);
  return False;
 def convert_any_to_itf14(upc):
+ upc = str(upc);
  if(len(upc)==8):
   return convert_upce_to_itf14(upc);
  if(len(upc)==12):
@@ -226,6 +242,7 @@ def convert_any_to_itf14(upc):
   return convert_ean13_to_itf14(upc);
  return False;
 def convert_any_to_ean8(upc):
+ upc = str(upc);
  if(len(upc)==12):
   return convert_upca_to_ean8(upc);
  if(len(upc)==13):
@@ -239,6 +256,7 @@ Changing a EAN-8 code to UPC-A and EAN-13 based on whats used at:
 http://www.upcdatabase.com/
 '''
 def convert_ean8_to_upca(upc):
+ upc = str(upc);
  if(len(upc)==7):
   upc = upc+str(validate_ean8(upc,True));
  if(len(upc)>8 or len(upc)<8):
@@ -248,10 +266,13 @@ def convert_ean8_to_upca(upc):
  upca = "0000"+upc; 
  return upca;
 def convert_ean8_to_ean13(upc):
+ upc = str(upc);
  return convert_upca_to_ean13(convert_ean8_to_upca(upc));
 def convert_ean8_to_itf14(upc):
+ upc = str(upc);
  return convert_ean13_to_itf14(convert_ean8_to_ean13(upc));
 def convert_upca_to_ean8(upc):
+ upc = str(upc);
  if(len(upc)==11):
   upc = upc+str(validate_upca(upc,True));
  if(len(upc)>12 or len(upc)<12):
@@ -265,8 +286,10 @@ def convert_upca_to_ean8(upc):
   ean8 = upc_matches[0];
  return ean8;
 def convert_ean13_to_ean8(upc):
+ upc = str(upc);
  return convert_upca_to_ean8(convert_ean13_to_upca(upc));
 def convert_itf14_to_ean8(upc):
+ upc = str(upc);
  return convert_ean13_to_ean8(convert_itf14_to_ean13(upc));
 
 '''
@@ -274,6 +297,7 @@ ISSN (International Standard Serial Number)
 http://en.wikipedia.org/wiki/International_Standard_Serial_Number
 '''
 def convert_issn8_to_issn13(upc):
+ upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  upc = upc.replace("X", "");
@@ -285,6 +309,7 @@ def convert_issn8_to_issn13(upc):
  issn13 = "977"+upc+"00"+str(validate_ean13("977"+upc+"00",True)); 
  return issn13;
 def convert_issn13_to_issn8(upc):
+ upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  upc = upc.replace("X", "");
@@ -297,6 +322,7 @@ def convert_issn13_to_issn8(upc):
   issn8 = upc_matches[1]+validate_issn8(upc_matches[1],True);
  return issn8;
 def print_issn8(upc):
+ upc = str(upc);
  if(len(upc)>8): 
   fix_matches = re.findall("^(\d{8})", upc); 
   upc = fix_matches[1];
@@ -309,6 +335,7 @@ def print_issn8(upc):
  issn8 = issn_matches[0]+"-"+issn_matches[1];
  return issn8;
 def print_issn13(upc):
+ upc = str(upc);
  if(len(upc)>13): 
   re.findall("^(\d{13})", upc, fix_matches); 
   upc = fix_matches[1];
@@ -321,9 +348,11 @@ def print_issn13(upc):
  issn13 = issn_matches[0]+"-"+issn_matches[1]+"-"+issn_matches[2]+"-"+issn_matches[3];
  return issn13;
 def print_convert_issn8_to_issn13(upc):
+ upc = str(upc);
  issn13 = print_issn13(convert_issn8_to_issn13(upc));
  return issn13;
 def print_convert_issn13_to_issn8(upc):
+ upc = str(upc);
  issn8 = print_issn8(convert_issn13_to_issn8(upc));
  return issn8;
 
@@ -332,6 +361,7 @@ ISBN (International Standard Book Number)
 http://en.wikipedia.org/wiki/ISBN
 '''
 def convert_isbn10_to_isbn13(upc):
+ upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(validate_isbn10(upc)==False):
@@ -342,6 +372,7 @@ def convert_isbn10_to_isbn13(upc):
   isbn13 = "978"+upc+str(validate_ean13("978"+upc,True)); 
  return isbn13;
 def convert_isbn13_to_isbn10(upc):
+ upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(validate_ean13(upc)==False):
@@ -353,14 +384,19 @@ def convert_isbn13_to_isbn10(upc):
   isbn10 = upc_matches[0]+str(validate_isbn10(upc_matches[0],True));
  return isbn10;
 def convert_isbn10_to_ean13(upc):
+ upc = str(upc);
  return convert_isbn10_to_isbn13(upc);
 def convert_ean13_to_isbn10(upc):
+ upc = str(upc);
  return convert_isbn13_to_isbn10(upc);
 def convert_isbn10_to_itf14(upc):
+ upc = str(upc);
  return convert_ean13_to_itf14(convert_isbn10_to_isbn13(upc));
 def convert_itf14_to_isbn10(upc):
+ upc = str(upc);
  return convert_itf14_to_ean13(convert_isbn13_to_isbn10(upc));
 def print_isbn10(upc):
+ upc = str(upc);
  if(len(upc)>10):
   fix_matches = re.findall("^(\d{9})(\d{1}|X{1})", upc); 
   fix_matches = fix_matches[0]
@@ -374,6 +410,7 @@ def print_isbn10(upc):
  isbn10 = isbn_matches[0]+"-"+isbn_matches[1]+"-"+isbn_matches[2]+"-"+isbn_matches[3];
  return isbn10;
 def print_isbn13(upc):
+ upc = str(upc);
  if(len(upc)>13):
   fix_matches = re.findall("^(\d{13})", upc); 
   upc = fix_matches[1];
@@ -386,9 +423,11 @@ def print_isbn13(upc):
  isbn13 = isbn_matches[0]+"-"+isbn_matches[1]+"-"+isbn_matches[2]+"-"+isbn_matches[3]+"-"+isbn_matches[4];
  return isbn13;
 def print_convert_isbn10_to_isbn13(upc):
+ upc = str(upc);
  isbn13 = print_isbn13(convert_isbn10_to_isbn13(upc));
  return isbn13;
 def print_convert_isbn13_to_isbn10(upc):
+ upc = str(upc);
  isbn10 = print_isbn10(convert_isbn13_to_isbn10(upc));
  return isbn10;
 
@@ -399,6 +438,7 @@ http://www.ismn-international.org/whatis.html
 http://www.ismn-international.org/manual_1998/chapter2.html
 '''
 def convert_ismn10_to_ismn13(upc):
+ upc = str(upc);
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
@@ -410,6 +450,7 @@ def convert_ismn10_to_ismn13(upc):
  ismn13 = "9790"+upc+str(validate_ean13("9790"+upc,True)); 
  return ismn13;
 def convert_ismn13_to_ismn10(upc):
+ upc = str(upc);
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
@@ -422,14 +463,19 @@ def convert_ismn13_to_ismn10(upc):
   ismn10 = upc_matches[0]+str(validate_ismn10(upc_matches[0],True));
  return ismn10;
 def convert_ismn10_to_ean13(upc):
+ upc = str(upc);
  return convert_ismn10_to_ismn13(upc);
 def convert_ean13_to_ismn10(upc):
+ upc = str(upc);
  return convert_ismn13_to_ismn10(upc);
 def convert_ismn10_to_itf14(upc):
+ upc = str(upc);
  return convert_ean13_to_itf14(convert_ismn10_to_ismn13(upc));
 def convert_itf14_to_ismn10(upc):
+ upc = str(upc);
  return convert_itf14_to_ean13(convert_ismn13_to_ismn10(upc));
 def print_ismn10(upc):
+ upc = str(upc);
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
@@ -445,6 +491,7 @@ def print_ismn10(upc):
  ismn10 = "M-"+ismn_matches[0]+"-"+ismn_matches[1]+"-"+ismn_matches[2];
  return ismn10;
 def print_ismn13(upc):
+ upc = str(upc);
  if(len(upc)>13):
   fix_matches = re.findall("^(\d{13})", upc); 
   upc = fix_matches[0];
@@ -457,9 +504,11 @@ def print_ismn13(upc):
  ismn13 = ismn_matches[0]+"-"+ismn_matches[1]+"-"+ismn_matches[2]+"-"+ismn_matches[3]+"-"+ismn_matches[4];
  return ismn13;
 def print_convert_ismn10_to_ismn13(upc):
+ upc = str(upc);
  ismn13 = print_ismn13(convert_ismn10_to_ismn13(upc));
  return ismn13;
 def print_convert_ismn13_to_ismn10(upc):
+ upc = str(upc);
  ismn10 = print_ismn10(convert_ismn13_to_ismn10(upc));
  return ismn10;
 
@@ -470,6 +519,8 @@ def print_convert_ismn13_to_ismn10(upc):
 // Source: http://barcodes.gs1us.org/GS1%20US%20BarCodes%20and%20eCom%20-%20The%20Global%20Language%20of%20Business.htm
 '''
 def make_vw_upca(code, price):
+ code = str(code);
+ price = str(price);
  if(len(code)>5):
   if(re.findall("^(\d{5})", code)):
    code_matches = re.findall("^(\d{5})", code);
@@ -483,12 +534,20 @@ def make_vw_upca(code, price):
  vwupc = vwupc+str(validate_upca(vwupc, True));
  return vwupc;
 def make_vw_to_ean13(code, price):
+ code = str(code);
+ price = str(price);
  vwean13 = convert_upca_to_ean13(make_vw_upca(code, price));
  return vwean13;
 def make_vw_to_itf14(code, price):
+ code = str(code);
+ price = str(price);
  vwitf14 = convert_upca_to_itf14(make_vw_upca(code, price));
  return vwitf14;
 def make_coupon_upca(numbersystem, manufacturer, family, value):
+ numbersystem = str(numbersystem);
+ manufacturer = str(manufacturer);
+ family = str(family);
+ value = str(value);
  if(int(numbersystem)!=5 and int(numbersystem)!=9):
   numbersystem = "5";
  if(len(manufacturer)>5):
@@ -504,8 +563,16 @@ def make_coupon_upca(numbersystem, manufacturer, family, value):
  couponupca = couponupca+str(validate_upca(couponupca, True));
  return couponupca;
 def make_coupon_to_ean13(numbersystem, manufacturer, family, value):
+ numbersystem = str(numbersystem);
+ manufacturer = str(manufacturer);
+ family = str(family);
+ value = str(value);
  couponean13 = convert_upca_to_ean13(make_coupon_upca(numbersystem, manufacturer, family, value));
  return couponean13;
 def make_coupon_to_itf14(numbersystem, manufacturer, family, value):
+ numbersystem = str(numbersystem);
+ manufacturer = str(manufacturer);
+ family = str(family);
+ value = str(value);
  couponitf14 = convert_upca_to_itf14(make_coupon_upca(numbersystem, manufacturer, family, value));
  return couponitf14;

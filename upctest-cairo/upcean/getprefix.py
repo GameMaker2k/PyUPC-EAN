@@ -25,6 +25,7 @@ from upcean.validate import *;
 // Source: http://en.wikipedia.org/wiki/List_of_GS1_country_codes
 '''
 def get_gs1_prefix(upc):
+ upc = str(upc);
  if(re.findall("^(\d{12})", upc)):
   upc = "0"+upc;
  if(re.findall("^0(\d{3}\d{10})", upc)):
@@ -374,6 +375,7 @@ def get_gs1_prefix(upc):
 // Source: http://www.computalabel.com/aboutupc.htm
 '''
 def get_upca_ns(upc):
+ upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
   upc = upc_matches[1];
@@ -406,6 +408,7 @@ def get_upca_ns(upc):
 // Source: http://www.qed.org/RBTL/chapters/ch3.3.htm
 '''
 def get_itf14_type(upc):
+ upc = str(upc);
  if(not re.findall("^(\d{14})", upc)):
   return False;
  if(re.findall("^(0)", upc)):
@@ -435,6 +438,7 @@ def get_itf14_type(upc):
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 '''
 def get_upca_vw_info(upc):
+ upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
   upc = upc_matches[1];
@@ -447,16 +451,19 @@ def get_upca_vw_info(upc):
  product = {'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2]}
  return product;
 def get_upca_vw_code(upc):
+ upc = str(upc);
  product = get_upca_vw_info(upc);
  if(product==False):
   return False;
  return product['code'];
 def get_upca_vw_price(upc):
+ upc = str(upc);
  product = get_upca_vw_info(upc);
  if(product==False):
   return False;
  return product['price'];
 def get_upca_vw_pricecs(upc):
+ upc = str(upc);
  product = get_upca_vw_info(upc);
  if(product==False):
   return False;
@@ -466,6 +473,7 @@ def get_upca_vw_pricecs(upc):
 // Source: http://divagirlusa-ivil.tripod.com/austinitecouponers/id29.html
 '''
 def get_upca_coupon_info(upc):
+ upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
   upc = upc_matches[1];
@@ -478,21 +486,25 @@ def get_upca_coupon_info(upc):
  product = {'manufacturer': upc_matches[1], 'family': upc_matches[2], 'value': upc_matches[3]}
  return product;
 def get_upca_coupon_manufacturer(upc):
+ upc = str(upc);
  product = get_upca_coupon_info(upc);
  if(product==False):
   return False;
  return product['manufacturer'];
 def get_upca_coupon_family(upc):
+ upc = str(upc);
  product = get_upca_coupon_info(upc);
  if(product==False):
   return False;
  return product['family'];
 def get_upca_coupon_value(upc):
+ upc = str(upc);
  product = get_upca_coupon_info(upc);
  if(product==False):
   return False;
  return product['value'];
 def get_upca_coupon_value_code(vcode):
+ vcode = str(vcode);
  if(re.findall("^(00)", vcode)):
   return "Manual Input Required";
  if(re.findall("^(01)", vcode)):

@@ -49,6 +49,7 @@ from upcean.cuecat import *;
 Shortcut Codes by Kazuki Przyborowski
 '''
 def validate_barcode(upc,return_check=False):
+ upc = str(upc);
  if(len(upc)==8): 
   return validate_upce(upc,return_check);
  if(len(upc)==12): 
@@ -59,16 +60,18 @@ def validate_barcode(upc,return_check=False):
   return validate_itf14(upc,return_check);
  return False;
 def fix_barcode_checksum(upc):
+ upc = str(upc);
  if(len(upc)==7): 
-  return upc+validate_upce(upc,True);
+  return upc+str(validate_upce(upc,True));
  if(len(upc)==11): 
-  return upc+validate_upca(upc,True);
+  return upc+str(validate_upca(upc,True));
  if(len(upc)==12): 
-  return upc+validate_ean13(upc,True);
+  return upc+str(validate_ean13(upc,True));
  if(len(upc)==13): 
-  return upc+validate_itf14(upc,True);
+  return upc+str(validate_itf14(upc,True));
  return False;
 def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
+ upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  upc_pieces = None; supplement = None;
