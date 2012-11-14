@@ -17,7 +17,7 @@
 '''
 
 from __future__ import division;
-import Image, ImageDraw, ImageFont, re, os, sys, upcean.prepil;
+import Image, ImageDraw, ImageFont, re, os, sys, types, upcean.prepil;
 import upcean.ean2, upcean.ean5;
 from upcean.prepil import *;
 
@@ -224,16 +224,27 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  new_upc_img = upc_preimg.resize(((48 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST) # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
- oldoutfile = outfile;
- if(outfile!="-" and outfile!="" and outfile!=" "):
-  if(len(re.findall("^\.([A-Za-z]+)", os.path.splitext(oldoutfile)[1]))>0):
-   outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
-  if(len(re.findall("^\.([A-Za-z]+)", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
-   tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
-   outfile = tmpoutfile[0][0];
-   outfileext = tmpoutfile[0][1].upper();
-  if(len(re.findall("^\.([A-Za-z]+)", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
-   outfileext = "PNG";
+ if(type(outfile)==types.StringType):
+  oldoutfile = outfile[:];
+ if(type(outfile)==types.TupleType):
+  oldoutfile = tuple(outfile[:]);
+ if(type(outfile)==types.ListType):
+  oldoutfile = list(outfile[:]);
+ if(type(oldoutfile)==types.StringType):
+  if(outfile!="-" and outfile!="" and outfile!=" "):
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
+    outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+    tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+    del(outfile);
+    outfile = tmpoutfile[0][0];
+    outfileext = tmpoutfile[0][1].upper();
+   if(len(re.findall("^\.([A-Za-z]+)", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+    outfileext = "PNG";
+ if(type(oldoutfile)==types.TupleType or type(oldoutfile)==types.ListType):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
    new_upc_img.save(sys.stdout, outfileext);
