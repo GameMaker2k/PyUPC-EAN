@@ -136,12 +136,22 @@ def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),b
  new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST) # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
- if(sys.version[0]=="2"):
-  if(outfile=="-" or outfile=="" or outfile==" "):
-   new_upc_img.save(sys.stdout, "PNG");
- if(sys.version[0]=="3"):
-  if(outfile=="-" or outfile=="" or outfile==" "):
-   new_upc_img.save(sys.stdout.buffer, "PNG");
+ oldoutfile = outfile;
  if(outfile!="-" and outfile!="" and outfile!=" "):
-  new_upc_img.save(outfile, re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper());
+  if(len(re.findall("^\.([A-Za-z]+)", os.path.splitext(oldoutfile)[1]))>0):
+   outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+  if(len(re.findall("^\.([A-Za-z]+)", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+   tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+   outfile = tmpoutfile[0][0].upper();
+   outfileext = tmpoutfile[0][1].upper();
+  if(len(re.findall("^\.([A-Za-z]+)", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+   outfileext = "PNG";
+ if(sys.version[0]=="2"):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+   new_upc_img.save(sys.stdout, outfileext);
+ if(sys.version[0]=="3"):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+   new_upc_img.save(sys.stdout.buffer, outfileext);
+ if(outfile!="-" and outfile!="" and outfile!=" "):
+  new_upc_img.save(outfile, outfileext);
  return True;
