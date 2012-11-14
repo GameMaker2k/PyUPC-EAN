@@ -276,8 +276,14 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
     del(outfile);
     outfile = tmpoutfile[0][0];
     outfileext = tmpoutfile[0][1].upper();
-   if(len(re.findall("^\.([A-Za-z]+)", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
     outfileext = "PNG";
+  if(outfileext=="JPG" or outfileext=="JPE"):
+   outfileext = "JPEG";
+  if(outfileext=="TIF"):
+   outfileext = "TIFF";
+  if(outfileext!="BMP" or outfileext!="EPS" or outfileext!="GIF" or outfileext!="IM" or outfileext!="JPEG" or outfileext!="PCX" or outfileext!="PDF" or outfileext!="PNG" or outfileext!="PPM" or outfileext!="TIFF"):
+   outfileext = "PNG";
  if(type(oldoutfile)==types.TupleType or type(oldoutfile)==types.ListType):
   del(outfile);
   outfile = oldoutfile[0];
