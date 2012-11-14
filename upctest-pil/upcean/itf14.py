@@ -190,7 +190,7 @@ def create_itf14(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fals
    outfileext = "JPEG";
   if(outfileext=="TIF"):
    outfileext = "TIFF";
-  if(outfileext!="BMP" or outfileext!="EPS" or outfileext!="GIF" or outfileext!="IM" or outfileext!="JPEG" or outfileext!="PCX" or outfileext!="PDF" or outfileext!="PNG" or outfileext!="PPM" or outfileext!="TIFF"):
+  if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF"):
    outfileext = "PNG";
  if(type(oldoutfile)==types.TupleType or type(oldoutfile)==types.ListType):
   del(outfile);
