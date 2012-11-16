@@ -1,0 +1,77 @@
+#!/bin/sh
+
+if [ ! -n "$RMFILE" ]; then
+RMFILE="$(which rm) -rf"
+fi
+
+if [ ! -n "$PYTHON" ]; then
+PYTHON="$(which python)"
+fi
+
+if [ ! -n "$MKDIR" ]; then
+MKDIR="$(which mkdir)"
+fi
+
+if [ ! -n "$INSTALL" ]; then
+INSTALL="$(which install) -c"
+fi
+
+if [ ! -n "$UNAME" ]; then
+UNAME="$(which uname)"
+if [ "$($UNAME -p)" == "unknown" ]; then
+UNAME="$UNAME -smr"
+else
+UNAME="$UNAME -smpr"
+fi
+fi
+
+if [ ! -n "$PREFIX" ]; then
+PREFIX=$($PYTHON -c "from distutils.sysconfig import get_python_lib; print(get_python_lib());")
+fi
+
+printandrun() {
+echo $1
+eval $1
+}
+
+testandcreatedir() {
+printandrun "test -z \"$1\" || $MKDIR -p \"$1\""
+}
+
+installpyfiles() {
+printandrun "$INSTALL \"$1\" \"$2\""
+}
+
+buildwithpy() {
+printandrun "$PYTHON -c \"import $1\""
+printandrun "$PYTHON -O -c \"import $1\""
+}
+
+OLDCWD="$(pwd)"
+echo "Installing Python Moudle upcean";
+testandcreatedir "$PREFIX/upcean"
+installpyfiles "./upcean/__init__.py" "$PREFIX/upcean/__init__.py"
+installpyfiles "./upcean/code11.py" "$PREFIX/upcean/code11.py"
+installpyfiles "./upcean/code39.py" "$PREFIX/upcean/code39.py"
+installpyfiles "./upcean/code93.py" "$PREFIX/upcean/code93.py"
+installpyfiles "./upcean/convert.py" "$PREFIX/upcean/convert.py"
+installpyfiles "./upcean/cuecat.py" "$PREFIX/upcean/cuecat.py"
+installpyfiles "./upcean/ean13.py" "$PREFIX/upcean/ean13.py"
+installpyfiles "./upcean/ean2.py" "$PREFIX/upcean/ean2.py"
+installpyfiles "./upcean/ean5.py" "$PREFIX/upcean/ean5.py"
+installpyfiles "./upcean/ean8.py" "$PREFIX/upcean/ean8.py"
+installpyfiles "./upcean/getprefix.py" "$PREFIX/upcean/getprefix.py"
+installpyfiles "./upcean/ISO8859-1.pbm" "$PREFIX/upcean/ISO8859-1.pbm"
+installpyfiles "./upcean/ISO8859-1.pil" "$PREFIX/upcean/ISO8859-1.pil"
+installpyfiles "./upcean/itf.py" "$PREFIX/upcean/itf.py"
+installpyfiles "./upcean/itf14.py" "$PREFIX/upcean/itf14.py"
+installpyfiles "./upcean/prepil.py" "$PREFIX/upcean/prepil.py"
+installpyfiles "./upcean/stf.py" "$PREFIX/upcean/stf.py"
+installpyfiles "./upcean/upca.py" "$PREFIX/upcean/upca.py"
+installpyfiles "./upcean/upce.py" "$PREFIX/upcean/upce.py"
+installpyfiles "./upcean/validate.py" "$PREFIX/upcean/validate.py"
+printandrun "cd \"$PREFIX\""
+buildwithpy "upcean"
+printandrun "cd \"$OLDCWD\""
+echo "Finished installing Python Moudle upcean";
+
