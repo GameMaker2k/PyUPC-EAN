@@ -234,7 +234,8 @@ def validate_issn8(upc,return_check=False):
  upc = upc.replace(" ", "");
  if(len(upc)>8):
   fix_matches = re.findall("^(\d{8})", upc); 
-  upc = fix_matches[0].fix_matches[1];
+  fix_matches = fix_matches[0];
+  upc = fix_matches[0]+fix_matches[1];
  if(len(upc)>8 or len(upc)<7):
   return False;
  if(len(upc)==7):
@@ -286,7 +287,8 @@ def validate_isbn10(upc,return_check=False):
  upc = upc.replace(" ", "");
  if(len(upc)>10):
   fix_matches = re.findall("^(\d{9})(\d{1}|X{1})", upc); 
-  upc = fix_matches[0].fix_matches[1];
+  fix_matches = fix_matches[0];
+  upc = fix_matches[0]+fix_matches[1];
  if(len(upc)>10 or len(upc)<9):
   return False;
  if(len(upc)==9):
@@ -343,7 +345,8 @@ def validate_ismn10(upc,return_check=False):
  upc = upc.replace(" ", "");
  if(len(upc)>9):
   fix_matches = re.findall("^(\d{8})(\d{1})", upc); 
-  upc = fix_matches[0].fix_matches[1];
+  fix_matches = fix_matches[0];
+  upc = fix_matches[0]+fix_matches[1];
  if(len(upc)>9 or len(upc)<8):
   return False;
  if(len(upc)==8):
