@@ -62,24 +62,9 @@ echo "Sorry could not find Python Moudle ReadLine";
 exit 0; 
 fi
 testandcreatedir "$PREFIX/upcean"
-installpyfiles "./upcean/__init__.py" "$PREFIX/upcean/__init__.py"
-installpyfiles "./upcean/code11.py" "$PREFIX/upcean/code11.py"
-installpyfiles "./upcean/code39.py" "$PREFIX/upcean/code39.py"
-installpyfiles "./upcean/code93.py" "$PREFIX/upcean/code93.py"
-installpyfiles "./upcean/convert.py" "$PREFIX/upcean/convert.py"
-installpyfiles "./upcean/cuecat.py" "$PREFIX/upcean/cuecat.py"
-installpyfiles "./upcean/ean13.py" "$PREFIX/upcean/ean13.py"
-installpyfiles "./upcean/ean2.py" "$PREFIX/upcean/ean2.py"
-installpyfiles "./upcean/ean5.py" "$PREFIX/upcean/ean5.py"
-installpyfiles "./upcean/ean8.py" "$PREFIX/upcean/ean8.py"
-installpyfiles "./upcean/getprefix.py" "$PREFIX/upcean/getprefix.py"
-installpyfiles "./upcean/itf.py" "$PREFIX/upcean/itf.py"
-installpyfiles "./upcean/itf14.py" "$PREFIX/upcean/itf14.py"
-installpyfiles "./upcean/prepil.py" "$PREFIX/upcean/prepil.py"
-installpyfiles "./upcean/stf.py" "$PREFIX/upcean/stf.py"
-installpyfiles "./upcean/upca.py" "$PREFIX/upcean/upca.py"
-installpyfiles "./upcean/upce.py" "$PREFIX/upcean/upce.py"
-installpyfiles "./upcean/validate.py" "$PREFIX/upcean/validate.py"
+for f in ./upcean/*; do  
+installpyfiles "$f" "$PREFIX/upcean/$(basename $f)"
+done
 printandrun "cd \"$PREFIX\""
 buildwithpy "upcean"
 printandrun "cd \"$OLDCWD\""
