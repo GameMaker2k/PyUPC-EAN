@@ -50,12 +50,12 @@ printandrun "$PYTHON -O -c \"import $1\""
 OLDCWD="$(pwd)"
 echo "Installing Python Moudle upcean";
 echo "Checking for Python Moudle PyCairo"
-if [ ! $(python -c "import cairo") ]; then 
+if [ ! $($PYTHON -c "import cairo") ]; then 
 echo "Sorry could not find Python Moudle PyCairo";
 exit 0; 
 fi
 echo "Checking for Python Moudle ReadLine"
-if [ ! $(python -c "import readline") ]; then 
+if [ ! $($PYTHON -c "import readline") ]; then 
 echo "Sorry could not find Python Moudle ReadLine"; 
 exit 0; 
 fi

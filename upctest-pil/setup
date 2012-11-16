@@ -50,12 +50,12 @@ printandrun "$PYTHON -O -c \"import $1\""
 OLDCWD="$(pwd)"
 echo "Installing Python Moudle upcean";
 echo "Checking for Python Moudle PIL"
-if [ ! $(python -c "import PIL") ]; then 
+if [ ! $($PYTHON -c "import PIL") ]; then 
 echo "Sorry could not find Python Moudle PIL";
 exit 0; 
 fi
 echo "Checking for Python Moudle ReadLine"
-if [ ! $(python -c "import readline") ]; then 
+if [ ! $($PYTHON -c "import readline") ]; then 
 echo "Sorry could not find Python Moudle ReadLine"; 
 exit 0; 
 fi
