@@ -49,6 +49,16 @@ printandrun "$PYTHON -O -c \"import $1\""
 
 OLDCWD="$(pwd)"
 echo "Installing Python Moudle upcean";
+echo "Checking for Python Moudle PIL"
+if [ ! $(python -c "import PIL") ]; then 
+echo "Sorry could not find Python Moudle PIL";
+exit 0; 
+fi
+echo "Checking for Python Moudle ReadLine"
+if [ ! $(python -c "import readline") ]; then 
+echo "Sorry could not find Python Moudle ReadLine"; 
+exit 0; 
+fi
 testandcreatedir "$PREFIX/upcean"
 installpyfiles "./upcean/__init__.py" "$PREFIX/upcean/__init__.py"
 installpyfiles "./upcean/code11.py" "$PREFIX/upcean/code11.py"
