@@ -172,16 +172,16 @@ def validate_upce(upc,return_check=False):
   upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
   upc_matches=upc_matches[0];
   if(int(upc_matches[6])==0):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[3]+"+"+upc_matches[5]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[3]+"+"+upc_matches[5]) * 3;
    EvenSum = eval(upc_matches[1]+"+"+upc_matches[4]);
   if(int(upc_matches[6])==1):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[3]+"+"+upc_matches[5]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[3]+"+"+upc_matches[5]) * 3;
    EvenSum = eval(upc_matches[1]+"+1+"+upc_matches[4]);
   if(int(upc_matches[6])==2):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[3]+"+"+upc_matches[5]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[3]+"+"+upc_matches[5]) * 3;
    EvenSum = eval(upc_matches[1]+"+2+"+upc_matches[4]);
   if(int(upc_matches[6])==3):
-   OddSum = eval(upc_matches[2]+"+"+upc_matches[4]) * 3;
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]) * 3;
    EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]);
  if(re.findall("^(\d{1})(\d{5})([4-9])", upc)):
   upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
