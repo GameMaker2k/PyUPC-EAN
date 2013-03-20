@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 03/07/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 03/20/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -51,7 +51,10 @@ Shortcut Codes by Kazuki Przyborowski
 def validate_barcode(upc,return_check=False):
  upc = str(upc);
  if(len(upc)==8): 
-  return validate_upce(upc,return_check);
+  if(re.findall("^([0-1])", upc)):
+   return validate_upce(upc,return_check);
+  if(re.findall("^([2-9])", upc)):
+   return validate_ean8(upc,return_check);
  if(len(upc)==12): 
   return validate_upca(upc,return_check);
  if(len(upc)==13): 
@@ -62,7 +65,10 @@ def validate_barcode(upc,return_check=False):
 def fix_barcode_checksum(upc):
  upc = str(upc);
  if(len(upc)==7): 
-  return upc+str(validate_upce(upc,True));
+  if(re.findall("^([0-1])", upc)):
+   return upc+str(validate_upce(upc,True));
+  if(re.findall("^([2-9])", upc)):
+   return upc+str(validate_ean8(upc,True));
  if(len(upc)==11): 
   return upc+str(validate_upca(upc,True));
  if(len(upc)==12): 
@@ -85,9 +91,15 @@ def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, 
   upc = upc_pieces[0]; supplement = upc_pieces[2];
  if(len(upc)==7 or len(upc)==8):
   if(supplement==None):
-   return create_upce(upc,outfile,resize,hideinfo,barheight);
+   if(re.findall("^([0-1])", upc)):
+    return create_upce(upc,outfile,resize,hideinfo,barheight);
+   if(re.findall("^([2-9])", upc)):
+    return create_ean8(upc,outfile,resize,hideinfo,barheight);
   if(supplement!=None):
-   return create_upce(upc+" "+supplement,outfile,resize,hideinfo,barheight);
+   if(re.findall("^([0-1])", upc)):
+    return create_upce(upc+" "+supplement,outfile,resize,hideinfo,barheight);
+   if(re.findall("^([2-9])", upc)):
+    return create_ean8(upc+" "+supplement,outfile,resize,hideinfo,barheight);
  if(len(upc)==11 or len(upc)==12):
   if(supplement==None):
    return create_upca(upc,outfile,resize,hideinfo,barheight);
