@@ -37,7 +37,7 @@ rootwin.bind("<Escape>", exit_ui);
 entry1 = Entry(rootwin);
 if(sys.platform=="win32"):
  entry1.place(x=40, y=132);
-if(sys.platform=="linux" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  entry1.place(x=45, y=130);
 labeltxt1 = StringVar();
 label1 = Label( rootwin, textvariable=labeltxt1);
@@ -48,7 +48,7 @@ listboxtxt1.set("Detect");
 listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "ITF", "ITF-14");
 if(sys.platform=="win32"):
  listbox1.place(x=60, y=164);
-if(sys.platform=="linux" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  listbox1.place(x=75, y=162);
 labeltxt2 = StringVar();
 label2 = Label(rootwin, textvariable=labeltxt2);
@@ -57,7 +57,7 @@ label2.place(x=0, y=166);
 magnify = Spinbox(rootwin, wrap=True, width=3, from_=1, to=10)
 if(sys.platform=="win32"):
  magnify.place(x=50, y=200);
-if(sys.platform=="linux" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  magnify.place(x=55, y=198);
 labeltxt3 = StringVar();
 label3 = Label(rootwin, textvariable=labeltxt3);
@@ -68,7 +68,7 @@ entry2 = Entry(rootwin, textvariable=entrytxt2);
 entrytxt2.set("48");
 if(sys.platform=="win32"):
  entry2.place(x=70, y=225);
-if(sys.platform=="linux" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  entry2.place(x=85, y=223);
 labeltxt4 = StringVar();
 label4 = Label( rootwin, textvariable=labeltxt4);
@@ -79,7 +79,7 @@ entry3 = Entry(rootwin, textvariable=entrytxt3);
 entrytxt3.set("54");
 if(sys.platform=="win32"):
  entry3.place(x=70, y=250);
-if(sys.platform=="linux" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  entry3.place(x=85, y=248);
 labeltxt5 = StringVar();
 label5 = Label( rootwin, textvariable=labeltxt5);
@@ -140,12 +140,12 @@ entry3.bind("<Return>", GenerateBarcodeAlt);
 button1 = Tkinter.Button(rootwin, text="Generate", command = GenerateBarcode);
 if(sys.platform=="win32"):
  button1.place(x=0, y=274);
-if(sys.platform=="linux" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  button1.place(x=0, y=272);
 button2 = Tkinter.Button(rootwin, text="Save As", command = SaveGeneratedBarcode);
 if(sys.platform=="win32"):
  button2.place(x=60, y=274);
-if(sys.platform=="linux" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  button2.place(x=90, y=272);
 button1.bind("<Return>", GenerateBarcodeAlt);
 button2.bind("<Return>", SaveGeneratedBarcodeAlt);
