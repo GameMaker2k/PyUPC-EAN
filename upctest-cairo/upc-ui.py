@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 03/23/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 03/24/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 import os, sys, tempfile, upcean;
@@ -115,7 +115,7 @@ def GenerateBarcode():
 def GenerateBarcodeAlt(event):
  GenerateBarcode();
 def SaveGeneratedBarcode():
- savefname=tkFileDialog.asksaveasfilename(parent=rootwin,title='Choose a file',filetypes=[('Windows Bitmap','*.bmp'), ('Portable Network Graphics','*.png'), ('JPEG / JFIF','*.jpg'), ('CompuServer GIF','*.gif')]);
+ savefname=tkFileDialog.asksaveasfilename(parent=rootwin,title='Save Image As',filetypes=[('Windows Bitmap','*.bmp'), ('Portable Network Graphics','*.png'), ('JPEG / JFIF','*.jpg *.jpeg *.jpe'), ('CompuServer GIF','*.gif'), ('Tag Image File Format','*.tif *.tiff'), ('Adobe Portable Document Format','*.pdf')]);
  if(listboxtxt1.get()=="Detect" and savefname!=""):
   create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-A" and savefname!=""):
