@@ -89,7 +89,7 @@ def GenerateBarcode():
  global updateimg, panel1, faddonsize;
  if(updateimg==True):
   panel1.destroy();
- (tmpfd, tmpfilename) = tempfile.mkstemp(".png");
+ '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  if(listboxtxt1.get()=="Detect"):
   ckvalidbc = validate_barcode(entry1.get());
   validbc = create_barcode(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
@@ -125,8 +125,8 @@ def GenerateBarcode():
   panel1.place(x=0, y=0);
   panel1.image = image1;
   updateimg = True;
- os.close(tmpfd);
- os.remove(tmpfilename);
+ '''os.close(tmpfd);
+ os.remove(tmpfilename);'''
 def GenerateBarcodeAlt(event):
  GenerateBarcode();
 def SaveGeneratedBarcode():
