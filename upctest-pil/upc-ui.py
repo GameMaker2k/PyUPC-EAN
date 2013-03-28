@@ -91,35 +91,20 @@ def GenerateBarcode():
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  if(listboxtxt1.get()=="Detect"):
-  ckvalidbc = validate_barcode(entry1.get());
   validbc = create_barcode(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-A"):
-  ckvalidbc = validate_upca(entry1.get());
   validbc = create_upca(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-E"):
-  ckvalidbc = validate_upce(entry1.get());
   validbc = create_upce(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-13"):
-  ckvalidbc = validate_ean13(entry1.get());
   validbc = create_ean13(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-8"):
-  ckvalidbc = validate_ean8(entry1.get());
   validbc = create_ean8(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF"):
-  ckvalidbc = True;
-  if(len(upc) % 2):
-   ckvalidbc = False;
-  if(len(upc) < 6):
-   ckvalidbc = False;
   validbc = create_itf(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF-14"):
-  ckvalidbc = True;
-  if(len(upc) % 2):
-   ckvalidbc = False;
-  if(len(upc) < 6):
-   ckvalidbc = False;
   validbc = create_itf14(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(ckvalidbc==True):
+ if(validbc!=False):
   image1 = ImageTk.PhotoImage(validbc);
   panel1 = Tkinter.Label(rootwin, image=image1);
   panel1.place(x=0, y=0);
