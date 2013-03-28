@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 03/24/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 import os, sys, tempfile, upcean;

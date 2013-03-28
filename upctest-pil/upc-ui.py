@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 03/24/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 import os, sys, tempfile, upcean;
@@ -91,21 +91,36 @@ def GenerateBarcode():
   panel1.destroy();
  (tmpfd, tmpfilename) = tempfile.mkstemp(".png");
  if(listboxtxt1.get()=="Detect"):
-  validbc = create_barcode(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  ckvalidbc = validate_barcode(entry1.get());
+  validbc = create_barcode(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-A"):
-  validbc = create_upca(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  ckvalidbc = validate_upca(entry1.get());
+  validbc = create_upca(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-E"):
-  validbc = create_upce(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  ckvalidbc = validate_upce(entry1.get());
+  validbc = create_upce(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-13"):
-  validbc = create_ean13(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  ckvalidbc = validate_ean13(entry1.get());
+  validbc = create_ean13(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-8"):
-  validbc = create_ean8(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  ckvalidbc = validate_ean8(entry1.get());
+  validbc = create_ean8(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF"):
-  validbc = create_itf(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  ckvalidbc = True;
+  if(len(upc) % 2):
+   ckvalidbc = False;
+  if(len(upc) < 6):
+   ckvalidbc = False;
+  validbc = create_itf(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF-14"):
-  validbc = create_itf14(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(validbc==True):
-  image1 = ImageTk.PhotoImage(Image.open(tmpfilename));
+  ckvalidbc = True;
+  if(len(upc) % 2):
+   ckvalidbc = False;
+  if(len(upc) < 6):
+   ckvalidbc = False;
+  validbc = create_itf14(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(ckvalidbc==True):
+  image1 = ImageTk.PhotoImage(validbc);
   panel1 = Tkinter.Label(rootwin, image=image1);
   panel1.place(x=0, y=0);
   panel1.image = image1;

@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code93.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: code93.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -232,6 +232,8 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
   oldoutfile = tuple(outfile[:]);
  if(type(outfile)==types.ListType):
   oldoutfile = list(outfile[:]);
+ if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+  oldoutfile = None;
  if(type(oldoutfile)==types.StringType):
   if(outfile!="-" and outfile!="" and outfile!=" "):
    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
@@ -243,16 +245,24 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
     outfileext = tmpoutfile[0][1].upper();
    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
     outfileext = "PNG";
-  if(outfileext=="JPG" or outfileext=="JPE"):
+  if(outfileext=="DIB"):
+   outfileext = "BMP";
+  if(outfileext=="PS"):
+   outfileext = "EPS";
+  if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
    outfileext = "JPEG";
+  if(outfileext=="PBM" or outfileext=="PGM"):
+   outfileext = "PPM";
   if(outfileext=="TIF"):
    outfileext = "TIFF";
-  if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF"):
+  if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
    outfileext = "PNG";
  if(type(oldoutfile)==types.TupleType or type(oldoutfile)==types.ListType):
   del(outfile);
   outfile = oldoutfile[0];
   outfileext = oldoutfile[1];
+ if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+  return new_upc_img;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
    new_upc_img.save(sys.stdout, outfileext);

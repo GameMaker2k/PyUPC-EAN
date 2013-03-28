@@ -13,11 +13,11 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upca.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: upca.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
-import cairo, re, sys, upcean.precairo, upcean.validate, upcean.convert;
+import cairo, re, sys, types, upcean.precairo, upcean.validate, upcean.convert;
 import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 from upcean.validate import *;
@@ -201,6 +201,8 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  del(upc_preimg);
+ if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+  return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" "):
    new_upc_preimg.write_to_png(sys.stdout);
