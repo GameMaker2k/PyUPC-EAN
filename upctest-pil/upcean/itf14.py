@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf14.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: itf14.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -166,7 +166,7 @@ def create_itf14(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fals
  drawColorRectangleAlt(upc_img, 1, 1, 42 + upc_size_add, (barheight[0] + 15) - 12, text_color);
  drawColorRectangleAlt(upc_img, 2, 2, 41 + upc_size_add, (barheight[0] + 15) - 13, text_color);
  drawColorRectangleAlt(upc_img, 3, 3, 40 + upc_size_add, (barheight[0] + 15) - 14, text_color);
- new_upc_img = upc_preimg.resize(((44 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST) # use nearest neighbour
+ new_upc_img = upc_preimg.resize(((44 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  if(type(outfile)==types.StringType):

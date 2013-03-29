@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: itf.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -162,7 +162,7 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
  drawColorLine(upc_img, 37 + upc_size_add, 4, 37 + upc_size_add, barheight[0], alt_text_color);
  drawColorLine(upc_img, 38 + upc_size_add, 4, 38 + upc_size_add, barheight[0], alt_text_color);
  drawColorLine(upc_img, 39 + upc_size_add, 4, 39 + upc_size_add, barheight[0], alt_text_color);
- new_upc_img = upc_preimg.resize(((39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST) # use nearest neighbour
+ new_upc_img = upc_preimg.resize(((39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  if(type(outfile)==types.StringType):

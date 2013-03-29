@@ -13,36 +13,44 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
-import Image, ImageDraw, ImageFont, re, upcean.prepil;
+import Image, ImageDraw, ImageFont, re, os, sys, types, upcean.prepil;
 from upcean.prepil import *;
 
-def create_ean2(upc,offsetadd,imgres,hidetext=False,barheight=(47, 53)):
+def create_ean2(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
+ hidesn = hideinfo[0];
+ hidecd = hideinfo[1];
+ hidetext = hideinfo[2];
  if(len(upc)>2 or len(upc)<2): 
   return False;
  upc_matches = re.findall("(\d{2})", upc);
  if(len(upc_matches)<=0): 
   return False;
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+  resize = 1;
  CheckSum = int(upc_matches[0]) % 4;
  LeftDigit = list(upc_matches[0]);
+ upc_preimg = Image.new("RGB", (29, barheight[1] + 9));
+ upc_img = ImageDraw.Draw(upc_preimg);
+ upc_img.rectangle([(0, 0), (29, barheight[1] + 9)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
  if(hidetext==False):
-  drawColorText(imgres, 10, 5 + offsetadd, barheight[0], LeftDigit[0], text_color);
-  drawColorText(imgres, 10, 13 + offsetadd, barheight[0], LeftDigit[1], text_color);
+  drawColorText(upc_img, 10, 5, barheight[0], LeftDigit[0], text_color);
+  drawColorText(upc_img, 10, 13, barheight[0], LeftDigit[1], text_color);
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];
- drawColorLine(imgres, 0 + offsetadd, 10, 0 + offsetadd, LineSize, alt_text_color);
- drawColorLine(imgres, 1 + offsetadd, 10, 1 + offsetadd, LineSize, text_color);
- drawColorLine(imgres, 2 + offsetadd, 10, 2 + offsetadd, LineSize, alt_text_color);
- drawColorLine(imgres, 3 + offsetadd, 10, 3 + offsetadd, LineSize, text_color);
- drawColorLine(imgres, 4 + offsetadd, 10, 4 + offsetadd, LineSize, text_color);
+ drawColorLine(upc_img, 0, 10, 0, LineSize, alt_text_color);
+ drawColorLine(upc_img, 1, 10, 1, LineSize, text_color);
+ drawColorLine(upc_img, 2, 10, 2, LineSize, alt_text_color);
+ drawColorLine(upc_img, 3, 10, 3, LineSize, text_color);
+ drawColorLine(upc_img, 4, 10, 4, LineSize, text_color);
  NumZero = 0; 
- LineStart = 5 + offsetadd;
+ LineStart = 5;
  while (NumZero < len(LeftDigit)):
   LineSize = barheight[0];
   if(hidetext==True):
@@ -99,15 +107,63 @@ def create_ean2(upc,offsetadd,imgres,hidetext=False,barheight=(47, 53)):
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_text_color)):
    if(left_text_color[InnerUPCNum]==1):
-    drawColorLine(imgres, LineStart, 10, LineStart, LineSize, text_color);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
    if(left_text_color[InnerUPCNum]==0):
-    drawColorLine(imgres, LineStart, 10, LineStart, LineSize, alt_text_color);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, alt_text_color);
    LineStart += 1;
    InnerUPCNum += 1;
   if(NumZero == 0):
-   drawColorLine(imgres, LineStart, 10, LineStart, LineSize, alt_text_color);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, alt_text_color);
    LineStart += 1;
-   drawColorLine(imgres, LineStart, 10, LineStart, LineSize, text_color);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
    LineStart += 1;
   NumZero += 1;
+ new_upc_img = upc_preimg.resize((29 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+ del(upc_img);
+ del(upc_preimg);
+ if(type(outfile)==types.StringType):
+  oldoutfile = outfile[:];
+ if(type(outfile)==types.TupleType):
+  oldoutfile = tuple(outfile[:]);
+ if(type(outfile)==types.ListType):
+  oldoutfile = list(outfile[:]);
+ if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+  oldoutfile = None;
+ if(type(oldoutfile)==types.StringType):
+  if(outfile!="-" and outfile!="" and outfile!=" "):
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
+    outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+    tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+    del(outfile);
+    outfile = tmpoutfile[0][0];
+    outfileext = tmpoutfile[0][1].upper();
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+    outfileext = "PNG";
+  if(outfileext=="DIB"):
+   outfileext = "BMP";
+  if(outfileext=="PS"):
+   outfileext = "EPS";
+  if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
+   outfileext = "JPEG";
+  if(outfileext=="PBM" or outfileext=="PGM"):
+   outfileext = "PPM";
+  if(outfileext=="TIF"):
+   outfileext = "TIFF";
+  if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
+   outfileext = "PNG";
+ if(type(oldoutfile)==types.TupleType or type(oldoutfile)==types.ListType):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
+ if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+  return new_upc_img;
+ if(sys.version[0]=="2"):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+   new_upc_img.save(sys.stdout, outfileext);
+ if(sys.version[0]=="3"):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+   new_upc_img.save(sys.stdout.buffer, outfileext);
+ if(outfile!="-" and outfile!="" and outfile!=" "):
+  new_upc_img.save(outfile, outfileext);
  return True;

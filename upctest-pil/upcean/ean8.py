@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean8.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -252,11 +252,17 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 80, 10, 80, barheight[0], alt_text_color);
  drawColorLine(upc_img, 81, 10, 81, barheight[0], alt_text_color);
  drawColorLine(upc_img, 82, 10, 82, barheight[0], alt_text_color);
- if(supplement!=None and len(supplement)==2):
-  create_ean2(supplement,83,upc_img,hidetext,barheight);
- if(supplement!=None and len(supplement)==5):
-  create_ean5(supplement,83,upc_img,hidetext,barheight);
- new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST) # use nearest neighbour
+ if(supplement!=None and len(supplement)==2): 
+  upc_sup_img = create_ean2(supplement,None,1,hideinfo,barheight);
+  if(upc_sup_img!=False):
+   upc_preimg.paste(upc_sup_img,(83,0));
+   del(upc_sup_img);
+ if(supplement!=None and len(supplement)==5): 
+  upc_sup_img = create_ean5(supplement,None,1,hideinfo,barheight);
+  if(upc_sup_img!=False):
+   upc_preimg.paste(upc_sup_img,(83,0));
+   del(upc_sup_img);
+ new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  if(type(outfile)==types.StringType):

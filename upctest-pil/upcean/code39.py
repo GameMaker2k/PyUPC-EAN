@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -221,7 +221,7 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  drawColorLine(upc_img, 45 + upc_size_add, 4, 45 + upc_size_add, LineSize, alt_text_color);
  drawColorLine(upc_img, 46 + upc_size_add, 4, 46 + upc_size_add, LineSize, alt_text_color);
  drawColorLine(upc_img, 48 + upc_size_add, 4, 48 + upc_size_add, LineSize, alt_text_color);
- new_upc_img = upc_preimg.resize(((48 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST) # use nearest neighbour
+ new_upc_img = upc_preimg.resize(((48 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  if(type(outfile)==types.StringType):

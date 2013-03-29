@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upca.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: upca.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -185,10 +185,16 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 111, 10, 111, barheight[0], alt_text_color);
  drawColorLine(upc_img, 112, 10, 112, barheight[0], alt_text_color);
  if(supplement!=None and len(supplement)==2): 
-  create_ean2(supplement,113,upc_img,hidetext,barheight);
+  upc_sup_img = create_ean2(supplement,None,1,hideinfo,barheight);
+  if(upc_sup_img!=False):
+   upc_preimg.paste(upc_sup_img,(113,0));
+   del(upc_sup_img);
  if(supplement!=None and len(supplement)==5): 
-  create_ean5(supplement,113,upc_img,hidetext,barheight);
- new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST) # use nearest neighbour
+  upc_sup_img = create_ean5(supplement,None,1,hideinfo,barheight);
+  if(upc_sup_img!=False):
+   upc_preimg.paste(upc_sup_img,(113,0));
+   del(upc_sup_img);
+ new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  if(type(outfile)==types.StringType):
