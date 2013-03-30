@@ -239,7 +239,6 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
-
  drawColorLine(upc_img, 71, 10, 71, barheight[1], text_color);
  drawColorLine(upc_img, 72, 10, 72, barheight[1], alt_text_color);
  drawColorLine(upc_img, 73, 10, 73, barheight[1], text_color);

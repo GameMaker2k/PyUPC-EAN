@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean8.py - Last Update: 03/27/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -242,7 +242,6 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
-
  drawColorLine(upc_img, 71, 10, 71, barheight[1], text_color);
  drawColorLine(upc_img, 72, 10, 72, barheight[1], alt_text_color);
  drawColorLine(upc_img, 73, 10, 73, barheight[1], text_color);
@@ -256,9 +255,15 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 81, 10, 81, barheight[0], alt_text_color);
  drawColorLine(upc_img, 82, 10, 82, barheight[0], alt_text_color);
  if(supplement!=None and len(supplement)==2):
-  create_ean2(supplement,83,upc_img,hidetext,barheight);
+  upc_sup_img = create_ean2(supplement,None,1,hideinfo,barheight);
+  upc_img.set_source_surface(upc_sup_img, 83, 0);
+  upc_img.paint();
+  del(upc_sup_img);
  if(supplement!=None and len(supplement)==5):
-  create_ean5(supplement,83,upc_img,hidetext,barheight);
+  upc_sup_img = create_ean5(supplement,None,1,hideinfo,barheight);
+  upc_img.set_source_surface(upc_sup_img, 83, 0);
+  upc_img.paint();
+  del(upc_sup_img);
  upc_imgpat = cairo.SurfacePattern(upc_preimg);
  scaler = cairo.Matrix();
  scaler.scale(1/int(resize),1/int(resize));

@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 03/20/2013 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -130,7 +130,7 @@ def fix_upc_checksum(upc):
  if(len(upc)==11): 
   return upc+str(validate_upca(upc,True));
  return False;
-def create_upc(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
+def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -168,7 +168,7 @@ def fix_ean_checksum(upc):
  if(len(upc)==12): 
   return upc+str(validate_ean13(upc,True));
  return False;
-def create_ean(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
+def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
