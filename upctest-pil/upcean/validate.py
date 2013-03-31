@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 03/30/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
 '''
 
 import sys, re;
@@ -181,8 +181,8 @@ def validate_upce(upc,return_check=False):
    OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[3]+"+"+upc_matches[5]) * 3;
    EvenSum = eval(upc_matches[1]+"+2+"+upc_matches[4]);
   if(int(upc_matches[6])==3):
-   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]) * 3;
-   EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]);
+   OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[5]) * 3;
+   EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[4]);
  if(re.findall("^(\d{1})(\d{5})([4-9])", upc)):
   upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
   upc_matches=upc_matches[0];
