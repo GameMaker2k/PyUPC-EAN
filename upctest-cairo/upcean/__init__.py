@@ -9,9 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2012 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
-    Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2013 Cool Dude 2k - http://idb.berlios.de/
+    Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
     $FileInfo: __init__.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1 - Author: cooldude2k $
 '''
