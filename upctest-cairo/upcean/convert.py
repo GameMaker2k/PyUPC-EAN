@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: convert.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: convert.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1  - Author: cooldude2k $
 '''
 
 import sys, re, upcean.validate;
@@ -210,18 +210,18 @@ def convert_any_to_upca(upc):
  if(len(upc)==8):
   return convert_upce_to_upca(upc);
  if(len(upc)==13):
-  return convert_ean13_to_upce(upc);
+  return convert_ean13_to_upca(upc);
  if(len(upc)==14):
-  return convert_itf14_to_upce(upc);
+  return convert_itf14_to_upca(upc);
  return False;
 def convert_any_to_upce(upc):
  upc = str(upc);
  if(len(upc)==12):
   return convert_upca_to_upce(upc);
  if(len(upc)==13):
-  return convert_ean13_to_upca(upc);
+  return convert_ean13_to_upce(upc);
  if(len(upc)==14):
-  return convert_itf14_to_upca(upc);
+  return convert_itf14_to_upce(upc);
  return False;
 def convert_any_to_ean13(upc):
  upc = str(upc);

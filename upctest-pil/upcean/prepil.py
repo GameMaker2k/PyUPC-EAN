@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: prepil.py - Last Update: 02/28/2012 Ver. 2.2.5 RC 1 - Author: cooldude2k $
+    $FileInfo: prepil.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1  - Author: cooldude2k $
 '''
 
 import re, os, sys, Image, ImageDraw, ImageFont;

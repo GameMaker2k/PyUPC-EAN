@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    FileInfo: ean5.py - Last Update: 03/28/2013 Ver. 2.0.0 - Author: cooldude2k 
+    FileInfo: ean5.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1 - Author: cooldude2k 
 '''
 
 import cairo, re, sys, types, upcean.precairo;
