@@ -14,7 +14,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 2  - Author: cooldude2k $
 '''
 
 import sys, re, upcean.validate;
@@ -369,6 +369,494 @@ def get_gs1_prefix(upc):
  if(re.findall("^(98[4-9])", upc)):
   return "Reserved for future use";
  return False;
+
+'''
+// Get ISBN identifier groups
+// Source: http://en.wikipedia.org/wiki/List_of_ISBN_identifier_groups
+'''
+def get_isbn_identifier(upc):
+ upc = str(upc);
+ upc = upc.replace("-", "");
+ upc = upc.replace(" ", "");
+ if(len(upc)>10):
+  fix_matches = re.findall("^(\d{9})(\d{1}|X{1})", upc); 
+  fix_matches = fix_matches[0]
+  upc = fix_matches[0]+fix_matches[1];
+ if(len(upc)>10 or len(upc)<10):
+  return False;
+ if(re.findall("^99972", upc)):
+  return "Faroe Islands";
+ if(re.findall("^99971", upc)):
+  return "Myanmar";
+ if(re.findall("^99970", upc)):
+  return "Haiti";
+ if(re.findall("^99969", upc)):
+  return "Oman";
+ if(re.findall("^99968", upc)):
+  return "Botswana";
+ if(re.findall("^99967", upc)):
+  return "Paraguay";
+ if(re.findall("^99966", upc)):
+  return "Kuwait";
+ if(re.findall("^99965", upc)):
+  return "Macau";
+ if(re.findall("^99964", upc)):
+  return "Nicaragua";
+ if(re.findall("^99963", upc)):
+  return "Cambodia";
+ if(re.findall("^99962", upc)):
+  return "Mongolia";
+ if(re.findall("^99961", upc)):
+  return "El Salvador";
+ if(re.findall("^99960", upc)):
+  return "Malawi";
+ if(re.findall("^99959", upc)):
+  return "Luxembourg";
+ if(re.findall("^99958", upc)):
+  return "Bahrain";
+ if(re.findall("^99957", upc)):
+  return "Malta";
+ if(re.findall("^99956", upc)):
+  return "Albania";
+ if(re.findall("^99955", upc)):
+  return "Republika Srpska";
+ if(re.findall("^99954", upc)):
+  return "Bolivia";
+ if(re.findall("^99953", upc)):
+  return "Paraguay";
+ if(re.findall("^99952", upc)):
+  return "Mali";
+ if(re.findall("^99951", upc)):
+  return "Democratic Republic of Congo";
+ if(re.findall("^99950", upc)):
+  return "Cambodia";
+ if(re.findall("^99949", upc)):
+  return "Mauritius";
+ if(re.findall("^99948", upc)):
+  return "Eritrea";
+ if(re.findall("^99947", upc)):
+  return "Tajikistan";
+ if(re.findall("^99946", upc)):
+  return "Nepal";
+ if(re.findall("^99945", upc)):
+  return "Namibia";
+ if(re.findall("^99944", upc)):
+  return "Ethiopia";
+ if(re.findall("^99943", upc)):
+  return "Albania";
+ if(re.findall("^99942", upc)):
+  return "Sudan";
+ if(re.findall("^99941", upc)):
+  return "Armenia";
+ if(re.findall("^99939", upc)):
+  return "Guatemala";
+ if(re.findall("^99938", upc)):
+  return "Republika Srpska";
+ if(re.findall("^99937", upc)):
+  return "Macau";
+ if(re.findall("^99936", upc)):
+  return "Bhutan";
+ if(re.findall("^99935", upc)):
+  return "Haiti";
+ if(re.findall("^99934", upc)):
+  return "Dominican republic";
+ if(re.findall("^99933", upc)):
+  return "Nepal";
+ if(re.findall("^99932", upc)):
+  return "Malta";
+ if(re.findall("^99931", upc)):
+  return "Seychelles";
+ if(re.findall("^99930", upc)):
+  return "Armenia";
+ if(re.findall("^99929", upc)):
+  return "Mongolia";
+ if(re.findall("^99928", upc)):
+  return "Georgia";
+ if(re.findall("^99927", upc)):
+  return "Albania";
+ if(re.findall("^99926", upc)):
+  return "Honduras";
+ if(re.findall("^99925", upc)):
+  return "Paraguay";
+ if(re.findall("^99924", upc)):
+  return "Nicaragua";
+ if(re.findall("^99923", upc)):
+  return "El Salvador";
+ if(re.findall("^99922", upc)):
+  return "Guatemala";
+ if(re.findall("^99921", upc)):
+  return "Qatar";
+ if(re.findall("^99920", upc)):
+  return "Andorra";
+ if(re.findall("^99919", upc)):
+  return "Benin";
+ if(re.findall("^99918", upc)):
+  return "Faroe Islands";
+ if(re.findall("^99917", upc)):
+  return "Brunei Darussalam";
+ if(re.findall("^99916", upc)):
+  return "Namibia";
+ if(re.findall("^99915", upc)):
+  return "Maldives";
+ if(re.findall("^99914", upc)):
+  return "Suriname";
+ if(re.findall("^99913", upc)):
+  return "Andorra";
+ if(re.findall("^99912", upc)):
+  return "Botsana";
+ if(re.findall("^99911", upc)):
+  return "Lesotho";
+ if(re.findall("^99910", upc)):
+  return "Sierra Leone";
+ if(re.findall("^99909", upc)):
+  return "Malta";
+ if(re.findall("^99908", upc)):
+  return "Malawi";
+ if(re.findall("^99906", upc)):
+  return "Kuwait";
+ if(re.findall("^99905", upc)):
+  return "Bolivia";
+ if(re.findall("^99904", upc)):
+  return "Netherland Antilles, and Aruba";
+ if(re.findall("^99903", upc)):
+  return "Mauritius";
+ if(re.findall("^99902", upc)):
+  return "Gabon";
+ if(re.findall("^99901", upc)):
+  return "Bahrain";
+ if(re.findall("^9989", upc)):
+  return "Macedonia";
+ if(re.findall("^9988", upc)):
+  return "Ghana";
+ if(re.findall("^9987", upc)):
+  return "Tanzania";
+ if(re.findall("^9986", upc)):
+  return "Lithuania";
+ if(re.findall("^9985", upc)):
+  return "Estonia";
+ if(re.findall("^9984", upc)):
+  return "Latvia";
+ if(re.findall("^9983", upc)):
+  return "Gambia";
+ if(re.findall("^9982", upc)):
+  return "Zambia";
+ if(re.findall("^9981", upc)):
+  return "Morocco";
+ if(re.findall("^9980", upc)):
+  return "Papua New Guinea";
+ if(re.findall("^9979", upc)):
+  return "Iceland";
+ if(re.findall("^9978", upc)):
+  return "Ecuador";
+ if(re.findall("^9977", upc)):
+  return "Costa Rica";
+ if(re.findall("^9976", upc)):
+  return "Tanzania";
+ if(re.findall("^9975", upc)):
+  return "Moldova";
+ if(re.findall("^9974", upc)):
+  return "Uruguay";
+ if(re.findall("^9973", upc)):
+  return "Tunisia";
+ if(re.findall("^9972", upc)):
+  return "Peru";
+ if(re.findall("^9971", upc)):
+  return "Singapore";
+ if(re.findall("^9970", upc)):
+  return "Uganda";
+ if(re.findall("^9968", upc)):
+  return "Costa Rica";
+ if(re.findall("^9967", upc)):
+  return "Kyrgyzstan";
+ if(re.findall("^9966", upc)):
+  return "Kenya";
+ if(re.findall("^9965", upc)):
+  return "Kazakhstan";
+ if(re.findall("^9964", upc)):
+  return "Ghana";
+ if(re.findall("^9963", upc)):
+  return "Cyprus";
+ if(re.findall("^9962", upc)):
+  return "Panama";
+ if(re.findall("^9961", upc)):
+  return "Algeria";
+ if(re.findall("^9960", upc)):
+  return "Saudi Arabia";
+ if(re.findall("^9959", upc)):
+  return "Libya";
+ if(re.findall("^9958", upc)):
+  return "Bosnia and Herzegovina";
+ if(re.findall("^9957", upc)):
+  return "Jordan";
+ if(re.findall("^9956", upc)):
+  return "Cameroon";
+ if(re.findall("^9955", upc)):
+  return "Lithuania";
+ if(re.findall("^9954", upc)):
+  return "Morocco";
+ if(re.findall("^9953", upc)):
+  return "Lebanon";
+ if(re.findall("^9952", upc)):
+  return "Azerbaijan";
+ if(re.findall("^9951", upc)):
+  return "Kosovo";
+ if(re.findall("^9950", upc)):
+  return "Palestine";
+ if(re.findall("^9949", upc)):
+  return "Estonia";
+ if(re.findall("^9948", upc)):
+  return "United Arab Emirates";
+ if(re.findall("^9947", upc)):
+  return "Algeria";
+ if(re.findall("^9946", upc)):
+  return "North Korea";
+ if(re.findall("^9945", upc)):
+  return "Dominican Republic";
+ if(re.findall("^9944", upc)):
+  return "Turkey";
+ if(re.findall("^9943", upc)):
+  return "Uzbekistan";
+ if(re.findall("^9942", upc)):
+  return "Ecuador";
+ if(re.findall("^9941", upc)):
+  return "Georgia";
+ if(re.findall("^9940", upc)):
+  return "Montenegro";
+ if(re.findall("^9939", upc)):
+  return "Armenia";
+ if(re.findall("^9937", upc)):
+  return "Nepal";
+ if(re.findall("^9936", upc)):
+  return "Afghanistan";
+ if(re.findall("^9935", upc)):
+  return "Iceland";
+ if(re.findall("^9934", upc)):
+  return "Latvia";
+ if(re.findall("^9933", upc)):
+  return "Syria";
+ if(re.findall("^9932", upc)):
+  return "Laos";
+ if(re.findall("^9931", upc)):
+  return "Algeria";
+ if(re.findall("^9930", upc)):
+  return "Costa Rica";
+ if(re.findall("^9929", upc)):
+  return "Guatemala";
+ if(re.findall("^9928", upc)):
+  return "Albania";
+ if(re.findall("^9927", upc)):
+  return "Qatar";
+ if(re.findall("^989", upc)):
+  return "Portugal";
+ if(re.findall("^988", upc)):
+  return "Hong Kong";
+ if(re.findall("^987", upc)):
+  return "Argentina";
+ if(re.findall("^986", upc)):
+  return "Taiwan";
+ if(re.findall("^985", upc)):
+  return "Belarus";
+ if(re.findall("^984", upc)):
+  return "Bangladesh";
+ if(re.findall("^983", upc)):
+  return "Malaysia";
+ if(re.findall("^982", upc)):
+  return "South Pacific";
+ if(re.findall("^981", upc)):
+  return "Singapore";
+ if(re.findall("^980", upc)):
+  return "Venezuela";
+ if(re.findall("^979", upc)):
+  return "Indonesia";
+ if(re.findall("^978", upc)):
+  return "Nigeria";
+ if(re.findall("^977", upc)):
+  return "Egypt";
+ if(re.findall("^976", upc)):
+  return "CARICOM";
+ if(re.findall("^975", upc)):
+  return "Turkey";
+ if(re.findall("^974", upc)):
+  return "Thailand";
+ if(re.findall("^973", upc)):
+  return "Romania";
+ if(re.findall("^972", upc)):
+  return "Portugal";
+ if(re.findall("^971", upc)):
+  return "Philippines";
+ if(re.findall("^970", upc)):
+  return "Mexico";
+ if(re.findall("^969", upc)):
+  return "Pakistan";
+ if(re.findall("^968", upc)):
+  return "Mexico";
+ if(re.findall("^967", upc)):
+  return "Malaysia";
+ if(re.findall("^966", upc)):
+  return "Ukraine";
+ if(re.findall("^965", upc)):
+  return "Israel";
+ if(re.findall("^964", upc)):
+  return "Iran";
+ if(re.findall("^963", upc)):
+  return "Hungary";
+ if(re.findall("^962", upc)):
+  return "Hong Kong";
+ if(re.findall("^961", upc)):
+  return "Slovenia";
+ if(re.findall("^960", upc)):
+  return "Greece";
+ if(re.findall("^959", upc)):
+  return "Cuba";
+ if(re.findall("^958", upc)):
+  return "Colombia";
+ if(re.findall("^957", upc)):
+  return "Taiwan";
+ if(re.findall("^956", upc)):
+  return "Chile";
+ if(re.findall("^955", upc)):
+  return "Sri Lanka";
+ if(re.findall("^954", upc)):
+  return "Bulgaria";
+ if(re.findall("^953", upc)):
+  return "Croatia";
+ if(re.findall("^952", upc)):
+  return "Finland";
+ if(re.findall("^951", upc)):
+  return "Finland";
+ if(re.findall("^950", upc)):
+  return "Argentina";
+ if(re.findall("^621", upc)):
+  return "Philippines";
+ if(re.findall("^620", upc)):
+  return "Mauritius";
+ if(re.findall("^619", upc)):
+  return "Bulgaria";
+ if(re.findall("^618", upc)):
+  return "Greece";
+ if(re.findall("^617", upc)):
+  return "Ukraine";
+ if(re.findall("^616", upc)):
+  return "Thailand";
+ if(re.findall("^615", upc)):
+  return "Hungary";
+ if(re.findall("^614", upc)):
+  return "Lebanon";
+ if(re.findall("^613", upc)):
+  return "Mauritius";
+ if(re.findall("^612", upc)):
+  return "Peru";
+ if(re.findall("^611", upc)):
+  return "Thailand";
+ if(re.findall("^609", upc)):
+  return "Lithuania";
+ if(re.findall("^608", upc)):
+  return "Macedonia";
+ if(re.findall("^607", upc)):
+  return "Mexico";
+ if(re.findall("^606", upc)):
+  return "Romania";
+ if(re.findall("^605", upc)):
+  return "Turkey";
+ if(re.findall("^604", upc)):
+  return "Vietnam";
+ if(re.findall("^603", upc)):
+  return "Saudi Arabia";
+ if(re.findall("^602", upc)):
+  return "Indonesia";
+ if(re.findall("^601", upc)):
+  return "Kazakhstan";
+ if(re.findall("^600", upc)):
+  return "Iran";
+ if(re.findall("^94", upc)):
+  return "Netherlands";
+ if(re.findall("^93", upc)):
+  return "India";
+ if(re.findall("^92", upc)):
+  return "International NGO Publishers and EC Organizations";
+ if(re.findall("^91", upc)):
+  return "Sweden";
+ if(re.findall("^90", upc)):
+  return "Netherlands";
+ if(re.findall("^89", upc)):
+  return "Republic of Korea";
+ if(re.findall("^88", upc)):
+  return "Italy";
+ if(re.findall("^87", upc)):
+  return "Denmark";
+ if(re.findall("^86", upc)):
+  return "Serbia ";(shared)
+ if(re.findall("^85", upc)):
+  return "Brazil";
+ if(re.findall("^84", upc)):
+  return "Spain";
+ if(re.findall("^83", upc)):
+  return "Poland";
+ if(re.findall("^82", upc)):
+  return "Norway";
+ if(re.findall("^81", upc)):
+  return "India";
+ if(re.findall("^80", upc)):
+  return "Czech Republic and Slovakia";
+ if(re.findall("^7", upc)):
+  return "China";
+ if(re.findall("^5", upc)):
+  return "Russia and former USSR";
+ if(re.findall("^4", upc)):
+  return "Japan";
+ if(re.findall("^3", upc)):
+  return "German";
+ if(re.findall("^2", upc)):
+  return "French";
+ if(re.findall("^1", upc)):
+  return "English";
+ if(re.findall("^0", upc)):
+  return "English";
+ return False;
+
+def get_upca_info(upc):
+ upc = str(upc);
+ if(re.findall("^0(\d{12})", upc)):
+  upc_matches = re.findall("^0(\d{12})", upc);
+  upc = upc_matches[1];
+ if(not re.findall("^(\d{12})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{1})(\d{5})(\d{5})(\d{1})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
+ return upc_type;
+def get_ean8_info(upc):
+ upc = str(upc);
+ if(not re.findall("^(\d{8})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{2})(\d{5})(\d{1})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': None, 'product': pre_upc_type[1], 'checkdigit': pre_upc_type[2]};
+ return upc_type;
+def get_ean13_info(upc):
+ upc = str(upc);
+ if(len(upc)==12):
+  upc = "0"+upc;
+ if(not re.findall("^(\d{13})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{2})(\d{5})(\d{5})(\d{1})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
+ return upc_type;
+def get_itf14_info(upc):
+ upc = str(upc);
+ if(len(upc)==12):
+  upc = "00"+upc;
+ if(len(upc)==13):
+  upc = "0"+upc;
+ if(not re.findall("^(\d{14})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{1})(\d{2})(\d{5})(\d{5})(\d{1})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'packagecode': pre_upc_type[0], 'numbersystem': pre_upc_type[1], 'manufacturer': pre_upc_type[2], 'product': pre_upc_type[3], 'checkdigit': pre_upc_type[4]};
+ return upc_type;
+ 
+
 '''
 // Get Number System Prefix for UPC-A barcodes
 // Source: http://www.morovia.com/education/symbology/upc-a.asp
@@ -402,6 +890,7 @@ def get_upca_ns(upc):
  if(re.findall("^(9)", upc)):
   return "Coupons";
  return False;
+
 '''
 // Get ITF-14 Packaging Indicator
 // Source: http://www.mecsw.com/specs/itf_14.html
@@ -432,6 +921,7 @@ def get_itf14_type(upc):
  if(re.findall("^(9)", upc)):
   return "Variable quantity content";
  return False;
+
 '''
 // Get variable weight info
 // Source: http://wiki.answers.com/Q/How_does_a_price_embedded_bar_code_work
@@ -448,7 +938,7 @@ def get_upca_vw_info(upc):
   return False;
  upc_matches = re.findall("^2(\d{5})(\d{1})(\d{4})(\d{1})", upc);
  upc_matches = upc_matches[0];
- product = {'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2]}
+ product = {'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2]};
  return product;
 def get_upca_vw_code(upc):
  upc = str(upc);
@@ -468,6 +958,7 @@ def get_upca_vw_pricecs(upc):
  if(product==False):
   return False;
  return product['pricecs'];
+
 '''
 // Get coupon info
 // Source: http://divagirlusa-ivil.tripod.com/austinitecouponers/id29.html
@@ -483,7 +974,7 @@ def get_upca_coupon_info(upc):
   return False;
  upc_matches = re.findall("^(5|9)(\d{5})(\d{3})(\d{2})(\d{1})", upc);
  upc_matches = upc_matches[0];
- product = {'manufacturer': upc_matches[1], 'family': upc_matches[2], 'value': upc_matches[3]}
+ product = {'manufacturer': upc_matches[1], 'family': upc_matches[2], 'value': upc_matches[3]};
  return product;
 def get_upca_coupon_manufacturer(upc):
  upc = str(upc);
