@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 04/01/2013 Ver. 2.3.5 RC 1  - Author: cooldude2k $
 '''
 
 import os, sys, tempfile, upcean;
@@ -91,19 +91,19 @@ def GenerateBarcode():
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  if(listboxtxt1.get()=="Detect"):
-  validbc = create_barcode(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_barcode(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-A"):
-  validbc = create_upca(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_upca(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-E"):
-  validbc = create_upce(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_upce(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-13"):
-  validbc = create_ean13(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_ean13(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-8"):
-  validbc = create_ean8(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_ean8(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF"):
-  validbc = create_itf(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_itf(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF-14"):
-  validbc = create_itf14(entry1.get(),None,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_itf14(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(validbc!=False):
   image1 = ImageTk.PhotoImage(validbc);
   panel1 = Tkinter.Label(rootwin, image=image1);

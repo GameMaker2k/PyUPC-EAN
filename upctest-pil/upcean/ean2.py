@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1 - Author: cooldude2k $
 '''
 
 import Image, ImageDraw, ImageFont, re, os, sys, types, upcean.prepil;
@@ -167,3 +167,6 @@ def create_ean2(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False)
  if(outfile!="-" and outfile!="" and outfile!=" "):
   new_upc_img.save(outfile, outfileext);
  return True;
+
+def draw_ean2(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ return create_ean2(upc,None,resize,hideinfo,barheight);

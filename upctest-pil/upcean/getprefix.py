@@ -14,7 +14,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 2  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1  - Author: cooldude2k $
 '''
 
 import sys, re, upcean.validate;
@@ -855,6 +855,16 @@ def get_itf14_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': pre_upc_type[0], 'numbersystem': pre_upc_type[1], 'manufacturer': pre_upc_type[2], 'product': pre_upc_type[3], 'checkdigit': pre_upc_type[4]};
  return upc_type;
+def get_barcode_info(upc):
+ if(len(upc)==8): 
+  return get_ean8_info(upc);
+ if(len(upc)==12):
+  return get_upca_info(upc);
+ if(len(upc)==13):
+  return get_ean13_info(upc);
+ if(len(upc)==14):
+  return get_itf14_info(upc);
+ return False;
 
 '''
 // Get Number System Prefix for UPC-A barcodes

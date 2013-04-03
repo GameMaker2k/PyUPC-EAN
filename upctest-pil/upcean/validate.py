@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1  - Author: cooldude2k $
 '''
 
 import sys, re;
@@ -223,6 +223,97 @@ def fix_upce_checksum(upc):
   fix_matches = re.findall("^(\d{7})", upc); 
   upc = fix_matches[0];
  return upc+str(validate_upce(upc,True));
+
+'''
+Shortcut Codes by Kazuki Przyborowski
+'''
+def validate_barcode(upc,return_check=False):
+ upc = str(upc);
+ if(len(upc)==8): 
+  if(re.findall("^([0-1])", upc)):
+   return validate_upce(upc,return_check);
+  if(re.findall("^([2-9])", upc)):
+   return validate_ean8(upc,return_check);
+ if(len(upc)==12): 
+  return validate_upca(upc,return_check);
+ if(len(upc)==13): 
+  return validate_ean13(upc,return_check);
+ if(len(upc)==14): 
+  return validate_itf14(upc,return_check);
+ return False;
+def fix_barcode_checksum(upc):
+ upc = str(upc);
+ if(len(upc)==7): 
+  if(re.findall("^([0-1])", upc)):
+   return upc+str(validate_upce(upc,True));
+  if(re.findall("^([2-9])", upc)):
+   return upc+str(validate_ean8(upc,True));
+ if(len(upc)==11): 
+  return upc+str(validate_upca(upc,True));
+ if(len(upc)==12): 
+  return upc+str(validate_ean13(upc,True));
+ if(len(upc)==13): 
+  return upc+str(validate_itf14(upc,True));
+ return False;
+
+def validate_any(upc,return_check=False):
+ upc = str(upc);
+ if(len(upc)==8): 
+  if(re.findall("^([0-1])", upc)):
+   return validate_upce(upc,return_check);
+  if(re.findall("^([2-9])", upc)):
+   return validate_ean8(upc,return_check);
+ if(len(upc)==12): 
+  return validate_upca(upc,return_check);
+ if(len(upc)==13): 
+  return validate_ean13(upc,return_check);
+ if(len(upc)==14): 
+  return validate_itf14(upc,return_check);
+ return False;
+def fix_any_checksum(upc):
+ upc = str(upc);
+ if(len(upc)==7): 
+  if(re.findall("^([0-1])", upc)):
+   return upc+str(validate_upce(upc,True));
+  if(re.findall("^([2-9])", upc)):
+   return upc+str(validate_ean8(upc,True));
+ if(len(upc)==11): 
+  return upc+str(validate_upca(upc,True));
+ if(len(upc)==12): 
+  return upc+str(validate_ean13(upc,True));
+ if(len(upc)==13): 
+  return upc+str(validate_itf14(upc,True));
+ return False;
+
+def validate_upc(upc,return_check=False):
+ upc = str(upc);
+ if(len(upc)==8): 
+  return validate_upce(upc,return_check);
+ if(len(upc)==12): 
+  return validate_upca(upc,return_check);
+ return False;
+def fix_upc_checksum(upc):
+ upc = str(upc);
+ if(len(upc)==7): 
+  return upc+str(validate_upce(upc,True));
+ if(len(upc)==11): 
+  return upc+str(validate_upca(upc,True));
+ return False;
+
+def validate_ean(upc,return_check=False):
+ upc = str(upc);
+ if(len(upc)==8): 
+  return validate_ean8(upc,return_check);
+ if(len(upc)==13): 
+  return validate_ean13(upc,return_check);
+ return False;
+def fix_ean_checksum(upc):
+ upc = str(upc);
+ if(len(upc)==7): 
+  return upc+str(validate_ean8(upc,True));
+ if(len(upc)==12): 
+  return upc+str(validate_ean13(upc,True));
+ return False;
 
 '''
 ISSN (International Standard Serial Number)

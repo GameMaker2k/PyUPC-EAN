@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean13.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1 - Author: cooldude2k $
+    $FileInfo: ean13.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -313,3 +313,6 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
  if(outfile!="-" and outfile!="" and outfile!=" "):
   new_upc_img.save(outfile, outfileext);
  return True;
+
+def draw_ean13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ return create_ean13(upc,None,resize,hideinfo,barheight);

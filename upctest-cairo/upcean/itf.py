@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf.py - Last Update: 04/01/2013 Ver. 2.3.0 RC 1  - Author: cooldude2k $
+    $FileInfo: itf.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -186,3 +186,6 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
  if(outfile!="-" and outfile!="" and outfile!=" "):
   new_upc_preimg.write_to_png(outfile);
  return True;
+
+def draw_itf(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ return create_itf(upc,None,resize,hideinfo,barheight);
