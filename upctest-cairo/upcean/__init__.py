@@ -181,26 +181,25 @@ def draw_ismn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
 def create_vw_upca(code,price,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_upca(make_vw_upca(code, price),outfile,resize,hideinfo,barheight);
 def draw_vw_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
- return create_vw_upca(make_vw_upca(code, price),None,resize,hideinfo,barheight);
+ return create_vw_upca(code,price,None,resize,hideinfo,barheight);
 def create_vw_to_ean13(code,price,outfile="./vw-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_ean13(make_vw_to_ean13(code, price),outfile,resize,hideinfo,barheight);
 def draw_vw_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
- return create_vw_to_ean13(make_vw_upca(code, price),None,resize,hideinfo,barheight);
+ return create_vw_to_ean13(code,price,None,resize,hideinfo,barheight);
 def create_vw_to_itf14(code,price,outfile="./vw-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_itf14(make_vw_to_itf14(code, price),outfile,resize,hideinfo,barheight);
 def draw_vw_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
- return create_vw_to_itf14(make_vw_upca(code, price),None,resize,hideinfo,barheight);
-
+ return create_vw_to_itf14(code,price,None,resize,hideinfo,barheight);
 
 def create_coupon_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_upca(make_coupon_upca(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight);
 def draw_coupon_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
- return create_vw_upca(make_coupon_upca(numbersystem, manufacturer, family, value),None,resize,hideinfo,barheight);
+ return create_coupon_upca(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight);
 def create_coupon_to_ean13(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_ean13(make_coupon_to_ean13(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight);
 def draw_coupon_to_ean13(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
- return create_vw_to_ean13(make_coupon_to_ean13(numbersystem, manufacturer, family, value),None,resize,hideinfo,barheight);
+ return create_coupon_to_ean13(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight);
 def create_coupon_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_itf14(make_coupon_to_itf14(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight);
 def draw_coupon_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
- return create_vw_to_itf14(make_coupon_to_itf14(numbersystem, manufacturer, family, value),None,resize,hideinfo,barheight);
+ return create_coupon_to_itf14(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight);
