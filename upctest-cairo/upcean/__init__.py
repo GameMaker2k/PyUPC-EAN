@@ -13,15 +13,21 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division;
-version_info = (2, 3, 5, "RC 1");
-if(version_info[3]!=None):
- __version__ = str(version_info[0])+"."+str(version_info[1])+"."+str(version_info[2])+" "+str(version_info[3]);
-if(version_info[3]==None):
- __version__ = str(version_info[0])+"."+str(version_info[1])+"."+str(version_info[2]);
+__version_info__ = (2, 3, 5, "RC 2");
+if(__version_info__[3]!=None):
+ __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
+if(__version_info__[3]==None):
+ __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2]);
+def version_info():
+ global __version_info__;
+ if(__version_info__[3]!=None):
+  return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": str(__version_info__[3])};
+ if(__version_info__[3]==None):
+  return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": None};
 import sys, re, upcean.validate, upcean.convert, upcean.getprefix;
 import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93;
 '''
@@ -188,13 +194,13 @@ def draw_vw_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheigh
 
 def create_coupon_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_upca(make_coupon_upca(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight);
-def draw_vw_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
+def draw_coupon_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_vw_upca(make_coupon_upca(numbersystem, manufacturer, family, value),None,resize,hideinfo,barheight);
 def create_coupon_to_ean13(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_ean13(make_coupon_to_ean13(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight);
-def draw_vw_to_ean13(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def draw_coupon_to_ean13(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  return create_vw_to_ean13(make_coupon_to_ean13(numbersystem, manufacturer, family, value),None,resize,hideinfo,barheight);
 def create_coupon_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_itf14(make_coupon_to_itf14(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight);
-def draw_vw_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def draw_coupon_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  return create_vw_to_itf14(make_coupon_to_itf14(numbersystem, manufacturer, family, value),None,resize,hideinfo,barheight);
