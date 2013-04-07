@@ -17,8 +17,9 @@
 '''
 
 from __future__ import division;
-import Image, ImageDraw, ImageFont, re, os, sys, types, upcean.prepil, upcean.validate, upcean.convert;
+import re, os, sys, types, upcean.prepil, upcean.validate, upcean.convert;
 import upcean.ean2, upcean.ean5;
+from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 from upcean.validate import *;
 from upcean.convert import *;

@@ -16,7 +16,8 @@
     $FileInfo: ean2.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1 - Author: cooldude2k $
 '''
 
-import Image, ImageDraw, ImageFont, re, os, sys, types, upcean.prepil;
+import re, os, sys, types, upcean.prepil;
+from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 
 def create_ean2(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):

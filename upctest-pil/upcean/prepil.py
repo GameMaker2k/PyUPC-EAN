@@ -16,7 +16,8 @@
     $FileInfo: prepil.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1  - Author: cooldude2k $
 '''
 
-import re, os, sys, Image, ImageDraw, ImageFont;
+import re, os, sys;
+from PIL import Image, ImageDraw, ImageFont;
 
 '''
 http://stevehanov.ca/blog/index.php?id=28

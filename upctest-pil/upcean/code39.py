@@ -17,8 +17,9 @@
 '''
 
 from __future__ import division;
-import Image, ImageDraw, ImageFont, re, os, sys, types, upcean.prepil;
+import re, os, sys, types, upcean.prepil;
 import upcean.ean2, upcean.ean5;
+from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 
 def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
