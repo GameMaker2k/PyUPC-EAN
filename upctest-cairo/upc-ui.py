@@ -89,29 +89,30 @@ def GenerateBarcode():
  global updateimg, panel1, faddonsize;
  if(updateimg==True):
   panel1.destroy();
- (tmpfd, tmpfilename) = tempfile.mkstemp(".png");
+ '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  if(listboxtxt1.get()=="Detect"):
-  validbc = create_barcode(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_barcode(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-A"):
-  validbc = create_upca(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_upca(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-E"):
-  validbc = create_upce(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_upce(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-13"):
-  validbc = create_ean13(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_ean13(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-8"):
-  validbc = create_ean8(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_ean8(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF"):
-  validbc = create_itf(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_itf(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF-14"):
-  validbc = create_itf14(entry1.get(),tmpfilename,"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(validbc==True):
-  image1 = ImageTk.PhotoImage(Image.open(tmpfilename));
+  validbc = draw_itf14(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(validbc!=False):
+  validbc = Image.frombuffer("RGB",(validbc.get_width(),validbc.get_height()),validbc.get_data(),"raw","RGBA",0,1).convert("RGB");
+  image1 = ImageTk.PhotoImage(validbc);
   panel1 = Tkinter.Label(rootwin, image=image1);
   panel1.place(x=0, y=0);
   panel1.image = image1;
   updateimg = True;
- os.close(tmpfd);
- os.remove(tmpfilename);
+ '''os.close(tmpfd);
+ os.remove(tmpfilename);'''
 def GenerateBarcodeAlt(event):
  GenerateBarcode();
 def SaveGeneratedBarcode():
