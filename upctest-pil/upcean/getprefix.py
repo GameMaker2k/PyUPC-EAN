@@ -156,7 +156,7 @@ def get_gs1_prefix(upc):
  if(re.findall("^(616)", upc)):
   return "Kenya";
  if(re.findall("^(618)", upc)):
-  return "CÃ´te d'Ivoire";
+  return "Côte d'Ivoire";
  if(re.findall("^(619)", upc)):
   return "Tunisia";
  if(re.findall("^(621)", upc)):
