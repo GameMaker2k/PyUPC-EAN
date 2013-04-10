@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code11.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1 - Author: cooldude2k $
+    $FileInfo: code11.py - Last Update: 04/10/2013 Ver. 2.3.7 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -158,42 +158,71 @@ def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
- if(type(outfile)==types.StringType):
-  oldoutfile = outfile[:];
- if(type(outfile)==types.TupleType):
+ if(sys.version[0]=="2"):
+  if(isinstance(outfile, str) or isinstance(outfile, unicode)):
+   oldoutfile = outfile[:];
+ if(sys.version[0]=="3"):
+  if(isinstance(outfile, str)):
+   oldoutfile = outfile[:];
+ if(isinstance(outfile, tuple)):
   oldoutfile = tuple(outfile[:]);
- if(type(outfile)==types.ListType):
+ if(isinstance(outfile, list)):
   oldoutfile = list(outfile[:]);
- if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+ if(outfile is None or isinstance(outfile, bool)):
   oldoutfile = None;
- if(type(oldoutfile)==types.StringType):
-  if(outfile!="-" and outfile!="" and outfile!=" "):
-   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
-    outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
-   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
-    tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
-    del(outfile);
-    outfile = tmpoutfile[0][0];
-    outfileext = tmpoutfile[0][1].upper();
-   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+ if(sys.version[0]=="2"):
+  if(isinstance(oldoutfile, str) or isinstance(outfile, unicode)):
+   if(outfile!="-" and outfile!="" and outfile!=" "):
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
+     outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+     tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+     del(outfile);
+     outfile = tmpoutfile[0][0];
+     outfileext = tmpoutfile[0][1].upper();
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+     outfileext = "PNG";
+   if(outfileext=="DIB"):
+    outfileext = "BMP";
+   if(outfileext=="PS"):
+    outfileext = "EPS";
+   if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
+    outfileext = "JPEG";
+   if(outfileext=="PBM" or outfileext=="PGM"):
+    outfileext = "PPM";
+   if(outfileext=="TIF"):
+    outfileext = "TIFF";
+   if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
     outfileext = "PNG";
-  if(outfileext=="DIB"):
-   outfileext = "BMP";
-  if(outfileext=="PS"):
-   outfileext = "EPS";
-  if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
-   outfileext = "JPEG";
-  if(outfileext=="PBM" or outfileext=="PGM"):
-   outfileext = "PPM";
-  if(outfileext=="TIF"):
-   outfileext = "TIFF";
-  if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
-   outfileext = "PNG";
- if(type(oldoutfile)==types.TupleType or type(oldoutfile)==types.ListType):
+ if(sys.version[0]=="3"):
+  if(isinstance(oldoutfile, str)):
+   if(outfile!="-" and outfile!="" and outfile!=" "):
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
+     outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+     tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+     del(outfile);
+     outfile = tmpoutfile[0][0];
+     outfileext = tmpoutfile[0][1].upper();
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+     outfileext = "PNG";
+   if(outfileext=="DIB"):
+    outfileext = "BMP";
+   if(outfileext=="PS"):
+    outfileext = "EPS";
+   if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
+    outfileext = "JPEG";
+   if(outfileext=="PBM" or outfileext=="PGM"):
+    outfileext = "PPM";
+   if(outfileext=="TIF"):
+    outfileext = "TIFF";
+   if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
+    outfileext = "PNG";
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
   del(outfile);
   outfile = oldoutfile[0];
   outfileext = oldoutfile[1];
- if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+ if(outfile is None or isinstance(outfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):

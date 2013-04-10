@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 04/10/2013 Ver. 2.3.7 RC 1 - Author: cooldude2k $
 '''
 
 import cairo, re, sys, types, upcean.precairo;
@@ -131,7 +131,7 @@ def create_ean2(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False)
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  del(upc_preimg);
- if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+ if(outfile is None or isinstance(outfile, bool)):
   return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" "):

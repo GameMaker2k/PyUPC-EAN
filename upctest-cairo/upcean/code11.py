@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code11.py - Last Update: 04/02/2013 Ver. 2.3.5 RC 1  - Author: cooldude2k $
+    $FileInfo: code11.py - Last Update: 04/10/2013 Ver. 2.3.7 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division;
@@ -167,7 +167,7 @@ def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  new_upc_img.set_source(upc_imgpat);
  new_upc_img.paint();
  del(upc_preimg);
- if(type(outfile)==types.NoneType or type(outfile)==types.BooleanType):
+ if(outfile is None or isinstance(outfile, bool)):
   return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" "):
