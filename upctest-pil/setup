@@ -1,32 +1,23 @@
 #!/bin/sh
 
-if [ ! -n "$RMFILE" ]; then
+if [ ! -n "${RMFILE}" ]; then
 RMFILE="$(which rm) -rf"
 fi
 
-if [ ! -n "$PYTHON" ]; then
+if [ ! -n "${PYTHON}" ]; then
 PYTHON="$(which python)"
 fi
 
-if [ ! -n "$MKDIR" ]; then
+if [ ! -n "${MKDIR}" ]; then
 MKDIR="$(which mkdir)"
 fi
 
-if [ ! -n "$INSTALL" ]; then
+if [ ! -n "${INSTALL}" ]; then
 INSTALL="$(which install) -c"
 fi
 
-if [ ! -n "$UNAME" ]; then
-UNAME="$(which uname)"
-if [ "$($UNAME -p)" == "unknown" ]; then
-UNAME="$UNAME -smr"
-else
-UNAME="$UNAME -smpr"
-fi
-fi
-
-if [ ! -n "$PREFIX" ]; then
-PREFIX=$($PYTHON -c "from distutils.sysconfig import get_python_lib; print(get_python_lib());")
+if [ ! -n "${PREFIX}" ]; then
+PREFIX=$(${PYTHON} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib());")
 fi
 
 printandrun() {
@@ -35,38 +26,38 @@ eval $1
 }
 
 testandcreatedir() {
-printandrun "test -z \"$1\" || $MKDIR -p \"$1\""
+printandrun "test -z \"$1\" || ${MKDIR} -p \"$1\""
 }
 
 installpyfiles() {
-printandrun "$INSTALL \"$1\" \"$2\""
+printandrun "${INSTALL} \"$1\" \"$2\""
 }
 
 buildwithpy() {
-printandrun "$PYTHON -c \"import $1\""
-printandrun "$PYTHON -O -c \"import $1\""
+printandrun "${PYTHON} -m compileall \"${PREFIX}/upcean\""
+printandrun "${PYTHON} -O -m compileall \"${PREFIX}/upcean\""
 }
 
 OLDCWD="$(pwd)"
 echo "Installing Python Moudle upcean";
 echo "Checking for Python Moudle PIL"
-$PYTHON -c "import PIL"
+${PYTHON} -c "import PIL"
 if [ "$?" -ne "0" ]; then 
 echo "Sorry could not find Python Moudle PIL";
 exit 0; 
 fi
 echo "Checking for Python Moudle ReadLine"
-$PYTHON -c "import readline"
+${PYTHON} -c "import readline"
 if [ "$?" -ne "0" ]; then 
 echo "Sorry could not find Python Moudle ReadLine"; 
 exit 0; 
 fi
-testandcreatedir "$PREFIX/upcean"
+testandcreatedir "${PREFIX}/upcean"
 for f in ./upcean/*; do  
-installpyfiles "$f" "$PREFIX/upcean/$(basename $f)"
+installpyfiles "${f}" "${PREFIX}/upcean/$(basename ${f})"
 done
-printandrun "cd \"$PREFIX\""
+printandrun "cd \"${PREFIX}\""
 buildwithpy "upcean"
-printandrun "cd \"$OLDCWD\""
+printandrun "cd \"${OLDCWD}\""
 echo "Finished installing Python Moudle upcean";
 
