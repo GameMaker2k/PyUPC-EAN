@@ -9,33 +9,33 @@ PYTHON="$(which python)"
 fi
 
 if [ ! -n "${MKDIR}" ]; then
-MKDIR="$(which mkdir)"
+MKDIR="$(which mkdir) -v"
 fi
 
 if [ ! -n "${INSTALL}" ]; then
-INSTALL="$(which install) -c"
-fi
+INSTALL="$(which install) -v -c"
+fi#!
 
 if [ ! -n "${PREFIX}" ]; then
 PREFIX=$(${PYTHON} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib());")
 fi
 
 printandrun() {
-echo $1
-eval $1
+echo ${1}
+eval ${1}
 }
 
 testandcreatedir() {
-printandrun "test -z \"$1\" || ${MKDIR} -p \"$1\""
+printandrun "test -z \"${1}\" || ${MKDIR} -p \"${1}\""
 }
 
 installpyfiles() {
-printandrun "${INSTALL} \"$1\" \"$2\""
+printandrun "${INSTALL} \"${1}\" \"${2}\""
 }
 
 buildwithpy() {
-printandrun "${PYTHON} -m compileall \"${PREFIX}/upcean\""
-printandrun "${PYTHON} -O -m compileall \"${PREFIX}/upcean\""
+printandrun "${PYTHON} -m compileall \"${PREFIX}/${1}\""
+printandrun "${PYTHON} -O -m compileall \"${PREFIX}/${1}\""
 }
 
 OLDCWD="$(pwd)"
