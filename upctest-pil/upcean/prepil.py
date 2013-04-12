@@ -33,7 +33,7 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  ctx.rectangle([(x1, y1), (x2, y2)], fill=color);
 
 def drawColorText( ctx, size, x, y, text, color ):
- font = ImageFont.load(os.path.dirname(__file__)+os.sep+"ISO8859-1.pil");
+ font = ImageFont.truetype(os.path.dirname(__file__)+os.sep+"OCRB.otf", size);
  text = str(text);
  ctx.text((x, y), text, font=font, fill=color);
  del(font);

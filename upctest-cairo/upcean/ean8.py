@@ -76,8 +76,7 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
  if(hidetext==False):
-  if(hidesn!=None and hidesn!=True):
-   drawColorText(upc_img, 10, 10, barheight[1] + 2, LeftLeftDigit, text_color);
+  drawColorText(upc_img, 10, 10, barheight[1] + 2, LeftLeftDigit, text_color);
   drawColorText(upc_img, 10, 23, barheight[1] + 2, LeftRightDigit, text_color);
   drawColorText(upc_img, 10, 42, barheight[1] + 2, RightLeftDigit, text_color);
   drawColorText(upc_img, 10, 55, barheight[1] + 2, RightRightDigit, text_color);

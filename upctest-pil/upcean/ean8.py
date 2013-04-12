@@ -74,11 +74,14 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
  if(hidetext==False):
-  if(hidesn!=None and hidesn!=True):
-   drawColorText(upc_img, 10, 12, barheight[0], LeftLeftDigit, text_color);
-  drawColorText(upc_img, 10, 25, barheight[0], LeftRightDigit, text_color);
-  drawColorText(upc_img, 10, 44, barheight[0], RightLeftDigit, text_color);
-  drawColorText(upc_img, 10, 57, barheight[0], RightRightDigit, text_color);
+  drawColorText(upc_img, 10, 11, barheight[0], list(LeftLeftDigit)[0], text_color);
+  drawColorText(upc_img, 10, 17, barheight[0], list(LeftLeftDigit)[1], text_color);
+  drawColorText(upc_img, 10, 24, barheight[0], list(LeftRightDigit)[0], text_color);
+  drawColorText(upc_img, 10, 30, barheight[0], list(LeftRightDigit)[1], text_color);
+  drawColorText(upc_img, 10, 43, barheight[0], list(RightLeftDigit)[0], text_color);
+  drawColorText(upc_img, 10, 49, barheight[0], list(RightLeftDigit)[1], text_color);
+  drawColorText(upc_img, 10, 56, barheight[0], list(RightRightDigit)[0], text_color);
+  drawColorText(upc_img, 10, 62, barheight[0], list(RightRightDigit)[1], text_color);
  drawColorLine(upc_img, 0, 10, 0, barheight[0], alt_text_color);
  drawColorLine(upc_img, 1, 10, 1, barheight[0], alt_text_color);
  drawColorLine(upc_img, 2, 10, 2, barheight[0], alt_text_color);
@@ -252,19 +255,19 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 80, 10, 80, barheight[0], alt_text_color);
  drawColorLine(upc_img, 81, 10, 81, barheight[0], alt_text_color);
  drawColorLine(upc_img, 82, 10, 82, barheight[0], alt_text_color);
- if(supplement!=None and len(supplement)==2): 
-  upc_sup_img = create_ean2(supplement,None,1,hideinfo,barheight);
-  if(upc_sup_img!=False):
-   upc_preimg.paste(upc_sup_img,(83,0));
-   del(upc_sup_img);
- if(supplement!=None and len(supplement)==5): 
-  upc_sup_img = create_ean5(supplement,None,1,hideinfo,barheight);
-  if(upc_sup_img!=False):
-   upc_preimg.paste(upc_sup_img,(83,0));
-   del(upc_sup_img);
- new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+ new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
+ if(supplement!=None and len(supplement)==2): 
+  upc_sup_img = create_ean2(supplement,None,resize,hideinfo,barheight);
+  if(upc_sup_img!=False):
+   new_upc_img.paste(upc_sup_img,(83 * int(resize),0));
+   del(upc_sup_img);
+ if(supplement!=None and len(supplement)==5): 
+  upc_sup_img = create_ean5(supplement,None,resize,hideinfo,barheight);
+  if(upc_sup_img!=False):
+   new_upc_img.paste(upc_sup_img,(83 * int(resize),0));
+   del(upc_sup_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
    oldoutfile = outfile[:];

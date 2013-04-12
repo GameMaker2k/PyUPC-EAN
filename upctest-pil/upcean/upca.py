@@ -73,11 +73,19 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  alt_text_color = (256, 256, 256);
  if(hidetext==False):
   if(hidesn!=None and hidesn!=True):
-   drawColorText(upc_img, 10, 2, barheight[0], upc_matches[0], text_color);
-  drawColorText(upc_img, 10, 22, barheight[0], upc_matches[1], text_color);
-  drawColorText(upc_img, 10, 61, barheight[0], upc_matches[2], text_color);
+   drawColorText(upc_img, 10, 1, barheight[0], upc_matches[0], text_color);
+  drawColorText(upc_img, 10, 22, barheight[0], list(upc_matches[1])[0], text_color);
+  drawColorText(upc_img, 10, 28, barheight[0], list(upc_matches[1])[1], text_color);
+  drawColorText(upc_img, 10, 34, barheight[0], list(upc_matches[1])[2], text_color);
+  drawColorText(upc_img, 10, 40, barheight[0], list(upc_matches[1])[3], text_color);
+  drawColorText(upc_img, 10, 46, barheight[0], list(upc_matches[1])[4], text_color);
+  drawColorText(upc_img, 10, 61, barheight[0], list(upc_matches[2])[0], text_color);
+  drawColorText(upc_img, 10, 67, barheight[0], list(upc_matches[2])[1], text_color);
+  drawColorText(upc_img, 10, 73, barheight[0], list(upc_matches[2])[2], text_color);
+  drawColorText(upc_img, 10, 79, barheight[0], list(upc_matches[2])[3], text_color);
+  drawColorText(upc_img, 10, 85, barheight[0], list(upc_matches[2])[4], text_color);
   if(hidecd!=None and hidecd!=True):
-   drawColorText(upc_img, 10, 106, barheight[0], upc_matches[3], text_color);
+   drawColorText(upc_img, 10, 105, barheight[0], upc_matches[3], text_color);
  drawColorLine(upc_img, 0, 10, 0, barheight[0], alt_text_color);
  drawColorLine(upc_img, 1, 10, 1, barheight[0], alt_text_color);
  drawColorLine(upc_img, 2, 10, 2, barheight[0], alt_text_color);
@@ -185,19 +193,19 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 110, 10, 110, barheight[0], alt_text_color);
  drawColorLine(upc_img, 111, 10, 111, barheight[0], alt_text_color);
  drawColorLine(upc_img, 112, 10, 112, barheight[0], alt_text_color);
- if(supplement!=None and len(supplement)==2): 
-  upc_sup_img = create_ean2(supplement,None,1,hideinfo,barheight);
-  if(upc_sup_img!=False):
-   upc_preimg.paste(upc_sup_img,(113,0));
-   del(upc_sup_img);
- if(supplement!=None and len(supplement)==5): 
-  upc_sup_img = create_ean5(supplement,None,1,hideinfo,barheight);
-  if(upc_sup_img!=False):
-   upc_preimg.paste(upc_sup_img,(113,0));
-   del(upc_sup_img);
- new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+ new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
+ if(supplement!=None and len(supplement)==2): 
+  upc_sup_img = create_ean2(supplement,None,resize,hideinfo,barheight);
+  if(upc_sup_img!=False):
+   new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
+   del(upc_sup_img);
+ if(supplement!=None and len(supplement)==5): 
+  upc_sup_img = create_ean5(supplement,None,resize,hideinfo,barheight);
+  if(upc_sup_img!=False):
+   new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
+   del(upc_sup_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
    oldoutfile = outfile[:];
