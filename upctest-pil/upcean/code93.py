@@ -70,13 +70,6 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  upc_img.rectangle([(0, 0), (37 + upc_size_add, barheight[1] + 9)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
- if(hidetext==False):
-  NumTxtZero = 0; 
-  LineTxtStart = 18;
-  while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10, LineTxtStart, barheight[0] + 1, upc_print[NumTxtZero], text_color);
-   LineTxtStart += 9;
-   NumTxtZero += 1;
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];
@@ -227,6 +220,15 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  new_upc_img = upc_preimg.resize(((37 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
+ upc_img = ImageDraw.Draw(new_upc_img);
+ if(hidetext==False):
+  NumTxtZero = 0; 
+  LineTxtStart = 18;
+  while (NumTxtZero < len(upc_print)):
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (19 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), upc_print[NumTxtZero], text_color);
+   LineTxtStart += 9 * int(resize);
+   NumTxtZero += 1;
+ del(upc_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
    oldoutfile = outfile[:];

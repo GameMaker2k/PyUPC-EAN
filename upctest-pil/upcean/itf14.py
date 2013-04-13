@@ -42,16 +42,6 @@ def create_itf14(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fals
  upc_img.rectangle([(0, 0), (44 + upc_size_add, barheight[0] + 15)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
- if(hidetext==False):
-  NumTxtZero = 0; 
-  LineTxtStart = 23;
-  while (NumTxtZero < len(upc_matches)):
-   ArrayDigit = list(upc_matches[NumTxtZero]);
-   drawColorText(upc_img, 10, LineTxtStart, barheight[0] + 4, ArrayDigit[0], text_color);
-   LineTxtStart += 9;
-   drawColorText(upc_img, 10, LineTxtStart, barheight[0] + 4, ArrayDigit[1], text_color);
-   LineTxtStart += 9;
-   NumTxtZero += 1;
  drawColorLine(upc_img, 4, 4, 4, barheight[0], alt_text_color);
  drawColorLine(upc_img, 5, 4, 5, barheight[0], alt_text_color);
  drawColorLine(upc_img, 6, 4, 6, barheight[0], alt_text_color);
@@ -170,6 +160,18 @@ def create_itf14(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fals
  new_upc_img = upc_preimg.resize(((44 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
+ upc_img = ImageDraw.Draw(new_upc_img);
+ if(hidetext==False):
+  NumTxtZero = 0; 
+  LineTxtStart = 23;
+  while (NumTxtZero < len(upc_matches)):
+   ArrayDigit = list(upc_matches[NumTxtZero]);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + 4 + (52 * (int(resize) - 1)), ArrayDigit[0], text_color);
+   LineTxtStart += 9 * int(resize);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + 4 + (52 * (int(resize) - 1)), ArrayDigit[1], text_color);
+   LineTxtStart += 9 * int(resize);
+   NumTxtZero += 1;
+ del(upc_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
    oldoutfile = outfile[:];

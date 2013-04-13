@@ -38,13 +38,6 @@ def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),b
  upc_img.rectangle([(0, 0), (46 + upc_size_add, barheight[0] + 15)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
- if(hidetext==False):
-  NumTxtZero = 0; 
-  LineTxtStart = 24;
-  while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10, LineTxtStart, barheight[0] + 1, upc_matches[NumTxtZero], text_color);
-   LineTxtStart += 14;
-   NumTxtZero += 1;
  drawColorLine(upc_img, 0, 4, 0, barheight[0], alt_text_color);
  drawColorLine(upc_img, 1, 4, 1, barheight[0], alt_text_color);
  drawColorLine(upc_img, 2, 4, 2, barheight[0], alt_text_color);
@@ -137,6 +130,15 @@ def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),b
  new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
+ upc_img = ImageDraw.Draw(new_upc_img);
+ if(hidetext==False):
+  NumTxtZero = 0; 
+  LineTxtStart = 24;
+  while (NumTxtZero < len(upc_matches)):
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), upc_matches[NumTxtZero], text_color);
+   LineTxtStart += 14 * int(resize);
+   NumTxtZero += 1;
+ del(upc_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
    oldoutfile = outfile[:];

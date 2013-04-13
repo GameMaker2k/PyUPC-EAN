@@ -73,15 +73,6 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  upc_img.rectangle([(0, 0), (83 + addonsize, barheight[1] + 9)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
- if(hidetext==False):
-  drawColorText(upc_img, 10, 11, barheight[0], list(LeftLeftDigit)[0], text_color);
-  drawColorText(upc_img, 10, 17, barheight[0], list(LeftLeftDigit)[1], text_color);
-  drawColorText(upc_img, 10, 24, barheight[0], list(LeftRightDigit)[0], text_color);
-  drawColorText(upc_img, 10, 30, barheight[0], list(LeftRightDigit)[1], text_color);
-  drawColorText(upc_img, 10, 43, barheight[0], list(RightLeftDigit)[0], text_color);
-  drawColorText(upc_img, 10, 49, barheight[0], list(RightLeftDigit)[1], text_color);
-  drawColorText(upc_img, 10, 56, barheight[0], list(RightRightDigit)[0], text_color);
-  drawColorText(upc_img, 10, 62, barheight[0], list(RightRightDigit)[1], text_color);
  drawColorLine(upc_img, 0, 10, 0, barheight[0], alt_text_color);
  drawColorLine(upc_img, 1, 10, 1, barheight[0], alt_text_color);
  drawColorLine(upc_img, 2, 10, 2, barheight[0], alt_text_color);
@@ -258,6 +249,17 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
+ upc_img = ImageDraw.Draw(new_upc_img);
+ if(hidetext==False):
+  drawColorText(upc_img, 10 * int(resize), 11 + (14 * (int(resize) - 1)) - (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(LeftLeftDigit)[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 17 + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(LeftLeftDigit)[1], text_color);
+  drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(LeftRightDigit)[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 30 + (29 * (int(resize) - 1)) + (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(LeftRightDigit)[1], text_color);
+  drawColorText(upc_img, 10 * int(resize), 43 + (46 * (int(resize) - 1)) - (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(RightLeftDigit)[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 49 + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(RightLeftDigit)[1], text_color);
+  drawColorText(upc_img, 10 * int(resize), 56 + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(RightRightDigit)[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 62 + (61 * (int(resize) - 1)) + (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(RightRightDigit)[1], text_color);
+ del(upc_img);
  if(supplement!=None and len(supplement)==2): 
   upc_sup_img = create_ean2(supplement,None,resize,hideinfo,barheight);
   if(upc_sup_img!=False):

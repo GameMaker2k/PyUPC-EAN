@@ -39,9 +39,6 @@ def create_ean2(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False)
  upc_img.rectangle([(0, 0), (29, barheight[1] + 9)], fill=(256, 256, 256));
  text_color = (0, 0, 0);
  alt_text_color = (256, 256, 256);
- if(hidetext==False):
-  drawColorText(upc_img, 10, 5, barheight[0], LeftDigit[0], text_color);
-  drawColorText(upc_img, 10, 13, barheight[0], LeftDigit[1], text_color);
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];
@@ -122,6 +119,11 @@ def create_ean2(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False)
  new_upc_img = upc_preimg.resize((29 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
+ upc_img = ImageDraw.Draw(new_upc_img);
+ if(hidetext==False):
+  drawColorText(upc_img, 10 * int(resize), 5 + (6 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 13 + (13 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[1], text_color);
+ del(upc_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
    oldoutfile = outfile[:];
