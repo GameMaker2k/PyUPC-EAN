@@ -297,12 +297,12 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
  if(hidetext==False):
   if(hidesn!=None and hidesn!=True):
    drawColorText(upc_img, 10 * int(resize), 1 + (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), upc_matches[0], text_color);
-  drawColorText(upc_img, 10 * int(resize), 15 + (18 * (int(resize) - 1)) - (3 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[0], text_color);
-  drawColorText(upc_img, 10 * int(resize), 21 + (23 * (int(resize) - 1)) - (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[1], text_color);
+  drawColorText(upc_img, 10 * int(resize), 15 + (18 * (int(resize) - 1)) - (5 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 21 + (23 * (int(resize) - 1)) - (3 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[1], text_color);
   drawColorText(upc_img, 10 * int(resize), 27 + (28 * (int(resize) - 1)) - (1 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[2], text_color);
   drawColorText(upc_img, 10 * int(resize), 33 + (33 * (int(resize) - 1)) + (1 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[3], text_color);
-  drawColorText(upc_img, 10 * int(resize), 39 + (38 * (int(resize) - 1)) + (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[4], text_color);
-  drawColorText(upc_img, 10 * int(resize), 45 + (43 * (int(resize) - 1)) + (3 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[5], text_color);  
+  drawColorText(upc_img, 10 * int(resize), 39 + (38 * (int(resize) - 1)) + (3 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[4], text_color);
+  drawColorText(upc_img, 10 * int(resize), 45 + (43 * (int(resize) - 1)) + (5 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[5], text_color);  
   if(hidecd!=None and hidecd!=True):
    drawColorText(upc_img, 10 * int(resize), 61 + (61 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), upc_matches[2], text_color);
  del(upc_img);
