@@ -207,11 +207,11 @@ def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False)
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), 7 + (7 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[0], text_color);
-  drawColorText(upc_img, 10 * int(resize), 16 + (15 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[1], text_color);
-  drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[2], text_color);
-  drawColorText(upc_img, 10 * int(resize), 32 + (32 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[3], text_color);
-  drawColorText(upc_img, 10 * int(resize), 40 + (40 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[4], text_color);
+  drawColorText(upc_img, 10 * int(resize), 7 + (7 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 16 + (15 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[1], text_color);
+  drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[2], text_color);
+  drawColorText(upc_img, 10 * int(resize), 32 + (32 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[3], text_color);
+  drawColorText(upc_img, 10 * int(resize), 40 + (40 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[4], text_color);
  del(upc_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):

@@ -217,15 +217,15 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), barheight[0] + (48 * (int(resize) - 1)), "*", text_color);
+  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", text_color);
   NumTxtZero = 0; 
   LineTxtStart = 30 * int(resize);
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (48 * (int(resize) - 1)), upc_matches[NumTxtZero], text_color);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[NumTxtZero], text_color);
    LineTxtStart += 16 * int(resize);
    NumTxtZero += 1;
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (48 * (int(resize) - 1)), "*", text_color);
+  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", text_color);
  del(upc_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):

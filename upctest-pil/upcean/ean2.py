@@ -122,8 +122,8 @@ def create_ean2(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False)
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), 5 + (6 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[0], text_color);
-  drawColorText(upc_img, 10 * int(resize), 13 + (13 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), LeftDigit[1], text_color);
+  drawColorText(upc_img, 10 * int(resize), 5 + (6 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 13 + (13 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[1], text_color);
  del(upc_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):

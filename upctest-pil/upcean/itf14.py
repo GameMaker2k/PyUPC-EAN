@@ -166,9 +166,9 @@ def create_itf14(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fals
   LineTxtStart = 23;
   while (NumTxtZero < len(upc_matches)):
    ArrayDigit = list(upc_matches[NumTxtZero]);
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + 4 + (52 * (int(resize) - 1)), ArrayDigit[0], text_color);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + (4 * (int(resize))) + (barheight[0] * (int(resize) - 1)), ArrayDigit[0], text_color);
    LineTxtStart += 9 * int(resize);
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + 4 + (52 * (int(resize) - 1)), ArrayDigit[1], text_color);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + (4 * (int(resize))) + (barheight[0] * (int(resize) - 1)), ArrayDigit[1], text_color);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);

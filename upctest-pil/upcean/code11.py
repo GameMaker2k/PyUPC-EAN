@@ -156,7 +156,7 @@ def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
   NumTxtZero = 0; 
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (16 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), upc_print[NumTxtZero], text_color);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (16 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_print[NumTxtZero], text_color);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);

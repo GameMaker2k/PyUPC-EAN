@@ -98,19 +98,19 @@ def GenerateBarcode():
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  if(listboxtxt1.get()=="Detect"):
-  validbc = draw_barcode(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_barcode(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="UPC-A"):
-  validbc = draw_upca(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_upca(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="UPC-E"):
-  validbc = draw_upce(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_upce(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="EAN-13"):
-  validbc = draw_ean13(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_ean13(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="EAN-8"):
-  validbc = draw_ean8(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_ean8(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="ITF"):
-  validbc = draw_itf(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_itf(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="ITF-14"):
-  validbc = draw_itf14(entry1.get(),"2",(False, False, False),(int(entry2.get()),int(entry3.get())));
+  validbc = draw_itf14(entry1.get(),"2",(False, False, False),(47, 53));
  if(validbc!=False):
   image1 = ImageTk.PhotoImage(validbc);
   imageframe1 = Frame(rootwin, width=350, height=validbc.size[1] + 20);

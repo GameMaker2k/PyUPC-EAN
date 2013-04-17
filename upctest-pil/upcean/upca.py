@@ -184,19 +184,19 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
   if(hidesn!=None and hidesn!=True):
-   drawColorText(upc_img, 10 * int(resize), 1 + (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), upc_matches[0], text_color);
-  drawColorText(upc_img, 10 * int(resize), 22 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[0], text_color);
-  drawColorText(upc_img, 10 * int(resize), 28 + (28 * (int(resize) - 1)) - (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[1], text_color);
-  drawColorText(upc_img, 10 * int(resize), 34 + (33 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[2], text_color);
-  drawColorText(upc_img, 10 * int(resize), 40 + (38 * (int(resize) - 1)) + (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[3], text_color);
-  drawColorText(upc_img, 10 * int(resize), 46 + (43 * (int(resize) - 1)) + (4 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[1])[4], text_color);
-  drawColorText(upc_img, 10 * int(resize), 61 + (63 * (int(resize) - 1)) - (4 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[2])[0], text_color);
-  drawColorText(upc_img, 10 * int(resize), 67 + (68 * (int(resize) - 1)) - (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[2])[1], text_color);
-  drawColorText(upc_img, 10 * int(resize), 73 + (73 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[2])[2], text_color);
-  drawColorText(upc_img, 10 * int(resize), 79 + (78 * (int(resize) - 1)) + (2 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[2])[3], text_color);
-  drawColorText(upc_img, 10 * int(resize), 85 + (83 * (int(resize) - 1)) + (4 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), list(upc_matches[2])[4], text_color);
+   drawColorText(upc_img, 10 * int(resize), 1 + (2 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 22 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[1])[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 28 + (28 * (int(resize) - 1)) - (2 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[1])[1], text_color);
+  drawColorText(upc_img, 10 * int(resize), 34 + (33 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[1])[2], text_color);
+  drawColorText(upc_img, 10 * int(resize), 40 + (38 * (int(resize) - 1)) + (2 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[1])[3], text_color);
+  drawColorText(upc_img, 10 * int(resize), 46 + (43 * (int(resize) - 1)) + (4 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[1])[4], text_color);
+  drawColorText(upc_img, 10 * int(resize), 61 + (63 * (int(resize) - 1)) - (4 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[2])[0], text_color);
+  drawColorText(upc_img, 10 * int(resize), 67 + (68 * (int(resize) - 1)) - (2 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[2])[1], text_color);
+  drawColorText(upc_img, 10 * int(resize), 73 + (73 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[2])[2], text_color);
+  drawColorText(upc_img, 10 * int(resize), 79 + (78 * (int(resize) - 1)) + (2 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[2])[3], text_color);
+  drawColorText(upc_img, 10 * int(resize), 85 + (83 * (int(resize) - 1)) + (4 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[2])[4], text_color);
   if(hidecd!=None and hidecd!=True):
-   drawColorText(upc_img, 10 * int(resize), 105 + (104 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), upc_matches[3], text_color);
+   drawColorText(upc_img, 10 * int(resize), 105 + (104 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[3], text_color);
  del(upc_img);
  if(supplement!=None and len(supplement)==2): 
   upc_sup_img = create_ean2(supplement,None,resize,hideinfo,barheight);

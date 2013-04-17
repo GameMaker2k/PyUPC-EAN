@@ -135,7 +135,7 @@ def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),b
   NumTxtZero = 0; 
   LineTxtStart = 24;
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), upc_matches[NumTxtZero], text_color);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[NumTxtZero], text_color);
    LineTxtStart += 14 * int(resize);
    NumTxtZero += 1;
  del(upc_img);

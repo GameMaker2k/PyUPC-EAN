@@ -162,9 +162,9 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
   LineTxtStart = 20;
   while (NumTxtZero < len(upc_matches)):
    ArrayDigit = list(upc_matches[NumTxtZero]);
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (21 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), ArrayDigit[0], text_color);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (21 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), ArrayDigit[0], text_color);
    LineTxtStart += 9 * int(resize);
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (21 * (int(resize) - 1)), barheight[0] + (48 * (int(resize) - 1)), ArrayDigit[1], text_color);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (21 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), ArrayDigit[1], text_color);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
