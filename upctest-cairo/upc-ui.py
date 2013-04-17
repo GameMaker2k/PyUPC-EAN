@@ -16,7 +16,7 @@
     $FileInfo: upc-ui.py - Last Update: 04/01/2013 Ver. 2.3.5 RC 1  - Author: cooldude2k $
 '''
 
-from __future__ import division;
+from __future__ import division, absolute_import, print_function;
 import os, sys, tempfile, upcean;
 if(sys.version[0]=="2"):
  import Tkinter, tkMessageBox, tkFileDialog;

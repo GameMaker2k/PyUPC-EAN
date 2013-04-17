@@ -13,10 +13,10 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean13.py - Last Update: 04/10/2013 Ver. 2.3.7 RC 1 - Author: cooldude2k $
+    $FileInfo: ean13.py - Last Update: 04/10/2013 Ver. 2.3.7 RC 2 - Author: cooldude2k $
 '''
 
-from __future__ import division;
+from __future__ import division, absolute_import, print_function;
 import re, os, sys, types, upcean.prepil, upcean.validate, upcean.convert;
 import upcean.ean2, upcean.ean5;
 from PIL import Image, ImageDraw, ImageFont;

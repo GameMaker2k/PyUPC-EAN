@@ -14,9 +14,10 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 04/10/2013 Ver. 2.3.7 RC 1  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 04/10/2013 Ver. 2.3.7 RC 2  - Author: cooldude2k $
 '''
 
+from __future__ import division, absolute_import, print_function;
 import sys, re, upcean.validate;
 from upcean.validate import *;
 
@@ -156,7 +157,10 @@ def get_gs1_prefix(upc):
  if(re.findall("^(616)", upc)):
   return "Kenya";
  if(re.findall("^(618)", upc)):
-  return "Côte d'Ivoire";
+  if(sys.version[0]=="2"):
+   return "Côte d'Ivoire".decode('utf-8');
+  if(sys.version[0]=="3"):
+   return "Côte d'Ivoire";
  if(re.findall("^(619)", upc)):
   return "Tunisia";
  if(re.findall("^(621)", upc)):

@@ -16,7 +16,7 @@
     $FileInfo: upc.py - Last Update: 04/01/2013 Ver. 2.3.5 RC 1  - Author: cooldude2k $
 '''
 
-from __future__ import print_function
+from __future__ import division, absolute_import, print_function;
 import sys, os, traceback, code, re, readline, upcean;
 from sys import argv;
 from upcean import *;
