@@ -29,7 +29,7 @@ from PIL import Image, ImageTk;
 
 updateimg = False;
 rootwin = Tk();
-rootwin.wm_title("PyUPC Test GUI");
+rootwin.wm_title("PyUPC-EAN Test GUI");
 rootwin.geometry(("%dx%d") % (350, 300));
 rootwin.resizable(0,0);
 def exit_ui(event):
