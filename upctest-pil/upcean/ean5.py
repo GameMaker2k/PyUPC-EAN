@@ -21,7 +21,7 @@ import re, os, sys, types, upcean.prepil;
 from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 
-def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
+def create_ean5_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -202,7 +202,7 @@ def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False)
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
    LineStart += 1;
   NumZero += 1;
- new_upc_img = upc_preimg.resize((56 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+ new_upc_img = upc_preimg.resize((56 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
@@ -289,5 +289,98 @@ def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False)
   new_upc_img.save(outfile, outfileext);
  return True;
 
-def draw_ean5(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def draw_ean5_supplement(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ return create_ean5_supplement(upc,None,resize,hideinfo,barheight);
+
+def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+  resize = 1;
+ upc_preimg = Image.new("RGB", ((56 * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize)));
+ upc_img = ImageDraw.Draw(upc_preimg);
+ upc_img.rectangle([(0, 0), ((56 * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize))], fill=(256, 256, 256));
+ text_color = (0, 0, 0);
+ alt_text_color = (256, 256, 256);
+ upc_sup_img = draw_ean5_supplement(upc,resize,hideinfo,barheight);
+ if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
+  return False;
+ upc_preimg.paste(upc_sup_img,(8 * int(resize),0));
+ del(upc_sup_img);
+ del(upc_img);
+ if(sys.version[0]=="2"):
+  if(isinstance(outfile, str) or isinstance(outfile, unicode)):
+   oldoutfile = outfile[:];
+ if(sys.version[0]=="3"):
+  if(isinstance(outfile, str)):
+   oldoutfile = outfile[:];
+ if(isinstance(outfile, tuple)):
+  oldoutfile = tuple(outfile[:]);
+ if(isinstance(outfile, list)):
+  oldoutfile = list(outfile[:]);
+ if(outfile is None or isinstance(outfile, bool)):
+  oldoutfile = None;
+ if(sys.version[0]=="2"):
+  if(isinstance(oldoutfile, str) or isinstance(outfile, unicode)):
+   if(outfile!="-" and outfile!="" and outfile!=" "):
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
+     outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+     tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+     del(outfile);
+     outfile = tmpoutfile[0][0];
+     outfileext = tmpoutfile[0][1].upper();
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+     outfileext = "PNG";
+   if(outfileext=="DIB"):
+    outfileext = "BMP";
+   if(outfileext=="PS"):
+    outfileext = "EPS";
+   if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
+    outfileext = "JPEG";
+   if(outfileext=="PBM" or outfileext=="PGM"):
+    outfileext = "PPM";
+   if(outfileext=="TIF"):
+    outfileext = "TIFF";
+   if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
+    outfileext = "PNG";
+ if(sys.version[0]=="3"):
+  if(isinstance(oldoutfile, str)):
+   if(outfile!="-" and outfile!="" and outfile!=" "):
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
+     outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+     tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+     del(outfile);
+     outfile = tmpoutfile[0][0];
+     outfileext = tmpoutfile[0][1].upper();
+    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+     outfileext = "PNG";
+   if(outfileext=="DIB"):
+    outfileext = "BMP";
+   if(outfileext=="PS"):
+    outfileext = "EPS";
+   if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
+    outfileext = "JPEG";
+   if(outfileext=="PBM" or outfileext=="PGM"):
+    outfileext = "PPM";
+   if(outfileext=="TIF"):
+    outfileext = "TIFF";
+   if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
+    outfileext = "PNG";
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
+ if(outfile is None or isinstance(outfile, bool)):
+  return upc_preimg;
+ if(sys.version[0]=="2"):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+   upc_preimg.save(sys.stdout, outfileext);
+ if(sys.version[0]=="3"):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+   upc_preimg.save(sys.stdout.buffer, outfileext);
+ if(outfile!="-" and outfile!="" and outfile!=" "):
+  upc_preimg.save(outfile, outfileext);
+ return True;
+
+def draw_ean5(upc,resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_ean5(upc,None,resize,hideinfo,barheight);

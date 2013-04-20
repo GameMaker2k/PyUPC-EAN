@@ -199,12 +199,12 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
    drawColorText(upc_img, 10 * int(resize), 105 + (104 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[3], text_color);
  del(upc_img);
  if(supplement!=None and len(supplement)==2): 
-  upc_sup_img = create_ean2(supplement,None,resize,hideinfo,barheight);
+  upc_sup_img = draw_ean2_supplement(supplement,resize,hideinfo,barheight);
   if(upc_sup_img!=False):
    new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
    del(upc_sup_img);
  if(supplement!=None and len(supplement)==5): 
-  upc_sup_img = create_ean5(supplement,None,resize,hideinfo,barheight);
+  upc_sup_img = draw_ean5_supplement(supplement,resize,hideinfo,barheight);
   if(upc_sup_img!=False):
    new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
    del(upc_sup_img);

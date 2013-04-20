@@ -78,6 +78,10 @@ def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, 
     return create_upce(upc+" "+supplement,outfile,resize,hideinfo,barheight);
    if(re.findall("^([2-9])", upc)):
     return create_ean8(upc+" "+supplement,outfile,resize,hideinfo,barheight);
+ if(len(upc)==2):
+  return create_ean2(upc,outfile,resize,hideinfo,barheight);
+ if(len(upc)==5):
+  return create_ean5(upc,outfile,resize,hideinfo,barheight);
  if(len(upc)==11 or len(upc)==12):
   if(supplement==None):
    return create_upca(upc,outfile,resize,hideinfo,barheight);
@@ -120,6 +124,13 @@ def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),b
    return create_upca(upc,outfile,resize,hideinfo,barheight);
   if(supplement!=None):
    return create_upca(upc+" "+supplement,outfile,resize,hideinfo,barheight);
+ if(len(upc)==13 or len(upc)==14): 
+  if(len(upc)==13): 
+    upc = "0"+upc;
+  if(supplement==None):
+   return create_itf14(upc,outfile,resize,hideinfo,barheight);
+  if(supplement!=None):
+   return create_itf14(upc+" "+supplement,outfile,resize,hideinfo,barheight);
  return False;
 def draw_upc(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  return create_upc(upc,None,resize,hideinfo,barheight);
@@ -137,6 +148,10 @@ def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),b
   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{5})$", upc);
   upc_pieces = upc_pieces[0];
   upc = upc_pieces[0]; supplement = upc_pieces[2];
+ if(len(upc)==2):
+  return create_ean2(upc,outfile,resize,hideinfo,barheight);
+ if(len(upc)==5):
+  return create_ean5(upc,outfile,resize,hideinfo,barheight);
  if(len(upc)==7 or len(upc)==8):
   if(supplement==None):
    return create_ean8(upc,outfile,resize,hideinfo,barheight);
@@ -147,6 +162,11 @@ def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),b
    return create_ean13(upc,outfile,resize,hideinfo,barheight);
   if(supplement!=None):
    return create_ean13(upc+" "+supplement,outfile,resize,hideinfo,barheight);
+ if(len(upc)==14): 
+  if(supplement==None):
+   return create_itf14(upc,outfile,resize,hideinfo,barheight);
+  if(supplement!=None):
+   return create_itf14(upc+" "+supplement,outfile,resize,hideinfo,barheight);
  return False;
 def draw_ean(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  return create_ean(upc,None,resize,hideinfo,barheight);

@@ -49,7 +49,7 @@ if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or s
  label1.place(x=0, y=144);
 listboxtxt1 = StringVar(rootwin);
 listboxtxt1.set("Detect");
-listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "ITF", "ITF-14");
+listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "ITF-14", "Code 11", "Code 39", "Code 93");
 if(sys.platform=="win32"):
  listbox1.place(x=60, y=164);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
@@ -107,10 +107,20 @@ def GenerateBarcode():
   validbc = draw_ean13(entry1.get(),"2",(False, False, False),(48, 54));
  if(listboxtxt1.get()=="EAN-8"):
   validbc = draw_ean8(entry1.get(),"2",(False, False, False),(48, 54));
+ if(listboxtxt1.get()=="EAN-2"):
+  validbc = draw_ean2(entry1.get(),"2",(False, False, False),(48, 54));
+ if(listboxtxt1.get()=="EAN-5"):
+  validbc = draw_ean5(entry1.get(),"2",(False, False, False),(48, 54));
  if(listboxtxt1.get()=="ITF"):
   validbc = draw_itf(entry1.get(),"2",(False, False, False),(48, 54));
  if(listboxtxt1.get()=="ITF-14"):
   validbc = draw_itf14(entry1.get(),"2",(False, False, False),(48, 54));
+ if(listboxtxt1.get()=="Code 11"):
+  validbc = draw_code11(entry1.get(),"2",(False, False, False),(48, 54));
+ if(listboxtxt1.get()=="Code 39"):
+  validbc = draw_code39(entry1.get(),"2",(False, False, False),(48, 54));
+ if(listboxtxt1.get()=="Code 93"):
+  validbc = draw_code93(entry1.get(),"2",(False, False, False),(48, 54));
  if(validbc!=False):
   validbc = Image.frombuffer("RGB",(validbc.get_width(),validbc.get_height()),validbc.get_data(),"raw","RGBA",0,1).convert("RGB");
   image1 = ImageTk.PhotoImage(validbc);
@@ -147,10 +157,20 @@ def SaveGeneratedBarcode():
   create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="EAN-8" and savefname!=""):
   create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="EAN-2" and savefname!=""):
+  create_ean2(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="EAN-5" and savefname!=""):
+  create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF" and savefname!=""):
   create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="ITF-14" and savefname!=""):
   create_itf14(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="Code 11" and savefname!=""):
+  create_code11(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="Code 39" and savefname!=""):
+  create_code39(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="Code 93" and savefname!=""):
+  create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
 def SaveGeneratedBarcodeAlt(event):
  SaveGeneratedBarcode();
 entry1.bind("<Return>", GenerateBarcodeAlt);
