@@ -35,7 +35,33 @@ rootwin.resizable(0,0);
 def exit_ui(event):
  rootwin.quit();
 rootwin.bind("<Escape>", exit_ui);
+''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326 '''
+def make_ccp_menu(w):
+ the_menu = Menu(w, tearoff=0);
+ the_menu.add_command(label="Cut");
+ the_menu.add_command(label="Copy");
+ the_menu.add_command(label="Paste");
+ return the_menu;
+def show_ccp_menu(e):
+ global rootwin;
+ the_menu = make_ccp_menu(rootwin);
+ w = e.widget;
+ the_menu.entryconfigure("Cut", command=lambda: w.event_generate("<<Cut>>"));
+ the_menu.entryconfigure("Copy", command=lambda: w.event_generate("<<Copy>>"));
+ the_menu.entryconfigure("Paste", command=lambda: w.event_generate("<<Paste>>"));
+ the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
+def make_save_menu(w):
+ the_menu = Menu(w, tearoff=0);
+ the_menu.add_command(label="Save As");
+ return the_menu;
+def show_save_menu(e):
+ global rootwin;
+ the_menu = make_save_menu(rootwin);
+ w = e.widget;
+ the_menu.entryconfigure("Save As", command = SaveGeneratedBarcode);
+ the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
 entry1 = Entry(rootwin);
+entry1.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 if(sys.platform=="win32"):
  entry1.place(x=40, y=146);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
@@ -61,7 +87,8 @@ if(sys.platform=="win32"):
  label2.place(x=0, y=168);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  label2.place(x=0, y=170);
-magnify = Spinbox(rootwin, wrap=True, width=3, from_=1, to=10)
+magnify = Spinbox(rootwin, wrap=True, width=3, from_=1, to=10);
+magnify.bind_class("Spinbox", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 if(sys.platform=="win32"):
  magnify.place(x=50, y=200);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
@@ -72,6 +99,7 @@ labeltxt3.set("Magnify:");
 label3.place(x=0, y=197);
 entrytxt2 = StringVar();
 entry2 = Entry(rootwin, textvariable=entrytxt2);
+entry2.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 entrytxt2.set("48");
 if(sys.platform=="win32"):
  entry2.place(x=70, y=225);
@@ -83,6 +111,7 @@ labeltxt4.set("Bar 1 Height:");
 label4.place(x=0, y=223);
 entrytxt3 = StringVar();
 entry3 = Entry(rootwin, textvariable=entrytxt3);
+entry3.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 entrytxt3.set("54");
 if(sys.platform=="win32"):
  entry3.place(x=70, y=250);
@@ -131,6 +160,7 @@ def GenerateBarcode():
   if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
    xscrollbar1.place(x=0, y=132);
   panel1 = Canvas(imageframe1, xscrollcommand=xscrollbar1.set, width=350, height=validbc.size[1]);
+  panel1.bind_class("Canvas", "<Button-3><ButtonRelease-3>", show_save_menu);
   panel1.create_image(validbc.size[0]/2,validbc.size[1]/2,image=image1);
   panel1.place(x=0, y=0);
   panel1.image = image1;
@@ -146,7 +176,7 @@ def GenerateBarcode():
 def GenerateBarcodeAlt(event):
  GenerateBarcode();
 def SaveGeneratedBarcode():
- savefname=tkFileDialog.asksaveasfilename(parent=rootwin,title='Save Image As',filetypes=[('Windows Bitmap','*.bmp'), ('Portable Network Graphics','*.png'), ('JPEG / JFIF','*.jpg *.jpeg *.jpe'), ('CompuServer GIF','*.gif'), ('Tag Image File Format','*.tif *.tiff'), ('Adobe Portable Document Format','*.pdf')]);
+ savefname=tkFileDialog.asksaveasfilename(parent=rootwin,title='Save Image As',filetypes=[('Portable Network Graphics','*.png'), ('All File Formats','*.*')]);
  if(listboxtxt1.get()=="Detect" and savefname!=""):
   create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
  if(listboxtxt1.get()=="UPC-A" and savefname!=""):
