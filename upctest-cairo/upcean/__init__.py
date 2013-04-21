@@ -100,6 +100,35 @@ def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, 
  return False;
 def draw_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  return create_barcode(upc,None,resize,hideinfo,barheight);
+def create_barcode_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ if(sys.version[0]=="2"):
+  if(isinstance(upc, str) or isinstance(upc, unicode)):
+   return create_barcode(upc,outfile,resize,hideinfo,barheight);
+ if(sys.version[0]=="3"):
+  if(isinstance(upc, str)):
+   return create_barcode(upc,outfile,resize,hideinfo,barheight);
+ if(isinstance(upc, tuple) or isinstance(upc, list)):
+  NumLoop = 0;
+  while (NumLoop < len(upc)):
+   if(isinstance(resize, tuple) or isinstance(resize, list)):
+    resize_val = resize[NumLoop];
+   if(sys.version[0]=="2"):
+    if(isinstance(resize, str) or isinstance(resize, unicode) or isinstance(resize, int)):
+     resize_val = resize;
+   if(sys.version[0]=="3"):
+    if(isinstance(resize, str) or isinstance(resize, int)):
+     resize_val = resize;
+   if(isinstance(hideinfo[0], tuple) or isinstance(hideinfo[0], list)):
+    hideinfo_val = hideinfo[NumLoop];
+   if(isinstance(hideinfo[0], bool)):
+    hideinfo_val = hideinfo;
+   if(isinstance(barheight[0], tuple) or isinstance(barheight[0], list)):
+    barheight_val = barheight[NumLoop];
+   if(isinstance(barheight[0], int)):
+    barheight_val = barheight;
+   create_barcode(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val);
+   NumLoop = NumLoop + 1;
+ return True;
 
 def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
@@ -134,6 +163,35 @@ def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),b
  return False;
 def draw_upc(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  return create_upc(upc,None,resize,hideinfo,barheight);
+def create_upc_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ if(sys.version[0]=="2"):
+  if(isinstance(upc, str) or isinstance(upc, unicode)):
+   return create_upc(upc,outfile,resize,hideinfo,barheight);
+ if(sys.version[0]=="3"):
+  if(isinstance(upc, str)):
+   return create_upc(upc,outfile,resize,hideinfo,barheight);
+ if(isinstance(upc, tuple) or isinstance(upc, list)):
+  NumLoop = 0;
+  while (NumLoop < len(upc)):
+   if(isinstance(resize, tuple) or isinstance(resize, list)):
+    resize_val = resize[NumLoop];
+   if(sys.version[0]=="2"):
+    if(isinstance(resize, str) or isinstance(resize, unicode) or isinstance(resize, int)):
+     resize_val = resize;
+   if(sys.version[0]=="3"):
+    if(isinstance(resize, str) or isinstance(resize, int)):
+     resize_val = resize;
+   if(isinstance(hideinfo[0], tuple) or isinstance(hideinfo[0], list)):
+    hideinfo_val = hideinfo[NumLoop];
+   if(isinstance(hideinfo[0], bool)):
+    hideinfo_val = hideinfo;
+   if(isinstance(barheight[0], tuple) or isinstance(barheight[0], list)):
+    barheight_val = barheight[NumLoop];
+   if(isinstance(barheight[0], int)):
+    barheight_val = barheight;
+   create_upc(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val);
+   NumLoop = NumLoop + 1;
+ return True;
 
 def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  upc = str(upc);
@@ -170,6 +228,35 @@ def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),b
  return False;
 def draw_ean(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  return create_ean(upc,None,resize,hideinfo,barheight);
+def create_ean_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+ if(sys.version[0]=="2"):
+  if(isinstance(upc, str) or isinstance(upc, unicode)):
+   return create_ean(upc,outfile,resize,hideinfo,barheight);
+ if(sys.version[0]=="3"):
+  if(isinstance(upc, str)):
+   return create_ean(upc,outfile,resize,hideinfo,barheight);
+ if(isinstance(upc, tuple) or isinstance(upc, list)):
+  NumLoop = 0;
+  while (NumLoop < len(upc)):
+   if(isinstance(resize, tuple) or isinstance(resize, list)):
+    resize_val = resize[NumLoop];
+   if(sys.version[0]=="2"):
+    if(isinstance(resize, str) or isinstance(resize, unicode) or isinstance(resize, int)):
+     resize_val = resize;
+   if(sys.version[0]=="3"):
+    if(isinstance(resize, str) or isinstance(resize, int)):
+     resize_val = resize;
+   if(isinstance(hideinfo[0], tuple) or isinstance(hideinfo[0], list)):
+    hideinfo_val = hideinfo[NumLoop];
+   if(isinstance(hideinfo[0], bool)):
+    hideinfo_val = hideinfo;
+   if(isinstance(barheight[0], tuple) or isinstance(barheight[0], list)):
+    barheight_val = barheight[NumLoop];
+   if(isinstance(barheight[0], int)):
+    barheight_val = barheight;
+   create_ean(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val);
+   NumLoop = NumLoop + 1;
+ return True;
 
 def create_issn13_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
  return create_ean13(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight);
