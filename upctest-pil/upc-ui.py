@@ -28,8 +28,9 @@ from upcean import *;
 from PIL import Image, ImageTk;
 
 updateimg = False;
+pro_app_name = "PyUPC-EAN";
 rootwin = Tk();
-rootwin.wm_title("PyUPC-EAN Test GUI");
+rootwin.wm_title(str(pro_app_name)+" Test GUI");
 rootwin.geometry(("%dx%d") % (350, 300));
 rootwin.resizable(0,0);
 def exit_ui(event):
@@ -63,30 +64,30 @@ def show_save_menu(e):
 entry1 = Entry(rootwin);
 entry1.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 if(sys.platform=="win32"):
- entry1.place(x=40, y=146);
+ entry1.place(x=40, y=150);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- entry1.place(x=45, y=144);
+ entry1.place(x=45, y=148);
 labeltxt1 = StringVar();
 label1 = Label( rootwin, textvariable=labeltxt1);
 labeltxt1.set("Value:");
 if(sys.platform=="win32"):
- label1.place(x=0, y=144);
+ label1.place(x=0, y=148);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- label1.place(x=0, y=144);
+ label1.place(x=0, y=148);
 listboxtxt1 = StringVar(rootwin);
 listboxtxt1.set("Detect");
 listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "ITF-14", "Code 11", "Code 39", "Code 93");
 if(sys.platform=="win32"):
- listbox1.place(x=60, y=164);
+ listbox1.place(x=60, y=170);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- listbox1.place(x=75, y=164);
+ listbox1.place(x=75, y=170);
 labeltxt2 = StringVar();
 label2 = Label(rootwin, textvariable=labeltxt2);
 labeltxt2.set("Symbology:");
 if(sys.platform=="win32"):
- label2.place(x=0, y=168);
+ label2.place(x=0, y=174);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- label2.place(x=0, y=170);
+ label2.place(x=0, y=176);
 magnify = Spinbox(rootwin, wrap=True, width=3, from_=1, to=10);
 magnify.bind_class("Spinbox", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 if(sys.platform=="win32"):
@@ -122,20 +123,31 @@ label5 = Label( rootwin, textvariable=labeltxt5);
 labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
 def GenerateBarcode():
- global updateimg, panel1, faddonsize;
+ global updateimg, panel1, faddonsize, rootwin, pro_app_name;
+ rootwin.wm_title(str(pro_app_name)+" Test GUI - "+str(entry1.get()));
+ upc_validate = entry1.get();
+ if(listboxtxt1.get()=="Detect" or listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
+  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
+   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get());
+   upc_pieces = upc_pieces[0];
+   upc_validate = upc_pieces[0];
+  if(re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get())):
+   upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get());
+   upc_pieces = upc_pieces[0];
+   upc_validate = upc_pieces[0];
  if(updateimg==True):
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  validbc = False;
- if(listboxtxt1.get()=="Detect" and validate_barcode(entry1.get())==True):
+ if(listboxtxt1.get()=="Detect" and validate_barcode(upc_validate)==True):
   validbc = draw_barcode(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="UPC-A" and validate_barcode(entry1.get())==True):
+ if(listboxtxt1.get()=="UPC-A" and validate_barcode(upc_validate)==True):
   validbc = draw_upca(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="UPC-E" and validate_barcode(entry1.get())==True):
+ if(listboxtxt1.get()=="UPC-E" and validate_barcode(upc_validate)==True):
   validbc = draw_upce(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="EAN-13" and validate_barcode(entry1.get())==True):
+ if(listboxtxt1.get()=="EAN-13" and validate_barcode(upc_validate)==True):
   validbc = draw_ean13(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="EAN-8" and validate_ean8(entry1.get())==True):
+ if(listboxtxt1.get()=="EAN-8" and validate_ean8(upc_validate)==True):
   validbc = draw_ean8(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="EAN-2" and len(entry1.get())==2):
   validbc = draw_ean2(entry1.get(),"2",(False, False, False),(47, 53));
@@ -179,23 +191,33 @@ def ShowSaveDialog():
  return tkFileDialog.asksaveasfilename(parent=rootwin,title='Save Image As',filetypes=[('Portable Network Graphics','*.png'), ('JPEG / JFIF','*.jpg *.jpeg *.jpe *.jfif *.jfi'), ('CompuServer GIF','*.gif'), ('Windows Bitmap','*.bmp *.dib'), ('Tag Image File Format','*.tif *.tiff'), ('Adobe Portable Document Format','*.pdf'), ('Adobe Encapsulated PostScript','*.ps *.eps'), ('Personal Computer Exchange','*.pcx'), ('Portable Anymap Format','*.pbm *.pgm *.ppm'), ('All File Formats','*.*')]);
 def SaveGeneratedBarcode():
  GenerateBarcode();
- if(listboxtxt1.get()=="Detect" and validate_barcode(entry1.get())==True):
+ upc_validate = entry1.get();
+ if(listboxtxt1.get()=="Detect" or listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
+  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
+   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get());
+   upc_pieces = upc_pieces[0];
+   upc_validate = upc_pieces[0];
+  if(re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get())):
+   upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get());
+   upc_pieces = upc_pieces[0];
+   upc_validate = upc_pieces[0];
+ if(listboxtxt1.get()=="Detect" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="UPC-A" and validate_barcode(entry1.get())==True):
+ if(listboxtxt1.get()=="UPC-A" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="UPC-E" and validate_barcode(entry1.get())==True):
+ if(listboxtxt1.get()=="UPC-E" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="EAN-13" and validate_barcode(entry1.get())==True):
+ if(listboxtxt1.get()=="EAN-13" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="EAN-8" and validate_ean8(entry1.get())==True):
+ if(listboxtxt1.get()=="EAN-8" and validate_ean8(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
