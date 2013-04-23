@@ -139,7 +139,7 @@ def GenerateBarcode():
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  validbc = False;
- if(listboxtxt1.get()=="Detect" and validate_barcode(upc_validate)==True):
+ if(listboxtxt1.get()=="Detect" and (validate_barcode(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
   validbc = draw_barcode(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="UPC-A" and validate_barcode(upc_validate)==True):
   validbc = draw_upca(entry1.get(),"2",(False, False, False),(47, 53));
@@ -202,7 +202,7 @@ def SaveGeneratedBarcode():
    upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get());
    upc_pieces = upc_pieces[0];
    upc_validate = upc_pieces[0];
- if(listboxtxt1.get()=="Detect" and validate_barcode(upc_validate)==True):
+ if(listboxtxt1.get()=="Detect" and (validate_barcode(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
