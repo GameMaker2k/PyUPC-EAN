@@ -126,29 +126,30 @@ def GenerateBarcode():
  if(updateimg==True):
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
- if(listboxtxt1.get()=="Detect"):
+ validbc = False;
+ if(listboxtxt1.get()=="Detect" and validate_barcode(entry1.get())==True):
   validbc = draw_barcode(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="UPC-A"):
+ if(listboxtxt1.get()=="UPC-A" and validate_barcode(entry1.get())==True):
   validbc = draw_upca(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="UPC-E"):
+ if(listboxtxt1.get()=="UPC-E" and validate_barcode(entry1.get())==True):
   validbc = draw_upce(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="EAN-13"):
+ if(listboxtxt1.get()=="EAN-13" and validate_barcode(entry1.get())==True):
   validbc = draw_ean13(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="EAN-8"):
+ if(listboxtxt1.get()=="EAN-8" and validate_ean8(entry1.get())==True):
   validbc = draw_ean8(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="EAN-2"):
+ if(listboxtxt1.get()=="EAN-2" and len(entry1.get())==2):
   validbc = draw_ean2(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="EAN-5"):
+ if(listboxtxt1.get()=="EAN-5" and len(entry1.get())==5):
   validbc = draw_ean5(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="ITF"):
+ if(listboxtxt1.get()=="ITF" and len(entry1.get()) % 2 and len(entry1.get()) > 5):
   validbc = draw_itf(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="ITF-14"):
+ if(listboxtxt1.get()=="ITF-14" and len(entry1.get()) % 2 and len(entry1.get()) > 5):
   validbc = draw_itf14(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="Code 11"):
+ if(listboxtxt1.get()=="Code 11" and len(entry1.get()) > 0 and re.findall("([0-9\-]+)", entry1.get())):
   validbc = draw_code11(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="Code 39"):
+ if(listboxtxt1.get()=="Code 39" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
   validbc = draw_code39(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="Code 93"):
+ if(listboxtxt1.get()=="Code 93" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
   validbc = draw_code93(entry1.get(),"2",(False, False, False),(47, 53));
  if(validbc!=False):
   image1 = ImageTk.PhotoImage(validbc);
@@ -174,32 +175,58 @@ def GenerateBarcode():
  os.remove(tmpfilename);'''
 def GenerateBarcodeAlt(event):
  GenerateBarcode();
+def ShowSaveDialog():
+ return tkFileDialog.asksaveasfilename(parent=rootwin,title='Save Image As',filetypes=[('Portable Network Graphics','*.png'), ('JPEG / JFIF','*.jpg *.jpeg *.jpe *.jfif *.jfi'), ('CompuServer GIF','*.gif'), ('Windows Bitmap','*.bmp *.dib'), ('Tag Image File Format','*.tif *.tiff'), ('Adobe Portable Document Format','*.pdf'), ('Adobe Encapsulated PostScript','*.ps *.eps'), ('Personal Computer Exchange','*.pcx'), ('Portable Anymap Format','*.pbm *.pgm *.ppm'), ('All File Formats','*.*')]);
 def SaveGeneratedBarcode():
- savefname=tkFileDialog.asksaveasfilename(parent=rootwin,title='Save Image As',filetypes=[('Windows Bitmap','*.bmp *.dib'), ('Portable Network Graphics','*.png'), ('JPEG / JFIF','*.jpg *.jpeg *.jpe *.jfif *.jfi'), ('CompuServer GIF','*.gif'), ('Tag Image File Format','*.tif *.tiff'), ('Adobe Portable Document Format','*.pdf'), ('Adobe Encapsulated PostScript','*.ps *.eps'), ('Personal Computer Exchange','*.pcx'), ('Portable Anymap Format','*.pbm *.pgm *.ppm'), ('All File Formats','*.*')]);
- if(listboxtxt1.get()=="Detect" and savefname!=""):
-  create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="UPC-A" and savefname!=""):
-  create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="UPC-E" and savefname!=""):
-  create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="EAN-13" and savefname!=""):
-  create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="EAN-8" and savefname!=""):
-  create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="EAN-2" and savefname!=""):
-  create_ean2(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="EAN-5" and savefname!=""):
-  create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="ITF" and savefname!=""):
-  create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="ITF-14" and savefname!=""):
+ GenerateBarcode();
+ if(listboxtxt1.get()=="Detect" and validate_barcode(entry1.get())==True):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="UPC-A" and validate_barcode(entry1.get())==True):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="UPC-E" and validate_barcode(entry1.get())==True):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="EAN-13" and validate_barcode(entry1.get())==True):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="EAN-8" and validate_ean8(entry1.get())==True):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="EAN-2" and len(entry1.get())==2):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_ean2(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="EAN-5" and len(entry1.get())==5):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="ITF" and len(entry1.get()) % 2 and len(entry1.get()) > 5):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="ITF-14" and len(entry1.get()) % 2 and len(entry1.get()) > 5):
+  if(savefname!=""):
+   savefname = ShowSaveDialog();
   create_itf14(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="Code 11" and savefname!=""):
-  create_code11(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="Code 39" and savefname!=""):
-  create_code39(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="Code 93" and savefname!=""):
-  create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="Code 11" and len(entry1.get()) > 0 and re.findall("([0-9\-]+)", entry1.get())):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_code11(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="Code 39" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_code39(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="Code 93" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
 def SaveGeneratedBarcodeAlt(event):
  SaveGeneratedBarcode();
 entry1.bind("<Return>", GenerateBarcodeAlt);
