@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 04/22/2013 Ver. 2.3.7 RC 3  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 04/24/2013 Ver. 2.3.7 RC 4  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -240,11 +240,85 @@ def fix_upce_checksum(upc):
   upc = fix_matches[0];
  return upc+str(get_upce_checksum(upc));
 
+def validate_ean2(upc,return_check=False): 
+ upc = str(upc);
+ if(len(upc)>3):
+  fix_matches = re.findall("^(\d{3})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>3 or len(upc)<2):
+  return False;
+ if(len(upc)==2):
+  upc_matches = re.findall("^(\d{2})", upc);
+ if(len(upc)==3):
+  upc_matches = re.findall("^(\d{2})(\d{1})", upc);
+  upc_matches=upc_matches[0];
+ if(len(upc_matches)<=0): 
+  return False;
+ CheckSum = int(upc_matches[0]) % 4;
+ if(return_check==False and len(upc)==3):
+  if(CheckSum!=int(upc_matches[1])):
+   return False;
+  if(CheckSum==int(upc_matches[1])):
+   return True;
+ if(return_check==True):
+  return str(CheckSum);
+ if(len(upc)==2):
+  return str(CheckSum);
+def get_ean2_checksum(upc):
+ upc = str(upc);
+ return validate_ean2(upc,True);
+def fix_ean2_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>2):
+  fix_matches = re.findall("^(\d{2})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_ean2_checksum(upc));
+
+def validate_ean5(upc,return_check=False): 
+ upc = str(upc);
+ if(len(upc)>6):
+  fix_matches = re.findall("^(\d{6})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>6 or len(upc)<5):
+  return False;
+ if(len(upc)==5):
+  upc_matches = re.findall("^(\d{5})", upc);
+ if(len(upc)==6):
+  upc_matches = re.findall("^(\d{5})(\d{1})", upc);
+  upc_matches=upc_matches[0];
+ if(len(upc_matches)<=0): 
+  return False;
+ LeftDigit = list(upc_matches[0]);
+ CheckSum = (int(LeftDigit[0]) * 3) + (int(LeftDigit[1]) * 9) + (int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3);
+ CheckSum = CheckSum % 10;
+ if(return_check==False and len(upc)==6):
+  if(CheckSum!=int(upc_matches[1])):
+   return False;
+  if(CheckSum==int(upc_matches[1])):
+   return True;
+ if(return_check==True):
+  return str(CheckSum);
+ if(len(upc)==5):
+  return str(CheckSum);
+def get_ean5_checksum(upc):
+ upc = str(upc);
+ return validate_ean5(upc,True);
+def fix_ean5_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>5):
+  fix_matches = re.findall("^(\d{5})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_ean5_checksum(upc));
+
 '''
 Shortcut Codes by Kazuki Przyborowski
 '''
 def validate_barcode(upc,return_check=False):
  upc = str(upc);
+ if(len(upc)==3): 
+  return validate_ean2(upc,return_check);
+ if(len(upc)==6): 
+  return validate_ean5(upc,return_check);
  if(len(upc)==8): 
   if(re.findall("^([0-1])", upc)):
    return validate_upce(upc,return_check);
@@ -259,6 +333,10 @@ def validate_barcode(upc,return_check=False):
  return False;
 def get_barcode_checksum(upc):
  upc = str(upc);
+ if(len(upc)==2): 
+  return validate_ean2(upc,True);
+ if(len(upc)==5): 
+  return validate_ean5(upc,True);
  if(len(upc)==7): 
   if(re.findall("^([0-1])", upc)):
    return validate_upce(upc,True);
@@ -273,6 +351,10 @@ def get_barcode_checksum(upc):
  return False;
 def fix_barcode_checksum(upc):
  upc = str(upc);
+ if(len(upc)==3): 
+  return upc+str(validate_ean2(upc,True));
+ if(len(upc)==6): 
+  return upc+str(validate_ean5(upc,True));
  if(len(upc)==7): 
   if(re.findall("^([0-1])", upc)):
    return upc+str(validate_upce(upc,True));
@@ -288,6 +370,10 @@ def fix_barcode_checksum(upc):
 
 def validate_any(upc,return_check=False):
  upc = str(upc);
+ if(len(upc)==3): 
+  return validate_ean2(upc,return_check);
+ if(len(upc)==6): 
+  return validate_ean5(upc,return_check);
  if(len(upc)==8): 
   if(re.findall("^([0-1])", upc)):
    return validate_upce(upc,return_check);
@@ -302,6 +388,10 @@ def validate_any(upc,return_check=False):
  return False;
 def get_any_checksum(upc):
  upc = str(upc);
+ if(len(upc)==2): 
+  return validate_ean2(upc,True);
+ if(len(upc)==5): 
+  return validate_ean5(upc,True);
  if(len(upc)==7): 
   if(re.findall("^([0-1])", upc)):
    return validate_upce(upc,True);
@@ -316,6 +406,10 @@ def get_any_checksum(upc):
  return False;
 def fix_any_checksum(upc):
  upc = str(upc);
+ if(len(upc)==3): 
+  return upc+str(validate_ean2(upc,True));
+ if(len(upc)==6): 
+  return upc+str(validate_ean5(upc,True));
  if(len(upc)==7): 
   if(re.findall("^([0-1])", upc)):
    return upc+str(validate_upce(upc,True));
@@ -331,47 +425,141 @@ def fix_any_checksum(upc):
 
 def validate_upc(upc,return_check=False):
  upc = str(upc);
- if(len(upc)==8): 
+ if(len(upc)==7 or len(upc)==8): 
   return validate_upce(upc,return_check);
- if(len(upc)==12): 
+ if(len(upc)==11 or len(upc)==12): 
   return validate_upca(upc,return_check);
+ if(len(upc)==13 or len(upc)==14): 
+  return validate_itf14(upc,return_check);
  return False;
 def get_upc_checksum(upc):
  upc = str(upc);
- if(len(upc)==7): 
+ if(len(upc)==7 or len(upc)==8): 
   return validate_upce(upc,True);
- if(len(upc)==11): 
+ if(len(upc)==11 or len(upc)==12): 
   return validate_upca(upc,True);
+ if(len(upc)==13 or len(upc)==14): 
+  return validate_itf14(upc,True);
  return False;
 def fix_upc_checksum(upc):
  upc = str(upc);
- if(len(upc)==7): 
+ if(len(upc)==7 or len(upc)==8): 
   return upc+str(validate_upce(upc,True));
- if(len(upc)==11): 
+ if(len(upc)==11 or len(upc)==12): 
   return upc+str(validate_upca(upc,True));
+ if(len(upc)==13 or len(upc)==14): 
+  return upc+str(validate_itf14(upc,True));
  return False;
 
 def validate_ean(upc,return_check=False):
  upc = str(upc);
- if(len(upc)==8): 
+ if(len(upc)==2 or len(upc)==3): 
+  return validate_ean2(upc,return_check);
+ if(len(upc)==5 or len(upc)==6): 
+  return validate_ean5(upc,return_check);
+ if(len(upc)==8 or len(upc)==8): 
   return validate_ean8(upc,return_check);
- if(len(upc)==13): 
+ if(len(upc)==13 or len(upc)==13): 
   return validate_ean13(upc,return_check);
  return False;
 def get_any_checksum(upc):
  upc = str(upc);
- if(len(upc)==7): 
+ if(len(upc)==2 or len(upc)==3): 
+  return validate_ean2(upc,True);
+ if(len(upc)==5 or len(upc)==6): 
+  return validate_ean5(upc,True);
+ if(len(upc)==7 or len(upc)==8): 
   return validate_ean8(upc,True);
- if(len(upc)==12): 
+ if(len(upc)==12 or len(upc)==13): 
   return validate_ean13(upc,True);
  return False;
 def fix_ean_checksum(upc):
  upc = str(upc);
- if(len(upc)==7): 
+ if(len(upc)==2 or len(upc)==3): 
+  return upc+str(validate_ean2(upc,True));
+ if(len(upc)==5 or len(upc)==6): 
+  return upc+str(validate_ean5(upc,True));
+ if(len(upc)==7 or len(upc)==8): 
   return upc+str(validate_ean8(upc,True));
- if(len(upc)==12): 
+ if(len(upc)==12 or len(upc)==13): 
   return upc+str(validate_ean13(upc,True));
  return False;
+
+def get_code11_checksum(upc):
+ if(len(upc) < 1): 
+  return False;
+ if(not re.findall("([0-9\-]+)", upc)):
+  return False;
+ upc = upc.upper();
+ upc_matches = list(upc);
+ if(len(upc_matches)<=0):
+  return False;
+ Code11Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "-"};
+ Code11Values = dict(zip(Code11Array.values(),Code11Array));
+ upc_reverse = list(upc_matches);
+ upc_reverse.reverse();
+ upc_print = list(upc_matches);
+ UPC_Count = 0; 
+ UPC_Weight = 1; 
+ UPC_Sum = 0;
+ while (UPC_Count < len(upc_reverse)):
+  if(UPC_Weight>10):
+   UPC_Weight = 1;
+  UPC_Sum = UPC_Sum + (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])]);
+  UPC_Count += 1; 
+  UPC_Weight += 1;
+ CheckSum = str(Code11Array[UPC_Sum % 11]);
+ upc_reverse = list(upc_matches);
+ upc_reverse.reverse();
+ UPC_Count = 0; 
+ UPC_Weight = 1; 
+ UPC_Sum = 0;
+ while (UPC_Count < len(upc_reverse)):
+  if(UPC_Weight>9):
+   UPC_Weight = 1;
+  UPC_Sum = UPC_Sum + (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])]);
+  UPC_Count += 1; 
+  UPC_Weight += 1;
+ CheckSum = str(CheckSum)+str(Code11Array[UPC_Sum % 11]);
+ return str(CheckSum);
+
+def get_code93_checksum(upc):
+ if(len(upc) < 1): 
+  return False;
+ if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
+  return False;
+ upc = upc.upper();
+ upc_matches = list(upc);
+ if(len(upc_matches)<=0):
+  return False;
+ Code93Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K", 21: "L", 22: "M", 23: "N", 24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%", 43: "($)", 44: "(%)", 45: "(/)", 46: "(+)"};
+ Code93Values = dict(zip(Code93Array.values(),Code93Array));
+ upc_reverse = list(upc_matches);
+ upc_reverse.reverse();
+ upc_print = list(upc_matches);
+ UPC_Count = 0; 
+ UPC_Weight = 1; 
+ UPC_Sum = 0;
+ while (UPC_Count < len(upc_reverse)):
+  if(UPC_Weight>20):
+   UPC_Weight = 1;
+  UPC_Sum = UPC_Sum + (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])]);
+  UPC_Count += 1; 
+  UPC_Weight += 1;
+ CheckSum = str(Code93Array[UPC_Sum % 47]);
+ upc_reverse = list(upc_matches);
+ upc_reverse.reverse();
+ UPC_Count = 0; 
+ UPC_Weight = 1; 
+ UPC_Sum = 0;
+ while (UPC_Count < len(upc_reverse)):
+  if(UPC_Weight>15):
+   UPC_Weight = 1;
+  UPC_Sum = UPC_Sum + (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])]);
+  UPC_Count += 1; 
+  UPC_Weight += 1;
+ CheckSum = str(CheckSum)+str(Code93Array[UPC_Sum % 47]);
+ return str(CheckSum);
 
 '''
 ISSN (International Standard Serial Number)
