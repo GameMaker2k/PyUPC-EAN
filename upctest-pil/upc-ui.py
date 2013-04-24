@@ -31,19 +31,25 @@ from PIL import Image, ImageTk;
 
 updateimg = False;
 pro_app_name = "PyUPC-EAN";
+pro_app_subname = " Test GUI";
+pro_app_version = upcean.__version__;
 rootwin = Tk();
-rootwin.wm_title(str(pro_app_name)+" Test GUI");
+rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
 rootwin.geometry(("%dx%d") % (350, 300));
 rootwin.resizable(0,0);
 def exit_ui(event):
  rootwin.quit();
 rootwin.bind("<Escape>", exit_ui);
-''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326 '''
+''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326 
+    http://ebook.pldworld.com/_eBook/_OReilly/133.Books/Python/programming_python_2ed-2001/1.9.htm '''
 def make_ccp_menu(w):
  the_menu = Menu(w, tearoff=0);
  the_menu.add_command(label="Cut");
  the_menu.add_command(label="Copy");
  the_menu.add_command(label="Paste");
+ the_menu.add_command(label="Delete");
+ the_menu.add_command(label="Delete All");
+ the_menu.add_command(label="Select All");
  return the_menu;
 def show_ccp_menu(e):
  global rootwin;
@@ -52,15 +58,20 @@ def show_ccp_menu(e):
  the_menu.entryconfigure("Cut", command=lambda: w.event_generate("<<Cut>>"));
  the_menu.entryconfigure("Copy", command=lambda: w.event_generate("<<Copy>>"));
  the_menu.entryconfigure("Paste", command=lambda: w.event_generate("<<Paste>>"));
+ the_menu.entryconfigure("Delete", command=lambda: w.delete(SEL_FIRST, SEL_LAST) if w.select_present() else None);
+ the_menu.entryconfigure("Delete All", command=lambda: w.delete(0, END));
+ the_menu.entryconfigure("Select All", command=lambda: w.selection_range(0, END));
  the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
 def make_save_menu(w):
  the_menu = Menu(w, tearoff=0);
+ the_menu.add_command(label="Generate");
  the_menu.add_command(label="Save As");
  return the_menu;
 def show_save_menu(e):
  global rootwin;
  the_menu = make_save_menu(rootwin);
  w = e.widget;
+ the_menu.entryconfigure("Generate", command = GenerateBarcode);
  the_menu.entryconfigure("Save As", command = SaveGeneratedBarcode);
  the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
 entry1 = Entry(rootwin);
@@ -80,16 +91,16 @@ listboxtxt1 = StringVar(rootwin);
 listboxtxt1.set("Detect");
 listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "ITF-14", "Code 11", "Code 39", "Code 93");
 if(sys.platform=="win32"):
- listbox1.place(x=60, y=170);
+ listbox1.place(x=60, y=169);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- listbox1.place(x=75, y=170);
+ listbox1.place(x=75, y=169);
 labeltxt2 = StringVar();
 label2 = Label(rootwin, textvariable=labeltxt2);
 labeltxt2.set("Symbology:");
 if(sys.platform=="win32"):
- label2.place(x=0, y=174);
+ label2.place(x=0, y=173);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- label2.place(x=0, y=176);
+ label2.place(x=0, y=175);
 magnify = Spinbox(rootwin, wrap=True, width=3, from_=1, to=10);
 magnify.bind_class("Spinbox", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 if(sys.platform=="win32"):
@@ -126,7 +137,7 @@ labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
 def GenerateBarcode():
  global updateimg, panel1, faddonsize, rootwin, pro_app_name;
- rootwin.wm_title(str(pro_app_name)+" Test GUI - "+str(entry1.get()));
+ rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - "+str(entry1.get()));
  upc_validate = entry1.get();
  if(listboxtxt1.get()=="Detect" or listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
   if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
@@ -155,9 +166,9 @@ def GenerateBarcode():
   validbc = draw_ean2(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="EAN-5" and len(entry1.get())==5):
   validbc = draw_ean5(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="ITF" and len(entry1.get()) % 2 and len(entry1.get()) > 5):
+ if(listboxtxt1.get()=="ITF" and not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   validbc = draw_itf(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="ITF-14" and len(entry1.get()) % 2 and len(entry1.get()) > 5):
+ if(listboxtxt1.get()=="ITF-14" and not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   validbc = draw_itf14(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="Code 11" and len(entry1.get()) > 0 and re.findall("([0-9\-]+)", entry1.get())):
   validbc = draw_code11(entry1.get(),"2",(False, False, False),(47, 53));
@@ -231,11 +242,11 @@ def SaveGeneratedBarcode():
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="ITF" and len(entry1.get()) % 2 and len(entry1.get()) > 5):
+ if(listboxtxt1.get()=="ITF" and not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="ITF-14" and len(entry1.get()) % 2 and len(entry1.get()) > 5):
+ if(listboxtxt1.get()=="ITF-14" and not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   if(savefname!=""):
    savefname = ShowSaveDialog();
   create_itf14(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
