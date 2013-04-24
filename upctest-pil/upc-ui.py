@@ -22,7 +22,9 @@ if(sys.version[0]=="2"):
  import Tkinter, tkMessageBox, tkFileDialog;
  from Tkinter import *;
 if(sys.version[0]=="3"):
- import tkinter, messageBox, filedialog;
+ import tkinter as Tkinter;
+ from tkinter import messagebox as tkMessageBox;
+ from tkinter import filedialog as tkFileDialog;
  from tkinter import *;
 from upcean import *;
 from PIL import Image, ImageTk;
