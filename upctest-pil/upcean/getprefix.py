@@ -959,7 +959,10 @@ def get_itf14_info(upc):
  return upc_type;
 def get_barcode_info(upc):
  if(len(upc)==8): 
-  return get_ean8_info(upc);
+  if(re.findall("^([0-1])", upc)):
+   return get_upce_info(upc);
+  if(re.findall("^([2-9])", upc)):
+   return get_ean8_info(upc);
  if(len(upc)==12):
   return get_upca_info(upc);
  if(len(upc)==13):
