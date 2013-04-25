@@ -129,7 +129,7 @@ def create_barcode_from_list(upc,outfile,resize=1,hideinfo=(False, False, False)
     barheight_val = barheight;
    retlist.append(create_barcode(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val));
    NumLoop = NumLoop + 1;
- return True;
+ return retlist;
 def draw_barcode_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  if(sys.version[0]=="2"):
   if(isinstance(upc, str) or isinstance(upc, unicode)):
@@ -224,7 +224,7 @@ def create_upc_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),bar
     barheight_val = barheight;
    retlist.append(create_upc(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val));
    NumLoop = NumLoop + 1;
- return True;
+ return retlist;
 def draw_upc_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  if(sys.version[0]=="2"):
   if(isinstance(upc, str) or isinstance(upc, unicode)):
@@ -320,7 +320,7 @@ def create_ean_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),bar
     barheight_val = barheight;
    retlist.append(create_ean(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val));
    NumLoop = NumLoop + 1;
- return True;
+ return retlist;
 def draw_ean_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  if(sys.version[0]=="2"):
   if(isinstance(upc, str) or isinstance(upc, unicode)):

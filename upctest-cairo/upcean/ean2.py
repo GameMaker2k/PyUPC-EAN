@@ -273,7 +273,7 @@ def create_ean2_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),ba
     barheight_val = barheight;
    retlist.append(create_ean2(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val));
    NumLoop = NumLoop + 1;
- return True;
+ return retlist;
 
 def draw_ean2_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
  if(sys.version[0]=="2"):
