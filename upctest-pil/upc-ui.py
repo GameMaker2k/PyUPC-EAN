@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 04/24/2013 Ver. 2.3.7 RC 4  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 04/25/2013 Ver. 2.4.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -89,7 +89,7 @@ if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or s
  label1.place(x=0, y=148);
 listboxtxt1 = StringVar(rootwin);
 listboxtxt1.set("Detect");
-listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "ITF-14", "Code 11", "Code 39", "Code 93");
+listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar");
 if(sys.platform=="win32"):
  listbox1.place(x=60, y=169);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
@@ -176,6 +176,8 @@ def GenerateBarcode():
   validbc = draw_code39(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="Code 93" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
   validbc = draw_code93(entry1.get(),"2",(False, False, False),(47, 53));
+ if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-D])([0-9\-\$\:\/\.\+]+)([a-dA-D])$", entry1.get())):
+  validbc = draw_codabar(entry1.get(),"2",(False, False, False),(47, 53));
  if(validbc!=False):
   image1 = ImageTk.PhotoImage(validbc);
   imageframe1 = Frame(rootwin, width=350, height=validbc.size[1] + 20);
@@ -262,6 +264,10 @@ def SaveGeneratedBarcode():
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+ if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-D])([0-9\-\$\:\/\.\+]+)([a-dA-D])$", entry1.get())):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   create_codabar(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
 def SaveGeneratedBarcodeAlt(event):
  SaveGeneratedBarcode();
 entry1.bind("<Return>", GenerateBarcodeAlt);

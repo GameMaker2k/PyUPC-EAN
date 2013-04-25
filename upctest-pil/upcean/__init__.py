@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 04/24/2013 Ver. 2.3.7 RC 4 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 04/25/2013 Ver. 2.4.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -29,7 +29,7 @@ def version_info():
  if(__version_info__[3]==None):
   return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": None};
 import sys, re, upcean.validate, upcean.convert, upcean.getprefix;
-import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93;
+import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93, upcean.codabar;
 '''
 import upcean.cuecat;
 '''
@@ -47,6 +47,7 @@ from upcean.itf14 import *;
 from upcean.code11 import *;
 from upcean.code39 import *;
 from upcean.code93 import *;
+from upcean.codabar import *;
 '''
 from upcean.cuecat import *;
 '''

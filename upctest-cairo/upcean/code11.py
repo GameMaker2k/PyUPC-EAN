@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code11.py - Last Update: 04/24/2013 Ver. 2.3.7 RC 4  - Author: cooldude2k $
+    $FileInfo: code11.py - Last Update: 04/25/2013 Ver. 2.4.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -147,7 +147,7 @@ def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, text_color);
  drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, alt_text_color);
  drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 27 + upc_size_add, 4, 27+ upc_size_add, LineSize, alt_text_color);
+ drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, alt_text_color);
  drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, alt_text_color);
  drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, alt_text_color);
  drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, alt_text_color);
