@@ -17,7 +17,7 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-__version_info__ = (2, 3, 7, "RC 4");
+__version_info__ = (2, 4, 0, "RC 1");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
 if(__version_info__[3]==None):
