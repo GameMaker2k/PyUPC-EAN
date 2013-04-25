@@ -18,8 +18,9 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re, upcean.validate;
+import sys, re, upcean.validate, upcean.convert;
 from upcean.validate import *;
+from upcean.convert import *;
 
 '''
 // Get GS1 Prefix for EAN-13 EAN-9 barcodes
@@ -820,6 +821,11 @@ def get_isbn_identifier(upc):
 
 def get_upca_info(upc):
  upc = str(upc);
+ if(len(upc)==8):
+  upc = convert_upce_to_upca(upc);
+ if(re.findall("^0(\d{13})", upc)):
+  upc_matches = re.findall("^0(\d{13})", upc);
+  upc = upc_matches[1];
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
   upc = upc_matches[1];
@@ -828,6 +834,96 @@ def get_upca_info(upc):
  upc_matches = re.findall("^(\d{1})(\d{5})(\d{5})(\d{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
+ return upc_type;
+def get_upca_info_from_upce(upc):
+ return get_upca_info(convert_upce_to_upca(upc));
+def get_upce_info(upc):
+ upc = str(upc);
+ if(re.findall("^0(\d{13})", upc)):
+  upc_matches = re.findall("^0(\d{13})", upc);
+  upc = upc_matches[1];
+ if(re.findall("^0(\d{12})", upc)):
+  upc_matches = re.findall("^0(\d{12})", upc);
+  upc = upc_matches[1];
+ if(len(upc)==12):
+  upc = convert_upca_to_upce(upc);
+ if(not re.findall("^(\d{8})", upc)):
+  return False;
+ get_ns = None;
+ get_manufac = None;
+ get_product = None;
+ get_checksum = None;
+ if(re.findall("(0|1)(\d{2})(\d{3})(0)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{2})(\d{3})(0)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2]+upc_matches[3];
+  get_checksum = upc_matches[4];
+ if(re.findall("(0|1)(\d{2})(\d{3})(1)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{2})(\d{3})(1)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2]+upc_matches[3];
+  get_checksum = upc_matches[4];
+ if(re.findall("(0|1)(\d{2})(\d{3})(2)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{2})(\d{3})(2)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2]+upc_matches[3];
+  get_checksum = upc_matches[4];
+ if(re.findall("(0|1)(\d{3})(\d{2})(3)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{3})(\d{2})(3)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2]+upc_matches[3];
+  get_checksum = upc_matches[4];
+ if(re.findall("(0|1)(\d{4})(\d{1})(4)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{4})(\d{1})(4)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2]+upc_matches[3];
+  get_checksum = upc_matches[4];
+ if(re.findall("(0|1)(\d{5})(5)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})(5)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2];
+  get_checksum = upc_matches[3];
+ if(re.findall("(0|1)(\d{5})(6)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})(6)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2];
+  get_checksum = upc_matches[3];
+ if(re.findall("(0|1)(\d{5})(7)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})(7)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2];
+  get_checksum = upc_matches[3];
+ if(re.findall("(0|1)(\d{5})(8)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})(8)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2];
+  get_checksum = upc_matches[3];
+ if(re.findall("(0|1)(\d{5})(9)(\d{1})", upc)):
+  upc_matches = re.findall("(0|1)(\d{5})(9)(\d{1})", upc);
+  upc_matches = upc_matches[0];
+  get_ns = upc_matches[0];
+  get_manufac = upc_matches[1];
+  get_product = upc_matches[2];
+  get_checksum = upc_matches[3];
+ upc_type = {'packagecode': None, 'numbersystem': get_ns, 'manufacturer': get_manufac, 'product': get_product, 'checkdigit': get_checksum};
  return upc_type;
 def get_ean8_info(upc):
  upc = str(upc);
@@ -839,6 +935,8 @@ def get_ean8_info(upc):
  return upc_type;
 def get_ean13_info(upc):
  upc = str(upc);
+ if(len(upc)==8):
+  upc = convert_upce_to_upca(upc);
  if(len(upc)==12):
   upc = "0"+upc;
  if(not re.findall("^(\d{13})", upc)):
@@ -951,8 +1049,14 @@ def get_upca_vw_info(upc):
   return False;
  upc_matches = re.findall("^2(\d{5})(\d{1})(\d{4})(\d{1})", upc);
  upc_matches = upc_matches[0];
- product = {'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2]};
+ product = {'numbersystem': str(2), 'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2], 'checkdigit': upc_matches[3]};
  return product;
+def get_upca_vw_numbersystem(upc):
+ upc = str(upc);
+ product = get_upca_vw_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
 def get_upca_vw_code(upc):
  upc = str(upc);
  product = get_upca_vw_info(upc);
@@ -971,6 +1075,12 @@ def get_upca_vw_pricecs(upc):
  if(product==False):
   return False;
  return product['pricecs'];
+def get_upca_vw_checkdigit(upc):
+ upc = str(upc);
+ product = get_upca_vw_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 
 '''
 // Get coupon info
@@ -987,8 +1097,14 @@ def get_upca_coupon_info(upc):
   return False;
  upc_matches = re.findall("^(5|9)(\d{5})(\d{3})(\d{2})(\d{1})", upc);
  upc_matches = upc_matches[0];
- product = {'manufacturer': upc_matches[1], 'family': upc_matches[2], 'value': upc_matches[3]};
+ product = {'numbersystem': upc_matches[0], 'manufacturer': upc_matches[1], 'family': upc_matches[2], 'value': upc_matches[3], 'checkdigit': upc_matches[4]};
  return product;
+def get_upca_coupon_numbersystem(upc):
+ upc = str(upc);
+ product = get_upca_coupon_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
 def get_upca_coupon_manufacturer(upc):
  upc = str(upc);
  product = get_upca_coupon_info(upc);
@@ -1007,6 +1123,12 @@ def get_upca_coupon_value(upc):
  if(product==False):
   return False;
  return product['value'];
+def get_upca_coupon_checkdigit(upc):
+ upc = str(upc);
+ product = get_upca_coupon_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 def get_upca_coupon_value_code(vcode):
  vcode = str(vcode);
  if(re.findall("^(00)", vcode)):
