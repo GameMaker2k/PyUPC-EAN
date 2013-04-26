@@ -176,7 +176,7 @@ def GenerateBarcode():
   validbc = draw_code39(entry1.get(),"2",(False, False, False),(47, 53));
  if(listboxtxt1.get()=="Code 93" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
   validbc = draw_code93(entry1.get(),"2",(False, False, False),(47, 53));
- if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-D])([0-9\-\$\:\/\.\+]+)([a-dA-D])$", entry1.get())):
+ if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", entry1.get())):
   validbc = draw_codabar(entry1.get(),"2",(False, False, False),(47, 53));
  if(validbc!=False):
   image1 = ImageTk.PhotoImage(validbc);
@@ -264,7 +264,7 @@ def SaveGeneratedBarcode():
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
- if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-D])([0-9\-\$\:\/\.\+]+)([a-dA-D])$", entry1.get())):
+ if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    create_codabar(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));

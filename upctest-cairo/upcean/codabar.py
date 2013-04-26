@@ -30,11 +30,11 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
  hidetext = hideinfo[2];
  if(len(upc) < 1): 
   return False;
- if(not re.findall("^([a-dA-D])([0-9\-\$\:\/\.\+]+)([a-dA-D])$", upc)):
+ if(not re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- pre_upc_matches = upc_matches = re.findall("^([a-dA-D])([0-9\-\$\:\/\.\+]+)([a-dA-D])$", upc);
+ pre_upc_matches = upc_matches = re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc);
  pre_upc_matches = pre_upc_matches[0];
  upc_matches = list(pre_upc_matches[1]);
  bcsize9 = len(re.findall("([0-9\-\$])", "".join(upc_matches)));
@@ -59,7 +59,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];
- if(pre_upc_matches[0]=="A"):
+ if(pre_upc_matches[0]=="A" or pre_upc_matches[0]=="T"):
   drawColorLine(upc_img, 0, 4, 0, LineSize, alt_text_color);
   drawColorLine(upc_img, 1, 4, 1, LineSize, alt_text_color);
   drawColorLine(upc_img, 2, 4, 2, LineSize, alt_text_color);
@@ -80,7 +80,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   drawColorLine(upc_img, 17, 4, 17, LineSize, alt_text_color);
   drawColorLine(upc_img, 18, 4, 18, LineSize, text_color);
   drawColorLine(upc_img, 19, 4, 19, LineSize, alt_text_color);
- if(pre_upc_matches[0]=="B"):
+ if(pre_upc_matches[0]=="B" or pre_upc_matches[0]=="N"):
   drawColorLine(upc_img, 0, 4, 0, LineSize, alt_text_color);
   drawColorLine(upc_img, 1, 4, 1, LineSize, alt_text_color);
   drawColorLine(upc_img, 2, 4, 2, LineSize, alt_text_color);
@@ -101,7 +101,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   drawColorLine(upc_img, 17, 4, 17, LineSize, text_color);
   drawColorLine(upc_img, 18, 4, 18, LineSize, text_color);
   drawColorLine(upc_img, 19, 4, 19, LineSize, alt_text_color);
- if(pre_upc_matches[0]=="C"):
+ if(pre_upc_matches[0]=="C" or pre_upc_matches[0]=="*"):
   drawColorLine(upc_img, 0, 4, 0, LineSize, alt_text_color);
   drawColorLine(upc_img, 1, 4, 1, LineSize, alt_text_color);
   drawColorLine(upc_img, 2, 4, 2, LineSize, alt_text_color);
@@ -122,7 +122,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   drawColorLine(upc_img, 17, 4, 17, LineSize, text_color);
   drawColorLine(upc_img, 18, 4, 18, LineSize, text_color);
   drawColorLine(upc_img, 19, 4, 19, LineSize, alt_text_color);
- if(pre_upc_matches[0]=="D"):
+ if(pre_upc_matches[0]=="D" or pre_upc_matches[0]=="E"):
   drawColorLine(upc_img, 0, 4, 0, LineSize, alt_text_color);
   drawColorLine(upc_img, 1, 4, 1, LineSize, alt_text_color);
   drawColorLine(upc_img, 2, 4, 2, LineSize, alt_text_color);
@@ -190,7 +190,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, alt_text_color);
   LineStart += 1;
   NumZero += 1; 
- if(pre_upc_matches[2]=="A"):
+ if(pre_upc_matches[2]=="A" or pre_upc_matches[2]=="T"):
   drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, text_color);
   drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, text_color);
@@ -213,7 +213,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   drawColorLine(upc_img, 40 + upc_size_add, 4, 40 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 41 + upc_size_add, 4, 41 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 42 + upc_size_add, 4, 42 + upc_size_add, LineSize, alt_text_color);
- if(pre_upc_matches[2]=="B"):
+ if(pre_upc_matches[2]=="B" or pre_upc_matches[2]=="N"):
   drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, text_color);
   drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, text_color);
@@ -236,7 +236,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   drawColorLine(upc_img, 40 + upc_size_add, 4, 40 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 41 + upc_size_add, 4, 41 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 42 + upc_size_add, 4, 42 + upc_size_add, LineSize, alt_text_color);
- if(pre_upc_matches[2]=="C"):
+ if(pre_upc_matches[2]=="C" or pre_upc_matches[2]=="*"):
   drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, text_color);
   drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, alt_text_color);
@@ -259,7 +259,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   drawColorLine(upc_img, 40 + upc_size_add, 4, 40 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 41 + upc_size_add, 4, 41 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 42 + upc_size_add, 4, 42 + upc_size_add, LineSize, alt_text_color);
- if(pre_upc_matches[2]=="D"):
+ if(pre_upc_matches[2]=="D" or pre_upc_matches[2]=="E"):
   drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, text_color);
   drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, alt_text_color);
   drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, text_color);
