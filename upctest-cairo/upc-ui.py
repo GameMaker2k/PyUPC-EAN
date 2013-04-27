@@ -56,7 +56,7 @@ def hex_color_to_tuple(color):
 def tuple_color_to_hex(color):
  if(not isinstance(color, tuple) or not len(color)==3):
   return False;
- return "#"+hex(int(color[0])).replace("0x", "").upper()+hex(int(color[1])).replace("0x", "").upper()+hex(int(color[2])).replace("0x", "").upper();
+ return "#"+hex(int(color[0])).replace("0x", "").upper().zfill(2)+hex(int(color[1])).replace("0x", "").upper().zfill(2)+hex(int(color[2])).replace("0x", "").upper().zfill(2);
 def tkColorPicker(color):
  return tkColorChooser.askcolor(title='Pick a color', initialcolor=color, parent=rootwin)[1].upper();
 ''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326 
