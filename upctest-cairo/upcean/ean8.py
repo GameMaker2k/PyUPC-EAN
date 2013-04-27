@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean8.py - Last Update: 04/25/2013 Ver. 2.4.0 RC 1 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -23,7 +23,7 @@ from upcean.convert import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -69,188 +69,186 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  upc_img = cairo.Context (upc_preimg);
  upc_img.set_antialias(cairo.ANTIALIAS_NONE);
  upc_img.rectangle(0, 0, 83 + addonsize, barheight[1] + 8);
- upc_img.set_source_rgb(256, 256, 256);
+ upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
  upc_img.fill();
- text_color = (0, 0, 0);
- alt_text_color = (256, 256, 256);
  if(hidetext==False):
-  drawColorText(upc_img, 10, 10, barheight[1] + 2, LeftLeftDigit, text_color);
-  drawColorText(upc_img, 10, 23, barheight[1] + 2, LeftRightDigit, text_color);
-  drawColorText(upc_img, 10, 42, barheight[1] + 2, RightLeftDigit, text_color);
-  drawColorText(upc_img, 10, 55, barheight[1] + 2, RightRightDigit, text_color);
- drawColorLine(upc_img, 0, 10, 0, barheight[0], alt_text_color);
- drawColorLine(upc_img, 1, 10, 1, barheight[0], alt_text_color);
- drawColorLine(upc_img, 2, 10, 2, barheight[0], alt_text_color);
- drawColorLine(upc_img, 3, 10, 3, barheight[0], alt_text_color);
- drawColorLine(upc_img, 4, 10, 4, barheight[0], alt_text_color);
- drawColorLine(upc_img, 5, 10, 5, barheight[0], alt_text_color);
- drawColorLine(upc_img, 6, 10, 6, barheight[0], alt_text_color);
- drawColorLine(upc_img, 7, 10, 7, barheight[1], text_color);
- drawColorLine(upc_img, 8, 10, 8, barheight[1], alt_text_color);
- drawColorLine(upc_img, 9, 10, 9, barheight[1], text_color);
+  drawColorText(upc_img, 10, 10, barheight[1] + 2, LeftLeftDigit, barcolor[1]);
+  drawColorText(upc_img, 10, 23, barheight[1] + 2, LeftRightDigit, barcolor[1]);
+  drawColorText(upc_img, 10, 42, barheight[1] + 2, RightLeftDigit, barcolor[1]);
+  drawColorText(upc_img, 10, 55, barheight[1] + 2, RightRightDigit, barcolor[1]);
+ drawColorLine(upc_img, 0, 10, 0, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 1, 10, 1, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 2, 10, 2, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 3, 10, 3, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 4, 10, 4, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 5, 10, 5, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 6, 10, 6, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 7, 10, 7, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 8, 10, 8, barheight[1], barcolor[2]);
+ drawColorLine(upc_img, 9, 10, 9, barheight[1], barcolor[0]);
  NumZero = 0; 
  LineStart = 10;
  while (NumZero < len(LeftDigit)):
   LineSize = barheight[0];
   if(hidetext==True):
    LineSize = barheight[1];
-  left_text_color_l = [0, 0, 0, 0, 0, 0, 0]; 
-  left_text_color_g = [1, 1, 1, 1, 1, 1, 1];
+  left_barcolor_l = [0, 0, 0, 0, 0, 0, 0]; 
+  left_barcolor_g = [1, 1, 1, 1, 1, 1, 1];
   if(int(LeftDigit[NumZero])==0): 
-   left_text_color_l = [0, 0, 0, 1, 1, 0, 1]; 
-   left_text_color_g = [0, 1, 0, 0, 1, 1, 1];
+   left_barcolor_l = [0, 0, 0, 1, 1, 0, 1]; 
+   left_barcolor_g = [0, 1, 0, 0, 1, 1, 1];
   if(int(LeftDigit[NumZero])==1): 
-   left_text_color_l = [0, 0, 1, 1, 0, 0, 1]; 
-   left_text_color_g = [0, 1, 1, 0, 0, 1, 1];
+   left_barcolor_l = [0, 0, 1, 1, 0, 0, 1]; 
+   left_barcolor_g = [0, 1, 1, 0, 0, 1, 1];
   if(int(LeftDigit[NumZero])==2): 
-   left_text_color_l = [0, 0, 1, 0, 0, 1, 1]; 
-   left_text_color_g = [0, 0, 1, 1, 0, 1, 1];
+   left_barcolor_l = [0, 0, 1, 0, 0, 1, 1]; 
+   left_barcolor_g = [0, 0, 1, 1, 0, 1, 1];
   if(int(LeftDigit[NumZero])==3): 
-   left_text_color_l = [0, 1, 1, 1, 1, 0, 1]; 
-   left_text_color_g = [0, 1, 0, 0, 0, 0, 1];
+   left_barcolor_l = [0, 1, 1, 1, 1, 0, 1]; 
+   left_barcolor_g = [0, 1, 0, 0, 0, 0, 1];
   if(int(LeftDigit[NumZero])==4): 
-   left_text_color_l = [0, 1, 0, 0, 0, 1, 1]; 
-   left_text_color_g = [0, 0, 1, 1, 1, 0, 1];
+   left_barcolor_l = [0, 1, 0, 0, 0, 1, 1]; 
+   left_barcolor_g = [0, 0, 1, 1, 1, 0, 1];
   if(int(LeftDigit[NumZero])==5): 
-   left_text_color_l = [0, 1, 1, 0, 0, 0, 1]; 
-   left_text_color_g = [0, 1, 1, 1, 0, 0, 1];
+   left_barcolor_l = [0, 1, 1, 0, 0, 0, 1]; 
+   left_barcolor_g = [0, 1, 1, 1, 0, 0, 1];
   if(int(LeftDigit[NumZero])==6): 
-   left_text_color_l = [0, 1, 0, 1, 1, 1, 1]; 
-   left_text_color_g = [0, 0, 0, 0, 1, 0, 1];
+   left_barcolor_l = [0, 1, 0, 1, 1, 1, 1]; 
+   left_barcolor_g = [0, 0, 0, 0, 1, 0, 1];
   if(int(LeftDigit[NumZero])==7): 
-   left_text_color_l = [0, 1, 1, 1, 0, 1, 1]; 
-   left_text_color_g = [0, 0, 1, 0, 0, 0, 1];
+   left_barcolor_l = [0, 1, 1, 1, 0, 1, 1]; 
+   left_barcolor_g = [0, 0, 1, 0, 0, 0, 1];
   if(int(LeftDigit[NumZero])==8): 
-   left_text_color_l = [0, 1, 1, 0, 1, 1, 1]; 
-   left_text_color_g = [0, 0, 0, 1, 0, 0, 1];
+   left_barcolor_l = [0, 1, 1, 0, 1, 1, 1]; 
+   left_barcolor_g = [0, 0, 0, 1, 0, 0, 1];
   if(int(LeftDigit[NumZero])==9):
-   left_text_color_l = [0, 0, 0, 1, 0, 1, 1];
-   left_text_color_g = [0, 0, 1, 0, 1, 1, 1];
-  left_text_color = left_text_color_l;
+   left_barcolor_l = [0, 0, 0, 1, 0, 1, 1];
+   left_barcolor_g = [0, 0, 1, 0, 1, 1, 1];
+  left_barcolor = left_barcolor_l;
   if(int(upc_matches[1])==1):
    if(NumZero==2):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==4):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==5):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   if(int(upc_matches[1])==2):
    if(NumZero==2):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==3):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==5):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   if(int(upc_matches[1])==3):
    if(NumZero==2):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==3):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==4):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   if(int(upc_matches[1])==4):
    if(NumZero==1):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==4):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==5):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   if(int(upc_matches[1])==5):
    if(NumZero==1):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==2):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==5):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   if(int(upc_matches[1])==6):
    if(NumZero==1):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==2):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==3):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   if(int(upc_matches[1])==7):
    if(NumZero==1):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==3):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==5):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   if(int(upc_matches[1])==8):
    if(NumZero==1):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==3):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==4):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   if(int(upc_matches[1])==9):
    if(NumZero==1):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==2):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
    if(NumZero==4):
-    left_text_color = left_text_color_g;
+    left_barcolor = left_barcolor_g;
   InnerUPCNum = 0;
-  while (InnerUPCNum < len(left_text_color)):
-   if(left_text_color[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
-   if(left_text_color[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, alt_text_color);
+  while (InnerUPCNum < len(left_barcolor)):
+   if(left_barcolor[InnerUPCNum]==1):
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
+   if(left_barcolor[InnerUPCNum]==0):
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
- drawColorLine(upc_img, 38, 10, 38, barheight[1], alt_text_color);
- drawColorLine(upc_img, 39, 10, 39, barheight[1], text_color);
- drawColorLine(upc_img, 40, 10, 40, barheight[1], alt_text_color);
- drawColorLine(upc_img, 41, 10, 41, barheight[1], text_color);
- drawColorLine(upc_img, 42, 10, 42, barheight[1], alt_text_color);
+ drawColorLine(upc_img, 38, 10, 38, barheight[1], barcolor[2]);
+ drawColorLine(upc_img, 39, 10, 39, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 40, 10, 40, barheight[1], barcolor[2]);
+ drawColorLine(upc_img, 41, 10, 41, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 42, 10, 42, barheight[1], barcolor[2]);
  NumZero = 0; LineStart = 43;
  while (NumZero < len(RightDigit)):
   LineSize = barheight[0];
   if(hidetext==True):
    LineSize = barheight[1];
-  right_text_color = [0, 0, 0, 0, 0, 0, 0];
+  right_barcolor = [0, 0, 0, 0, 0, 0, 0];
   if(int(RightDigit[NumZero])==0): 
-   right_text_color = [1, 1, 1, 0, 0, 1, 0];
+   right_barcolor = [1, 1, 1, 0, 0, 1, 0];
   if(int(RightDigit[NumZero])==1): 
-   right_text_color = [1, 1, 0, 0, 1, 1, 0];
+   right_barcolor = [1, 1, 0, 0, 1, 1, 0];
   if(int(RightDigit[NumZero])==2): 
-   right_text_color = [1, 1, 0, 1, 1, 0, 0];
+   right_barcolor = [1, 1, 0, 1, 1, 0, 0];
   if(int(RightDigit[NumZero])==3): 
-   right_text_color = [1, 0, 0, 0, 0, 1, 0];
+   right_barcolor = [1, 0, 0, 0, 0, 1, 0];
   if(int(RightDigit[NumZero])==4): 
-   right_text_color = [1, 0, 1, 1, 1, 0, 0];
+   right_barcolor = [1, 0, 1, 1, 1, 0, 0];
   if(int(RightDigit[NumZero])==5): 
-   right_text_color = [1, 0, 0, 1, 1, 1, 0];
+   right_barcolor = [1, 0, 0, 1, 1, 1, 0];
   if(int(RightDigit[NumZero])==6): 
-   right_text_color = [1, 0, 1, 0, 0, 0, 0];
+   right_barcolor = [1, 0, 1, 0, 0, 0, 0];
   if(int(RightDigit[NumZero])==7): 
-   right_text_color = [1, 0, 0, 0, 1, 0, 0];
+   right_barcolor = [1, 0, 0, 0, 1, 0, 0];
   if(int(RightDigit[NumZero])==8): 
-   right_text_color = [1, 0, 0, 1, 0, 0, 0];
+   right_barcolor = [1, 0, 0, 1, 0, 0, 0];
   if(int(RightDigit[NumZero])==9): 
-   right_text_color = [1, 1, 1, 0, 1, 0, 0];
+   right_barcolor = [1, 1, 1, 0, 1, 0, 0];
   InnerUPCNum = 0;
-  while (InnerUPCNum < len(right_text_color)):
-   if(right_text_color[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, text_color);
-   if(right_text_color[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, alt_text_color);
+  while (InnerUPCNum < len(right_barcolor)):
+   if(right_barcolor[InnerUPCNum]==1):
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
+   if(right_barcolor[InnerUPCNum]==0):
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
- drawColorLine(upc_img, 71, 10, 71, barheight[1], text_color);
- drawColorLine(upc_img, 72, 10, 72, barheight[1], alt_text_color);
- drawColorLine(upc_img, 73, 10, 73, barheight[1], text_color);
- drawColorLine(upc_img, 74, 10, 74, barheight[0], alt_text_color);
- drawColorLine(upc_img, 75, 10, 75, barheight[0], alt_text_color);
- drawColorLine(upc_img, 76, 10, 76, barheight[0], alt_text_color);
- drawColorLine(upc_img, 77, 10, 77, barheight[0], alt_text_color);
- drawColorLine(upc_img, 78, 10, 78, barheight[0], alt_text_color);
- drawColorLine(upc_img, 79, 10, 79, barheight[0], alt_text_color);
- drawColorLine(upc_img, 80, 10, 80, barheight[0], alt_text_color);
- drawColorLine(upc_img, 81, 10, 81, barheight[0], alt_text_color);
- drawColorLine(upc_img, 82, 10, 82, barheight[0], alt_text_color);
+ drawColorLine(upc_img, 71, 10, 71, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 72, 10, 72, barheight[1], barcolor[2]);
+ drawColorLine(upc_img, 73, 10, 73, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 74, 10, 74, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 75, 10, 75, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 76, 10, 76, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 77, 10, 77, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 78, 10, 78, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 79, 10, 79, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 80, 10, 80, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 81, 10, 81, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 82, 10, 82, barheight[0], barcolor[2]);
  if(supplement!=None and len(supplement)==2):
   upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight);
   upc_img.set_source_surface(upc_sup_img, 83, 0);
@@ -283,16 +281,16 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
   new_upc_preimg.write_to_png(outfile);
  return True;
 
-def draw_ean8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
- return create_ean8(upc,None,resize,hideinfo,barheight);
+def draw_ean8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean8(upc,None,resize,hideinfo,barheight,barcolor);
 
-def create_ean8_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def create_ean8_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(sys.version[0]=="2"):
   if(isinstance(upc, str) or isinstance(upc, unicode)):
-   return create_ean8(upc,outfile,resize,hideinfo,barheight);
+   return create_ean8(upc,outfile,resize,hideinfo,barheight,barcolor);
  if(sys.version[0]=="3"):
   if(isinstance(upc, str)):
-   return create_ean8(upc,outfile,resize,hideinfo,barheight);
+   return create_ean8(upc,outfile,resize,hideinfo,barheight,barcolor);
  if(isinstance(upc, tuple) or isinstance(upc, list)):
   NumLoop = 0;
   retlist = list();
@@ -313,11 +311,15 @@ def create_ean8_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),ba
     barheight_val = barheight[NumLoop];
    if(isinstance(barheight[0], int)):
     barheight_val = barheight;
-   retlist.append(create_ean8(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val));
+   if(isinstance(barcolor[0][0], tuple) or isinstance(barcolor[0][0], list)):
+    barcolor_val = barcolor[NumLoop];
+   if(isinstance(barcolor[0][0], int)):
+    barcolor_val = barcolor;
+   retlist.append(create_ean8(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val,barcolor_val));
    NumLoop = NumLoop + 1;
  return retlist;
 
-def draw_ean8_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def draw_ean8_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(sys.version[0]=="2"):
   if(isinstance(upc, str) or isinstance(upc, unicode)):
    return draw_ean8(upc,resize,hideinfo,barheight);
@@ -344,6 +346,10 @@ def draw_ean8_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(4
     barheight_val = barheight[NumLoop];
    if(isinstance(barheight[0], int)):
     barheight_val = barheight;
-   drawlist.append(draw_ean8(upc[NumLoop],resize_val,hideinfo_val,barheight_val));
+   if(isinstance(barcolor[0][0], tuple) or isinstance(barcolor[0][0], list)):
+    barcolor_val = barcolor[NumLoop];
+   if(isinstance(barcolor[0][0], int)):
+    barcolor_val = barcolor;
+   drawlist.append(draw_ean8(upc[NumLoop],resize_val,hideinfo_val,barheight_val,barcolor_val));
    NumLoop = NumLoop + 1;
  return drawlist;

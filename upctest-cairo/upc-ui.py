@@ -13,18 +13,20 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 04/25/2013 Ver. 2.4.0 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import os, sys, tempfile, upcean;
 if(sys.version[0]=="2"):
- import Tkinter, tkMessageBox, tkFileDialog;
+ import Tkinter, tkMessageBox, tkFileDialog, tkColorChooser, tkSimpleDialog;
  from Tkinter import *;
 if(sys.version[0]=="3"):
  import tkinter as Tkinter;
  from tkinter import messagebox as tkMessageBox;
  from tkinter import filedialog as tkFileDialog;
+ from tkinter import colorchooser as tkColorChooser;
+ from tkinter import simpledialog as tkSimpleDialog;
  from tkinter import *;
 from upcean import *;
 from PIL import Image, ImageTk;
@@ -33,6 +35,9 @@ updateimg = False;
 pro_app_name = "PyUPC-EAN";
 pro_app_subname = " Test GUI";
 pro_app_version = upcean.__version__;
+barcode_bg_color = (255, 255, 255);
+barcode_bar_color = (0, 0, 0);
+barcode_text_color = (0, 0, 0);
 rootwin = Tk();
 rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
 rootwin.geometry(("%dx%d") % (350, 300));
@@ -40,6 +45,20 @@ rootwin.resizable(0,0);
 def exit_ui(event):
  rootwin.quit();
 rootwin.bind("<Escape>", exit_ui);
+def hex_color_to_tuple(color):
+ if(not re.findall("\#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$", color)):
+  return False;
+ if(re.findall("\#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$", color)):
+  pre_color = re.findall("\#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$", color);
+  pre_color = pre_color[0];
+  return (int(pre_color[0], 16), int(pre_color[1], 16), int(pre_color[2], 16));
+ return False;
+def tuple_color_to_hex(color):
+ if(not isinstance(color, tuple) or not len(color)==3):
+  return False;
+ return "#"+hex(int(color[0])).replace("0x", "").upper()+hex(int(color[1])).replace("0x", "").upper()+hex(int(color[2])).replace("0x", "").upper();
+def tkColorPicker(color):
+ return tkColorChooser.askcolor(title='Pick a color', initialcolor=color, parent=rootwin)[1].upper();
 ''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326 
     http://ebook.pldworld.com/_eBook/_OReilly/133.Books/Python/programming_python_2ed-2001/1.9.htm '''
 def make_ccp_menu(w):
@@ -74,6 +93,15 @@ def show_save_menu(e):
  the_menu.entryconfigure("Generate", command = GenerateBarcode);
  the_menu.entryconfigure("Save As", command = SaveGeneratedBarcode);
  the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
+def ch_barcode_bg_color():
+ global barcode_bg_color;
+ barcode_bg_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bg_color)));
+def ch_barcode_bar_color():
+ global barcode_bar_color;
+ barcode_bar_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bar_color)));
+def ch_barcode_text_color():
+ global barcode_text_color;
+ barcode_text_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_text_color)));
 entry1 = Entry(rootwin);
 entry1.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 if(sys.platform=="win32"):
@@ -87,6 +115,11 @@ if(sys.platform=="win32"):
  label1.place(x=0, y=148);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  label1.place(x=0, y=148);
+button3 = Button(rootwin, text="Color", command= ch_barcode_text_color);
+if(sys.platform=="win32"):
+ button3.place(x=175, y=148);
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+ button3.place(x=205, y=146);
 listboxtxt1 = StringVar(rootwin);
 listboxtxt1.set("Detect");
 listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar");
@@ -118,11 +151,16 @@ entrytxt2.set("48");
 if(sys.platform=="win32"):
  entry2.place(x=70, y=225);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- entry2.place(x=90, y=223);
+ entry2.place(x=85, y=223);
 labeltxt4 = StringVar();
 label4 = Label( rootwin, textvariable=labeltxt4);
 labeltxt4.set("Bar 1 Height:");
 label4.place(x=0, y=223);
+button4 = Button(rootwin, text="Color", command= ch_barcode_bar_color);
+if(sys.platform=="win32"):
+ button4.place(x=205, y=223);
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+ button4.place(x=235, y=221);
 entrytxt3 = StringVar();
 entry3 = Entry(rootwin, textvariable=entrytxt3);
 entry3.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
@@ -130,11 +168,16 @@ entrytxt3.set("54");
 if(sys.platform=="win32"):
  entry3.place(x=70, y=250);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- entry3.place(x=90, y=248);
+ entry3.place(x=85, y=248);
 labeltxt5 = StringVar();
 label5 = Label( rootwin, textvariable=labeltxt5);
 labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
+button5 = Button(rootwin, text="Color", command= ch_barcode_bg_color);
+if(sys.platform=="win32"):
+ button5.place(x=205, y=248);
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+ button5.place(x=235, y=246);
 def GenerateBarcode():
  global updateimg, panel1, faddonsize, rootwin, pro_app_name;
  rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - "+str(entry1.get()));
@@ -153,31 +196,31 @@ def GenerateBarcode():
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  validbc = False;
  if(listboxtxt1.get()=="Detect" and (validate_barcode(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
-  validbc = draw_barcode(entry1.get(),"2",(False, False, False),(47, 53));
+  validbc = draw_barcode(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="UPC-A" and validate_barcode(upc_validate)==True):
-  validbc = draw_upca(entry1.get(),"2",(False, False, False),(47, 53));
+  validbc = draw_upca(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="UPC-E" and validate_barcode(upc_validate)==True):
-  validbc = draw_upce(entry1.get(),"2",(False, False, False),(47, 53));
+  validbc = draw_upce(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-13" and validate_barcode(upc_validate)==True):
-  validbc = draw_ean13(entry1.get(),"2",(False, False, False),(47, 53));
+  validbc = draw_ean13(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-8" and validate_ean8(upc_validate)==True):
-  validbc = draw_ean8(entry1.get(),"2",(False, False, False),(47, 53));
+  validbc = draw_ean8(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-2" and len(entry1.get())==2):
-  validbc = draw_ean2(entry1.get(),"2",(False, False, False),(48, 54));
+  validbc = draw_ean2(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-5" and len(entry1.get())==5):
-  validbc = draw_ean5(entry1.get(),"2",(False, False, False),(48, 54));
+  validbc = draw_ean5(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF" not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
-  validbc = draw_itf(entry1.get(),"2",(False, False, False),(48, 54));
+  validbc = draw_itf(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF-14" not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
-  validbc = draw_itf14(entry1.get(),"2",(False, False, False),(48, 54));
+  validbc = draw_itf14(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 11" and len(entry1.get()) > 0 and re.findall("([0-9\-]+)", entry1.get())):
-  validbc = draw_code11(entry1.get(),"2",(False, False, False),(48, 54));
+  validbc = draw_code11(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 39" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
-  validbc = draw_code39(entry1.get(),"2",(False, False, False),(48, 54));
+  validbc = draw_code39(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 93" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
-  validbc = draw_code93(entry1.get(),"2",(False, False, False),(48, 54));
+  validbc = draw_code93(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", entry1.get())):
-  validbc = draw_codabar(entry1.get(),"2",(False, False, False),(48, 54));
+  validbc = draw_codabar(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(validbc!=False):
   validbc = Image.frombuffer("RGB",(validbc.get_width(),validbc.get_height()),validbc.get_data(),"raw","RGBA",0,1).convert("RGB");
   image1 = ImageTk.PhotoImage(validbc);
@@ -220,55 +263,55 @@ def SaveGeneratedBarcode():
  if(listboxtxt1.get()=="Detect" and (validate_barcode(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="UPC-A" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="UPC-E" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-13" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-8" and validate_ean8(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-2" and len(entry1.get())==2):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_ean2(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_ean2(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-5" and len(entry1.get())==5):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF" not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF-14" not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   if(savefname!=""):
    savefname = ShowSaveDialog();
-  create_itf14(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+  create_itf14(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 11" and len(entry1.get()) > 0 and re.findall("([0-9\-]+)", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_code11(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_code11(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 39" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_code39(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_code39(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 93" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_codabar(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())));
+   create_codabar(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
 def SaveGeneratedBarcodeAlt(event):
  SaveGeneratedBarcode();
 entry1.bind("<Return>", GenerateBarcodeAlt);

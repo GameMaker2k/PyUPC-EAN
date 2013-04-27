@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 04/25/2013 Ver. 2.4.0 RC 1 - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -20,7 +20,7 @@ import upcean.ean2, upcean.ean5;
 from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 
-def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53)):
+def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -38,192 +38,190 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
   return False;
  upc_preimg = Image.new("RGB", (48 + upc_size_add, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (48 + upc_size_add, barheight[1] + 9)], fill=(256, 256, 256));
- text_color = (0, 0, 0);
- alt_text_color = (256, 256, 256);
+ upc_img.rectangle([(0, 0), (48 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];
- drawColorLine(upc_img, 0, 4, 0, LineSize, alt_text_color);
- drawColorLine(upc_img, 1, 4, 1, LineSize, alt_text_color);
- drawColorLine(upc_img, 2, 4, 2, LineSize, alt_text_color);
- drawColorLine(upc_img, 3, 4, 3, LineSize, alt_text_color);
- drawColorLine(upc_img, 4, 4, 4, LineSize, alt_text_color);
- drawColorLine(upc_img, 5, 4, 5, LineSize, alt_text_color);
- drawColorLine(upc_img, 6, 4, 6, LineSize, alt_text_color);
- drawColorLine(upc_img, 7, 4, 7, LineSize, alt_text_color);
- drawColorLine(upc_img, 8, 4, 8, LineSize, alt_text_color);
- drawColorLine(upc_img, 9, 4, 9, LineSize, text_color);
- drawColorLine(upc_img, 10, 4, 10, LineSize, alt_text_color);
- drawColorLine(upc_img, 11, 4, 11, LineSize, alt_text_color);
- drawColorLine(upc_img, 12, 4, 12, LineSize, alt_text_color);
- drawColorLine(upc_img, 13, 4, 13, LineSize, text_color);
- drawColorLine(upc_img, 14, 4, 14, LineSize, alt_text_color);
- drawColorLine(upc_img, 15, 4, 15, LineSize, text_color);
- drawColorLine(upc_img, 16, 4, 16, LineSize, text_color);
- drawColorLine(upc_img, 17, 4, 17, LineSize, text_color);
- drawColorLine(upc_img, 18, 4, 18, LineSize, alt_text_color);
- drawColorLine(upc_img, 19, 4, 19, LineSize, text_color);
- drawColorLine(upc_img, 20, 4, 20, LineSize, text_color);
- drawColorLine(upc_img, 21, 4, 21, LineSize, text_color);
- drawColorLine(upc_img, 22, 4, 22, LineSize, alt_text_color);
- drawColorLine(upc_img, 23, 4, 23, LineSize, text_color);
- drawColorLine(upc_img, 24, 4, 24, LineSize, alt_text_color); 
+ drawColorLine(upc_img, 0, 4, 0, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 1, 4, 1, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 2, 4, 2, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 3, 4, 3, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 4, 4, 4, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 5, 4, 5, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 6, 4, 6, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 7, 4, 7, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 8, 4, 8, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 9, 4, 9, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 10, 4, 10, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 11, 4, 11, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 12, 4, 12, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 13, 4, 13, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 14, 4, 14, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 15, 4, 15, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 16, 4, 16, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 17, 4, 17, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 18, 4, 18, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 19, 4, 19, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 20, 4, 20, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 21, 4, 21, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 22, 4, 22, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 23, 4, 23, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 24, 4, 24, LineSize, barcolor[2]); 
  NumZero = 0; 
  LineStart = 25; 
  while (NumZero < len(upc_matches)):
-  left_text_color = [0, 2, 0, 3, 1, 2, 1, 2, 0];
+  left_barcolor = [0, 2, 0, 3, 1, 2, 1, 2, 0];
   if(upc_matches[NumZero]=="0"):
-   left_text_color = [0, 2, 0, 3, 1, 2, 1, 2, 0];
+   left_barcolor = [0, 2, 0, 3, 1, 2, 1, 2, 0];
   if(upc_matches[NumZero]=="1"):
-   left_text_color = [1, 2, 0, 3, 0, 2, 0, 2, 1];
+   left_barcolor = [1, 2, 0, 3, 0, 2, 0, 2, 1];
   if(upc_matches[NumZero]=="2"):
-   left_text_color = [0, 2, 1, 3, 0, 2, 0, 2, 1];
+   left_barcolor = [0, 2, 1, 3, 0, 2, 0, 2, 1];
   if(upc_matches[NumZero]=="3"):
-   left_text_color = [1, 2, 1, 3, 0, 2, 0, 2, 0];
+   left_barcolor = [1, 2, 1, 3, 0, 2, 0, 2, 0];
   if(upc_matches[NumZero]=="4"):
-   left_text_color = [0, 2, 0, 3, 1, 2, 0, 2, 1];
+   left_barcolor = [0, 2, 0, 3, 1, 2, 0, 2, 1];
   if(upc_matches[NumZero]=="5"):
-   left_text_color = [1, 2, 0, 3, 1, 2, 0, 2, 0];
+   left_barcolor = [1, 2, 0, 3, 1, 2, 0, 2, 0];
   if(upc_matches[NumZero]=="6"):
-   left_text_color = [0, 2, 1, 3, 1, 2, 0, 2, 0];
+   left_barcolor = [0, 2, 1, 3, 1, 2, 0, 2, 0];
   if(upc_matches[NumZero]=="7"):
-   left_text_color = [0, 2, 0, 3, 0, 2, 1, 2, 1];
+   left_barcolor = [0, 2, 0, 3, 0, 2, 1, 2, 1];
   if(upc_matches[NumZero]=="8"):
-   left_text_color = [1, 2, 0, 3, 0, 2, 1, 2, 0];
+   left_barcolor = [1, 2, 0, 3, 0, 2, 1, 2, 0];
   if(upc_matches[NumZero]=="9"):
-   left_text_color = [0, 2, 1, 3, 0, 2, 1, 2, 0];
+   left_barcolor = [0, 2, 1, 3, 0, 2, 1, 2, 0];
   if(upc_matches[NumZero]=="A"):
-   left_text_color = [1, 2, 0, 2, 0, 3, 0, 2, 1];
+   left_barcolor = [1, 2, 0, 2, 0, 3, 0, 2, 1];
   if(upc_matches[NumZero]=="B"):
-   left_text_color = [0, 2, 1, 2, 0, 3, 0, 2, 1];
+   left_barcolor = [0, 2, 1, 2, 0, 3, 0, 2, 1];
   if(upc_matches[NumZero]=="C"):
-   left_text_color = [1, 2, 1, 2, 0, 3, 0, 2, 0];
+   left_barcolor = [1, 2, 1, 2, 0, 3, 0, 2, 0];
   if(upc_matches[NumZero]=="D"):
-   left_text_color = [0, 2, 0, 2, 1, 3, 0, 2, 1];
+   left_barcolor = [0, 2, 0, 2, 1, 3, 0, 2, 1];
   if(upc_matches[NumZero]=="E"):
-   left_text_color = [1, 2, 0, 2, 1, 3, 0, 2, 0];
+   left_barcolor = [1, 2, 0, 2, 1, 3, 0, 2, 0];
   if(upc_matches[NumZero]=="F"):
-   left_text_color = [0, 2, 1, 2, 1, 3, 0, 2, 0];
+   left_barcolor = [0, 2, 1, 2, 1, 3, 0, 2, 0];
   if(upc_matches[NumZero]=="G"):
-   left_text_color = [0, 2, 0, 2, 0, 3, 1, 2, 1];
+   left_barcolor = [0, 2, 0, 2, 0, 3, 1, 2, 1];
   if(upc_matches[NumZero]=="H"):
-   left_text_color = [1, 2, 0, 2, 0, 3, 1, 2, 0];
+   left_barcolor = [1, 2, 0, 2, 0, 3, 1, 2, 0];
   if(upc_matches[NumZero]=="I"):
-   left_text_color = [0, 2, 1, 2, 0, 3, 1, 2, 0];
+   left_barcolor = [0, 2, 1, 2, 0, 3, 1, 2, 0];
   if(upc_matches[NumZero]=="J"):
-   left_text_color = [0, 2, 0, 2, 1, 3, 1, 2, 0];
+   left_barcolor = [0, 2, 0, 2, 1, 3, 1, 2, 0];
   if(upc_matches[NumZero]=="K"):
-   left_text_color = [1, 2, 0, 2, 0, 2, 0, 3, 1];
+   left_barcolor = [1, 2, 0, 2, 0, 2, 0, 3, 1];
   if(upc_matches[NumZero]=="L"):
-   left_text_color = [0, 2, 1, 2, 0, 2, 0, 3, 1];
+   left_barcolor = [0, 2, 1, 2, 0, 2, 0, 3, 1];
   if(upc_matches[NumZero]=="M"):
-   left_text_color = [1, 2, 1, 2, 0, 2, 0, 3, 0];
+   left_barcolor = [1, 2, 1, 2, 0, 2, 0, 3, 0];
   if(upc_matches[NumZero]=="N"):
-   left_text_color = [0, 2, 0, 2, 1, 2, 0, 3, 1];
+   left_barcolor = [0, 2, 0, 2, 1, 2, 0, 3, 1];
   if(upc_matches[NumZero]=="O"):
-   left_text_color = [1, 2, 0, 2, 1, 2, 0, 3, 0];
+   left_barcolor = [1, 2, 0, 2, 1, 2, 0, 3, 0];
   if(upc_matches[NumZero]=="P"):
-   left_text_color = [0, 2, 1, 2, 1, 2, 0, 3, 0];
+   left_barcolor = [0, 2, 1, 2, 1, 2, 0, 3, 0];
   if(upc_matches[NumZero]=="Q"):
-   left_text_color = [0, 2, 0, 2, 0, 2, 1, 3, 1];
+   left_barcolor = [0, 2, 0, 2, 0, 2, 1, 3, 1];
   if(upc_matches[NumZero]=="R"):
-   left_text_color = [1, 2, 0, 2, 0, 2, 1, 3, 0];
+   left_barcolor = [1, 2, 0, 2, 0, 2, 1, 3, 0];
   if(upc_matches[NumZero]=="S"):
-   left_text_color = [0, 2, 1, 2, 0, 2, 1, 3, 0];
+   left_barcolor = [0, 2, 1, 2, 0, 2, 1, 3, 0];
   if(upc_matches[NumZero]=="T"):
-   left_text_color = [0, 2, 0, 2, 1, 2, 1, 3, 0];
+   left_barcolor = [0, 2, 0, 2, 1, 2, 1, 3, 0];
   if(upc_matches[NumZero]=="U"):
-   left_text_color = [1, 3, 0, 2, 0, 2, 0, 2, 1];
+   left_barcolor = [1, 3, 0, 2, 0, 2, 0, 2, 1];
   if(upc_matches[NumZero]=="V"):
-   left_text_color = [0, 3, 1, 2, 0, 2, 0, 2, 1];
+   left_barcolor = [0, 3, 1, 2, 0, 2, 0, 2, 1];
   if(upc_matches[NumZero]=="W"):
-   left_text_color = [1, 3, 1, 2, 0, 2, 0, 2, 0];
+   left_barcolor = [1, 3, 1, 2, 0, 2, 0, 2, 0];
   if(upc_matches[NumZero]=="X"):
-   left_text_color = [0, 3, 0, 2, 1, 2, 0, 2, 1];
+   left_barcolor = [0, 3, 0, 2, 1, 2, 0, 2, 1];
   if(upc_matches[NumZero]=="Y"):
-   left_text_color = [1, 3, 0, 2, 1, 2, 0, 2, 0];
+   left_barcolor = [1, 3, 0, 2, 1, 2, 0, 2, 0];
   if(upc_matches[NumZero]=="Z"):
-   left_text_color = [0, 3, 1, 2, 1, 2, 0, 2, 0];
+   left_barcolor = [0, 3, 1, 2, 1, 2, 0, 2, 0];
   if(upc_matches[NumZero]=="-"):
-   left_text_color = [0, 3, 0, 2, 0, 2, 1, 2, 1];
+   left_barcolor = [0, 3, 0, 2, 0, 2, 1, 2, 1];
   if(upc_matches[NumZero]=="."):
-   left_text_color = [1, 3, 0, 2, 0, 2, 1, 2, 0];
+   left_barcolor = [1, 3, 0, 2, 0, 2, 1, 2, 0];
   if(upc_matches[NumZero]==" "):
-   left_text_color = [0, 3, 1, 2, 0, 2, 1, 2, 0];
+   left_barcolor = [0, 3, 1, 2, 0, 2, 1, 2, 0];
   if(upc_matches[NumZero]=="$"):
-   left_text_color = [0, 3, 0, 3, 0, 3, 0, 2, 0];
+   left_barcolor = [0, 3, 0, 3, 0, 3, 0, 2, 0];
   if(upc_matches[NumZero]=="/"):
-   left_text_color = [0, 3, 0, 3, 0, 2, 0, 3, 0];
+   left_barcolor = [0, 3, 0, 3, 0, 2, 0, 3, 0];
   if(upc_matches[NumZero]=="+"):
-   left_text_color = [0, 3, 0, 2, 0, 3, 0, 3, 0];
+   left_barcolor = [0, 3, 0, 2, 0, 3, 0, 3, 0];
   if(upc_matches[NumZero]=="%"):
-   left_text_color = [0, 2, 0, 3, 0, 3, 0, 3, 0];
+   left_barcolor = [0, 2, 0, 3, 0, 3, 0, 3, 0];
   InnerUPCNum = 0;
-  while (InnerUPCNum < len(left_text_color)):
-   if(left_text_color[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, text_color); 
+  while (InnerUPCNum < len(left_barcolor)):
+   if(left_barcolor[InnerUPCNum]==1):
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[0]); 
     LineStart += 1; 
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, text_color); 
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[0]); 
     LineStart += 1; 
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, text_color); 
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[0]); 
     LineStart += 1;
-   if(left_text_color[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, text_color); 
+   if(left_barcolor[InnerUPCNum]==0):
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[0]); 
     LineStart += 1;
-   if(left_text_color[InnerUPCNum]==3):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, alt_text_color); 
+   if(left_barcolor[InnerUPCNum]==3):
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]); 
     LineStart += 1; 
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, alt_text_color); 
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]); 
     LineStart += 1; 
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, alt_text_color); 
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]); 
     LineStart += 1;
-   if(left_text_color[InnerUPCNum]==2):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, alt_text_color); 
+   if(left_barcolor[InnerUPCNum]==2):
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]); 
     LineStart += 1;
    InnerUPCNum += 1;
-  drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, alt_text_color); 
+  drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]); 
   LineStart += 1; 
   NumZero += 1;
- drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, alt_text_color); 
- drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 31 + upc_size_add, 4, 31 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 32 + upc_size_add, 4, 32 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 33 + upc_size_add, 4, 33 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 34 + upc_size_add, 4, 34 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 35 + upc_size_add, 4, 35 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 36 + upc_size_add, 4, 36 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 37 + upc_size_add, 4, 37 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 38 + upc_size_add, 4, 38 + upc_size_add, LineSize, text_color);
- drawColorLine(upc_img, 39 + upc_size_add, 4, 39 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 40 + upc_size_add, 4, 40 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 41 + upc_size_add, 4, 41 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 42 + upc_size_add, 4, 42 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 43 + upc_size_add, 4, 43 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 44 + upc_size_add, 4, 44 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 45 + upc_size_add, 4, 45 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 46 + upc_size_add, 4, 46 + upc_size_add, LineSize, alt_text_color);
- drawColorLine(upc_img, 48 + upc_size_add, 4, 48 + upc_size_add, LineSize, alt_text_color);
+ drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, barcolor[2]); 
+ drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 31 + upc_size_add, 4, 31 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 32 + upc_size_add, 4, 32 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 33 + upc_size_add, 4, 33 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 34 + upc_size_add, 4, 34 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 35 + upc_size_add, 4, 35 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 36 + upc_size_add, 4, 36 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 37 + upc_size_add, 4, 37 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 38 + upc_size_add, 4, 38 + upc_size_add, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 39 + upc_size_add, 4, 39 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 40 + upc_size_add, 4, 40 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 41 + upc_size_add, 4, 41 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 42 + upc_size_add, 4, 42 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 43 + upc_size_add, 4, 43 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 44 + upc_size_add, 4, 44 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 45 + upc_size_add, 4, 45 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 46 + upc_size_add, 4, 46 + upc_size_add, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 48 + upc_size_add, 4, 48 + upc_size_add, LineSize, barcolor[2]);
  new_upc_img = upc_preimg.resize(((48 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", text_color);
+  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", barcolor[1]);
   NumTxtZero = 0; 
   LineTxtStart = 30 * int(resize);
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[NumTxtZero], text_color);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[NumTxtZero], barcolor[1]);
    LineTxtStart += 16 * int(resize);
    NumTxtZero += 1;
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", text_color);
+  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", barcolor[1]);
  del(upc_img);
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
@@ -301,16 +299,16 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
   new_upc_img.save(outfile, outfileext);
  return True;
 
-def draw_code39(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
- return create_code39(upc,None,resize,hideinfo,barheight);
+def draw_code39(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_code39(upc,None,resize,hideinfo,barheight,barcolor);
 
-def create_code39_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def create_code39_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(sys.version[0]=="2"):
   if(isinstance(upc, str) or isinstance(upc, unicode)):
-   return create_code39(upc,outfile,resize,hideinfo,barheight);
+   return create_code39(upc,outfile,resize,hideinfo,barheight,barcolor);
  if(sys.version[0]=="3"):
   if(isinstance(upc, str)):
-   return create_code39(upc,outfile,resize,hideinfo,barheight);
+   return create_code39(upc,outfile,resize,hideinfo,barheight,barcolor);
  if(isinstance(upc, tuple) or isinstance(upc, list)):
   NumLoop = 0;
   retlist = list();
@@ -331,11 +329,15 @@ def create_code39_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),
     barheight_val = barheight[NumLoop];
    if(isinstance(barheight[0], int)):
     barheight_val = barheight;
-   retlist.append(create_code39(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val));
+   if(isinstance(barcolor[0][0], tuple) or isinstance(barcolor[0][0], list)):
+    barcolor_val = barcolor[NumLoop];
+   if(isinstance(barcolor[0][0], int)):
+    barcolor_val = barcolor;
+   retlist.append(create_code39(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val,barcolor_val));
    NumLoop = NumLoop + 1;
  return retlist;
 
-def draw_code39_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54)):
+def draw_code39_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(sys.version[0]=="2"):
   if(isinstance(upc, str) or isinstance(upc, unicode)):
    return draw_code39(upc,resize,hideinfo,barheight);
@@ -362,6 +364,10 @@ def draw_code39_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=
     barheight_val = barheight[NumLoop];
    if(isinstance(barheight[0], int)):
     barheight_val = barheight;
-   drawlist.append(draw_code39(upc[NumLoop],resize_val,hideinfo_val,barheight_val));
+   if(isinstance(barcolor[0][0], tuple) or isinstance(barcolor[0][0], list)):
+    barcolor_val = barcolor[NumLoop];
+   if(isinstance(barcolor[0][0], int)):
+    barcolor_val = barcolor;
+   drawlist.append(draw_code39(upc[NumLoop],resize_val,hideinfo_val,barheight_val,barcolor_val));
    NumLoop = NumLoop + 1;
  return drawlist;
