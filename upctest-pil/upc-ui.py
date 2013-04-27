@@ -57,8 +57,9 @@ def tuple_color_to_hex(color):
  if(not isinstance(color, tuple) or not len(color)==3):
   return False;
  return "#"+hex(int(color[0])).replace("0x", "").upper().zfill(2)+hex(int(color[1])).replace("0x", "").upper().zfill(2)+hex(int(color[2])).replace("0x", "").upper().zfill(2);
-def tkColorPicker(color):
- return tkColorChooser.askcolor(title='Pick a color', initialcolor=color, parent=rootwin)[1].upper();
+def tkColorPicker(color, title):
+ global rootwin;
+ return tkColorChooser.askcolor(title=title, initialcolor=color, parent=rootwin)[1].upper();
 ''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326 
     http://ebook.pldworld.com/_eBook/_OReilly/133.Books/Python/programming_python_2ed-2001/1.9.htm '''
 def make_ccp_menu(w):
@@ -85,6 +86,7 @@ def make_save_menu(w):
  the_menu = Menu(w, tearoff=0);
  the_menu.add_command(label="Generate");
  the_menu.add_command(label="Save As");
+ the_menu.add_command(label="Colors");
  return the_menu;
 def show_save_menu(e):
  global rootwin;
@@ -92,16 +94,13 @@ def show_save_menu(e):
  w = e.widget;
  the_menu.entryconfigure("Generate", command = GenerateBarcode);
  the_menu.entryconfigure("Save As", command = SaveGeneratedBarcode);
+ the_menu.entryconfigure("Colors", command = ch_barcode_colors);
  the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
-def ch_barcode_bg_color():
- global barcode_bg_color;
- barcode_bg_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bg_color)));
-def ch_barcode_bar_color():
- global barcode_bar_color;
- barcode_bar_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bar_color)));
-def ch_barcode_text_color():
- global barcode_text_color;
- barcode_text_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_text_color)));
+def ch_barcode_colors():
+ global barcode_bg_color, barcode_bar_color, barcode_text_color;
+ barcode_bg_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bg_color), "Background Color"));
+ barcode_bar_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bar_color), "Bar Color"));
+ barcode_text_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_text_color), "Text Color"));
 entry1 = Entry(rootwin);
 entry1.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 if(sys.platform=="win32"):
@@ -115,11 +114,6 @@ if(sys.platform=="win32"):
  label1.place(x=0, y=148);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  label1.place(x=0, y=148);
-button3 = Button(rootwin, text="Color", command= ch_barcode_text_color);
-if(sys.platform=="win32"):
- button3.place(x=175, y=148);
-if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- button3.place(x=205, y=146);
 listboxtxt1 = StringVar(rootwin);
 listboxtxt1.set("Detect");
 listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar");
@@ -156,11 +150,6 @@ labeltxt4 = StringVar();
 label4 = Label( rootwin, textvariable=labeltxt4);
 labeltxt4.set("Bar 1 Height:");
 label4.place(x=0, y=223);
-button4 = Button(rootwin, text="Color", command= ch_barcode_bar_color);
-if(sys.platform=="win32"):
- button4.place(x=205, y=223);
-if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- button4.place(x=235, y=221);
 entrytxt3 = StringVar();
 entry3 = Entry(rootwin, textvariable=entrytxt3);
 entry3.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
@@ -173,11 +162,6 @@ labeltxt5 = StringVar();
 label5 = Label( rootwin, textvariable=labeltxt5);
 labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
-button5 = Button(rootwin, text="Color", command= ch_barcode_bg_color);
-if(sys.platform=="win32"):
- button5.place(x=205, y=248);
-if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- button5.place(x=235, y=246);
 def GenerateBarcode():
  global updateimg, panel1, faddonsize, rootwin, pro_app_name;
  rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - "+str(entry1.get()));
@@ -328,6 +312,12 @@ if(sys.platform=="win32"):
  button2.place(x=60, y=274);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  button2.place(x=90, y=272);
+button3 = Button(rootwin, text="Colors", command= ch_barcode_colors);
+if(sys.platform=="win32"):
+ button3.place(x=115, y=274);
+if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
+ button3.place(x=170, y=272);
 button1.bind("<Return>", GenerateBarcodeAlt);
 button2.bind("<Return>", SaveGeneratedBarcodeAlt);
+button3.bind("<Return>", ch_barcode_colors);
 rootwin.mainloop();
