@@ -267,12 +267,12 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
   drawColorText(upc_img, 10 * int(resize), 93 + (90 * (int(resize) - 1)) + (5 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(upc_matches[2])[5], barcolor[1]);
  del(upc_img);
  if(supplement!=None and len(supplement)==2): 
-  upc_sup_img = draw_ean2_supplement(supplement,resize,hideinfo,barheight);
+  upc_sup_img = draw_ean2_supplement(supplement,resize,hideinfo,barheight,barcolor);
   if(upc_sup_img!=False):
    new_upc_img.paste(upc_sup_img,(115 * int(resize),0));
    del(upc_sup_img);
  if(supplement!=None and len(supplement)==5): 
-  upc_sup_img = draw_ean5_supplement(supplement,resize,hideinfo,barheight);
+  upc_sup_img = draw_ean5_supplement(supplement,resize,hideinfo,barheight,barcolor);
   if(upc_sup_img!=False):
    new_upc_img.paste(upc_sup_img,(115 * int(resize),0));
    del(upc_sup_img);

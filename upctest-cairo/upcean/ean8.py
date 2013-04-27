@@ -250,12 +250,12 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 81, 10, 81, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 82, 10, 82, barheight[0], barcolor[2]);
  if(supplement!=None and len(supplement)==2):
-  upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight);
+  upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barcolor);
   upc_img.set_source_surface(upc_sup_img, 83, 0);
   upc_img.paint();
   del(upc_sup_img);
  if(supplement!=None and len(supplement)==5):
-  upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight);
+  upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barcolor);
   upc_img.set_source_surface(upc_sup_img, 83, 0);
   upc_img.paint();
   del(upc_sup_img);

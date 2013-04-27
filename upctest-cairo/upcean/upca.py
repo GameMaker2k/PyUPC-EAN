@@ -184,12 +184,12 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  drawColorLine(upc_img, 111, 10, 111, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 112, 10, 112, barheight[0], barcolor[2]);
  if(supplement!=None and len(supplement)==2):
-  upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight);
+  upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barcolor);
   upc_img.set_source_surface(upc_sup_img, 113, 0);
   upc_img.paint();
   del(upc_sup_img);
  if(supplement!=None and len(supplement)==5):
-  upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight);
+  upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barcolor);
   upc_img.set_source_surface(upc_sup_img, 113, 0);
   upc_img.paint();
   del(upc_sup_img);
