@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 1 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -152,7 +152,7 @@ def create_ean2(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False)
  upc_img.rectangle(0, 0, (29 * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize));
  upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
  upc_img.fill();
- upc_sup_img = draw_ean2_supplement(upc,resize,hideinfo,barheight);
+ upc_sup_img = draw_ean2_supplement(upc,resize,hideinfo,barheight,barcolor);
  if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
   return False;
  upc_img.set_source_surface(upc_sup_img, 8 * int(resize), 0);

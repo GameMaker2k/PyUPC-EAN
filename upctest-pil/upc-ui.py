@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 2  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -84,16 +84,16 @@ def show_ccp_menu(e):
  the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
 def make_save_menu(w):
  the_menu = Menu(w, tearoff=0);
- the_menu.add_command(label="Generate");
- the_menu.add_command(label="Save As");
+ the_menu.add_command(label="Generate Image");
+ the_menu.add_command(label="Save Image As");
  the_menu.add_command(label="Colors");
  return the_menu;
 def show_save_menu(e):
  global rootwin;
  the_menu = make_save_menu(rootwin);
  w = e.widget;
- the_menu.entryconfigure("Generate", command = GenerateBarcode);
- the_menu.entryconfigure("Save As", command = SaveGeneratedBarcode);
+ the_menu.entryconfigure("Generate Image", command = GenerateBarcode);
+ the_menu.entryconfigure("Save Image As", command = SaveGeneratedBarcode);
  the_menu.entryconfigure("Colors", command = ch_barcode_colors);
  the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
 def ch_barcode_colors():
@@ -101,6 +101,7 @@ def ch_barcode_colors():
  barcode_bg_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bg_color), "Background Color"));
  barcode_bar_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bar_color), "Bar Color"));
  barcode_text_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_text_color), "Text Color"));
+ GenerateBarcode();
 entry1 = Entry(rootwin);
 entry1.bind_class("Entry", "<Button-3><ButtonRelease-3>", show_ccp_menu);
 if(sys.platform=="win32"):
@@ -163,8 +164,7 @@ label5 = Label( rootwin, textvariable=labeltxt5);
 labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
 def GenerateBarcode():
- global updateimg, panel1, faddonsize, rootwin, pro_app_name;
- rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - "+str(entry1.get()));
+ global updateimg, image1, panel1, imageframe1, xscrollbar1, faddonsize, rootwin, pro_app_name, pro_app_subname, pro_app_version;
  upc_validate = entry1.get();
  if(listboxtxt1.get()=="Detect" or listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
   if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
@@ -176,6 +176,8 @@ def GenerateBarcode():
    upc_pieces = upc_pieces[0];
    upc_validate = upc_pieces[0];
  if(updateimg==True):
+  xscrollbar1.destroy();
+  imageframe1.destroy();
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  validbc = False;
@@ -205,7 +207,10 @@ def GenerateBarcode():
   validbc = draw_code93(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", entry1.get())):
   validbc = draw_codabar(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+ if(validbc==False):
+  rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
  if(validbc!=False):
+  rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - "+str(entry1.get()));
   image1 = ImageTk.PhotoImage(validbc);
   imageframe1 = Frame(rootwin, width=350, height=validbc.size[1] + 20);
   xscrollbar1 = Scrollbar(imageframe1, orient=HORIZONTAL);
@@ -316,7 +321,7 @@ button3 = Button(rootwin, text="Colors", command= ch_barcode_colors);
 if(sys.platform=="win32"):
  button3.place(x=115, y=274);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
- button3.place(x=170, y=272);
+ button3.place(x=175, y=272);
 button1.bind("<Return>", GenerateBarcodeAlt);
 button2.bind("<Return>", SaveGeneratedBarcodeAlt);
 button3.bind("<Return>", ch_barcode_colors);

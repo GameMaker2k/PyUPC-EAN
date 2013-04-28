@@ -11,11 +11,11 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-__version_info__ = (2, 4, 2, "RC 1");
+__version_info__ = (2, 4, 2, "RC 2");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
 if(__version_info__[3]==None):
@@ -53,7 +53,7 @@ from upcean.cuecat import *;
 '''
 Shortcut Codes by Kazuki Przyborowski
 '''
-def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -169,7 +169,7 @@ def draw_barcode_from_list(upc,resize=1,hideinfo=(False, False, False),barheight
  return drawlist;
 
 
-def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -271,7 +271,7 @@ def draw_upc_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48
    NumLoop = NumLoop + 1;
  return drawlist;
 
-def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -375,55 +375,55 @@ def draw_ean_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48
    NumLoop = NumLoop + 1;
  return drawlist;
 
-def create_issn13_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_issn13_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,barcolor);
 def draw_issn13_from_issn8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_issn13_from_issn8(upc,None,resize,hideinfo,barheight,barcolor);
-def create_issn13(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_issn13(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_issn13_from_issn8(upc,outfile,resize,hideinfo,barheight,barcolor);
 def draw_issn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_issn13(upc,None,resize,hideinfo,barheight,barcolor);
 
-def create_isbn13_from_isbn10(upc,outfile="./isbn13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_isbn13_from_isbn10(upc,outfile="./isbn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13(convert_isbn10_to_isbn13(upc),outfile,resize,hideinfo,barheight,barcolor);
 def draw_isbn13_from_isbn10(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_isbn13_from_isbn10(upc,None,resize,hideinfo,barheight,barcolor);
-def create_isbn13(upc,outfile="./isbn13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_isbn13(upc,outfile="./isbn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_isbn13_from_isbn10(upc,outfile,resize,hideinfo,barheight,barcolor);
 def draw_isbn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_isbn13(upc,None,resize,hideinfo,barheight,barcolor);
 
-def create_ismn13_from_ismn10(upc,outfile="./ismn13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ismn13_from_ismn10(upc,outfile="./ismn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13(convert_ismn10_to_ismn13(upc),outfile,resize,hideinfo,barheight,barcolor);
 def draw_ismn13_from_ismn10(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ismn13_from_ismn10(upc,None,resize,hideinfo,barheight,barcolor);
-def create_ismn13(upc,outfile="./ismn13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ismn13(upc,outfile="./ismn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ismn13_from_ismn10(upc,outfile,resize,hideinfo,barheight,barcolor);
 def draw_ismn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ismn13(upc,None,resize,hideinfo,barheight,barcolor);
 
-def create_vw_upca(code,price,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_vw_upca(code,price,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_upca(make_vw_upca(code, price),outfile,resize,hideinfo,barheight,barcolor);
-def draw_vw_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def draw_vw_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_vw_upca(code,price,None,resize,hideinfo,barheight,barcolor);
-def create_vw_to_ean13(code,price,outfile="./vw-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_vw_to_ean13(code,price,outfile="./vw-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13(make_vw_to_ean13(code, price),outfile,resize,hideinfo,barheight,barcolor);
 def draw_vw_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_vw_to_ean13(code,price,None,resize,hideinfo,barheight,barcolor);
-def create_vw_to_itf14(code,price,outfile="./vw-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_vw_to_itf14(code,price,outfile="./vw-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_itf14(make_vw_to_itf14(code, price),outfile,resize,hideinfo,barheight,barcolor);
 def draw_vw_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_vw_to_itf14(code,price,None,resize,hideinfo,barheight,barcolor);
 
-def create_coupon_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_coupon_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_upca(make_coupon_upca(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,barcolor);
-def draw_coupon_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def draw_coupon_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_upca(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,barcolor);
-def create_coupon_to_ean13(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_coupon_to_ean13(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13(make_coupon_to_ean13(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,barcolor);
 def draw_coupon_to_ean13(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_to_ean13(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,barcolor);
-def create_coupon_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_coupon_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_itf14(make_coupon_to_itf14(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,barcolor);
 def draw_coupon_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_to_itf14(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,barcolor);

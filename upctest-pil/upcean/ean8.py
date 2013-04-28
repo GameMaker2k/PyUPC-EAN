@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean8.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 1 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -24,7 +24,7 @@ from upcean.convert import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(47, 53),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
