@@ -11,11 +11,11 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 04/30/2013 Ver. 2.4.2 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-__version_info__ = (2, 4, 2, "RC 2");
+__version_info__ = (2, 4, 2, "RC 3");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
 if(__version_info__[3]==None):
@@ -26,7 +26,7 @@ def version_info():
   return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": str(__version_info__[3])};
  if(__version_info__[3]==None):
   return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": None};
-import sys, re, upcean.validate, upcean.convert, upcean.getprefix;
+import sys, re, upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93, upcean.codabar;
 '''
 import upcean.cuecat;
@@ -35,6 +35,7 @@ from sys import argv;
 from upcean.validate import *;
 from upcean.convert import *;
 from upcean.getprefix import *;
+from upcean.getsfname import *;
 from upcean.upca import *;
 from upcean.upce import *;
 from upcean.ean13 import *;

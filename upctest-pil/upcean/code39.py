@@ -11,14 +11,14 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 2 - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 04/30/2013 Ver. 2.4.2 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-import re, os, sys, types, upcean.prepil;
-import upcean.ean2, upcean.ean5;
+import re, os, sys, types, upcean.prepil, upcean.getsfname;
 from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
+from upcean.getsfname import *;
 
 def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
@@ -223,71 +223,12 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  if(hidetext==False):
   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", barcolor[1]);
  del(upc_img);
- if(sys.version[0]=="2"):
-  if(isinstance(outfile, str) or isinstance(outfile, unicode)):
-   oldoutfile = outfile[:];
- if(sys.version[0]=="3"):
-  if(isinstance(outfile, str)):
-   oldoutfile = outfile[:];
- if(isinstance(outfile, tuple)):
-  oldoutfile = tuple(outfile[:]);
- if(isinstance(outfile, list)):
-  oldoutfile = list(outfile[:]);
- if(outfile is None or isinstance(outfile, bool)):
-  oldoutfile = None;
- if(sys.version[0]=="2"):
-  if(isinstance(oldoutfile, str) or isinstance(outfile, unicode)):
-   if(outfile!="-" and outfile!="" and outfile!=" "):
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
-     outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
-     tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
-     del(outfile);
-     outfile = tmpoutfile[0][0];
-     outfileext = tmpoutfile[0][1].upper();
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
-     outfileext = "PNG";
-   if(outfileext=="DIB"):
-    outfileext = "BMP";
-   if(outfileext=="PS"):
-    outfileext = "EPS";
-   if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
-    outfileext = "JPEG";
-   if(outfileext=="PBM" or outfileext=="PGM"):
-    outfileext = "PPM";
-   if(outfileext=="TIF"):
-    outfileext = "TIFF";
-   if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
-    outfileext = "PNG";
- if(sys.version[0]=="3"):
-  if(isinstance(oldoutfile, str)):
-   if(outfile!="-" and outfile!="" and outfile!=" "):
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
-     outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
-     tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
-     del(outfile);
-     outfile = tmpoutfile[0][0];
-     outfileext = tmpoutfile[0][1].upper();
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
-     outfileext = "PNG";
-   if(outfileext=="DIB"):
-    outfileext = "BMP";
-   if(outfileext=="PS"):
-    outfileext = "EPS";
-   if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
-    outfileext = "JPEG";
-   if(outfileext=="PBM" or outfileext=="PGM"):
-    outfileext = "PPM";
-   if(outfileext=="TIF"):
-    outfileext = "TIFF";
-   if(outfileext!="BMP" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="XPM"):
-    outfileext = "PNG";
+ oldoutfile = get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
   del(outfile);
   outfile = oldoutfile[0];
   outfileext = oldoutfile[1];
- if(outfile is None or isinstance(outfile, bool)):
+ if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):

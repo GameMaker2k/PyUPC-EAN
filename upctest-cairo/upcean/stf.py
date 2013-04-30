@@ -11,12 +11,11 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: stf.py - Last Update: 04/27/2013 Ver. 2.4.2 RC 2  - Author: cooldude2k $
+    $FileInfo: stf.py - Last Update: 04/30/2013 Ver. 2.4.2 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import cairo, re, sys, types, upcean.precairo;
-import upcean.ean2, upcean.ean5;
 from upcean.precairo import *;
 
 def create_stf(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
