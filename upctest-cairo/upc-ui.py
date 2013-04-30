@@ -98,8 +98,11 @@ def show_save_menu(e):
  the_menu.tk.call("tk_popup", the_menu, e.x_root, e.y_root);
 def ch_barcode_colors():
  global barcode_bg_color, barcode_bar_color, barcode_text_color;
+ tkMessageBox.showinfo("Background Color", "Select a color for the background.");
  barcode_bg_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bg_color), "Background Color"));
+ tkMessageBox.showinfo("Bar Color", "Select a color for the bars.");
  barcode_bar_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_bar_color), "Bar Color"));
+ tkMessageBox.showinfo("Bar Color", "Select a color for the text.");
  barcode_text_color = hex_color_to_tuple(tkColorPicker(tuple_color_to_hex(barcode_text_color), "Text Color"));
  GenerateBarcode();
 entry1 = Entry(rootwin);
@@ -165,6 +168,18 @@ labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
 def GenerateBarcode():
  global updateimg, image1, panel1, imageframe1, xscrollbar1, faddonsize, rootwin, pro_app_name, pro_app_subname, pro_app_version;
+ if(entry2.get().isdigit()==False or entry3.get().isdigit()==False):
+  tkMessageBox.showerror("PyUPC-EAN - Error", "Bar Height has to be a integer value.");
+  if(entry2.get().isdigit()==False):
+   entry2.delete(0, END);
+   entry2.insert(0, "48");
+  if(entry3.get().isdigit()==False):
+   entry3.delete(0, END);
+   entry3.insert(0, "54");
+ if(magnify.get().isdigit()==False):
+  tkMessageBox.showerror("PyUPC-EAN - Error", "Magnify has to be a integer value.");
+  magnify.delete(0, END);
+  magnify.insert(0, "1");
  upc_validate = entry1.get();
  if(listboxtxt1.get()=="Detect" or listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
   if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
@@ -208,6 +223,7 @@ def GenerateBarcode():
  if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", entry1.get())):
   validbc = draw_codabar(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(validbc==False):
+  tkMessageBox.showerror("PyUPC-EAN - Error", "Could not generate/save barcode.");
   rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
  if(validbc!=False):
   rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - "+str(entry1.get()));
@@ -249,58 +265,62 @@ def SaveGeneratedBarcode():
    upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get());
    upc_pieces = upc_pieces[0];
    upc_validate = upc_pieces[0];
+ savestate = False;
+ savefname = "";
  if(listboxtxt1.get()=="Detect" and (validate_barcode(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="UPC-A" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="UPC-E" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-13" and validate_barcode(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-8" and validate_ean8(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-2" and len(entry1.get())==2):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_ean2(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_ean2(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-5" and len(entry1.get())==5):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF" not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_itf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF-14" not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   if(savefname!=""):
    savefname = ShowSaveDialog();
-  create_itf14(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+  savestate = create_itf14(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 11" and len(entry1.get()) > 0 and re.findall("([0-9\-]+)", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_code11(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_code11(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 39" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_code39(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_code39(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Code 93" and len(entry1.get()) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_code93(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", entry1.get())):
   savefname = ShowSaveDialog();
   if(savefname!=""):
-   create_codabar(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+   savestate = create_codabar(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+ if(savestate==False and savefname!=""):
+  tkMessageBox.showerror("PyUPC-EAN - Error", "Failed to save barcode.");
 def SaveGeneratedBarcodeAlt(event):
  SaveGeneratedBarcode();
 entry1.bind("<Return>", GenerateBarcodeAlt);
