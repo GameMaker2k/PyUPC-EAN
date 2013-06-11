@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 04/30/2013 Ver. 2.4.2 RC 3  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 06/11/2013 Ver. 2.4.2 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -120,7 +120,7 @@ if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or s
  label1.place(x=0, y=148);
 listboxtxt1 = StringVar(rootwin);
 listboxtxt1.set("Detect");
-listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar");
+listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "STF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar");
 if(sys.platform=="win32"):
  listbox1.place(x=60, y=169);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
@@ -210,6 +210,8 @@ def GenerateBarcode():
   validbc = draw_ean2(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-5" and len(entry1.get())==5):
   validbc = draw_ean5(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+ if(listboxtxt1.get()=="STF"):
+  validbc = draw_stf(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF" and not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   validbc = draw_itf(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF-14" and not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
@@ -294,6 +296,10 @@ def SaveGeneratedBarcode():
   savefname = ShowSaveDialog();
   if(savefname!=""):
    savestate = create_ean5(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+ if(listboxtxt1.get()=="STF"):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   savestate = create_stf(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="ITF" and not (len(entry1.get()) % 2) and len(entry1.get()) > 5):
   savefname = ShowSaveDialog();
   if(savefname!=""):
