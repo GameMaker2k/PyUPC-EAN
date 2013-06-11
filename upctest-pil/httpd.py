@@ -131,8 +131,8 @@ cherrypy.config.update({'environment': 'production',
                         'log.error_file': "./errors.log",
                         'log.access_file': "./access.log",
                         'log.screen': True,
-						'server.socket_host': host,
+                        'server.socket_host': host,
                         'server.socket_port': port,
-						'response.timeout': 6000,
+                        'response.timeout': 6000,
                         }) 
 cherrypy.quickstart(GenerateBarcodes())
