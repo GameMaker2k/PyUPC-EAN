@@ -61,13 +61,13 @@ while(radsta<=radmax):
   radout += "<option value=\""+str(radsta)+"\">"+str(radsta)+" &#176;</option>\n";
  radsta = radsta + radinc;
 ServerSignature = "<address><a href=\"https://github.com/GameMaker2k/PyUPC-EAN\" title=\"PyUPC-EAN barcode generator\">PyUPC-EAN</a>/%s (<a href=\"http://www.cherrypy.org/\" title=\"CherryPy python web server\">CherryPy</a>/%s)</address>" % (upcean.__version__, cherrypy.__version__);
-IndexHTMLCode = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n<head>\n<title> "+pro_app_name+" "+pro_app_subname+" </title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n<meta http-equiv=\"Content-Language\" content=\"en\" />\n<meta name=\"generator\" content=\"CherryPy\" />\n<meta name=\"author\" content=\"Game Maker 2k\" />\n<meta name=\"keywords\" content=\"barcode,upc,ean,stf,itf,itf14,upca,upce,ean2,ean5,ean8,ean13,code11,code39,code93,codabar\" />\n<meta name=\"description\" content=\"Barcode Generator with PyUPC-EAN\" /><meta name=\"resource-type\" content=\"document\" />\n<meta name=\"distribution\" content=\"global\" />\n<link rel=\"Generator\" href=\"http://www.cherrypy.org/\" title=\"CherryPy\" />\n</head>\n<body>\n<form name=\"upcean\" id=\"upcean\" method=\"get\" action=\"/upcean/\" onsubmit=\"location.href='/generate/'+upcean.upc.value+'/'+upcean.bctype.value+'/'+upcean.size.value+'/'+upcean.rotate.value+'/'+upcean.upc.value+'.'+upcean.imgtype.value; return false;\">\n<fieldset>\n<legend>Barcode Info: </legend>\n<label style=\"cursor: pointer;\" for=\"upc\">Enter UPC/EAN: </label><br />\n<input type=\"text\" id=\"upc\" name=\"upc\" /><br />\n<label style=\"cursor: pointer;\" for=\"imgtype\">Select and image type: </label><br />\n<select id=\"imgtype\" name=\"imgtype\">\n<option value=\"png\" selected=\"selected\">PNG Image</option>\n<option value=\"gif\">GIF Image</option>\n<option value=\"jpeg\">JPEG Image</option>\n<option value=\"bmp\">BMP Image</option>\n<option value=\"tiff\">TIFF Image</option>\n</select><br />\n<label style=\"cursor: pointer;\" for=\"size\">Select barcode size: </label><br />\n<select id=\"size\" name=\"size\">\n<option value=\"1\" selected=\"selected\">1x</option>\n<option value=\"2\">2x</option>\n<option value=\"3\">3x</option>\n<option value=\"4\">4x</option>\n<option value=\"5\">5x</option>\n<option value=\"6\">6x</option>\n<option value=\"7\">7x</option>\n<option value=\"8\">8x</option>\n<option value=\"9\">9x</option>\n<option value=\"10\">10x</option>\n</select><br />\n<label style=\"cursor: pointer;\" for=\"bctype\">Select barcode type: </label><br />\n<select id=\"bctype\" name=\"bctype\">\n<option value=\"barcode\" selected=\"selected\">Barcode</option>\n<option value=\"upca\">UPC-A</option>\n<option value=\"upce\">UPC-E</option>\n<option value=\"ean13\">EAN-13</option>\n<option value=\"ean8\">EAN-8</option>\n<option value=\"ean2\">EAN-2</option>\n<option value=\"ean5\">EAN-5</option>\n<option value=\"stf\">STF</option>\n<option value=\"itf\">ITF</option>\n<option value=\"itf14\">ITF-14</option>\n<option value=\"code11\">Code 11</option>\n<option value=\"code39\">Code 39</option>\n<option value=\"code93\">Code 93</option>\n<option value=\"codabar\">Codabar</option>\n</select><br />\n<label style=\"cursor: pointer;\" for=\"rotate\">Select degrees to rotate image by: </label><br />\n<select id=\"rotate\" name=\"rotate\">"+radout+"</select><br />\n<input type=\"submit\" value=\"Generate\" />\n</fieldset>\n</form><br />\n"+ServerSignature+"\n</body>\n</html>";
+IndexHTMLCode = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n<head>\n<title> "+pro_app_name+" "+pro_app_subname+" </title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n<meta http-equiv=\"Content-Language\" content=\"en\" />\n<meta name=\"generator\" content=\"CherryPy\" />\n<meta name=\"author\" content=\"Game Maker 2k\" />\n<meta name=\"keywords\" content=\"barcode,upc,ean,stf,itf,itf14,upca,upce,ean2,ean5,ean8,ean13,code11,code39,code93,codabar\" />\n<meta name=\"description\" content=\"Barcode Generator with PyUPC-EAN\" /><meta name=\"resource-type\" content=\"document\" />\n<meta name=\"distribution\" content=\"global\" />\n<link rel=\"Generator\" href=\"http://www.cherrypy.org/\" title=\"CherryPy\" />\n</head>\n<body>\n<form name=\"upcean\" id=\"upcean\" method=\"get\" action=\"/upcean/\" onsubmit=\"location.href='/generate/'+upcean.bctype.value+'/'+upcean.size.value+'/'+upcean.rotate.value+'/'+upcean.upc.value+'.'+upcean.imgtype.value; return false;\">\n<fieldset>\n<legend>Barcode Info: </legend>\n<label style=\"cursor: pointer;\" for=\"upc\">Enter UPC/EAN: </label><br />\n<input type=\"text\" id=\"upc\" name=\"upc\" /><br />\n<label style=\"cursor: pointer;\" for=\"imgtype\">Select and image type: </label><br />\n<select id=\"imgtype\" name=\"imgtype\">\n<option value=\"png\" selected=\"selected\">PNG Image</option>\n<option value=\"gif\">GIF Image</option>\n<option value=\"jpeg\">JPEG Image</option>\n<option value=\"bmp\">BMP Image</option>\n<option value=\"tiff\">TIFF Image</option>\n</select><br />\n<label style=\"cursor: pointer;\" for=\"size\">Select barcode size: </label><br />\n<select id=\"size\" name=\"size\">\n<option value=\"1\" selected=\"selected\">1x</option>\n<option value=\"2\">2x</option>\n<option value=\"3\">3x</option>\n<option value=\"4\">4x</option>\n<option value=\"5\">5x</option>\n<option value=\"6\">6x</option>\n<option value=\"7\">7x</option>\n<option value=\"8\">8x</option>\n<option value=\"9\">9x</option>\n<option value=\"10\">10x</option>\n</select><br />\n<label style=\"cursor: pointer;\" for=\"bctype\">Select barcode type: </label><br />\n<select id=\"bctype\" name=\"bctype\">\n<option value=\"barcode\" selected=\"selected\">Barcode</option>\n<option value=\"upca\">UPC-A</option>\n<option value=\"upce\">UPC-E</option>\n<option value=\"ean13\">EAN-13</option>\n<option value=\"ean8\">EAN-8</option>\n<option value=\"ean2\">EAN-2</option>\n<option value=\"ean5\">EAN-5</option>\n<option value=\"stf\">STF</option>\n<option value=\"itf\">ITF</option>\n<option value=\"itf14\">ITF-14</option>\n<option value=\"code11\">Code 11</option>\n<option value=\"code39\">Code 39</option>\n<option value=\"code93\">Code 93</option>\n<option value=\"codabar\">Codabar</option>\n</select><br />\n<label style=\"cursor: pointer;\" for=\"rotate\">Select degrees to rotate image by: </label><br />\n<select id=\"rotate\" name=\"rotate\">"+radout+"</select><br />\n<input type=\"submit\" value=\"Generate\" />\n</fieldset>\n</form><br />\n"+ServerSignature+"\n</body>\n</html>";
 class GenerateIndexPage(object):
  def index(self):
   cherrypy.response.headers['Content-Type']= 'text/html; charset=UTF-8';
   return IndexHTMLCode;
  index.exposed = True;
- def generate(self, upc, bctype, bcsize, bcrotate, imgtype):
+ def generate(self, bctype, bcsize, bcrotate, imgtype):
   imgdata = StringIO.StringIO();
   try:
    bctype;
@@ -81,6 +81,7 @@ class GenerateIndexPage(object):
    imgtype;
   except KeyError:
    imgtype = "png";
+  upc = os.path.splitext(imgtype)[0];
   try:
    bcrotate;
   except KeyError:
@@ -273,7 +274,7 @@ class GenerateBarcodes(object):
    cherrypy.response.headers['Content-Type']= 'text/html; charset=UTF-8';
    return IndexHTMLCode;
  index.exposed = True;
- def generate(self, upc, bctype, bcsize, bcrotate, imgtype):
+ def generate(self, bctype, bcsize, bcrotate, imgtype):
   imgdata = StringIO.StringIO();
   try:
    bctype;
@@ -287,6 +288,7 @@ class GenerateBarcodes(object):
    imgtype;
   except KeyError:
    imgtype = "png";
+  upc = os.path.splitext(imgtype)[0];
   try:
    bcrotate;
   except KeyError:
