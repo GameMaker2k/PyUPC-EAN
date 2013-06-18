@@ -13,15 +13,15 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: httpd.py - Last Update: 06/17/2013 Ver. 2.4.2 RC 3  - Author: cooldude2k $
+    $FileInfo: httpd.py - Last Update: 06/18/2013 Ver. 2.4.2 RC 3  - Author: cooldude2k $
 '''
 
-import tempfile, uuid, re, os, sys, cherrypy, upcean, StringIO, argparse;
+import tempfile, uuid, re, os, sys, cherrypy, upcean, StringIO, argparse, time, datetime;
 from PIL import Image, ImageDraw, ImageFont;
 parser = argparse.ArgumentParser(description="A web server that draws barcodes with PyUPC-EAN powered by CherryPy web server.");
 parser.add_argument("--port", "--port-number", help="port number to use for server.");
 parser.add_argument("--host", "--host-name", help="host name to use for server.");
-parser.add_argument("--screen", "--log-screen", help="show log on terminal screen.", action="store_true");
+parser.add_argument("--verbose", "--verbose-mode", help="show log on terminal screen.", action="store_true");
 parser.add_argument("--accesslog", "--accesslog-file", help="location to store access log file.");
 parser.add_argument("--errorlog", "--errorlog-file", help="location to store error log file.");
 parser.add_argument("--timeout", "--response-timeout", help="the number of seconds to allow responses to run.");
@@ -377,7 +377,7 @@ class GenerateBarcodes(object):
 cherrypy.config.update({"environment": serv_environ,
                         "log.error_file": errorlog,
                         "log.access_file": accesslog,
-                        "log.screen": getargs.screen,
+                        "log.screen": getargs.verbose,
                         "gzipfilter.on": True,
                         "tools.gzip.on": True,
                         "tools.gzip.mime_types": ['text/*'],
