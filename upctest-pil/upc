@@ -5,7 +5,7 @@ if [ ! -z "${PYTHON}" ]; then
 else
  export PYTHON="$(/usr/bin/which python)"
 fi
-if [ "$1" == "setup" ] || [ "$1" == "install" ]; then
+if [ "$1" = "setup" ] || [ "$1" = "install" ]; then
  PYTHON="${PYTHON}" ./setup
 else
  PYTHON="${PYTHON}" PYTHONDONTWRITEBYTECODE="x" PYTHONPATH="$(pwd)/upcean" "${PYTHON}" -b -B -x "./upc.py" "$@"
