@@ -559,6 +559,26 @@ def get_code93_checksum(upc):
  CheckSum = str(CheckSum)+str(Code93Array[UPC_Sum % 47]);
  return str(CheckSum);
 
+def get_msi_checksum(upc):
+ upc_matches = list(upc);
+ if(len(upc) % 2==0):
+  PreChck1 = list(str(int("".join(upc_matches[1:][::2])) * 2));
+  PreChck2 = upc_matches[0:][::2];
+ else:
+  PreChck1 = list(str(int("".join(upc_matches[0:][::2])) * 2));
+  PreChck2 = upc_matches[1:][::2];
+ PreCount = 0;
+ UPC_Sum = 0;
+ while (PreCount<=len(PreChck1)-1):
+  UPC_Sum = UPC_Sum + int(PreChck1[PreCount]);
+  PreCount += 1;
+ PreCount = 0;
+ while (PreCount<=len(PreChck2)-1):
+  UPC_Sum = UPC_Sum + int(PreChck2[PreCount]);
+  PreCount += 1;
+ CheckSum = 10 - (UPC_Sum % 10);
+ return str(CheckSum);
+
 '''
 ISSN (International Standard Serial Number)
 http://en.wikipedia.org/wiki/International_Standard_Serial_Number
