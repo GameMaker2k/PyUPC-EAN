@@ -98,7 +98,6 @@ def create_msi(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False)
    left_barcolor = [1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="9"):
    left_barcolor = [1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0];
-  print(left_barcolor);
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):

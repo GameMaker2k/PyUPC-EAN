@@ -120,7 +120,7 @@ if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or s
  label1.place(x=0, y=148);
 listboxtxt1 = StringVar(rootwin);
 listboxtxt1.set("Detect");
-listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "STF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar");
+listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "STF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar", "MSI");
 if(sys.platform=="win32"):
  listbox1.place(x=60, y=169);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
@@ -224,6 +224,8 @@ def GenerateBarcode():
   validbc = draw_code93(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="Codabar" and len(entry1.get()) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", entry1.get())):
   validbc = draw_codabar(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+ if(listboxtxt1.get()=="MSI" and len(entry1.get()) > 0 and re.findall("([0-9]+)", entry1.get())):
+  validbc = draw_msi(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(validbc==False):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Could not generate/save barcode.");
   rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
@@ -324,6 +326,10 @@ def SaveGeneratedBarcode():
   savefname = ShowSaveDialog();
   if(savefname!=""):
    savestate = create_codabar(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
+ if(listboxtxt1.get()=="MSI" and len(entry1.get()) > 0 and re.findall("([0-9]+)", entry1.get())):
+  savefname = ShowSaveDialog();
+  if(savefname!=""):
+   savestate = create_msi(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(savestate==False and savefname!=""):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Failed to save barcode.");
 def SaveGeneratedBarcodeAlt(event):
