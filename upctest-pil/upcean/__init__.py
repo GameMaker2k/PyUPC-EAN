@@ -11,11 +11,11 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 04/30/2013 Ver. 2.4.2 RC 3 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 08/03/2013 Ver. 2.4.3 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-__version_info__ = (2, 4, 2, "RC 3");
+__version_info__ = (2, 4, 3, "RC 1");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
 if(__version_info__[3]==None):
@@ -47,6 +47,7 @@ from upcean.code11 import *;
 from upcean.code39 import *;
 from upcean.code93 import *;
 from upcean.codabar import *;
+from upcean.msi import *;
 '''
 from upcean.cuecat import *;
 '''
