@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upce.py - Last Update: 08/03/2013 Ver. 2.4.3 RC 1 - Author: cooldude2k $
+    $FileInfo: upce.py - Last Update: 08/05/2013 Ver. 2.4.3 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -322,12 +322,21 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
   return new_upc_img;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
-   new_upc_img.save(sys.stdout, outfileext);
+   try:
+    new_upc_img.save(sys.stdout, outfileext);
+   except:
+    return False;
  if(sys.version[0]=="3"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
-   new_upc_img.save(sys.stdout.buffer, outfileext);
+   try:
+    new_upc_img.save(sys.stdout.buffer, outfileext);
+   except:
+    return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
-  new_upc_img.save(outfile, outfileext);
+  try:
+   new_upc_img.save(outfile, outfileext);
+  except:
+   return False;
  return True;
 
 def draw_upce(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):

@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 08/03/2013 Ver. 2.4.3 RC 1  - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 08/05/2013 Ver. 2.4.3 RC 2  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -233,12 +233,21 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
   return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" "):
-   new_upc_preimg.write_to_png(sys.stdout);
+   try:
+    new_upc_preimg.write_to_png(sys.stdout);
+   except:
+    return False;
  if(sys.version[0]=="3"):
   if(outfile=="-" or outfile=="" or outfile==" "):
-   new_upc_preimg.write_to_png(sys.stdout.buffer);
+   try:
+    new_upc_preimg.write_to_png(sys.stdout.buffer);
+   except:
+    return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
-  new_upc_preimg.write_to_png(outfile);
+  try:
+   new_upc_preimg.write_to_png(outfile);
+  except:
+   return False;
  return True;
 
 def draw_code39(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
