@@ -11,13 +11,14 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 08/03/2013 Ver. 2.4.3 RC 1  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 08/06/2013 Ver. 2.4.3 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import sys, re;
 
 def get_digital_root(number):
+ number = str(number);
  while(len(str(number))>1):
   subnum = list(str(number));
   PreCount = 0;
@@ -26,6 +27,7 @@ def get_digital_root(number):
    number += int(subnum[PreCount]);
    PreCount += 1;
  return number;
+
 def validate_upca(upc,return_check=False): 
  upc = str(upc);
  if(len(upc)>12):

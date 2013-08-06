@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf.py - Last Update: 08/05/2013 Ver. 2.4.3 RC 2 - Author: cooldude2k $
+    $FileInfo: itf.py - Last Update: 08/06/2013 Ver. 2.4.3 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
