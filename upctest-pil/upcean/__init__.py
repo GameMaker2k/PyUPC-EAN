@@ -27,7 +27,7 @@ def version_info():
  if(__version_info__[3]==None):
   return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": None};
 import sys, re, upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
-import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93, upcean.codabar;
+import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93, upcean.codabar, upcean.msi;
 '''
 import upcean.cuecat;
 '''
@@ -48,9 +48,6 @@ from upcean.code39 import *;
 from upcean.code93 import *;
 from upcean.codabar import *;
 from upcean.msi import *;
-'''
-from upcean.cuecat import *;
-'''
 
 '''
 Shortcut Codes by Kazuki Przyborowski
