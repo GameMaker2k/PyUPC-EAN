@@ -17,6 +17,15 @@
 from __future__ import division, absolute_import, print_function;
 import sys, re;
 
+def get_digital_root(number):
+ while(len(str(number))>1):
+  subnum = list(str(number));
+  PreCount = 0;
+  number = 0;
+  while (PreCount<=len(subnum)-1):
+   number += int(subnum[PreCount]);
+   PreCount += 1;
+ return number;
 def validate_upca(upc,return_check=False): 
  upc = str(upc);
  if(len(upc)>12):
@@ -483,6 +492,49 @@ def fix_ean_checksum(upc):
   return upc+str(validate_ean13(upc,True));
  return False;
 
+'''
+IMEI (International Mobile Station Equipment Identity)
+http://en.wikipedia.org/wiki/IMEI#Check_digit_computation
+'''
+def validate_imei(upc,return_check=False): 
+ upc = str(upc);
+ if(len(upc)>15):
+  fix_matches = re.findall("^(\d{15})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>15 or len(upc)<14):
+  return False;
+ upc_matches = list(upc);
+ PreChck1 = upc_matches[0:][::2];
+ PreChck2 = upc_matches[1:][::2];
+ UPC_Sum = int(PreChck1[0]) + get_digital_root(int(PreChck2[0]) * 2) + int(PreChck1[1]) + get_digital_root(int(PreChck2[1]) * 2) + int(PreChck1[2]) + get_digital_root(int(PreChck2[2]) * 2) + int(PreChck1[3]) + get_digital_root(int(PreChck2[3]) * 2) + int(PreChck1[4]) + get_digital_root(int(PreChck2[4]) * 2) + int(PreChck1[5]) + get_digital_root(int(PreChck2[5]) * 2) + int(PreChck1[6]) + get_digital_root(int(PreChck2[6]) * 2);
+ PreCheckSum = 0;
+ while((UPC_Sum + PreCheckSum) % 10 != 0):
+  PreCheckSum += 1;
+ CheckSum = PreCheckSum;
+ if(return_check==False and len(upc)==15):
+  if(CheckSum!=int(PreChck1[7])):
+   return False;
+  if(CheckSum==int(PreChck1[7])):
+   return True;
+ if(return_check==True):
+  return str(CheckSum);
+ if(len(upc)==14):
+  return str(CheckSum);
+def get_imei_checksum(upc):
+ upc = str(upc);
+ return validate_imei(upc,True);
+def fix_imei_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>14):
+  fix_matches = re.findall("^(\d{14})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_imei_checksum(upc));
+
+'''
+Code 11
+http://www.barcodeisland.com/code11.phtml
+https://en.wikipedia.org/wiki/Code_11
+'''
 def get_code11_checksum(upc):
  if(len(upc) < 1): 
   return False;
@@ -521,6 +573,11 @@ def get_code11_checksum(upc):
  CheckSum = str(CheckSum)+str(Code11Array[UPC_Sum % 11]);
  return str(CheckSum);
 
+'''
+Code 93
+http://www.barcodeisland.com/code93.phtml
+https://en.wikipedia.org/wiki/Code_93
+'''
 def get_code93_checksum(upc):
  if(len(upc) < 1): 
   return False;
@@ -559,6 +616,11 @@ def get_code93_checksum(upc):
  CheckSum = str(CheckSum)+str(Code93Array[UPC_Sum % 47]);
  return str(CheckSum);
 
+'''
+MSI (Modified Plessey)
+http://www.barcodeisland.com/msi.phtml
+https://en.wikipedia.org/wiki/MSI_Barcode
+'''
 def get_msi_checksum(upc):
  upc_matches = list(upc);
  if(len(upc) % 2==0):
