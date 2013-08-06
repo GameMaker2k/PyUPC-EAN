@@ -15,9 +15,8 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import re, os, sys, types, upcean.prepil;
-from PIL import Image, ImageDraw, ImageFont;
-from upcean.prepil import *;
+import cairo, re, sys, types, upcean.precairo;
+from upcean.precairo import *;
 
 def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
