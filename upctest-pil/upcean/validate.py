@@ -17,6 +17,10 @@
 from __future__ import division, absolute_import, print_function;
 import sys, re;
 
+'''
+Digital Root
+http://en.wikipedia.org/wiki/Digital_root
+'''
 def get_digital_root(number):
  number = str(number);
  while(len(str(number))>1):
@@ -26,7 +30,7 @@ def get_digital_root(number):
   while (PreCount<=len(subnum)-1):
    number += int(subnum[PreCount]);
    PreCount += 1;
- return number;
+ return int(number);
 
 def validate_upca(upc,return_check=False): 
  upc = str(upc);
@@ -498,7 +502,7 @@ def fix_ean_checksum(upc):
 IMEI (International Mobile Station Equipment Identity)
 http://en.wikipedia.org/wiki/IMEI#Check_digit_computation
 '''
-def validate_imei(upc,return_check=False): 
+def validate_imei(upc,return_check=False):
  upc = str(upc);
  if(len(upc)>15):
   fix_matches = re.findall("^(\d{15})", upc);
@@ -533,9 +537,48 @@ def fix_imei_checksum(upc):
  return upc+str(get_imei_checksum(upc));
 
 '''
+Bank Card Numbers
+http://tywkiwdbi.blogspot.com/2012/06/checksum-number-on-credit-card.html
+http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
+'''
+def validate_bcn(upc,return_check=False):
+ upc = str(upc);
+ if(len(upc)>16):
+  fix_matches = re.findall("^(\d{16})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>16 or len(upc)<15):
+  return False;
+ upc_matches = list(upc);
+ PreChck1 = upc_matches[0:][::2];
+ PreChck2 = upc_matches[1:][::2];
+ UPC_Sum = int(PreChck2[0]) + get_digital_root(int(PreChck1[0]) * 2) + int(PreChck2[1]) + get_digital_root(int(PreChck1[1]) * 2) + int(PreChck2[2]) + get_digital_root(int(PreChck1[2]) * 2) + int(PreChck2[3]) + get_digital_root(int(PreChck1[3]) * 2) + int(PreChck2[4]) + get_digital_root(int(PreChck1[4]) * 2) + int(PreChck2[5]) + get_digital_root(int(PreChck1[5]) * 2) + int(PreChck2[6]) + get_digital_root(int(PreChck1[6]) * 2) + get_digital_root(int(PreChck1[7]) * 2);
+ PreCheckSum = 0;
+ while((UPC_Sum + PreCheckSum) % 10 != 0):
+  PreCheckSum += 1;
+ CheckSum = PreCheckSum;
+ if(return_check==False and len(upc)==16):
+  if(CheckSum!=int(PreChck2[7])):
+   return False;
+  if(CheckSum==int(PreChck2[7])):
+   return True;
+ if(return_check==True):
+  return str(CheckSum);
+ if(len(upc)==15):
+  return str(CheckSum);
+def get_bcn_checksum(upc):
+ upc = str(upc);
+ return validate_bcn(upc,True);
+def fix_bcn_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>15):
+  fix_matches = re.findall("^(\d{15})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_bcn_checksum(upc));
+
+'''
 Code 11
 http://www.barcodeisland.com/code11.phtml
-https://en.wikipedia.org/wiki/Code_11
+http://en.wikipedia.org/wiki/Code_11
 '''
 def get_code11_checksum(upc):
  if(len(upc) < 1): 
@@ -578,7 +621,7 @@ def get_code11_checksum(upc):
 '''
 Code 93
 http://www.barcodeisland.com/code93.phtml
-https://en.wikipedia.org/wiki/Code_93
+http://en.wikipedia.org/wiki/Code_93
 '''
 def get_code93_checksum(upc):
  if(len(upc) < 1): 
@@ -621,7 +664,7 @@ def get_code93_checksum(upc):
 '''
 MSI (Modified Plessey)
 http://www.barcodeisland.com/msi.phtml
-https://en.wikipedia.org/wiki/MSI_Barcode
+http://en.wikipedia.org/wiki/MSI_Barcode
 '''
 def get_msi_checksum(upc):
  upc_matches = list(upc);
