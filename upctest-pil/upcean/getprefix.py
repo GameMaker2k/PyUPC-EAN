@@ -834,6 +834,30 @@ def get_upca_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
  return upc_type;
+def get_upca_numbersystem(upc):
+ upc = str(upc);
+ product = get_upca_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
+def get_upca_manufacturer(upc):
+ upc = str(upc);
+ product = get_upca_info(upc);
+ if(product==False):
+  return False;
+ return product['manufacturer'];
+def get_upca_product(upc):
+ upc = str(upc);
+ product = get_upca_info(upc);
+ if(product==False):
+  return False;
+ return product['product'];
+def get_upca_checkdigit(upc):
+ upc = str(upc);
+ product = get_upca_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 def get_upca_info_from_upce(upc):
  return get_upca_info(convert_upce_to_upca(upc));
 def get_upce_info(upc):
@@ -924,6 +948,30 @@ def get_upce_info(upc):
   get_checksum = upc_matches[3];
  upc_type = {'packagecode': None, 'numbersystem': get_ns, 'manufacturer': get_manufac, 'product': get_product, 'checkdigit': get_checksum};
  return upc_type;
+def get_upce_numbersystem(upc):
+ upc = str(upc);
+ product = get_upce_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
+def get_upce_manufacturer(upc):
+ upc = str(upc);
+ product = get_upce_info(upc);
+ if(product==False):
+  return False;
+ return product['manufacturer'];
+def get_upce_product(upc):
+ upc = str(upc);
+ product = get_upce_info(upc);
+ if(product==False):
+  return False;
+ return product['product'];
+def get_upce_checkdigit(upc):
+ upc = str(upc);
+ product = get_upce_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 def get_ean8_info(upc):
  upc = str(upc);
  if(not re.findall("^(\d{8})", upc)):
@@ -932,6 +980,30 @@ def get_ean8_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': None, 'product': pre_upc_type[1], 'checkdigit': pre_upc_type[2]};
  return upc_type;
+def get_ean8_numbersystem(upc):
+ upc = str(upc);
+ product = get_ean8_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
+def get_ean8_manufacturer(upc):
+ upc = str(upc);
+ product = get_ean8_info(upc);
+ if(product==False):
+  return False;
+ return product['manufacturer'];
+def get_ean8_product(upc):
+ upc = str(upc);
+ product = get_ean8_info(upc);
+ if(product==False):
+  return False;
+ return product['product'];
+def get_ean8_checkdigit(upc):
+ upc = str(upc);
+ product = get_ean8_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 def get_ean13_info(upc):
  upc = str(upc);
  if(len(upc)==8):
@@ -944,6 +1016,30 @@ def get_ean13_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
  return upc_type;
+def get_ean13_numbersystem(upc):
+ upc = str(upc);
+ product = get_ean13_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
+def get_ean13_manufacturer(upc):
+ upc = str(upc);
+ product = get_ean13_info(upc);
+ if(product==False):
+  return False;
+ return product['manufacturer'];
+def get_ean13_product(upc):
+ upc = str(upc);
+ product = get_ean13_info(upc);
+ if(product==False):
+  return False;
+ return product['product'];
+def get_ean13_checkdigit(upc):
+ upc = str(upc);
+ product = get_ean13_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 def get_itf14_info(upc):
  upc = str(upc);
  if(len(upc)==12):
@@ -956,6 +1052,36 @@ def get_itf14_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': pre_upc_type[0], 'numbersystem': pre_upc_type[1], 'manufacturer': pre_upc_type[2], 'product': pre_upc_type[3], 'checkdigit': pre_upc_type[4]};
  return upc_type;
+def get_itf14_packagecode(upc):
+ upc = str(upc);
+ product = get_itf14_info(upc);
+ if(product==False):
+  return False;
+ return product['packagecode'];
+def get_itf14_numbersystem(upc):
+ upc = str(upc);
+ product = get_itf14_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
+def get_itf14_manufacturer(upc):
+ upc = str(upc);
+ product = get_itf14_info(upc);
+ if(product==False):
+  return False;
+ return product['manufacturer'];
+def get_itf14_product(upc):
+ upc = str(upc);
+ product = get_itf14_info(upc);
+ if(product==False):
+  return False;
+ return product['product'];
+def get_itf14_checkdigit(upc):
+ upc = str(upc);
+ product = get_itf14_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 def get_barcode_info(upc):
  if(len(upc)==8): 
   if(re.findall("^([0-1])", upc)):
@@ -969,7 +1095,36 @@ def get_barcode_info(upc):
  if(len(upc)==14):
   return get_itf14_info(upc);
  return False;
-
+def get_barcode_packagecode(upc):
+ upc = str(upc);
+ product = get_barcode_info(upc);
+ if(product==False):
+  return False;
+ return product['packagecode'];
+def get_barcode_numbersystem(upc):
+ upc = str(upc);
+ product = get_barcode_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
+def get_barcode_manufacturer(upc):
+ upc = str(upc);
+ product = get_barcode_info(upc);
+ if(product==False):
+  return False;
+ return product['manufacturer'];
+def get_barcode_product(upc):
+ upc = str(upc);
+ product = get_barcode_info(upc);
+ if(product==False):
+  return False;
+ return product['product'];
+def get_barcode_checkdigit(upc):
+ upc = str(upc);
+ product = get_barcode_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 '''
 // Get Number System Prefix for UPC-A barcodes
 // Source: http://www.morovia.com/education/symbology/upc-a.asp
@@ -1334,3 +1489,198 @@ def get_upca_coupon_value_code(vcode):
  if(re.findall("^(99)", vcode)):
   return "$0.99";
  return False;
+
+'''
+// Get Major Industry Identifier for Bank Card Number
+// Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
+'''
+def get_bcn_mii(upc):
+ upc = str(upc);
+ upc = upc.replace("-", "");
+ upc = upc.replace(" ", "");
+ if(not re.findall("^(\d{16})", upc)):
+  return False;
+ if(re.findall("^(0)", upc)):
+  return "ISO/TC 68";
+ if(re.findall("^(1)", upc)):
+  return "Airlines";
+ if(re.findall("^(2)", upc)):
+  return "Airlines";
+ if(re.findall("^(3)", upc)):
+  return "Travel and Entertainment and Banking/Financial";
+ if(re.findall("^(4)", upc)):
+  return "Banking and Financial";
+ if(re.findall("^(5)", upc)):
+  return "Banking and Financial";
+ if(re.findall("^(6)", upc)):
+  return "Merchandising and Banking/Financial";
+ if(re.findall("^(7)", upc)):
+  return "Petroleum";
+ if(re.findall("^(8)", upc)):
+  return "Healthcare and Telecommunications";
+ if(re.findall("^(9)", upc)):
+  return "National Assignment";
+ return False;
+
+'''
+// Get IMEI (International Mobile Station Equipment Identity) Info
+// Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
+'''
+def get_new_imei_info(upc):
+ upc = str(upc);
+ if(not re.findall("^(\d{16})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{8})(\d{6})(\d{1})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'checkdigit': pre_upc_type[2]};
+ return upc_type;
+def get_new_imei_tac(upc):
+ upc = str(upc);
+ product = get_new_imei_info(upc);
+ if(product==False):
+  return False;
+ return product['tac'];
+def get_new_imei_serialnumber(upc):
+ upc = str(upc);
+ product = get_new_imei_info(upc);
+ if(product==False):
+  return False;
+ return product['serialnumber'];
+def get_new_imei_checkdigit(upc):
+ upc = str(upc);
+ product = get_new_imei_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
+def get_old_imei_info(upc):
+ upc = str(upc);
+ if(not re.findall("^(\d{16})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{6})(\d{2})(\d{6})(\d{1})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1], 'serialnumber': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
+ return upc_type;
+def get_old_imei_tac(upc):
+ upc = str(upc);
+ product = get_old_imei_info(upc);
+ if(product==False):
+  return False;
+ return product['tac'];
+def get_old_imei_fac(upc):
+ upc = str(upc);
+ product = get_old_imei_info(upc);
+ if(product==False):
+  return False;
+ return product['fac'];
+def get_old_imei_serialnumber(upc):
+ upc = str(upc);
+ product = get_old_imei_info(upc);
+ if(product==False):
+  return False;
+ return product['serialnumber'];
+def get_old_imei_checkdigit(upc):
+ upc = str(upc);
+ product = get_old_imei_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
+
+'''
+// Get IMEISV (International Mobile Station Equipment Identity Software Version) Info
+// Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
+'''
+def get_new_imeisv_info(upc):
+ upc = str(upc);
+ if(not re.findall("^(\d{16})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{8})(\d{6})(\d{2})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'svn': pre_upc_type[2]};
+ return upc_type;
+def get_new_imeisv_tac(upc):
+ upc = str(upc);
+ product = get_new_imeisv_info(upc);
+ if(product==False):
+  return False;
+ return product['tac'];
+def get_new_imeisv_serialnumber(upc):
+ upc = str(upc);
+ product = get_new_imeisv_info(upc);
+ if(product==False):
+  return False;
+ return product['serialnumber'];
+def get_new_imeisv_svn(upc):
+ upc = str(upc);
+ product = get_new_imeisv_info(upc);
+ if(product==False):
+  return False;
+ return product['svn'];
+def get_old_imeisv_info(upc):
+ upc = str(upc);
+ if(not re.findall("^(\d{16})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{6})(\d{2})(\d{6})(\d{2})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1], 'serialnumber': pre_upc_type[2], 'svn': pre_upc_type[3]};
+ return upc_type;
+def get_old_imeisv_tac(upc):
+ upc = str(upc);
+ product = get_old_imeisv_info(upc);
+ if(product==False):
+  return False;
+ return product['tac'];
+def get_old_imeisv_fac(upc):
+ upc = str(upc);
+ product = get_old_imeisv_info(upc);
+ if(product==False):
+  return False;
+ return product['fac'];
+def get_old_imeisv_serialnumber(upc):
+ upc = str(upc);
+ product = get_old_imeisv_info(upc);
+ if(product==False):
+  return False;
+ return product['serialnumber'];
+def get_old_imeisv_svn(upc):
+ upc = str(upc);
+ product = get_old_imeisv_info(upc);
+ if(product==False):
+  return False;
+ return product['svn'];
+
+'''
+// Get Bank Card Number Info
+// Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
+'''
+def get_bcn_info(upc):
+ upc = str(upc);
+ if(not re.findall("^(\d{16})", upc)):
+  return False;
+ upc_matches = re.findall("^(\d{1})(\d{5})(\d{12})(\d{1})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'mii': pre_upc_type[0], 'iin': pre_upc_type[0]+pre_upc_type[1], 'account': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
+ return upc_type;
+def get_bcn_mii(upc):
+ upc = str(upc);
+ product = get_bcn_info(upc);
+ if(product==False):
+  return False;
+ return product['mii'];
+def get_bcn_iin(upc):
+ upc = str(upc);
+ product = get_bcn_info(upc);
+ if(product==False):
+  return False;
+ return product['iin'];
+def get_bcn_account(upc):
+ upc = str(upc);
+ product = get_bcn_info(upc);
+ if(product==False):
+  return False;
+ return product['account'];
+def get_bcn_checkdigit(upc):
+ upc = str(upc);
+ product = get_bcn_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
