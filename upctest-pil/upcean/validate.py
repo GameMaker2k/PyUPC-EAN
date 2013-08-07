@@ -39,21 +39,19 @@ def validate_upca(upc,return_check=False):
   upc = fix_matches[0];
  if(len(upc)>12 or len(upc)<11):
   return False;
- if(len(upc)==11):
-  upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
- if(len(upc)==12):
-  upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
- upc_matches=upc_matches[0];
- OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]+"+"+upc_matches[8]+"+"+upc_matches[10]) * 3;
- EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]+"+"+upc_matches[7]+"+"+upc_matches[9]);
+ upc_matches = list(upc);
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ OddSum = eval(upc_matches1[0]+"+"+upc_matches1[1]+"+"+upc_matches1[2]+"+"+upc_matches1[3]+"+"+upc_matches1[4]+"+"+upc_matches1[5]) * 3;
+ EvenSum = eval(upc_matches2[0]+"+"+upc_matches2[1]+"+"+upc_matches2[2]+"+"+upc_matches2[3]+"+"+upc_matches2[4]);
  AllSum = OddSum + EvenSum;
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
  if(return_check==False and len(upc)==12):
-  if(CheckSum!=int(upc_matches[11])):
+  if(CheckSum!=int(upc_matches2[5])):
    return False;
-  if(CheckSum==int(upc_matches[11])):
+  if(CheckSum==int(upc_matches2[5])):
    return True;
  if(return_check==True):
   return str(CheckSum);
@@ -76,21 +74,19 @@ def validate_ean13(upc,return_check=False):
   upc = fix_matches[0];
  if(len(upc)>13 or len(upc)<12):
   return False;
- if(len(upc)==12):
-  upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
- if(len(upc)==13):
-  upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
- upc_matches=upc_matches[0];
- EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]+"+"+upc_matches[7]+"+"+upc_matches[9]+"+"+upc_matches[11]) * 3;
- OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]+"+"+upc_matches[8]+"+"+upc_matches[10]);
+ upc_matches = list(upc);
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ EvenSum = eval(upc_matches2[0]+"+"+upc_matches2[1]+"+"+upc_matches2[2]+"+"+upc_matches2[3]+"+"+upc_matches2[4]+"+"+upc_matches2[5]) * 3;
+ OddSum = eval(upc_matches1[0]+"+"+upc_matches1[1]+"+"+upc_matches1[2]+"+"+upc_matches1[3]+"+"+upc_matches1[4]+"+"+upc_matches1[5]);
  AllSum = OddSum + EvenSum;
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
  if(return_check==False and len(upc)==13):
-  if(CheckSum!=int(upc_matches[12])):
+  if(CheckSum!=int(upc_matches1[6])):
    return False;
-  if(CheckSum==int(upc_matches[12])):
+  if(CheckSum==int(upc_matches1[6])):
    return True;
  if(return_check==True):
   return str(CheckSum);
@@ -113,21 +109,19 @@ def validate_itf14(upc,return_check=False):
   upc = fix_matches[0];
  if(len(upc)>14 or len(upc)<13):
   return False;
- if(len(upc)==13):
-  upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
- if(len(upc)==14):
-  upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
- upc_matches=upc_matches[0];
- EvenSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]+"+"+upc_matches[7]+"+"+upc_matches[9]+"+"+upc_matches[11]);
- OddSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]+"+"+upc_matches[8]+"+"+upc_matches[10]+"+"+upc_matches[12]) * 3;
+ upc_matches = list(upc);
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ EvenSum = eval(upc_matches2[0]+"+"+upc_matches2[1]+"+"+upc_matches2[2]+"+"+upc_matches2[3]+"+"+upc_matches2[4]+"+"+upc_matches2[5]);
+ OddSum = eval(upc_matches1[0]+"+"+upc_matches1[1]+"+"+upc_matches1[2]+"+"+upc_matches1[3]+"+"+upc_matches1[4]+"+"+upc_matches1[5]+"+"+upc_matches1[6]) * 3;
  AllSum = OddSum + EvenSum;
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
  if(return_check==False and len(upc)==14):
-  if(CheckSum!=int(upc_matches[13])):
+  if(CheckSum!=int(upc_matches2[6])):
    return False;
-  if(CheckSum==int(upc_matches[13])):
+  if(CheckSum==int(upc_matches2[6])):
    return True;
  if(return_check==True):
   return str(CheckSum);
@@ -150,21 +144,19 @@ def validate_ean8(upc,return_check=False):
   upc = fix_matches[0];
  if(len(upc)>8 or len(upc)<7):
   return False;
- if(len(upc)==7):
-  upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
- if(len(upc)==8):
-  upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
- upc_matches=upc_matches[0];
- EvenSum = eval(upc_matches[0]+"+"+upc_matches[2]+"+"+upc_matches[4]+"+"+upc_matches[6]) * 3;
- OddSum = eval(upc_matches[1]+"+"+upc_matches[3]+"+"+upc_matches[5]);
+ upc_matches = list(upc);
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ EvenSum = eval(upc_matches1[0]+"+"+upc_matches1[1]+"+"+upc_matches1[2]+"+"+upc_matches1[3]) * 3;
+ OddSum = eval(upc_matches2[0]+"+"+upc_matches2[1]+"+"+upc_matches2[2]);
  AllSum = OddSum + EvenSum;
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
  if(return_check==False and len(upc)==8):
-  if(CheckSum!=int(upc_matches[7])):
+  if(CheckSum!=int(upc_matches2[3])):
    return False;
-  if(CheckSum==int(upc_matches[7])): 
+  if(CheckSum==int(upc_matches2[3])): 
    return True;
  if(return_check==True):
   return str(CheckSum);
@@ -510,17 +502,17 @@ def validate_imei(upc,return_check=False):
  if(len(upc)>15 or len(upc)<14):
   return False;
  upc_matches = list(upc);
- PreChck1 = upc_matches[0:][::2];
- PreChck2 = upc_matches[1:][::2];
- UPC_Sum = int(PreChck1[0]) + get_digital_root(int(PreChck2[0]) * 2) + int(PreChck1[1]) + get_digital_root(int(PreChck2[1]) * 2) + int(PreChck1[2]) + get_digital_root(int(PreChck2[2]) * 2) + int(PreChck1[3]) + get_digital_root(int(PreChck2[3]) * 2) + int(PreChck1[4]) + get_digital_root(int(PreChck2[4]) * 2) + int(PreChck1[5]) + get_digital_root(int(PreChck2[5]) * 2) + int(PreChck1[6]) + get_digital_root(int(PreChck2[6]) * 2);
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ UPC_Sum = int(upc_matches1[0]) + get_digital_root(int(upc_matches2[0]) * 2) + int(upc_matches1[1]) + get_digital_root(int(upc_matches2[1]) * 2) + int(upc_matches1[2]) + get_digital_root(int(upc_matches2[2]) * 2) + int(upc_matches1[3]) + get_digital_root(int(upc_matches2[3]) * 2) + int(upc_matches1[4]) + get_digital_root(int(upc_matches2[4]) * 2) + int(upc_matches1[5]) + get_digital_root(int(upc_matches2[5]) * 2) + int(upc_matches1[6]) + get_digital_root(int(upc_matches2[6]) * 2);
  PreCheckSum = 0;
  while((UPC_Sum + PreCheckSum) % 10 != 0):
   PreCheckSum += 1;
  CheckSum = PreCheckSum;
  if(return_check==False and len(upc)==15):
-  if(CheckSum!=int(PreChck1[7])):
+  if(CheckSum!=int(upc_matches1[7])):
    return False;
-  if(CheckSum==int(PreChck1[7])):
+  if(CheckSum==int(upc_matches1[7])):
    return True;
  if(return_check==True):
   return str(CheckSum);
@@ -543,23 +535,25 @@ http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
 '''
 def validate_bcn(upc,return_check=False):
  upc = str(upc);
+ upc = upc.replace("-", "");
+ upc = upc.replace(" ", "");
  if(len(upc)>16):
   fix_matches = re.findall("^(\d{16})", upc);
   upc = fix_matches[0];
  if(len(upc)>16 or len(upc)<15):
   return False;
  upc_matches = list(upc);
- PreChck1 = upc_matches[0:][::2];
- PreChck2 = upc_matches[1:][::2];
- UPC_Sum = int(PreChck2[0]) + get_digital_root(int(PreChck1[0]) * 2) + int(PreChck2[1]) + get_digital_root(int(PreChck1[1]) * 2) + int(PreChck2[2]) + get_digital_root(int(PreChck1[2]) * 2) + int(PreChck2[3]) + get_digital_root(int(PreChck1[3]) * 2) + int(PreChck2[4]) + get_digital_root(int(PreChck1[4]) * 2) + int(PreChck2[5]) + get_digital_root(int(PreChck1[5]) * 2) + int(PreChck2[6]) + get_digital_root(int(PreChck1[6]) * 2) + get_digital_root(int(PreChck1[7]) * 2);
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ UPC_Sum = int(upc_matches2[0]) + get_digital_root(int(upc_matches1[0]) * 2) + int(upc_matches2[1]) + get_digital_root(int(upc_matches1[1]) * 2) + int(upc_matches2[2]) + get_digital_root(int(upc_matches1[2]) * 2) + int(upc_matches2[3]) + get_digital_root(int(upc_matches1[3]) * 2) + int(upc_matches2[4]) + get_digital_root(int(upc_matches1[4]) * 2) + int(upc_matches2[5]) + get_digital_root(int(upc_matches1[5]) * 2) + int(upc_matches2[6]) + get_digital_root(int(upc_matches1[6]) * 2) + get_digital_root(int(upc_matches1[7]) * 2);
  PreCheckSum = 0;
  while((UPC_Sum + PreCheckSum) % 10 != 0):
   PreCheckSum += 1;
  CheckSum = PreCheckSum;
  if(return_check==False and len(upc)==16):
-  if(CheckSum!=int(PreChck2[7])):
+  if(CheckSum!=int(upc_matches2[7])):
    return False;
-  if(CheckSum==int(PreChck2[7])):
+  if(CheckSum==int(upc_matches2[7])):
    return True;
  if(return_check==True):
   return str(CheckSum);
@@ -567,9 +561,13 @@ def validate_bcn(upc,return_check=False):
   return str(CheckSum);
 def get_bcn_checksum(upc):
  upc = str(upc);
+ upc = upc.replace("-", "");
+ upc = upc.replace(" ", "");
  return validate_bcn(upc,True);
 def fix_bcn_checksum(upc):
  upc = str(upc);
+ upc = upc.replace("-", "");
+ upc = upc.replace(" ", "");
  if(len(upc)>15):
   fix_matches = re.findall("^(\d{15})", upc); 
   upc = fix_matches[0];
@@ -669,19 +667,19 @@ http://en.wikipedia.org/wiki/MSI_Barcode
 def get_msi_checksum(upc):
  upc_matches = list(upc);
  if(len(upc) % 2==0):
-  PreChck1 = list(str(int("".join(upc_matches[1:][::2])) * 2));
-  PreChck2 = upc_matches[0:][::2];
+  upc_matches1 = list(str(int("".join(upc_matches[1:][::2])) * 2));
+  upc_matches2 = upc_matches[0:][::2];
  else:
-  PreChck1 = list(str(int("".join(upc_matches[0:][::2])) * 2));
-  PreChck2 = upc_matches[1:][::2];
+  upc_matches1 = list(str(int("".join(upc_matches[0:][::2])) * 2));
+  upc_matches2 = upc_matches[1:][::2];
  PreCount = 0;
  UPC_Sum = 0;
- while (PreCount<=len(PreChck1)-1):
-  UPC_Sum = UPC_Sum + int(PreChck1[PreCount]);
+ while (PreCount<=len(upc_matches1)-1):
+  UPC_Sum = UPC_Sum + int(upc_matches1[PreCount]);
   PreCount += 1;
  PreCount = 0;
- while (PreCount<=len(PreChck2)-1):
-  UPC_Sum = UPC_Sum + int(PreChck2[PreCount]);
+ while (PreCount<=len(upc_matches2)-1):
+  UPC_Sum = UPC_Sum + int(upc_matches2[PreCount]);
   PreCount += 1;
  CheckSum = 10 - (UPC_Sum % 10);
  return str(CheckSum);
