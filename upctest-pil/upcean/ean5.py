@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    FileInfo: ean5.py - Last Update: 08/06/2013 Ver. 2.4.3 RC 3 - Author: cooldude2k 
+    FileInfo: ean5.py - Last Update: 08/08/2013 Ver. 2.4.3 RC 4 - Author: cooldude2k 
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -270,73 +270,3 @@ def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False)
 
 def draw_ean5(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean5(upc,None,resize,hideinfo,barheight,barcolor);
-
-def create_ean5_from_list(upc,outfile,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- if(sys.version[0]=="2"):
-  if(isinstance(upc, str) or isinstance(upc, unicode)):
-   return create_ean5(upc,outfile,resize,hideinfo,barheight,barcolor);
- if(sys.version[0]=="3"):
-  if(isinstance(upc, str)):
-   return create_ean5(upc,outfile,resize,hideinfo,barheight,barcolor);
- if(isinstance(upc, tuple) or isinstance(upc, list)):
-  NumLoop = 0;
-  retlist = list();
-  while (NumLoop < len(upc)):
-   if(isinstance(resize, tuple) or isinstance(resize, list)):
-    resize_val = resize[NumLoop];
-   if(sys.version[0]=="2"):
-    if(isinstance(resize, str) or isinstance(resize, unicode) or isinstance(resize, int)):
-     resize_val = resize;
-   if(sys.version[0]=="3"):
-    if(isinstance(resize, str) or isinstance(resize, int)):
-     resize_val = resize;
-   if(isinstance(hideinfo[0], tuple) or isinstance(hideinfo[0], list)):
-    hideinfo_val = hideinfo[NumLoop];
-   if(isinstance(hideinfo[0], bool)):
-    hideinfo_val = hideinfo;
-   if(isinstance(barheight[0], tuple) or isinstance(barheight[0], list)):
-    barheight_val = barheight[NumLoop];
-   if(isinstance(barheight[0], int)):
-    barheight_val = barheight;
-   if(isinstance(barcolor[0][0], tuple) or isinstance(barcolor[0][0], list)):
-    barcolor_val = barcolor[NumLoop];
-   if(isinstance(barcolor[0][0], int)):
-    barcolor_val = barcolor;
-   retlist.append(create_ean5(upc[NumLoop],outfile[NumLoop],resize_val,hideinfo_val,barheight_val,barcolor_val));
-   NumLoop = NumLoop + 1;
- return retlist;
-
-def draw_ean5_from_list(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- if(sys.version[0]=="2"):
-  if(isinstance(upc, str) or isinstance(upc, unicode)):
-   return draw_ean5(upc,resize,hideinfo,barheight);
- if(sys.version[0]=="3"):
-  if(isinstance(upc, str)):
-   return draw_ean5(upc,resize,hideinfo,barheight);
- if(isinstance(upc, tuple) or isinstance(upc, list)):
-  NumLoop = 0;
-  drawlist = list();
-  while (NumLoop < len(upc)):
-   if(isinstance(resize, tuple) or isinstance(resize, list)):
-    resize_val = resize[NumLoop];
-   if(sys.version[0]=="2"):
-    if(isinstance(resize, str) or isinstance(resize, unicode) or isinstance(resize, int)):
-     resize_val = resize;
-   if(sys.version[0]=="3"):
-    if(isinstance(resize, str) or isinstance(resize, int)):
-     resize_val = resize;
-   if(isinstance(hideinfo[0], tuple) or isinstance(hideinfo[0], list)):
-    hideinfo_val = hideinfo[NumLoop];
-   if(isinstance(hideinfo[0], bool)):
-    hideinfo_val = hideinfo;
-   if(isinstance(barheight[0], tuple) or isinstance(barheight[0], list)):
-    barheight_val = barheight[NumLoop];
-   if(isinstance(barheight[0], int)):
-    barheight_val = barheight;
-   if(isinstance(barcolor[0][0], tuple) or isinstance(barcolor[0][0], list)):
-    barcolor_val = barcolor[NumLoop];
-   if(isinstance(barcolor[0][0], int)):
-    barcolor_val = barcolor;
-   drawlist.append(draw_ean5(upc[NumLoop],resize_val,hideinfo_val,barheight_val,barcolor_val));
-   NumLoop = NumLoop + 1;
- return drawlist;

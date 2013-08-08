@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 08/06/2013 Ver. 2.4.3 RC 3  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 08/08/2013 Ver. 2.4.3 RC 4  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
