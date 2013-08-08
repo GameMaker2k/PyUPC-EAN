@@ -27,27 +27,65 @@ def version_info():
  if(__version_info__[3]==None):
   return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": None};
 import sys, re, upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
-import upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93, upcean.codabar, upcean.msi;
-'''
-import upcean.cuecat;
-'''
+import upcean.ean2, upcean.ean5, upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93, upcean.codabar, upcean.msi;
 from sys import argv;
+''' Code for validating UPC/EAN by Kazuki Przyborowski '''
 from upcean.validate import *;
+''' Code for converting UPC/EAN by Kazuki Przyborowski '''
 from upcean.convert import *;
+''' Code for getting GS1 Prefix EAN-8/EAN-13/ITF-14 by Kazuki Przyborowski '''
 from upcean.getprefix import *;
+''' Code for getting save file name and type by Kazuki Przyborowski '''
 from upcean.getsfname import *;
+''' Code for making EAN-2 supplement by Kazuki Przyborowski '''
+from upcean.ean2 import *;
+''' Code for making EAN-5 supplement by Kazuki Przyborowski '''
+from upcean.ean5 import *;
+''' Code for making UPC-A by Kazuki Przyborowski '''
 from upcean.upca import *;
+''' Code for making UPC-E by Kazuki Przyborowski '''
 from upcean.upce import *;
+''' Code for making EAN-13 by Kazuki Przyborowski '''
 from upcean.ean13 import *;
+''' Code for making EAN-8 by Kazuki Przyborowski '''
 from upcean.ean8 import *;
+''' Code for making Standard 2 of 5 by Kazuki Przyborowski '''
 from upcean.stf import *;
+''' Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
 from upcean.itf import *;
+''' Code for making ITF-14 by Kazuki Przyborowski '''
 from upcean.itf14 import *;
+''' Code for making Code 11 by Kazuki Przyborowski '''
 from upcean.code11 import *;
+''' Code for making Code 39 by Kazuki Przyborowski '''
 from upcean.code39 import *;
+''' Code for making Code 93 by Kazuki Przyborowski '''
 from upcean.code93 import *;
+''' Code for making Codabar by Kazuki Przyborowski '''
 from upcean.codabar import *;
+''' Code for making Modified Plessey by Kazuki Przyborowski '''
 from upcean.msi import *;
+
+'''
+UPC Resources and Info
+http://en.wikipedia.org/wiki/Universal_Product_Code
+http://en.wikipedia.org/wiki/Global_Trade_Item_Number
+http://en.wikipedia.org/wiki/Barcode
+http://www.ucancode.net/CPP_Library_Control_Tool/Draw-Print-encode-UPCA-barcode-UPCE-barcode-EAN13-barcode-VC-Code.htm
+http://en.wikipedia.org/wiki/International_Article_Number
+http://www.upcdatabase.com/docs/
+http://www.accipiter.org/projects/cat.php
+http://www.accipiter.org/download/kittycode.js
+http://uscan.sourceforge.net/upc.txt
+http://www.adams1.com/upccode.html
+http://www.documentmedia.com/Media/PublicationsArticles/QuietZone.pdf
+http://zxing.org/w/decode.jspx
+http://code.google.com/p/zxing/
+http://www.terryburton.co.uk/barcodewriter/generator/
+http://en.wikipedia.org/wiki/Interleaved_2_of_5
+http://www.gs1au.org/assets/documents/info/user_manuals/barcode_technical_details/ITF_14_Barcode_Structure.pdf
+http://www.barcodeisland.com/
+'''
 
 '''
 Shortcut Codes by Kazuki Przyborowski

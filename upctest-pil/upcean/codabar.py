@@ -41,7 +41,6 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
  upc_size_add = (bcsize9 * 9) + (bcsize10 * 10) + (bcsize12 * 12) + len(upc_matches) - 1;
  upc_preimg = Image.new("RGB", (40 + upc_size_add, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
-
  upc_img.rectangle([(0, 0), (40 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
  LineSize = barheight[0];
  if(hidetext==True):
