@@ -54,6 +54,11 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
   pil_ver = pil_ver.split(".");
   pil_ver = [int(x) for x in pil_ver];
   pil_is_pillow = True;
+ except AttributeError:
+  pil_ver = Image.VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = False;
  except NameError:
   pil_ver = Image.VERSION;
   pil_ver = pil_ver.split(".");
