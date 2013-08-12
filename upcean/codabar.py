@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: codabar.py - Last Update: 08/10/2013 Ver. 2.4.4 RC 1 - Author: cooldude2k $
+    $FileInfo: codabar.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -32,6 +32,21 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
+ try:
+  pil_ver = Image.PILLOW_VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = True;
+ except NameError:
+  pil_ver = Image.VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = False;
+ pil_addon_fix = 0;
+ pil_prevercheck = [str(x) for x in pil_ver];
+ pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
+ if(pil_is_pillow==True and pil_vercheck>=210):
+  pil_addon_fix = int(resize) * 2;
  pre_upc_matches = upc_matches = re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc);
  pre_upc_matches = pre_upc_matches[0];
  upc_matches = list(pre_upc_matches[1]);
@@ -276,7 +291,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   NumTxtZero = 0; 
   LineTxtStart = 20;
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (16 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[NumTxtZero], barcolor[0]);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (16 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, upc_matches[NumTxtZero], barcolor[0]);
    LineTxtStart += 11 * int(resize);
    NumTxtZero += 1;
  del(upc_img);

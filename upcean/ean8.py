@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean8.py - Last Update: 08/10/2013 Ver. 2.4.4 RC 1 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -45,6 +45,21 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
+ try:
+  pil_ver = Image.PILLOW_VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = True;
+ except NameError:
+  pil_ver = Image.VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = False;
+ pil_addon_fix = 0;
+ pil_prevercheck = [str(x) for x in pil_ver];
+ pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
+ if(pil_is_pillow==True and pil_vercheck>=210):
+  pil_addon_fix = int(resize) * 2;
  if(validate_ean8(upc)==False):
   pre_matches = re.findall("^(\d{7})", upc); 
   upc = pre_matches[0]+str(validate_ean8(pre_matches[0],True));
@@ -248,14 +263,14 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), 11 + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(LeftLeftDigit)[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 17 + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(LeftLeftDigit)[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(LeftRightDigit)[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 30 + (29 * (int(resize) - 1)) + (3 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(LeftRightDigit)[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 43 + (46 * (int(resize) - 1)) - (3 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(RightLeftDigit)[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 49 + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(RightLeftDigit)[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 56 + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(RightRightDigit)[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 62 + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), list(RightRightDigit)[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 11 + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, list(LeftLeftDigit)[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 17 + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, list(LeftLeftDigit)[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, list(LeftRightDigit)[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 30 + (29 * (int(resize) - 1)) + (3 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, list(LeftRightDigit)[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 43 + (46 * (int(resize) - 1)) - (3 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, list(RightLeftDigit)[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 49 + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, list(RightLeftDigit)[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 56 + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, list(RightRightDigit)[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 62 + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, list(RightRightDigit)[1], barcolor[1]);
  del(upc_img);
  if(supplement!=None and len(supplement)==2): 
   upc_sup_img = draw_ean2_supplement(supplement,resize,hideinfo,barheight,barcolor);

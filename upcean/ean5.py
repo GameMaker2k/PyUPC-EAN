@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    FileInfo: ean5.py - Last Update: 08/10/2013 Ver. 2.4.4 RC 1 - Author: cooldude2k 
+    FileInfo: ean5.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2 - Author: cooldude2k 
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -32,6 +32,21 @@ def create_ean5_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
+ try:
+  pil_ver = Image.PILLOW_VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = True;
+ except NameError:
+  pil_ver = Image.VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = False;
+ pil_addon_fix = 0;
+ pil_prevercheck = [str(x) for x in pil_ver];
+ pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
+ if(pil_is_pillow==True and pil_vercheck>=210):
+  pil_addon_fix = int(resize) * 2;
  LeftDigit = list(upc_matches[0]);
  CheckSum = (int(LeftDigit[0]) * 3) + (int(LeftDigit[1]) * 9) + (int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3);
  CheckSum = CheckSum % 10;
@@ -204,11 +219,11 @@ def create_ean5_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), 7 + (7 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 16 + (15 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[2], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 32 + (32 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[3], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 40 + (40 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)), LeftDigit[4], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 7 + (7 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, LeftDigit[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 16 + (15 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, LeftDigit[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, LeftDigit[2], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 32 + (32 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, LeftDigit[3], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 40 + (40 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, LeftDigit[4], barcolor[1]);
  del(upc_img);
  oldoutfile = get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):

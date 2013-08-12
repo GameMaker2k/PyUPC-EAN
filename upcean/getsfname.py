@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getsfname.py - Last Update: 08/10/2013 Ver. 2.4.4 RC 1  - Author: cooldude2k $
+    $FileInfo: getsfname.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
