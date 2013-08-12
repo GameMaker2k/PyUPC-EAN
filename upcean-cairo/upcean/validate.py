@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 08/10/2013 Ver. 2.4.4 RC 1  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -189,6 +189,7 @@ def validate_upce(upc,return_check=False):
  if(len(upc)==8 and re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc)):
   upc_matches = re.findall("^(\d{7})(\d{1})", upc);
   upc_matches = upc_matches[0];
+  upc_matches = [int(x) for x in upc_matches];
   CheckDigit = upc_matches[1];
  if(re.findall("^(\d{1})(\d{5})([0-3])", upc)):
   upc_matches = re.findall("^(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);

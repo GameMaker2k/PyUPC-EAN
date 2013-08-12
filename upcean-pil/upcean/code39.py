@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 08/10/2013 Ver. 2.4.4 RC 1 - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -31,6 +31,21 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
+ try:
+  pil_ver = Image.PILLOW_VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = True;
+ except NameError:
+  pil_ver = Image.VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  pil_is_pillow = False;
+ pil_addon_fix = 0;
+ pil_prevercheck = [str(x) for x in pil_ver];
+ pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
+ if(pil_is_pillow==True and pil_vercheck>=210):
+  pil_addon_fix = int(resize) * 2;
  upc = upc.upper();
  upc_matches = list(upc);
  upc_size_add = (len(upc_matches) * 15) + (len(upc_matches) + 1);
@@ -213,15 +228,15 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, "*", barcolor[1]);
   NumTxtZero = 0; 
   LineTxtStart = 30 * int(resize);
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), upc_matches[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, upc_matches[NumTxtZero], barcolor[1]);
    LineTxtStart += 16 * int(resize);
    NumTxtZero += 1;
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)), "*", barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, "*", barcolor[1]);
  del(upc_img);
  oldoutfile = get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
