@@ -1191,6 +1191,47 @@ def get_itf14_type(upc):
  return False;
 
 '''
+// Get Goodwill UPC Info.
+'''
+def get_goodwill_upca_info(upc):
+ upc = str(upc);
+ if(re.findall("^0(\d{12})", upc)):
+  upc_matches = re.findall("^0(\d{12})", upc);
+  upc = upc_matches[1];
+ if(not re.findall("^(\d{12})", upc)):
+  return False;
+ if(not re.findall("^4(\d{11})", upc)):
+  return False;
+ upc_matches = re.findall("^4(\d{5})(\d{5})(\d{1})", upc);
+ upc_matches = upc_matches[0];
+ product = {'numbersystem': str(4), 'code': upc_matches[0], 'price': upc_matches[1], 'checkdigit': upc_matches[2]};
+ return product;
+def get_goodwill_upca_numbersystem(upc):
+ upc = str(upc);
+ product = get_goodwill_upca_info(upc);
+ if(product==False):
+  return False;
+ return product['numbersystem'];
+def get_goodwill_upca_code(upc):
+ upc = str(upc);
+ product = get_goodwill_upca_info(upc);
+ if(product==False):
+  return False;
+ return product['code'];
+def get_goodwill_upca_price(upc):
+ upc = str(upc);
+ product = get_goodwill_upca_info(upc);
+ if(product==False):
+  return False;
+ return product['price'];
+def get_goodwill_upca_checkdigit(upc):
+ upc = str(upc);
+ product = get_goodwill_upca_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
+
+'''
 // Get variable weight info
 // Source: http://wiki.answers.com/Q/How_does_a_price_embedded_bar_code_work
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
