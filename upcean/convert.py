@@ -529,7 +529,7 @@ def make_vw_upca(code, price):
    price_matches = re.findall("^(\d{4})", price);
    price = price_matches[0];
  pricecs = str(get_vw_price_checksum(price));
- vwupc = "2"+code+pricecs+price;
+ vwupc = "2"+code+pricecs+price.zfill(4);
  vwupc = vwupc+str(validate_upca(vwupc, True));
  return vwupc;
 def make_vw_to_ean13(code, price):
@@ -538,6 +538,30 @@ def make_vw_to_ean13(code, price):
  vwean13 = convert_upca_to_ean13(make_vw_upca(code, price));
  return vwean13;
 def make_vw_to_itf14(code, price):
+ code = str(code);
+ price = str(price);
+ vwitf14 = convert_upca_to_itf14(make_vw_upca(code, price));
+ return vwitf14;
+def make_goodwill_upca(code, price):
+ code = str(code);
+ price = str(price);
+ if(len(code)>5):
+  if(re.findall("^(\d{5})", code)):
+   code_matches = re.findall("^(\d{5})", code);
+   code = code_matches[0];
+ if(len(price)>5):
+  if(re.findall("^(\d{5})", price)):
+   price_matches = re.findall("^(\d{5})", price);
+   price = price_matches[0];
+ vwupc = "4"+code+price.zfill(5);
+ vwupc = vwupc+str(validate_upca(vwupc, True));
+ return vwupc;
+def make_goodwill_to_ean13(code, price):
+ code = str(code);
+ price = str(price);
+ vwean13 = convert_upca_to_ean13(make_vw_upca(code, price));
+ return vwean13;
+def make_goodwill_to_itf14(code, price):
  code = str(code);
  price = str(price);
  vwitf14 = convert_upca_to_itf14(make_vw_upca(code, price));
