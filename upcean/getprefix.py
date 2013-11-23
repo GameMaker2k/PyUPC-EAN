@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -34,9 +34,9 @@ def get_gs1_prefix(upc):
   upc = fix_ean[0];
  if(not re.findall("^(\d{3}\d{5}|\d{3}\d{10})$", upc)):
   return False;
- if(re.findall("^(\d{3}\d{10})$", upc) and validate_ean13(upc)==False):
+ if(re.findall("^(\d{3}\d{10})$", upc) and validate_ean13_checksum(upc)==False):
   return False;
- if(re.findall("^(\d{3}\d{5})$", upc) and validate_ean8(upc)==False):
+ if(re.findall("^(\d{3}\d{5})$", upc) and validate_ean8_checksum(upc)==False):
   return False;
  if(re.findall("^(0[0-1][0-9])", upc)):
   return "United States and Canada";
@@ -1535,7 +1535,7 @@ def get_upca_coupon_value_code(vcode):
 // Get Major Industry Identifier for Bank Card Number
 // Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
 '''
-def get_bcn_mii(upc):
+def get_bcn_mii_prefix(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
