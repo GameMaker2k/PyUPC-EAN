@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean13.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2 - Author: cooldude2k $
+    $FileInfo: ean13.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -41,17 +41,17 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
   upc = convert_upce_to_ean13(upc);
  if(len(upc)==12): 
   upc = convert_upca_to_ean13(upc);
- if(len(upc)==12 and validate_upca(upc)==True): 
+ if(len(upc)==12 and validate_upca_checksum(upc)==True): 
   upc = "0"+upc;
- if(len(upc)==12 and validate_upca(upc)==False): 
-  upc = upc+str(validate_ean13(upc,true));
+ if(len(upc)==12 and validate_upca_checksum(upc)==False): 
+  upc = upc+str(validate_ean13_checksum(upc,true));
  if(len(upc)>13 or len(upc)<13): 
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(validate_ean13(upc)==False): 
+ if(validate_ean13_checksum(upc)==False): 
   pre_matches = re.findall("^(\d{12})", upc); 
-  upc = pre_matches[0]+str(validate_ean13(pre_matches[0],True));
+  upc = pre_matches[0]+str(validate_ean13_checksum(pre_matches[0],True));
  upc_matches = re.findall("(\d{1})(\d{6})(\d{6})", upc);
  if(len(upc_matches)<=0): 
   return False;

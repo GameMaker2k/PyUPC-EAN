@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upca.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2 - Author: cooldude2k $
+    $FileInfo: upca.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -42,14 +42,14 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  if(len(upc)==13):
   upc = convert_ean13_to_upca(upc);
  if(len(upc)==11):
-  upc = upc+validate_upca(upc,True);
+  upc = upc+validate_upca_checksum(upc,True);
  if(len(upc)>12 or len(upc)<12):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(validate_upca(upc)==False):
+ if(validate_upca_checksum(upc)==False):
   pre_matches = re.findall("^(\d{11})", upc); 
-  upc = pre_matches[0]+str(validate_upca(pre_matches[0],True));
+  upc = pre_matches[0]+str(validate_upca_checksum(pre_matches[0],True));
  upc_matches = re.findall("(\d{1})(\d{5})(\d{5})(\d{1})", upc);
  if(len(upc_matches)<=0):
   return False;

@@ -11,11 +11,11 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-__version_info__ = (2, 4, 4, "RC 2");
+__version_info__ = (2, 5, 0, "RC 1");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
 if(__version_info__[3]==None):
@@ -294,6 +294,19 @@ def create_vw_to_itf14(code,price,outfile="./vw-itf14.png",resize=1,hideinfo=(Fa
 def draw_vw_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_vw_to_itf14(code,price,None,resize,hideinfo,barheight,barcolor);
 
+def create_goodwill_upca(code,price,outfile="./goodwill-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_upca(make_goodwill_upca(code, price),outfile,resize,hideinfo,barheight,barcolor);
+def draw_goodwill_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_goodwill_upca(code,price,None,resize,hideinfo,barheight,barcolor);
+def create_goodwill_to_ean13(code,price,outfile="./goodwill-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean13(make_goodwill_to_ean13(code, price),outfile,resize,hideinfo,barheight,barcolor);
+def draw_goodwill_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_goodwill_to_ean13(code,price,None,resize,hideinfo,barheight,barcolor);
+def create_goodwill_to_itf14(code,price,outfile="./goodwill-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf14(make_goodwill_to_itf14(code, price),outfile,resize,hideinfo,barheight,barcolor);
+def draw_goodwill_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_goodwill_to_itf14(code,price,None,resize,hideinfo,barheight,barcolor);
+
 def create_coupon_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_upca(make_coupon_upca(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,barcolor);
 def draw_coupon_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -306,3 +319,193 @@ def create_coupon_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-
  return create_itf14(make_coupon_to_itf14(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,barcolor);
 def draw_coupon_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_to_itf14(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,barcolor);
+
+'''
+Object-oriented classes and functions by Kazuki Przyborowski
+'''
+class barcode:
+ def __init__(self):
+  self.type = "barcode";
+  self.outfile = "./barcode.png";
+  self.resize = 1;
+  self.hideinfo = (False, False, False);
+  self.barheight = (48, 54);
+  self.barcolor = ((0, 0, 0), (0, 0, 0), (255, 255, 255));
+  self.return_check = False;
+ def version_info(self):
+  return version_info();
+ def create(self):
+  return getattr(upcean, "create_"+self.type)(self.code, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def draw(self):
+  return getattr(upcean, "draw_"+self.type)(self.code, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def create_from(self):
+  return getattr(upcean, "create_"+self.type+"_from_"+self.outtype)(self.code, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def draw_from(self):
+  return getattr(upcean, "draw_"+self.type+"_from_"+self.outtype)(self.code, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def create_vw(self):
+  if(self.type=="upca"):
+   return create_vw_upca(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  if(self.type=="upca"):
+   return getattr(upcean, "create_vw_to_"+self.type)(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def draw_vw(self):
+  if(self.type=="upca"):
+   return drawvw_upca(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  if(self.type=="upca"):
+   return getattr(upcean, "draw_vw_to_"+self.type)(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def create_goodwill(self):
+  if(self.type=="upca"):
+   return create_goodwill_upca(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  if(self.type=="upca"):
+   return getattr(upcean, "create_goodwill_to_"+self.type)(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def draw_goodwill(self):
+  if(self.type=="upca"):
+   return draw_goodwill_upca(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  if(self.type=="upca"):
+   return getattr(upcean, "draw_goodwill_to_"+self.type)(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def create_coupon(self):
+  if(self.type=="upca"):
+   return create_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  if(self.type=="upca"):
+   return getattr(upcean, "create_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def draw_coupon(self):
+  if(self.type=="upca"):
+   return draw_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  if(self.type=="upca"):
+   return getattr(upcean, "draw_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+ def validate_checksum(self):
+  return getattr(upcean, "validate_"+self.type+"_checksum")(self.code, self.return_check);
+ def get_checksum(self):
+  return getattr(upcean, "get_"+self.type+"_checksum")(self.code);
+ def get_info(self):
+  return getattr(upcean, "get_"+self.type+"_info")(self.code);
+ def get_packagecode(self):
+  return getattr(upcean, "get_"+self.type+"_packagecode")(self.code);
+ def get_numbersystem(self):
+  return getattr(upcean, "get_"+self.type+"_numbersystem")(self.code);
+ def get_manufacturer(self):
+  return getattr(upcean, "get_"+self.type+"_manufacturer")(self.code);
+ def get_product(self):
+  return getattr(upcean, "get_"+self.type+"_product")(self.code);
+ def get_checkdigit(self):
+  return getattr(upcean, "get_"+self.type+"_checkdigit")(self.code);
+ def get_upca_info_from_upce(self):
+  return get_upca_info_from_upce(self.code);
+ def get_upce_as_upca_info(self):
+  return get_upca_info_from_upce(self.code);
+ def get_gs1_prefix(self):
+  return get_gs1_prefix(self.code);
+ def get_isbn_identifier(self):
+  return get_isbn_identifier(self.code);
+ def get_upca_ns(self):
+  return get_upca_ns(self.code);
+ def get_itf14_type(self):
+  return get_itf14_type(self.code);
+ def get_vw_info(self):
+  return get_upca_vw_info(self.code);
+ def get_vw_numbersystem(self):
+  return get_upca_vw_numbersystem(self.code);
+ def get_vw_code(self):
+  return get_upca_vw_code(self.code);
+ def get_vw_price(self):
+  return get_upca_vw_price(self.code);
+ def get_vw_pricecs(self):
+  return get_upca_vw_pricecs(self.code);
+ def get_vw_checkdigit(self):
+  return get_upca_vw_checkdigit(self.code);
+ def get_goodwill_info(self):
+  return get_upca_goodwill_info(self.code);
+ def get_goodwill_numbersystem(self):
+  return get_upca_goodwill_numbersystem(self.code);
+ def get_goodwill_code(self):
+  return get_upca_goodwill_code(self.code);
+ def get_goodwill_price(self):
+  return get_upca_goodwill_price(self.code);
+ def get_goodwill_checkdigit(self):
+  return get_upca_goodwill_checkdigit(self.code);
+ def get_coupon_info(self):
+  return get_upca_coupon_info(self.code);
+ def get_coupon_numbersystem(self):
+  return get_upca_coupon_numbersystem(self.code);
+ def get_coupon_manufacturer(self):
+  return get_upca_coupon_manufacturer(self.code);
+ def get_coupon_family(self):
+  return get_upca_coupon_family(self.code);
+ def get_coupon_value(self):
+  return get_upca_coupon_value(self.code);
+ def get_coupon_checkdigit(self):
+  return get_upca_coupon_checkdigit(self.code);
+ def get_coupon_value_code(self):
+  return get_upca_coupon_value_code(self.code);
+ def get_bcn_mii_prefix(self):
+  return get_bcn_mii_prefix(self.code);
+ def get_bcn_info(self):
+  return get_bcn_info(self.code);
+ def get_bcn_mii(self):
+  return get_bcn_mii(self.code);
+ def get_bcn_iin(self):
+  return get_bcn_iin(self.code);
+ def get_bcn_account(self):
+  return get_bcn_account(self.code);
+ def get_bcn_checkdigit(self):
+  return get_bcn_checkdigit(self.code);
+ def get_new_imei_info(self):
+  return get_new_imei_info(self.code);
+ def get_new_imei_tac(self):
+  return get_new_imei_tac(self.code);
+ def get_new_imei_serialnumber(self):
+  return get_new_imei_serialnumber(self.code);
+ def get_new_imei_checkdigit(self):
+  return get_new_imei_checkdigit(self.code);
+ def get_old_imei_info(self):
+  return get_old_imei_info(self.code);
+ def get_old_imei_tac(self):
+  return get_old_imei_tac(self.code);
+ def get_old_imei_fac(self):
+  return get_old_imei_fac(self.code);
+ def get_old_imei_serialnumber(self):
+  return get_old_imei_serialnumber(self.code);
+ def get_old_imei_checkdigit(self):
+  return get_old_imei_checkdigit(self.code);
+ def get_new_imeisv_info(self):
+  return get_new_imeisv_info(self.code);
+ def get_new_imeisv_tac(self):
+  return get_new_imeisv_tac(self.code);
+ def get_new_imeisv_serialnumber(self):
+  return get_new_imeisv_serialnumber(self.code);
+ def get_new_imeisv_checkdigit(self):
+  return get_new_imeisv_checkdigit(self.code);
+ def get_old_imeisv_info(self):
+  return get_old_imeisv_info(self.code);
+ def get_old_imeisv_tac(self):
+  return get_old_imeisv_tac(self.code);
+ def get_old_imeisv_fac(self):
+  return get_old_imeisv_fac(self.code);
+ def get_old_imeisv_serialnumber(self):
+  return get_old_imeisv_serialnumber(self.code);
+ def get_old_imeisv_checkdigit(self):
+  return get_old_imeisv_checkdigit(self.code);
+ def get_save_filename(self):
+  return get_save_filename(self.outfile);
+ def fix_checksum(self):
+  return getattr(upcean, "fix_"+self.type+"_checksum")(self.code);
+ def convert(self):
+  return getattr(upcean, "convert_"+self.type+"_to_"+self.outtype)(self.code);
+ def print(self):
+  return getattr(upcean, "print_"+self.type)(self.code);
+ def print_convert(self):
+  return getattr(upcean, "print_convert_"+self.type+"_to_"+self.outtype)(self.code);
+ def make_vw(self):
+  if(self.type=="upca"):
+   return make_vw_upca(self.code, self.price);
+  if(self.type!="upca"):
+   return getattr(upcean, "make_vw_to_"+self.type)(self.code, self.price);
+ def make_goodwill(self):
+  if(self.type=="upca"):
+   return make_goodwill_upca(self.code, self.price);
+  if(self.type!="upca"):
+   return getattr(upcean, "make_goodwill_to_"+self.type)(self.code, self.price);
+ def make_coupon(self):
+  if(self.type=="upca"):
+   return make_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value);
+  if(self.type!="upca"):
+   return getattr(upcean, "make_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value);

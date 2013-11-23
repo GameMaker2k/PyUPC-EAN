@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -196,15 +196,15 @@ def GenerateBarcode():
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
  validbc = False;
- if(listboxtxt1.get()=="Detect" and (validate_barcode(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
+ if(listboxtxt1.get()=="Detect" and (validate_barcode_checksum(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
   validbc = draw_barcode(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
- if(listboxtxt1.get()=="UPC-A" and validate_barcode(upc_validate)==True):
+ if(listboxtxt1.get()=="UPC-A" and validate_barcode_checksum(upc_validate)==True):
   validbc = draw_upca(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
- if(listboxtxt1.get()=="UPC-E" and validate_barcode(upc_validate)==True):
+ if(listboxtxt1.get()=="UPC-E" and validate_barcode_checksum(upc_validate)==True):
   validbc = draw_upce(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
- if(listboxtxt1.get()=="EAN-13" and validate_barcode(upc_validate)==True):
+ if(listboxtxt1.get()=="EAN-13" and validate_barcode_checksum(upc_validate)==True):
   validbc = draw_ean13(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
- if(listboxtxt1.get()=="EAN-8" and validate_ean8(upc_validate)==True):
+ if(listboxtxt1.get()=="EAN-8" and validate_ean8_checksum(upc_validate)==True):
   validbc = draw_ean8(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
  if(listboxtxt1.get()=="EAN-2" and len(entry1.get())==2):
   validbc = draw_ean2(entry1.get(),"2",(False, False, False),(48, 54),(barcode_bar_color, barcode_text_color, barcode_bg_color));
@@ -271,23 +271,23 @@ def SaveGeneratedBarcode():
    upc_validate = upc_pieces[0];
  savestate = False;
  savefname = "";
- if(listboxtxt1.get()=="Detect" and (validate_barcode(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
+ if(listboxtxt1.get()=="Detect" and (validate_barcode_checksum(upc_validate)==True or len(entry1.get())==2 or len(entry1.get())==5 or len(entry1.get())==14)):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    savestate = create_barcode(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
- if(listboxtxt1.get()=="UPC-A" and validate_barcode(upc_validate)==True):
+ if(listboxtxt1.get()=="UPC-A" and validate_barcode_checksum(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    savestate = create_upca(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
- if(listboxtxt1.get()=="UPC-E" and validate_barcode(upc_validate)==True):
+ if(listboxtxt1.get()=="UPC-E" and validate_barcode_checksum(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    savestate = create_upce(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
- if(listboxtxt1.get()=="EAN-13" and validate_barcode(upc_validate)==True):
+ if(listboxtxt1.get()=="EAN-13" and validate_barcode_checksum(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    savestate = create_ean13(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));
- if(listboxtxt1.get()=="EAN-8" and validate_ean8(upc_validate)==True):
+ if(listboxtxt1.get()=="EAN-8" and validate_ean8_checksum(upc_validate)==True):
   savefname = ShowSaveDialog();
   if(savefname!=""):
    savestate = create_ean8(entry1.get(),savefname,magnify.get(),(False, False, False),(int(entry2.get()),int(entry3.get())),(barcode_bar_color, barcode_text_color, barcode_bg_color));

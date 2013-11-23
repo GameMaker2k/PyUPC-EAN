@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean8.py - Last Update: 08/12/2013 Ver. 2.4.4 RC 2 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -38,14 +38,14 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
   upc_pieces = upc_pieces[0];
   upc = upc_pieces[0]; supplement = upc_pieces[2];
  if(len(upc)==7):
-  upc = upc+validate_ean8(upc,True);
+  upc = upc+validate_ean8_checksum(upc,True);
  if(len(upc)>8 or len(upc)<8):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(validate_ean8(upc)==False):
+ if(validate_ean8_checksum(upc)==False):
   pre_matches = re.findall("^(\d{7})", upc); 
-  upc = pre_matches[0]+str(validate_ean8(pre_matches[0],True));
+  upc = pre_matches[0]+str(validate_ean8_checksum(pre_matches[0],True));
  upc_matches = re.findall("(\d{4})(\d{4})", upc);
  upc_matches = upc_matches[0];
  if(len(upc_matches)<=0):
