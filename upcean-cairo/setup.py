@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1  - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 11/24/2013 Ver. 2.5.0 RC 2  - Author: cooldude2k $
 '''
 
 import os;
@@ -21,19 +21,23 @@ from setuptools import setup;
 
 setup(
  name = 'PyUPC-EAN',
- version = '2.5.0.1',
+ version = '2.5.0.2',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
+ maintainer = 'Kazuki Przyborowski',
+ maintainer_email = 'kazuki.przyborowski@gmail.com',
  description = 'A barcode library/module for python.',
  license = 'BSD',
  keywords = 'barcode barcodegenerator barcodes codabar msi code11 code-11 code39 code-39 code93 code-93 ean ean13 ean-13 ean2 ean-2 ean5 ean-5 ean8 ean-8 itf itf14 itf-14 stf upc upca upc-a upce upc-e',
  url = 'https://github.com/GameMaker2k/PyUPC-EAN',
- packages=['upcean'],
- package_data={'upcean': ['*.otf']},
- include_package_data=True,
- install_requires=['cairo'],
- long_description='A barcode library/module for python.',
- classifiers=[
+ packages= ['upcean'],
+ package_data = {'upcean': ['*.otf']},
+ include_package_data = True,
+ install_requires = ['cairo'],
+ long_description = 'A barcode library/module for python.',
+ platforms = 'OS Independent',
+ zip_safe = False,
+ classifiers = [
   'Development Status :: 5 - Production/Stable',
   'Intended Audience :: Customer Service',
   'Intended Audience :: Developers',
