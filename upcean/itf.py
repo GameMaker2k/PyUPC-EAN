@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1 - Author: cooldude2k $
+    $FileInfo: itf.py - Last Update: 11/24/2013 Ver. 2.5.0 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -49,7 +49,7 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
  pil_addon_fix = 0;
  pil_prevercheck = [str(x) for x in pil_ver];
  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
- if(pil_is_pillow==True and pil_vercheck>=210):
+ if(pil_is_pillow==True and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
  upc_matches = re.findall("([0-9]{2})", upc);
  upc_size_add = len(upc_matches) * 18;

@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 11/23/2013 Ver. 2.5.0 RC 1 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 11/24/2013 Ver. 2.5.0 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -50,7 +50,7 @@ def create_ean2_supplement(upc,outfile="./ean2_supplement.png",resize=1,hideinfo
  pil_addon_fix = 0;
  pil_prevercheck = [str(x) for x in pil_ver];
  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
- if(pil_is_pillow==True and pil_vercheck>=210):
+ if(pil_is_pillow==True and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
  CheckSum = int(upc_matches[0]) % 4;
  LeftDigit = list(upc_matches[0]);
