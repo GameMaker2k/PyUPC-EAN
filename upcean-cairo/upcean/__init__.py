@@ -11,11 +11,11 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 11/24/2013 Ver. 2.5.0 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-__version_info__ = (2, 5, 0, "RC 2");
+__version_info__ = (2, 5, 0, "RC 3");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
 if(__version_info__[3]==None):
@@ -23,9 +23,9 @@ if(__version_info__[3]==None):
 def version_info():
  global __version_info__;
  if(__version_info__[3]!=None):
-  return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": str(__version_info__[3])};
+  return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3]==None):
-  return {"major": str(__version_info__[0]), "minor": str(__version_info__[1]), "build": str(__version_info__[2]), "release": None};
+  return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
 import sys, re, upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.ean2, upcean.ean5, upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93, upcean.codabar, upcean.msi;
 from sys import argv;
@@ -320,58 +320,95 @@ def create_coupon_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-
 def draw_coupon_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_to_itf14(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,barcolor);
 
+def exec_function(function, *argument):
+ return getattr(upcean, function)(*argument);
+def run_function(function, *argument):
+ return getattr(upcean, function)(*argument);
+
 '''
 Object-oriented classes and functions by Kazuki Przyborowski
 '''
 class barcode:
+ __version_info__ = (version_info()["major"], version_info()["minor"], version_info()["build"], version_info()["release"]);
+ if(version_info()["release"]!=None):
+  __version__ = str(version_info()["major"])+"."+str(version_info()["minor"])+"."+str(version_info()["build"])+" "+str(version_info()["release"]);
+ if(version_info()["release"]==None):
+  __version__ = str(version_info()["major"])+"."+str(version_info()["minor"])+"."+str(version_info()["build"]);
+ '''
+ Barcode Types
+ '''
+ EAN2="ean2"
+ UPCS2="ean2";
+ EAN5="ean5";
+ UPCS5="ean5";
+ UPCA="upca";
+ UPCE="upce";
+ EAN13="ean13"
+ EAN8="ean8"
+ STF="stf";
+ ITF="itf";
+ ITF14="itf14";
+ CODE11="code11";
+ CODE39="code39";
+ CODE93="code93";
+ CODABAR="codabar";
+ MSI="msi";
  def __init__(self):
   self.type = "barcode";
-  self.outfile = "./barcode.png";
-  self.resize = 1;
-  self.hideinfo = (False, False, False);
+  self.filename = "./barcode.png";
+  self.size = 1;
+  self.hidesn = False;
+  self.hidecd = False;
+  self.hidetext = False;
   self.barheight = (48, 54);
-  self.barcolor = ((0, 0, 0), (0, 0, 0), (255, 255, 255));
+  self.barcolor = (0, 0, 0);
+  self.textcolor = (0, 0, 0);
+  self.bgcolor = (255, 255, 255);
   self.return_check = False;
  def version_info(self):
   return version_info();
+ def exec_function(self, function, *argument):
+  return getattr(upcean, function)(*argument);
+ def run_function(self, function, *argument):
+  return getattr(upcean, function)(*argument);
  def create(self):
-  return getattr(upcean, "create_"+self.type)(self.code, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  return getattr(upcean, "create_"+self.type)(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def draw(self):
-  return getattr(upcean, "draw_"+self.type)(self.code, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  return getattr(upcean, "draw_"+self.type)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def create_from(self):
-  return getattr(upcean, "create_"+self.type+"_from_"+self.outtype)(self.code, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  return getattr(upcean, "create_"+self.type+"_from_"+self.outtype)(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_from(self):
-  return getattr(upcean, "draw_"+self.type+"_from_"+self.outtype)(self.code, self.resize, self.hideinfo, self.barheight, self.barcolor);
+  return getattr(upcean, "draw_"+self.type+"_from_"+self.outtype)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def create_vw(self):
   if(self.type=="upca"):
-   return create_vw_upca(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return create_vw_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "create_vw_to_"+self.type)(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return getattr(upcean, "create_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_vw(self):
   if(self.type=="upca"):
-   return drawvw_upca(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return drawvw_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "draw_vw_to_"+self.type)(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return getattr(upcean, "draw_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def create_goodwill(self):
   if(self.type=="upca"):
-   return create_goodwill_upca(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return create_goodwill_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "create_goodwill_to_"+self.type)(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return getattr(upcean, "create_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_goodwill(self):
   if(self.type=="upca"):
-   return draw_goodwill_upca(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return draw_goodwill_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "draw_goodwill_to_"+self.type)(self.code, self.price, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return getattr(upcean, "draw_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def create_coupon(self):
   if(self.type=="upca"):
-   return create_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return create_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "create_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return getattr(upcean, "create_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_coupon(self):
   if(self.type=="upca"):
-   return draw_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return draw_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "draw_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.outfile, self.resize, self.hideinfo, self.barheight, self.barcolor);
+   return getattr(upcean, "draw_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
  def validate_checksum(self):
   return getattr(upcean, "validate_"+self.type+"_checksum")(self.code, self.return_check);
  def get_checksum(self):
@@ -485,7 +522,7 @@ class barcode:
  def get_old_imeisv_checkdigit(self):
   return get_old_imeisv_checkdigit(self.code);
  def get_save_filename(self):
-  return get_save_filename(self.outfile);
+  return get_save_filename(self.filename);
  def fix_checksum(self):
   return getattr(upcean, "fix_"+self.type+"_checksum")(self.code);
  def convert(self):
