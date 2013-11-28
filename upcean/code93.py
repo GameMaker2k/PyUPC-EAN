@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code93.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3 - Author: cooldude2k $
+    $FileInfo: code93.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 from upcean.getsfname import *;
 
-def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -241,7 +241,7 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
   NumTxtZero = 0; 
   LineTxtStart = 18;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (19 * (int(resize) - 1)), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (19 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1]);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
@@ -271,5 +271,5 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
    return False;
  return True;
 
-def draw_code93(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_code93(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_code93(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_code93(upc,None,resize,hideinfo,barheight,textxy,barcolor);
