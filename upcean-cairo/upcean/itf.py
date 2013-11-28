@@ -11,14 +11,14 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3  - Author: cooldude2k $
+    $FileInfo: itf.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import cairo, re, sys, types, upcean.precairo;
 from upcean.precairo import *;
 
-def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -44,9 +44,9 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
   LineTxtStart = 18;
   while (NumTxtZero < len(upc_matches)):
    ArrayDigit = list(upc_matches[NumTxtZero]);
-   drawColorText(upc_img, 10, LineTxtStart, (barheight[0] + 14) - 5, ArrayDigit[0], barcolor[1]);
+   drawColorText(upc_img, 10, LineTxtStart, ((barheight[0] + 14) - 5) + textxy[1], ArrayDigit[0], barcolor[1]);
    LineTxtStart += 9;
-   drawColorText(upc_img, 10, LineTxtStart, (barheight[0] + 14) - 5, ArrayDigit[1], barcolor[1]);
+   drawColorText(upc_img, 10, LineTxtStart, ((barheight[0] + 14) - 5) + textxy[1], ArrayDigit[1], barcolor[1]);
    LineTxtStart += 9;
    NumTxtZero += 1;
  drawColorLine(upc_img, 0, 4, 0, barheight[0], barcolor[2]);
@@ -191,5 +191,5 @@ def create_itf(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),b
    return False;
  return True;
 
-def draw_itf(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_itf(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_itf(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf(upc,None,resize,hideinfo,barheight,textxy,barcolor);

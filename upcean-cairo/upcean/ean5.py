@@ -11,14 +11,14 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    FileInfo: ean5.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3 - Author: cooldude2k 
+    FileInfo: ean5.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1 - Author: cooldude2k 
 '''
 
 from __future__ import division, absolute_import, print_function;
 import cairo, re, sys, types, upcean.precairo;
 from upcean.precairo import *;
 
-def create_ean5_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean5_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -40,11 +40,11 @@ def create_ean5_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo
  upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
  upc_img.fill();
  if(hidetext==False):
-  drawColorText(upc_img, 10, 5, barheight[1] + 2, LeftDigit[0], barcolor[1]);
-  drawColorText(upc_img, 10, 14, barheight[1] + 2, LeftDigit[1], barcolor[1]);
-  drawColorText(upc_img, 10, 22, barheight[1] + 2, LeftDigit[2], barcolor[1]);
-  drawColorText(upc_img, 10, 30, barheight[1] + 2, LeftDigit[3], barcolor[1]);
-  drawColorText(upc_img, 10, 38, barheight[1] + 2, LeftDigit[4], barcolor[1]);
+  drawColorText(upc_img, 10, 5, (barheight[1] + 2) + textxy[1], LeftDigit[0], barcolor[1]);
+  drawColorText(upc_img, 10, 14, (barheight[1] + 2) + textxy[1], LeftDigit[1], barcolor[1]);
+  drawColorText(upc_img, 10, 22, (barheight[1] + 2) + textxy[1], LeftDigit[2], barcolor[1]);
+  drawColorText(upc_img, 10, 30, (barheight[1] + 2) + textxy[1], LeftDigit[3], barcolor[1]);
+  drawColorText(upc_img, 10, 38, (barheight[1] + 2) + textxy[1], LeftDigit[4], barcolor[1]);
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];
@@ -237,10 +237,10 @@ def create_ean5_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo
    return False;
  return True;
 
-def draw_ean5_supplement(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean5_supplement(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_ean5_supplement(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean5_supplement(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize));
@@ -332,5 +332,5 @@ def create_ean5(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False)
   upc_preimg.save(outfile, outfileext);
  return True;
 
-def draw_ean5(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean5(upc,None,resize,hideinfo,barheight,barcolor); 
+def draw_ean5(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean5(upc,None,resize,hideinfo,barheight,textxy,barcolor); 

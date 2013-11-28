@@ -11,11 +11,11 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-__version_info__ = (2, 5, 0, "RC 3");
+__version_info__ = (2, 5, 4, "RC 1");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
 if(__version_info__[3]==None):
@@ -90,7 +90,7 @@ http://www.barcodeisland.com/
 '''
 Shortcut Codes by Kazuki Przyborowski
 '''
-def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -106,38 +106,38 @@ def create_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, 
  if(len(upc)==7 or len(upc)==8):
   if(supplement==None):
    if(re.findall("^([0-1])", upc)):
-    return create_upce(upc,outfile,resize,hideinfo,barheight,barcolor);
+    return create_upce(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
    if(re.findall("^([2-9])", upc)):
-    return create_ean8(upc,outfile,resize,hideinfo,barheight,barcolor);
+    return create_ean8(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    if(re.findall("^([0-1])", upc)):
     return create_upce(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
    if(re.findall("^([2-9])", upc)):
     return create_ean8(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==2):
-  return create_ean2(upc,outfile,resize,hideinfo,barheight,barcolor);
+  return create_ean2(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
  if(len(upc)==5):
-  return create_ean5(upc,outfile,resize,hideinfo,barheight,barcolor);
+  return create_ean5(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
  if(len(upc)==11 or len(upc)==12):
   if(supplement==None):
-   return create_upca(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_upca(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_upca(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==13): 
   if(supplement==None):
-   return create_ean13(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_ean13(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_ean13(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==14): 
   if(supplement==None):
-   return create_itf14(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_itf14(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_itf14(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  return False;
-def draw_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_barcode(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_any(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_any(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -153,38 +153,38 @@ def create_any(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, Fals
  if(len(upc)==7 or len(upc)==8):
   if(supplement==None):
    if(re.findall("^([0-1])", upc)):
-    return create_upce(upc,outfile,resize,hideinfo,barheight,barcolor);
+    return create_upce(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
    if(re.findall("^([2-9])", upc)):
-    return create_ean8(upc,outfile,resize,hideinfo,barheight,barcolor);
+    return create_ean8(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    if(re.findall("^([0-1])", upc)):
     return create_upce(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
    if(re.findall("^([2-9])", upc)):
     return create_ean8(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==2):
-  return create_ean2(upc,outfile,resize,hideinfo,barheight,barcolor);
+  return create_ean2(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
  if(len(upc)==5):
-  return create_ean5(upc,outfile,resize,hideinfo,barheight,barcolor);
+  return create_ean5(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
  if(len(upc)==11 or len(upc)==12):
   if(supplement==None):
-   return create_upca(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_upca(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_upca(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==13): 
   if(supplement==None):
-   return create_ean13(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_ean13(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_ean13(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==14): 
   if(supplement==None):
-   return create_itf14(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_itf14(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_itf14(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  return False;
-def draw_any(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_barcode(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_any(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -199,26 +199,26 @@ def create_upc(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),b
   upc = upc_pieces[0]; supplement = upc_pieces[2];
  if(len(upc)==7 or len(upc)==8):
   if(supplement==None):
-   return create_upce(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_upce(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_upce(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==11 or len(upc)==12):
   if(supplement==None):
-   return create_upca(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_upca(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_upca(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==13 or len(upc)==14): 
   if(len(upc)==13): 
     upc = "0"+upc;
   if(supplement==None):
-   return create_itf14(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_itf14(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_itf14(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  return False;
-def draw_upc(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upc(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_upc(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_upc(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -232,93 +232,93 @@ def create_ean(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),b
   upc_pieces = upc_pieces[0];
   upc = upc_pieces[0]; supplement = upc_pieces[2];
  if(len(upc)==2):
-  return create_ean2(upc,outfile,resize,hideinfo,barheight,barcolor);
+  return create_ean2(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
  if(len(upc)==5):
-  return create_ean5(upc,outfile,resize,hideinfo,barheight,barcolor);
+  return create_ean5(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
  if(len(upc)==7 or len(upc)==8):
   if(supplement==None):
-   return create_ean8(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_ean8(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_ean8(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==12 or len(upc)==13): 
   if(supplement==None):
-   return create_ean13(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_ean13(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_ean13(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  if(len(upc)==14): 
   if(supplement==None):
-   return create_itf14(upc,outfile,resize,hideinfo,barheight,barcolor);
+   return create_itf14(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
   if(supplement!=None):
    return create_itf14(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
  return False;
-def draw_ean(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_ean(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_issn13_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,barcolor);
-def draw_issn13_from_issn8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_issn13_from_issn8(upc,None,resize,hideinfo,barheight,barcolor);
-def create_issn13(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_issn13_from_issn8(upc,outfile,resize,hideinfo,barheight,barcolor);
-def draw_issn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_issn13(upc,None,resize,hideinfo,barheight,barcolor);
+def create_issn13_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean13(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_issn13_from_issn8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_issn13_from_issn8(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_issn13(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_issn13_from_issn8(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_issn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_issn13(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_isbn13_from_isbn10(upc,outfile="./isbn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13(convert_isbn10_to_isbn13(upc),outfile,resize,hideinfo,barheight,barcolor);
-def draw_isbn13_from_isbn10(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_isbn13_from_isbn10(upc,None,resize,hideinfo,barheight,barcolor);
-def create_isbn13(upc,outfile="./isbn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_isbn13_from_isbn10(upc,outfile,resize,hideinfo,barheight,barcolor);
-def draw_isbn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_isbn13(upc,None,resize,hideinfo,barheight,barcolor);
+def create_isbn13_from_isbn10(upc,outfile="./isbn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean13(convert_isbn10_to_isbn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_isbn13_from_isbn10(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_isbn13_from_isbn10(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_isbn13(upc,outfile="./isbn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_isbn13_from_isbn10(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_isbn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_isbn13(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_ismn13_from_ismn10(upc,outfile="./ismn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13(convert_ismn10_to_ismn13(upc),outfile,resize,hideinfo,barheight,barcolor);
-def draw_ismn13_from_ismn10(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ismn13_from_ismn10(upc,None,resize,hideinfo,barheight,barcolor);
-def create_ismn13(upc,outfile="./ismn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ismn13_from_ismn10(upc,outfile,resize,hideinfo,barheight,barcolor);
-def draw_ismn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ismn13(upc,None,resize,hideinfo,barheight,barcolor);
+def create_ismn13_from_ismn10(upc,outfile="./ismn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean13(convert_ismn10_to_ismn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_ismn13_from_ismn10(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ismn13_from_ismn10(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_ismn13(upc,outfile="./ismn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ismn13_from_ismn10(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_ismn13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ismn13(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_vw_upca(code,price,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upca(make_vw_upca(code, price),outfile,resize,hideinfo,barheight,barcolor);
-def draw_vw_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_vw_upca(code,price,None,resize,hideinfo,barheight,barcolor);
-def create_vw_to_ean13(code,price,outfile="./vw-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13(make_vw_to_ean13(code, price),outfile,resize,hideinfo,barheight,barcolor);
-def draw_vw_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_vw_to_ean13(code,price,None,resize,hideinfo,barheight,barcolor);
-def create_vw_to_itf14(code,price,outfile="./vw-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_itf14(make_vw_to_itf14(code, price),outfile,resize,hideinfo,barheight,barcolor);
-def draw_vw_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_vw_to_itf14(code,price,None,resize,hideinfo,barheight,barcolor);
+def create_vw_upca(code,price,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_upca(make_vw_upca(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_vw_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_vw_upca(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_vw_to_ean13(code,price,outfile="./vw-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean13(make_vw_to_ean13(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_vw_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_vw_to_ean13(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_vw_to_itf14(code,price,outfile="./vw-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf14(make_vw_to_itf14(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_vw_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_vw_to_itf14(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_goodwill_upca(code,price,outfile="./goodwill-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upca(make_goodwill_upca(code, price),outfile,resize,hideinfo,barheight,barcolor);
-def draw_goodwill_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_goodwill_upca(code,price,None,resize,hideinfo,barheight,barcolor);
-def create_goodwill_to_ean13(code,price,outfile="./goodwill-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13(make_goodwill_to_ean13(code, price),outfile,resize,hideinfo,barheight,barcolor);
-def draw_goodwill_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_goodwill_to_ean13(code,price,None,resize,hideinfo,barheight,barcolor);
-def create_goodwill_to_itf14(code,price,outfile="./goodwill-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_itf14(make_goodwill_to_itf14(code, price),outfile,resize,hideinfo,barheight,barcolor);
-def draw_goodwill_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_goodwill_to_itf14(code,price,None,resize,hideinfo,barheight,barcolor);
+def create_goodwill_upca(code,price,outfile="./goodwill-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_upca(make_goodwill_upca(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_goodwill_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_goodwill_upca(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_goodwill_to_ean13(code,price,outfile="./goodwill-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean13(make_goodwill_to_ean13(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_goodwill_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_goodwill_to_ean13(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_goodwill_to_itf14(code,price,outfile="./goodwill-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf14(make_goodwill_to_itf14(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_goodwill_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_goodwill_to_itf14(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 
-def create_coupon_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upca(make_coupon_upca(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,barcolor);
-def draw_coupon_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_coupon_upca(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,barcolor);
-def create_coupon_to_ean13(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13(make_coupon_to_ean13(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,barcolor);
-def draw_coupon_to_ean13(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_coupon_to_ean13(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,barcolor);
-def create_coupon_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_itf14(make_coupon_to_itf14(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,barcolor);
-def draw_coupon_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_coupon_to_itf14(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,barcolor);
+def create_coupon_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_upca(make_coupon_upca(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_coupon_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_coupon_upca(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_coupon_to_ean13(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean13(make_coupon_to_ean13(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_coupon_to_ean13(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_coupon_to_ean13(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,textxy,barcolor);
+def create_coupon_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf14(make_coupon_to_itf14(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
+def draw_coupon_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_coupon_to_itf14(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def exec_function(function, *argument):
  return getattr(upcean, function)(*argument);
@@ -361,6 +361,7 @@ class barcode:
   self.hidecd = False;
   self.hidetext = False;
   self.barheight = (48, 54);
+  self.textxy = (1, 1, 1);
   self.barcolor = (0, 0, 0);
   self.textcolor = (0, 0, 0);
   self.bgcolor = (255, 255, 255);
@@ -372,43 +373,43 @@ class barcode:
  def run_function(self, function, *argument):
   return getattr(upcean, function)(*argument);
  def create(self):
-  return getattr(upcean, "create_"+self.type)(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+  return getattr(upcean, "create_"+self.type)(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def draw(self):
-  return getattr(upcean, "draw_"+self.type)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+  return getattr(upcean, "draw_"+self.type)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def create_from(self):
-  return getattr(upcean, "create_"+self.type+"_from_"+self.outtype)(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+  return getattr(upcean, "create_"+self.type+"_from_"+self.outtype)(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_from(self):
-  return getattr(upcean, "draw_"+self.type+"_from_"+self.outtype)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+  return getattr(upcean, "draw_"+self.type+"_from_"+self.outtype)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def create_vw(self):
   if(self.type=="upca"):
-   return create_vw_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return create_vw_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "create_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return getattr(upcean, "create_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_vw(self):
   if(self.type=="upca"):
-   return drawvw_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return drawvw_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "draw_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return getattr(upcean, "draw_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def create_goodwill(self):
   if(self.type=="upca"):
-   return create_goodwill_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return create_goodwill_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "create_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return getattr(upcean, "create_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_goodwill(self):
   if(self.type=="upca"):
-   return draw_goodwill_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return draw_goodwill_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "draw_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return getattr(upcean, "draw_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def create_coupon(self):
   if(self.type=="upca"):
-   return create_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return create_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "create_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return getattr(upcean, "create_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_coupon(self):
   if(self.type=="upca"):
-   return draw_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return draw_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   if(self.type=="upca"):
-   return getattr(upcean, "draw_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, (self.barcolor, self.textcolor, self.bgcolor));
+   return getattr(upcean, "draw_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def validate_checksum(self):
   return getattr(upcean, "validate_"+self.type+"_checksum")(self.code, self.return_check);
  def get_checksum(self):

@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3 - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 from upcean.getsfname import *;
 
-def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -233,15 +233,15 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, "*", barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1]);
   NumTxtZero = 0; 
   LineTxtStart = 30 * int(resize);
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, upc_matches[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1]);
    LineTxtStart += 16 * int(resize);
    NumTxtZero += 1;
  if(hidetext==False):
-  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix, "*", barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1]);
  del(upc_img);
  oldoutfile = get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
@@ -269,5 +269,5 @@ def create_code39(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
    return False;
  return True;
 
-def draw_code39(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_code39(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_code39(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_code39(upc,None,resize,hideinfo,barheight,textxy,barcolor);

@@ -11,14 +11,14 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code11.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3  - Author: cooldude2k $
+    $FileInfo: code11.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import cairo, re, sys, types, upcean.precairo;
 from upcean.precairo import *;
 
-def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -73,7 +73,7 @@ def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
   NumTxtZero = 0; 
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10, LineTxtStart, barheight[1] + 3, upc_print[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10, LineTxtStart, (barheight[1] + 3) + textxy[1], upc_print[NumTxtZero], barcolor[1]);
    LineTxtStart += 9;
    NumTxtZero += 1;
  LineSize = barheight[0];
@@ -183,5 +183,5 @@ def create_code11(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
    return False;
  return True;
 
-def draw_code11(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_code11(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_code11(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_code11(upc,None,resize,hideinfo,barheight,textxy,barcolor);

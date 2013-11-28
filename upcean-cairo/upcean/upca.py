@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upca.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3 - Author: cooldude2k $
+    $FileInfo: upca.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -23,7 +23,7 @@ from upcean.convert import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -71,11 +71,11 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
  upc_img.fill();
  if(hidetext==False):
   if(hidesn!=None and hidesn!=True):
-   drawColorText(upc_img, 10, 0, barheight[1] + 2, upc_matches[0], barcolor[1]);
-  drawColorText(upc_img, 10, 20, barheight[1] + 2, upc_matches[1], barcolor[1]);
-  drawColorText(upc_img, 10, 59, barheight[1] + 2, upc_matches[2], barcolor[1]);
+   drawColorText(upc_img, 10, 0, (barheight[1] + 2) + textxy[0], upc_matches[0], barcolor[1]);
+  drawColorText(upc_img, 10, 20, (barheight[1] + 2) + textxy[1], upc_matches[1], barcolor[1]);
+  drawColorText(upc_img, 10, 59, (barheight[1] + 2) + textxy[1], upc_matches[2], barcolor[1]);
   if(hidecd!=None and hidecd!=True):
-   drawColorText(upc_img, 10, 104, barheight[1] + 2, upc_matches[3], barcolor[1]);
+   drawColorText(upc_img, 10, 104, (barheight[1] + 2) + textxy[2], upc_matches[3], barcolor[1]);
  drawColorLine(upc_img, 0, 10, 0, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 1, 10, 1, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 2, 10, 2, barheight[0], barcolor[2]);
@@ -224,5 +224,5 @@ def create_upca(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False)
    return False;
  return True;
 
-def draw_upca(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upca(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_upca(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_upca(upc,None,resize,hideinfo,barheight,textxy,barcolor);

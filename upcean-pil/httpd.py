@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: httpd.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3  - Author: cooldude2k $
+    $FileInfo: httpd.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
 '''
 
 import tempfile, uuid, re, os, sys, cherrypy, upcean, StringIO, argparse, time, datetime;

@@ -11,14 +11,14 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: codabar.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3 - Author: cooldude2k $
+    $FileInfo: codabar.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import cairo, re, sys, types, upcean.precairo;
 from upcean.precairo import *;
 
-def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  upc = upc.upper();
  hidesn = hideinfo[0];
@@ -47,7 +47,7 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
   NumTxtZero = 0; 
   LineTxtStart = 20;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10, LineTxtStart, barheight[1] + 3, upc_matches[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10, LineTxtStart, (barheight[1] + 3) + textxy[1], upc_matches[NumTxtZero], barcolor[1]);
    LineTxtStart += 11;
    NumTxtZero += 1;
  LineSize = barheight[0];
@@ -307,5 +307,5 @@ def create_codabar(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fa
    return False;
  return True;
 
-def draw_codabar(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_codabar(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_codabar(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_codabar(upc,None,resize,hideinfo,barheight,textxy,barcolor);

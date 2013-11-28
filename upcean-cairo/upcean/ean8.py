@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean8.py - Last Update: 11/25/2013 Ver. 2.5.0 RC 3 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -23,7 +23,7 @@ from upcean.convert import *;
 from upcean.ean2 import *;
 from upcean.ean5 import *;
 
-def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -72,10 +72,10 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
  upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
  upc_img.fill();
  if(hidetext==False):
-  drawColorText(upc_img, 10, 10, barheight[1] + 2, LeftLeftDigit, barcolor[1]);
-  drawColorText(upc_img, 10, 23, barheight[1] + 2, LeftRightDigit, barcolor[1]);
-  drawColorText(upc_img, 10, 42, barheight[1] + 2, RightLeftDigit, barcolor[1]);
-  drawColorText(upc_img, 10, 55, barheight[1] + 2, RightRightDigit, barcolor[1]);
+  drawColorText(upc_img, 10, 10, (barheight[1] + 2) + textxy[1], LeftLeftDigit, barcolor[1]);
+  drawColorText(upc_img, 10, 23, (barheight[1] + 2) + textxy[1], LeftRightDigit, barcolor[1]);
+  drawColorText(upc_img, 10, 42, (barheight[1] + 2) + textxy[1], RightLeftDigit, barcolor[1]);
+  drawColorText(upc_img, 10, 55, (barheight[1] + 2) + textxy[1], RightRightDigit, barcolor[1]);
  drawColorLine(upc_img, 0, 10, 0, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 1, 10, 1, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 2, 10, 2, barheight[0], barcolor[2]);
@@ -290,5 +290,5 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
    return False;
  return True;
 
-def draw_ean8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean8(upc,None,resize,hideinfo,barheight,barcolor);
+def draw_ean8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean8(upc,None,resize,hideinfo,barheight,textxy,barcolor);
