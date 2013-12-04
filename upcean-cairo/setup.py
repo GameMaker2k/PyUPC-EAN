@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 12/04/2013 Ver. 2.5.4 RC 2  - Author: cooldude2k $
 '''
 
 import os;
@@ -21,7 +21,7 @@ from setuptools import setup;
 
 setup(
  name = 'PyUPC-EAN',
- version = '2.5.4.1',
+ version = '2.5.4.2',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
  maintainer = 'Kazuki Przyborowski',

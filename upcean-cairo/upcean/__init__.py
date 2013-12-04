@@ -11,24 +11,29 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 12/04/2013 Ver. 2.5.4 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-__version_info__ = (2, 5, 4, "RC 1");
+import sys, re;
+__version_info__ = (2, 5, 4, "RC 2");
 if(__version_info__[3]!=None):
- __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
+ __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
 if(__version_info__[3]==None):
- __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2]);
+ __version__ = "{major}.{minor}.{build}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2]);
 def version_info():
  global __version_info__;
  if(__version_info__[3]!=None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3]==None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-import sys, re, upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
-import upcean.ean2, upcean.ean5, upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14, upcean.code11, upcean.code39, upcean.code93, upcean.codabar, upcean.msi;
-from sys import argv;
+__version_date_info__ = (2013, 12, 4);
+def version_date():
+  return {"year":__version_date_info__[0], "month": __version_date_info__[1], "day": __version_date_info__[2]};
+__version_date__ = "{year}.{month}.{day}".format(year=__version_date_info__[0], month=__version_date_info__[1], day=__version_date_info__[2]);
+import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
+import upcean.ean2, upcean.ean5, upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14;
+import upcean.code11, upcean.code39, upcean.code93, upcean.codabar, upcean.msi;
 ''' Code for validating UPC/EAN by Kazuki Przyborowski '''
 from upcean.validate import *;
 ''' Code for converting UPC/EAN by Kazuki Przyborowski '''
@@ -331,9 +336,11 @@ Object-oriented classes and functions by Kazuki Przyborowski
 class barcode:
  __version_info__ = (version_info()["major"], version_info()["minor"], version_info()["build"], version_info()["release"]);
  if(version_info()["release"]!=None):
-  __version__ = str(version_info()["major"])+"."+str(version_info()["minor"])+"."+str(version_info()["build"])+" "+str(version_info()["release"]);
+  __version__ = "{major}.{minor}.{build} {release}".format(major=version_info()["major"], minor=version_info()["minor"], build=version_info()["build"], release=version_info()["release"]);
  if(version_info()["release"]==None):
-  __version__ = str(version_info()["major"])+"."+str(version_info()["minor"])+"."+str(version_info()["build"]);
+  __version__ = "{major}.{minor}.{build}".format(major=version_info()["major"], minor=version_info()["minor"], build=version_info()["build"]);
+ __version_date_info__ = (version_date()["year"], version_date()["month"], version_date()["day"]);
+ __version_date__ = "{year}.{month}.{day}".format(year=version_date()["year"], month=version_date()["month"], day=version_date()["day"]);
  '''
  Barcode Types
  '''
@@ -360,14 +367,16 @@ class barcode:
   self.hidesn = False;
   self.hidecd = False;
   self.hidetext = False;
-  self.barheight = (48, 54);
   self.textxy = (1, 1, 1);
+  self.barheight = (48, 54);
   self.barcolor = (0, 0, 0);
   self.textcolor = (0, 0, 0);
   self.bgcolor = (255, 255, 255);
   self.return_check = False;
  def version_info(self):
   return version_info();
+ def version_date(self):
+  return version_date();
  def exec_function(self, function, *argument):
   return getattr(upcean, function)(*argument);
  def run_function(self, function, *argument):
