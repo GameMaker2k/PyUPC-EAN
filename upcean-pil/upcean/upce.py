@@ -324,12 +324,12 @@ def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False)
    drawColorText(upc_img, 10 * int(resize), 61 + (61 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), upc_matches[2], barcolor[1]);
  del(upc_img);
  if(supplement!=None and len(supplement)==2): 
-  upc_sup_img = draw_ean2_supplement(supplement,resize,hideinfo,barheight,barcolor);
+  upc_sup_img = draw_ean2_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
   if(upc_sup_img!=False):
    new_upc_img.paste(upc_sup_img,(69 * int(resize),0));
    del(upc_sup_img);
  if(supplement!=None and len(supplement)==5): 
-  upc_sup_img = draw_ean5_supplement(supplement,resize,hideinfo,barheight,barcolor);
+  upc_sup_img = draw_ean5_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
   if(upc_sup_img!=False):
    new_upc_img.paste(upc_sup_img,(69 * int(resize),0));
    del(upc_sup_img);

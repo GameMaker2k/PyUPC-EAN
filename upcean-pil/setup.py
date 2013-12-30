@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 12/26/2013 Ver. 2.5.5 RC 1  - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 12/30/2013 Ver. 2.5.5 RC 2  - Author: cooldude2k $
 '''
 
 import os;
