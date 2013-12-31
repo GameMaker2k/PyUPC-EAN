@@ -1,2 +1,0 @@
-include *.otf
-recursive-include upcean *.otf *.py
