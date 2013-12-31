@@ -409,33 +409,51 @@ class barcode:
  def create_vw(self):
   if(self.type=="upca"):
    return create_vw_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
-  if(self.type=="upca"):
-   return getattr(upcean, "create_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  if(not self.type=="upca" and (self.type=="ean13" or self.type=="itf14")):
+   if(hasattr(upcean, "create_vw_to_"+self.type) and callable(getattr(upcean, "create_vw_to_"+self.type))):
+    return getattr(upcean, "create_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   if(not hasattr(upcean, "create_vw_to_"+self.type) or not callable(getattr(upcean, "create_vw_to_"+self.type))):
+    return False;
  def draw_vw(self):
   if(self.type=="upca"):
-   return drawvw_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
-  if(self.type=="upca"):
-   return getattr(upcean, "draw_vw_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return drawvw_upca(self.code, self.price, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  if(not self.type=="upca" and (self.type=="ean13" or self.type=="itf14")):
+   if(hasattr(upcean, "draw_vw_to_"+self.type) and callable(getattr(upcean, "draw_vw_to_"+self.type))):
+    return getattr(upcean, "draw_vw_to_"+self.type)(self.code, self.price, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   if(not hasattr(upcean, "draw_vw_to_"+self.type) or not callable(getattr(upcean, "draw_vw_to_"+self.type))):
+    return False;
  def create_goodwill(self):
   if(self.type=="upca"):
    return create_goodwill_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
-  if(self.type=="upca"):
-   return getattr(upcean, "create_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  if(not self.type=="upca" and (self.type=="ean13" or self.type=="itf14")):
+   if(hasattr(upcean, "create_goodwill_to_"+self.type) and callable(getattr(upcean, "create_goodwill_to_"+self.type))):
+    return getattr(upcean, "create_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   if(not hasattr(upcean, "create_goodwill_to_"+self.type) or not callable(getattr(upcean, "create_goodwill_to_"+self.type))):
+    return False;
  def draw_goodwill(self):
   if(self.type=="upca"):
-   return draw_goodwill_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
-  if(self.type=="upca"):
-   return getattr(upcean, "draw_goodwill_to_"+self.type)(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return draw_goodwill_upca(self.code, self.price, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  if(not self.type=="upca" and (self.type=="ean13" or self.type=="itf14")):
+   if(hasattr(upcean, "draw_goodwill_to_"+self.type) and callable(getattr(upcean, "draw_goodwill_to_"+self.type))):
+    return getattr(upcean, "draw_goodwill_to_"+self.type)(self.code, self.price, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   if(not hasattr(upcean, "draw_goodwill_to_"+self.type) or not callable(getattr(upcean, "draw_goodwill_to_"+self.type))):
+    return False;
  def create_coupon(self):
   if(self.type=="upca"):
    return create_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
-  if(self.type=="upca"):
-   return getattr(upcean, "create_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  if(not self.type=="upca" and (self.type=="ean13" or self.type=="itf14")):
+   if(hasattr(upcean, "create_coupon_to_"+self.type) and callable(getattr(upcean, "create_coupon_to_"+self.type))):
+    return getattr(upcean, "create_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   if(not hasattr(upcean, "create_coupon_to_"+self.type) or not callable(getattr(upcean, "create_coupon_to_"+self.type))):
+    return False;
  def draw_coupon(self):
   if(self.type=="upca"):
-   return draw_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
-  if(self.type=="upca"):
-   return getattr(upcean, "draw_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return draw_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  if(not self.type=="upca" and (self.type=="ean13" or self.type=="itf14")):
+   if(hasattr(upcean, "draw_coupon_to_"+self.type) and callable(getattr(upcean, "draw_coupon_to_"+self.type))):
+    return getattr(upcean, "draw_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   if(not hasattr(upcean, "draw_coupon_to_"+self.type) or not callable(getattr(upcean, "draw_coupon_to_"+self.type))):
+    return False;
  def validate_checksum(self):
   return getattr(upcean, "validate_"+self.type+"_checksum")(self.code, self.return_check);
  def get_checksum(self):
