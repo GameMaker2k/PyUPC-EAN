@@ -11,12 +11,12 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 12/30/2013 Ver. 2.5.5 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import sys, re;
-__version_info__ = (2, 5, 6, "RC 1");
+__version_info__ = (2, 5, 6, "RC 2");
 if(__version_info__[3]!=None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
 if(__version_info__[3]==None):
@@ -27,7 +27,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3]==None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2014, 02, 18, "RC 1");
+__version_date_info__ = (2014, 02, 18, "RC 2");
 def version_date():
  global __version_info__;
  if(__version_date_info__[3]!=None):
@@ -530,6 +530,20 @@ class barcode:
   return get_bcn_account(self.code);
  def get_bcn_checkdigit(self):
   return get_bcn_checkdigit(self.code);
+ def get_ups_info(self):
+  return get_ups_info(self.code);
+ def get_ups_accountnumber(self):
+  return get_ups_accountnumber(self.code);
+ def get_ups_servicetype(self):
+  return get_ups_servicetype(self.code);
+ def get_ups_servicetype_info(self):
+  return get_ups_servicetype_info(self.code);
+ def get_ups_invoicenumber(self):
+  return get_ups_invoicenumber(self.code);
+ def get_ups_packagenumber(self):
+  return get_ups_packagenumber(self.code);
+ def get_ups_checkdigit(self):
+  return get_ups_checkdigit(self.code);
  def get_new_imei_info(self):
   return get_new_imei_info(self.code);
  def get_new_imei_tac(self):
