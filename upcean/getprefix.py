@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -294,7 +294,7 @@ def get_gs1_prefix(upc):
  if(re.findall("^(99[0-9])", upc)):
   return "Coupons";
  '''
- Reserved for future use
+ // Reserved for future use
  '''
  if(re.findall("^(1[4-9][0-9])", upc)):
   return "Reserved for future use";
@@ -1562,6 +1562,66 @@ def get_bcn_mii_prefix(upc):
  if(re.findall("^(9)", upc)):
   return "National Assignment";
  return False;
+
+'''
+// Get UPS Checkdigit and Info by stebo0728 and HolidayBows
+// Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit
+// Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit?msg=2961884#xx2961884xx
+'''
+def get_ups_info(upc):
+ upc = str(upc).upper();
+ if(not re.findall("^1Z", upc)):
+  return False;
+ if(re.findall("^1Z", upc)):
+  fix_matches = re.findall("^1Z(\w*)", upc);
+  upc = fix_matches[0];
+ if(len(upc)>16):
+  fix_matches = re.findall("^(\w{16})", upc);
+  upc = fix_matches[0];
+ upc_matches = re.findall("^(\w{6})(\w{2})(\w{5})(\w{2})(\w{1})", upc);
+ pre_upc_type = upc_matches[0];
+ upc_type = {'accountnumber': pre_upc_type[0], 'servicetype': pre_upc_type[1], 'invoicenumber': pre_upc_type[2], 'packagenumber': pre_upc_type[3], 'checkdigit': pre_upc_type[4]};
+ return upc_type;
+def get_ups_accountnumber(upc):
+ upc = str(upc).upper();
+ product = get_ups_info(upc);
+ if(product==False):
+  return False;
+ return product['accountnumber'];
+def get_ups_servicetype(upc):
+ upc = str(upc).upper();
+ product = get_ups_info(upc);
+ if(product==False):
+  return False;
+ return product['servicetype'];
+def get_ups_servicetype_info(upc):
+ upc = str(upc);
+ upc = get_ups_servicetype(upc);
+ if(re.findall("^(01)", upc)):
+  return "Next Day Air Shipment";
+ if(re.findall("^(02)", upc)):
+  return "Second Day Air Shipment";
+ if(re.findall("^(03)", upc)):
+  return "Ground Shipment";
+ return False;
+def get_ups_invoicenumber(upc):
+ upc = str(upc).upper();
+ product = get_ups_info(upc);
+ if(product==False):
+  return False;
+ return product['invoicenumber'];
+def get_ups_packagenumber(upc):
+ upc = str(upc).upper();
+ product = get_ups_info(upc);
+ if(product==False):
+  return False;
+ return product['packagenumber'];
+def get_ups_checkdigit(upc):
+ upc = str(upc).upper();
+ product = get_ups_info(upc);
+ if(product==False):
+  return False;
+ return product['checkdigit'];
 
 '''
 // Get IMEI (International Mobile Station Equipment Identity) Info

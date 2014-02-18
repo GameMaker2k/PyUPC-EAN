@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: convert.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
+    $FileInfo: convert.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -251,8 +251,8 @@ def convert_any_to_ean8(upc):
  return False;
 
 '''
-Changing a EAN-8 code to UPC-A and EAN-13 based on whats used at: 
-http://www.upcdatabase.com/
+// Changing a EAN-8 code to UPC-A and EAN-13 based on whats used at: 
+// Source: http://www.upcdatabase.com/
 '''
 def convert_ean8_to_upca(upc):
  upc = str(upc);
@@ -292,8 +292,8 @@ def convert_itf14_to_ean8(upc):
  return convert_ean13_to_ean8(convert_itf14_to_ean13(upc));
 
 '''
-ISSN (International Standard Serial Number)
-http://en.wikipedia.org/wiki/International_Standard_Serial_Number
+// ISSN (International Standard Serial Number)
+// Source: http://en.wikipedia.org/wiki/International_Standard_Serial_Number
 '''
 def convert_issn8_to_issn13(upc):
  upc = str(upc);
@@ -356,8 +356,8 @@ def print_convert_issn13_to_issn8(upc):
  return issn8;
 
 '''
-ISBN (International Standard Book Number)
-http://en.wikipedia.org/wiki/ISBN
+// ISBN (International Standard Book Number)
+// Source: http://en.wikipedia.org/wiki/ISBN
 '''
 def convert_isbn10_to_isbn13(upc):
  upc = str(upc);
@@ -431,10 +431,10 @@ def print_convert_isbn13_to_isbn10(upc):
  return isbn10;
 
 '''
-ISMN (International Standard Music Number)
-http://en.wikipedia.org/wiki/International_Standard_Music_Number
-http://www.ismn-international.org/whatis.html
-http://www.ismn-international.org/manual_1998/chapter2.html
+// ISMN (International Standard Music Number)
+// Source: http://en.wikipedia.org/wiki/International_Standard_Music_Number
+// Source: http://www.ismn-international.org/whatis.html
+// Source: http://www.ismn-international.org/manual_1998/chapter2.html
 '''
 def convert_ismn10_to_ismn13(upc):
  upc = str(upc);

@@ -11,15 +11,15 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import sys, re;
 
 '''
-Digital Root
-http://en.wikipedia.org/wiki/Digital_root
+// Digital Root
+// Source: http://en.wikipedia.org/wiki/Digital_root
 '''
 def get_digital_root(number):
  number = str(number);
@@ -327,7 +327,7 @@ def fix_ean5_checksum(upc):
  return upc+str(get_ean5_checksum(upc));
 
 '''
-Shortcut Codes by Kazuki Przyborowski
+// Shortcut Codes by Kazuki Przyborowski
 '''
 def validate_barcode_checksum(upc,return_check=False):
  upc = str(upc);
@@ -502,8 +502,112 @@ def fix_ean_checksum(upc):
  return False;
 
 '''
-IMEI (International Mobile Station Equipment Identity)
-http://en.wikipedia.org/wiki/IMEI#Check_digit_computation
+// Get USPS Checkdigit by MACY8167
+// Source: http://www.mrexcel.com/forum/excel-questions/530675-usps-mod-10-check-digit.html
+'''
+def validate_usps_checksum(upc,return_check=False): 
+ upc = str(upc);
+ if(len(upc)>22):
+  fix_matches = re.findall("^(\d{22})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>22 or len(upc)<21):
+  return False;
+ upc_matches = list(upc);
+ upc_matches = [int(x) for x in upc_matches];
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ OddSum = (upc_matches1[0] + upc_matches1[1] + upc_matches1[2] + upc_matches1[3] + upc_matches1[4] + upc_matches1[5] + upc_matches1[6] + upc_matches1[7] + upc_matches1[8] + upc_matches1[9] + upc_matches1[10]) * 3;
+ EvenSum = upc_matches2[0] + upc_matches2[1] + upc_matches2[2] + upc_matches2[3] + upc_matches2[4] + upc_matches2[5] + upc_matches2[6] + upc_matches2[7] + upc_matches2[8] + upc_matches2[9];
+ AllSum = OddSum + EvenSum;
+ CheckSum = AllSum % 10;
+ if(CheckSum>0):
+  CheckSum = 10 - CheckSum;
+ if(return_check==False and len(upc)==22):
+  if(CheckSum!=upc_matches2[10]):
+   return False;
+  if(CheckSum==upc_matches2[10]):
+   return True;
+ if(return_check==True):
+  return str(CheckSum);
+ if(len(upc)==21):
+  return str(CheckSum);
+def get_usps_checksum(upc):
+ upc = str(upc);
+ return validate_usps_checksum(upc,True);
+def fix_usps_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>21):
+  fix_matches = re.findall("^(\d{21})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_usps_checksum(upc));
+
+'''
+// Get UPS Checkdigit and Info by stebo0728 and HolidayBows
+// Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit
+// Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit?msg=2961884#xx2961884xx
+'''
+def validate_ups_checksum(upc,return_check=False): 
+ upc = str(upc).upper();
+ if(not re.findall("^1Z", upc)):
+  return False;
+ if(re.findall("^1Z", upc)):
+  fix_matches = re.findall("^1Z(\w*)", upc);
+  upc = fix_matches[0];
+ if(len(upc)>16):
+  fix_matches = re.findall("^(\w{16})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>16 or len(upc)<15):
+  return False;
+ if(len(upc)>16):
+  fix_matches = re.findall("^(\w{16})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>16 or len(upc)<15):
+  return False;
+ upc_matches = list(upc);
+ upc_matches1 = upc_matches[0:][::2];
+ upc_count1 = 0;
+ OddSum = 0;
+ while(upc_count1<8):
+  if(upc_matches1[upc_count1].isdigit()):
+   OddSum = OddSum + int(upc_matches1[upc_count1]);
+  if(not upc_matches1[upc_count1].isdigit()):
+   OddSum = OddSum + ((ord(upc_matches1[upc_count1]) - 63) % 10);
+  upc_count1 = upc_count1 + 1;
+ upc_matches2 = upc_matches[1:][::2];
+ upc_count2 = 0;
+ EvenSum = 0;
+ while(upc_count2<7):
+  if(upc_matches2[upc_count2].isdigit()):
+   EvenSum = EvenSum + (int(upc_matches2[upc_count2]) * 2);
+  if(not upc_matches2[upc_count2].isdigit()):
+   EvenSum = EvenSum + (((ord(upc_matches2[upc_count2]) - 63) % 10) * 2);
+  upc_count2 = upc_count2 + 1;
+ AllSum = OddSum + EvenSum;
+ CheckSum = AllSum % 10;
+ if(CheckSum>0):
+  CheckSum = 10 - CheckSum;
+ if(return_check==False and len(upc)==16):
+  if(CheckSum!=int(upc_matches2[7])):
+   return False;
+  if(CheckSum==int(upc_matches2[7])):
+   return True;
+ if(return_check==True):
+  return str(CheckSum);
+ if(len(upc)==15):
+  return str(CheckSum);
+def get_ups_checksum(upc):
+ upc = str(upc);
+ return validate_ups_checksum(upc,True);
+def fix_ups_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>15):
+  fix_matches = re.findall("^(\d{15})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_ups_checksum(upc));
+
+'''
+// IMEI (International Mobile Station Equipment Identity)
+// Source: http://en.wikipedia.org/wiki/IMEI#Check_digit_computation
 '''
 def validate_imei_checksum(upc,return_check=False):
  upc = str(upc);
@@ -541,9 +645,9 @@ def fix_imei_checksum(upc):
  return upc+str(get_imei_checksum(upc));
 
 '''
-Bank Card Numbers
-http://tywkiwdbi.blogspot.com/2012/06/checksum-number-on-credit-card.html
-http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
+// Bank Card Numbers
+// Source: http://tywkiwdbi.blogspot.com/2012/06/checksum-number-on-credit-card.html
+// Source: http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
 '''
 def validate_bcn_checksum(upc,return_check=False):
  upc = str(upc);
@@ -587,9 +691,9 @@ def fix_bcn_checksum(upc):
  return upc+str(get_bcn_checksum(upc));
 
 '''
-Code 11
-http://www.barcodeisland.com/code11.phtml
-http://en.wikipedia.org/wiki/Code_11
+// Code 11
+// Source: http://www.barcodeisland.com/code11.phtml
+// Source: http://en.wikipedia.org/wiki/Code_11
 '''
 def get_code11_checksum(upc):
  if(len(upc) < 1): 
@@ -630,9 +734,9 @@ def get_code11_checksum(upc):
  return str(CheckSum);
 
 '''
-Code 93
-http://www.barcodeisland.com/code93.phtml
-http://en.wikipedia.org/wiki/Code_93
+// Code 93
+// Source: http://www.barcodeisland.com/code93.phtml
+// Source: http://en.wikipedia.org/wiki/Code_93
 '''
 def get_code93_checksum(upc):
  if(len(upc) < 1): 
@@ -673,9 +777,9 @@ def get_code93_checksum(upc):
  return str(CheckSum);
 
 '''
-MSI (Modified Plessey)
-http://www.barcodeisland.com/msi.phtml
-http://en.wikipedia.org/wiki/MSI_Barcode
+// MSI (Modified Plessey)
+// Source: http://www.barcodeisland.com/msi.phtml
+// Source: http://en.wikipedia.org/wiki/MSI_Barcode
 '''
 def get_msi_checksum(upc):
  upc_matches = list(upc);
@@ -701,8 +805,8 @@ def get_msi_checksum(upc):
  return str(CheckSum);
 
 '''
-ISSN (International Standard Serial Number)
-http://en.wikipedia.org/wiki/International_Standard_Serial_Number
+// ISSN (International Standard Serial Number)
+// Source: http://en.wikipedia.org/wiki/International_Standard_Serial_Number
 '''
 def validate_issn8_checksum(upc,return_check=False):
  upc = str(upc);
@@ -763,8 +867,8 @@ def fix_issn13_checksum(upc):
   return fix_ean13_checksum(upc);
 
 '''
-ISBN (International Standard Book Number)
-http://en.wikipedia.org/wiki/ISBN
+// ISBN (International Standard Book Number)
+// Source: http://en.wikipedia.org/wiki/ISBN
 '''
 def validate_isbn10_checksum(upc,return_check=False):
  upc = str(upc);
@@ -827,10 +931,10 @@ def fix_isbn13_checksum(upc):
   return fix_ean13_checksum(upc);
 
 '''
-ISMN (International Standard Music Number)
-http://en.wikipedia.org/wiki/International_Standard_Music_Number
-http://www.ismn-international.org/whatis.html
-http://www.ismn-international.org/manual_1998/chapter2.html
+// ISMN (International Standard Music Number)
+// Source: http://en.wikipedia.org/wiki/International_Standard_Music_Number
+// Source: http://www.ismn-international.org/whatis.html
+// Source: http://www.ismn-international.org/manual_1998/chapter2.html
 '''
 def validate_ismn10_checksum(upc,return_check=False):
  upc = str(upc);

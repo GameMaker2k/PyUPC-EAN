@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: prepil.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
+    $FileInfo: prepil.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -19,7 +19,7 @@ import re, os, sys;
 from PIL import Image, ImageDraw, ImageFont;
 
 '''
-http://stevehanov.ca/blog/index.php?id=28
+// Source: http://stevehanov.ca/blog/index.php?id=28
 '''
 def snapCoords( ctx, x, y ):
  (xd, yd) = ctx.user_to_device(x, y);
