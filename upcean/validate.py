@@ -11,7 +11,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 02/22/2014 Ver. 2.5.6 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -31,6 +31,66 @@ def get_digital_root(number):
    number += int(subnum[PreCount]);
    PreCount += 1;
  return int(number);
+
+'''
+// Luhn Algorithm ( Luhn Formula )
+// http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
+'''
+def validate_luhn_checksum(upc,upclen,return_check=False):
+ upc = str(upc);
+ upclen = int(upclen);
+ upclendwn = upclen - 1;
+ if(len(upc)>upclen):
+  fix_matches = re.findall("^(\d{"+str(upclen)+"})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>upclen or len(upc)<upclendwn):
+  return False;
+ upc_matches = list(upc);
+ upc_matches = [int(x) for x in upc_matches];
+ upc_matches1 = upc_matches[0:][::2];
+ upc_count1 = 0;
+ upc_len1 = len(upc_matches1);
+ if(len(upc)==upclen and upclen%2==1):
+  upc_len1 = len(upc_matches1) - 1;
+ OddSum = 0;
+ while(upc_count1<upc_len1):
+  OddSum = OddSum + upc_matches1[upc_count1];
+  upc_count1 = upc_count1 + 1;
+ upc_matches2 = upc_matches[1:][::2];
+ upc_count2 = 0;
+ upc_len2 = len(upc_matches2);
+ if(len(upc)==upclen and upclen%2==0):
+  upc_len2 = len(upc_matches2) - 1;
+ EvenSum = 0;
+ while(upc_count2<upc_len2):
+  EvenSum = EvenSum + get_digital_root(upc_matches2[upc_count2] * 2);
+  upc_count2 = upc_count2 + 1;
+ AllSum = OddSum + EvenSum;
+ CheckSum = AllSum % 10;
+ if(CheckSum>0):
+  CheckSum = 10 - CheckSum;
+ if(return_check==False and len(upc)==upclen):
+  if(CheckSum!=upc_matches[-1]):
+   return False;
+  if(CheckSum==upc_matches[-1]):
+   return True;
+ if(return_check==True):
+  return str(CheckSum);
+ if(len(upc)==upclendwn):
+  return str(CheckSum);
+def get_luhn_checksum(upc,upclen):
+ upc = str(upc);
+ upclen = int(upclen);
+ upclendwn = upclen - 1;
+ return validate_luhn_checksum(upc,upclen,True);
+def fix_luhn_checksum(upc,upclen):
+ upc = str(upc);
+ upclen = int(upclen);
+ upclendwn = upclen - 1;
+ if(len(upc)>upclendwn):
+  fix_matches = re.findall("^(\d{"+str(upclendwn)+"})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_luhn_checksum(upc,upclen));
 
 def validate_upca_checksum(upc,return_check=False): 
  upc = str(upc);

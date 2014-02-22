@@ -11,12 +11,12 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 02/22/2014 Ver. 2.5.6 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import sys, re;
-__version_info__ = (2, 5, 6, "RC 2");
+__version_info__ = (2, 5, 6, "RC 3");
 if(__version_info__[3]!=None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
 if(__version_info__[3]==None):
@@ -27,7 +27,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3]==None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2014, 02, 18, "RC 2");
+__version_date_info__ = (2014, 02, 22, "RC 3");
 def version_date():
  global __version_info__;
  if(__version_date_info__[3]!=None):
@@ -38,41 +38,41 @@ __version_date__ = "{year}.{month}.{day}".format(year=__version_date_info__[0], 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.ean2, upcean.ean5, upcean.upca, upcean.upce, upcean.ean13, upcean.ean8, upcean.itf, upcean.itf14;
 import upcean.code11, upcean.code39, upcean.code93, upcean.codabar, upcean.msi;
-''' Code for validating UPC/EAN by Kazuki Przyborowski '''
+''' // Code for validating UPC/EAN by Kazuki Przyborowski '''
 from upcean.validate import *;
-''' Code for converting UPC/EAN by Kazuki Przyborowski '''
+''' // Code for converting UPC/EAN by Kazuki Przyborowski '''
 from upcean.convert import *;
-''' Code for getting GS1 Prefix EAN-8/EAN-13/ITF-14 by Kazuki Przyborowski '''
+''' // Code for getting GS1 Prefix EAN-8/EAN-13/ITF-14 by Kazuki Przyborowski '''
 from upcean.getprefix import *;
-''' Code for getting save file name and type by Kazuki Przyborowski '''
+''' // Code for getting save file name and type by Kazuki Przyborowski '''
 from upcean.getsfname import *;
-''' Code for making EAN-2 supplement by Kazuki Przyborowski '''
+''' // Code for making EAN-2 supplement by Kazuki Przyborowski '''
 from upcean.ean2 import *;
-''' Code for making EAN-5 supplement by Kazuki Przyborowski '''
+''' // Code for making EAN-5 supplement by Kazuki Przyborowski '''
 from upcean.ean5 import *;
-''' Code for making UPC-A by Kazuki Przyborowski '''
+''' // Code for making UPC-A by Kazuki Przyborowski '''
 from upcean.upca import *;
-''' Code for making UPC-E by Kazuki Przyborowski '''
+''' // Code for making UPC-E by Kazuki Przyborowski '''
 from upcean.upce import *;
-''' Code for making EAN-13 by Kazuki Przyborowski '''
+''' // Code for making EAN-13 by Kazuki Przyborowski '''
 from upcean.ean13 import *;
-''' Code for making EAN-8 by Kazuki Przyborowski '''
+''' // Code for making EAN-8 by Kazuki Przyborowski '''
 from upcean.ean8 import *;
-''' Code for making Standard 2 of 5 by Kazuki Przyborowski '''
+''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
 from upcean.stf import *;
-''' Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
+''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
 from upcean.itf import *;
-''' Code for making ITF-14 by Kazuki Przyborowski '''
+''' // Code for making ITF-14 by Kazuki Przyborowski '''
 from upcean.itf14 import *;
-''' Code for making Code 11 by Kazuki Przyborowski '''
+''' // Code for making Code 11 by Kazuki Przyborowski '''
 from upcean.code11 import *;
-''' Code for making Code 39 by Kazuki Przyborowski '''
+''' // Code for making Code 39 by Kazuki Przyborowski '''
 from upcean.code39 import *;
-''' Code for making Code 93 by Kazuki Przyborowski '''
+''' // Code for making Code 93 by Kazuki Przyborowski '''
 from upcean.code93 import *;
-''' Code for making Codabar by Kazuki Przyborowski '''
+''' // Code for making Codabar by Kazuki Przyborowski '''
 from upcean.codabar import *;
-''' Code for making Modified Plessey by Kazuki Przyborowski '''
+''' // Code for making Modified Plessey by Kazuki Przyborowski '''
 from upcean.msi import *;
 
 '''
