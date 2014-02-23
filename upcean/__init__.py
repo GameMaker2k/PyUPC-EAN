@@ -11,12 +11,12 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 02/22/2014 Ver. 2.5.6 RC 3 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 02/23/2014 Ver. 2.5.6 RC 4 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import sys, re;
-__version_info__ = (2, 5, 6, "RC 3");
+__version_info__ = (2, 5, 6, "RC 4");
 if(__version_info__[3]!=None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
 if(__version_info__[3]==None):
@@ -27,7 +27,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3]==None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2014, 02, 22, "RC 3");
+__version_date_info__ = (2014, 02, 23, "RC 4");
 def version_date():
  global __version_info__;
  if(__version_date_info__[3]!=None):
@@ -456,6 +456,8 @@ class barcode:
     return False;
  def validate_checksum(self):
   return getattr(upcean, "validate_"+self.type+"_checksum")(self.code, self.return_check);
+ def validate_luhn_checksum(self):
+  return validate_luhn_checksum(self.code, self.upclen, self.return_check);
  def get_checksum(self):
   return getattr(upcean, "get_"+self.type+"_checksum")(self.code);
  def get_info(self):
@@ -470,6 +472,33 @@ class barcode:
   return getattr(upcean, "get_"+self.type+"_product")(self.code);
  def get_checkdigit(self):
   return getattr(upcean, "get_"+self.type+"_checkdigit")(self.code);
+ def get_luhn_checksum(self):
+  return get_luhn_checksum(self.code, self.upclen, self.return_check);
+ def fix_checksum(self):
+  return getattr(upcean, "fix_"+self.type+"_checksum")(self.code);
+ def fix_luhn_checksum(self):
+  return fix_luhn_checksum(self.code, self.upclen, self.return_check);
+ def convert(self):
+  return getattr(upcean, "convert_"+self.type+"_to_"+self.outtype)(self.code);
+ def print(self):
+  return getattr(upcean, "print_"+self.type)(self.code);
+ def print_convert(self):
+  return getattr(upcean, "print_convert_"+self.type+"_to_"+self.outtype)(self.code);
+ def make_vw(self):
+  if(self.type=="upca"):
+   return make_vw_upca(self.code, self.price);
+  if(self.type!="upca"):
+   return getattr(upcean, "make_vw_to_"+self.type)(self.code, self.price);
+ def make_goodwill(self):
+  if(self.type=="upca"):
+   return make_goodwill_upca(self.code, self.price);
+  if(self.type!="upca"):
+   return getattr(upcean, "make_goodwill_to_"+self.type)(self.code, self.price);
+ def make_coupon(self):
+  if(self.type=="upca"):
+   return make_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value);
+  if(self.type!="upca"):
+   return getattr(upcean, "make_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value);
  def get_upca_info_from_upce(self):
   return get_upca_info_from_upce(self.code);
  def get_upce_as_upca_info(self):
@@ -582,26 +611,3 @@ class barcode:
   return get_old_imeisv_checkdigit(self.code);
  def get_save_filename(self):
   return get_save_filename(self.filename);
- def fix_checksum(self):
-  return getattr(upcean, "fix_"+self.type+"_checksum")(self.code);
- def convert(self):
-  return getattr(upcean, "convert_"+self.type+"_to_"+self.outtype)(self.code);
- def print(self):
-  return getattr(upcean, "print_"+self.type)(self.code);
- def print_convert(self):
-  return getattr(upcean, "print_convert_"+self.type+"_to_"+self.outtype)(self.code);
- def make_vw(self):
-  if(self.type=="upca"):
-   return make_vw_upca(self.code, self.price);
-  if(self.type!="upca"):
-   return getattr(upcean, "make_vw_to_"+self.type)(self.code, self.price);
- def make_goodwill(self):
-  if(self.type=="upca"):
-   return make_goodwill_upca(self.code, self.price);
-  if(self.type!="upca"):
-   return getattr(upcean, "make_goodwill_to_"+self.type)(self.code, self.price);
- def make_coupon(self):
-  if(self.type=="upca"):
-   return make_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value);
-  if(self.type!="upca"):
-   return getattr(upcean, "make_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value);
