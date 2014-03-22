@@ -16,14 +16,14 @@
 
 from __future__ import division, absolute_import, print_function;
 import re, os, sys, types, upcean.prepil, upcean.validate, upcean.convert, upcean.getsfname;
-import upcean.ean2, upcean.ean5;
+import upcean.barcodes.ean2, upcean.barcodes.ean5;
 from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 from upcean.validate import *;
 from upcean.convert import *;
 from upcean.getsfname import *;
-from upcean.ean2 import *;
-from upcean.ean5 import *;
+from upcean.barcodes.ean2 import *;
+from upcean.barcodes.ean5 import *;
 
 def create_upce(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);

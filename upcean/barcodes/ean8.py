@@ -11,21 +11,21 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean13.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import re, os, sys, types, upcean.prepil, upcean.validate, upcean.convert, upcean.getsfname;
-import upcean.ean2, upcean.ean5;
+import upcean.barcodes.ean2, upcean.barcodes.ean5;
 from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 from upcean.validate import *;
 from upcean.convert import *;
 from upcean.getsfname import *;
-from upcean.ean2 import *;
-from upcean.ean5 import *;
+from upcean.barcodes.ean2 import *;
+from upcean.barcodes.ean5 import *;
 
-def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -39,15 +39,9 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
   upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc);
   upc_pieces = upc_pieces[0];
   upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(len(upc)==8): 
-  upc = convert_upce_to_ean13(upc);
- if(len(upc)==12): 
-  upc = convert_upca_to_ean13(upc);
- if(len(upc)==12 and validate_upca_checksum(upc)==True): 
-  upc = "0"+upc;
- if(len(upc)==12 and validate_upca_checksum(upc)==False): 
-  upc = upc+str(validate_ean13_checksum(upc,true));
- if(len(upc)>13 or len(upc)<13): 
+ if(len(upc)==7):
+  upc = upc+validate_ean8_checksum(upc,True);
+ if(len(upc)>8 or len(upc)<8):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -71,24 +65,31 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
  if(pil_is_pillow==True and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
- if(validate_ean13_checksum(upc)==False): 
-  pre_matches = re.findall("^(\d{12})", upc); 
-  upc = pre_matches[0]+str(validate_ean13_checksum(pre_matches[0],True));
- upc_matches = re.findall("(\d{1})(\d{6})(\d{6})", upc);
- if(len(upc_matches)<=0): 
-  return False;
+ if(validate_ean8_checksum(upc)==False):
+  pre_matches = re.findall("^(\d{7})", upc); 
+  upc = pre_matches[0]+str(validate_ean8_checksum(pre_matches[0],True));
+ upc_matches = re.findall("(\d{4})(\d{4})", upc);
  upc_matches = upc_matches[0];
- PrefixDigit = upc_matches[0];
- LeftDigit = list(upc_matches[1]);
- RightDigit = list(upc_matches[2]);
+ if(len(upc_matches)<=0):
+  return False;
+ LeftDigit = list(upc_matches[0]);
+ upc_matches_new = re.findall("(\d{2})(\d{2})", upc_matches[0]);
+ upc_matches_new= upc_matches_new[0];
+ LeftLeftDigit = upc_matches_new[0];
+ LeftRightDigit = upc_matches_new[1];
+ RightDigit = list(upc_matches[1]);
+ upc_matches_new = re.findall("(\d{2})(\d{2})", upc_matches[1]);
+ upc_matches_new= upc_matches_new[0];
+ RightLeftDigit = upc_matches_new[0];
+ RightRightDigit = upc_matches_new[1];
  addonsize = 0;
  if(supplement!=None and len(supplement)==2): 
   addonsize = 29;
  if(supplement!=None and len(supplement)==5): 
   addonsize = 56;
- upc_preimg = Image.new("RGB", (115 + addonsize, barheight[1] + 9));
+ upc_preimg = Image.new("RGB", (83 + addonsize, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (115 + addonsize, barheight[1] + 9)], fill=barcolor[2]);
+ upc_img.rectangle([(0, 0), (83 + addonsize, barheight[1] + 9)], fill=barcolor[2]);
  drawColorLine(upc_img, 0, 10, 0, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 1, 10, 1, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 2, 10, 2, barheight[0], barcolor[2]);
@@ -96,15 +97,11 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
  drawColorLine(upc_img, 4, 10, 4, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 5, 10, 5, barheight[0], barcolor[2]);
  drawColorLine(upc_img, 6, 10, 6, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 7, 10, 7, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 8, 10, 8, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 9, 10, 9, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 10, 10, 10, barheight[1], barcolor[2]);
- drawColorLine(upc_img, 11, 10, 11, barheight[1], barcolor[0]);
- drawColorLine(upc_img, 12, 10, 12, barheight[1], barcolor[2]);
- drawColorLine(upc_img, 13, 10, 13, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 7, 10, 7, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 8, 10, 8, barheight[1], barcolor[2]);
+ drawColorLine(upc_img, 9, 10, 9, barheight[1], barcolor[0]);
  NumZero = 0; 
- LineStart = 14;
+ LineStart = 10;
  while (NumZero < len(LeftDigit)):
   LineSize = barheight[0];
   if(hidetext==True):
@@ -142,68 +139,68 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
    left_barcolor_l = [0, 0, 0, 1, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 0, 1, 1, 1];
   left_barcolor = left_barcolor_l;
-  if(int(upc_matches[0])==1):
-   if(NumZero==2): 
+  if(int(upc_matches[1])==1):
+   if(NumZero==2):
     left_barcolor = left_barcolor_g;
-   if(NumZero==4): 
+   if(NumZero==4):
     left_barcolor = left_barcolor_g;
-   if(NumZero==5): 
+   if(NumZero==5):
     left_barcolor = left_barcolor_g;
-  if(int(upc_matches[0])==2):
-   if(NumZero==2): 
+  if(int(upc_matches[1])==2):
+   if(NumZero==2):
     left_barcolor = left_barcolor_g;
-   if(NumZero==3): 
+   if(NumZero==3):
     left_barcolor = left_barcolor_g;
-   if(NumZero==5): 
+   if(NumZero==5):
     left_barcolor = left_barcolor_g;
-  if(int(upc_matches[0])==3):
-   if(NumZero==2): 
+  if(int(upc_matches[1])==3):
+   if(NumZero==2):
     left_barcolor = left_barcolor_g;
-   if(NumZero==3): 
+   if(NumZero==3):
     left_barcolor = left_barcolor_g;
-   if(NumZero==4): 
+   if(NumZero==4):
     left_barcolor = left_barcolor_g;
-  if(int(upc_matches[0])==4):
-   if(NumZero==1): 
+  if(int(upc_matches[1])==4):
+   if(NumZero==1):
     left_barcolor = left_barcolor_g;
-   if(NumZero==4): 
+   if(NumZero==4):
     left_barcolor = left_barcolor_g;
-   if(NumZero==5): 
+   if(NumZero==5):
     left_barcolor = left_barcolor_g;
-  if(int(upc_matches[0])==5):
-   if(NumZero==1): 
+  if(int(upc_matches[1])==5):
+   if(NumZero==1):
     left_barcolor = left_barcolor_g;
-   if(NumZero==2): 
+   if(NumZero==2):
     left_barcolor = left_barcolor_g;
-   if(NumZero==5): 
+   if(NumZero==5):
     left_barcolor = left_barcolor_g;
-  if(int(upc_matches[0])==6):
-   if(NumZero==1): 
+  if(int(upc_matches[1])==6):
+   if(NumZero==1):
     left_barcolor = left_barcolor_g;
-   if(NumZero==2): 
+   if(NumZero==2):
     left_barcolor = left_barcolor_g;
-   if(NumZero==3): 
+   if(NumZero==3):
     left_barcolor = left_barcolor_g;
-  if(int(upc_matches[0])==7):
-   if(NumZero==1): 
+  if(int(upc_matches[1])==7):
+   if(NumZero==1):
     left_barcolor = left_barcolor_g;
-   if(NumZero==3): 
+   if(NumZero==3):
     left_barcolor = left_barcolor_g;
-   if(NumZero==5): 
+   if(NumZero==5):
     left_barcolor = left_barcolor_g;
-  if(int(upc_matches[0])==8):
-   if(NumZero==1): 
+  if(int(upc_matches[1])==8):
+   if(NumZero==1):
     left_barcolor = left_barcolor_g;
-   if(NumZero==3): 
+   if(NumZero==3):
     left_barcolor = left_barcolor_g;
-   if(NumZero==4): 
+   if(NumZero==4):
     left_barcolor = left_barcolor_g;
-  if(int(upc_matches[0])==9):
-   if(NumZero==1): 
+  if(int(upc_matches[1])==9):
+   if(NumZero==1):
     left_barcolor = left_barcolor_g;
-   if(NumZero==2): 
+   if(NumZero==2):
     left_barcolor = left_barcolor_g;
-   if(NumZero==4): 
+   if(NumZero==4):
     left_barcolor = left_barcolor_g;
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
@@ -214,13 +211,12 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
- drawColorLine(upc_img, 56, 10, 56, barheight[1], barcolor[2]);
- drawColorLine(upc_img, 57, 10, 57, barheight[1], barcolor[0]);
- drawColorLine(upc_img, 58, 10, 58, barheight[1], barcolor[2]);
- drawColorLine(upc_img, 59, 10, 59, barheight[1], barcolor[0]);
- drawColorLine(upc_img, 60, 10, 60, barheight[1], barcolor[2]);
- NumZero = 0; 
- LineStart = 61;
+ drawColorLine(upc_img, 38, 10, 38, barheight[1], barcolor[2]);
+ drawColorLine(upc_img, 39, 10, 39, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 40, 10, 40, barheight[1], barcolor[2]);
+ drawColorLine(upc_img, 41, 10, 41, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 42, 10, 42, barheight[1], barcolor[2]);
+ NumZero = 0; LineStart = 43;
  while (NumZero < len(RightDigit)):
   LineSize = barheight[0];
   if(hidetext==True):
@@ -255,47 +251,41 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
- drawColorLine(upc_img, 103, 10, 103, barheight[1], barcolor[0]);
- drawColorLine(upc_img, 104, 10, 104, barheight[1], barcolor[2]);
- drawColorLine(upc_img, 105, 10, 105, barheight[1], barcolor[0]);
- drawColorLine(upc_img, 106, 10, 106, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 107, 10, 107, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 108, 10, 108, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 109, 10, 109, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 110, 10, 110, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 111, 10, 111, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 112, 10, 112, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 113, 10, 113, barheight[0], barcolor[2]);
- drawColorLine(upc_img, 114, 10, 114, barheight[0], barcolor[2]);
- new_upc_img = upc_preimg.resize(((115 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
+ drawColorLine(upc_img, 71, 10, 71, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 72, 10, 72, barheight[1], barcolor[2]);
+ drawColorLine(upc_img, 73, 10, 73, barheight[1], barcolor[0]);
+ drawColorLine(upc_img, 74, 10, 74, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 75, 10, 75, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 76, 10, 76, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 77, 10, 77, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 78, 10, 78, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 79, 10, 79, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 80, 10, 80, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 81, 10, 81, barheight[0], barcolor[2]);
+ drawColorLine(upc_img, 82, 10, 82, barheight[0], barcolor[2]);
+ new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  if(hidesn!=None and hidesn!=True):
-   drawColorText(upc_img, 10 * int(resize), 2 + (2 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), upc_matches[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 17 + (20 * (int(resize) - 1)) - (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 23 + (25 * (int(resize) - 1)) - (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 29 + (30 * (int(resize) - 1)) - (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[2], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 35 + (35 * (int(resize) - 1)) + (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[3], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 41 + (40 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[4], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 47 + (45 * (int(resize) - 1)) + (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[5], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 63 + (65 * (int(resize) - 1)) - (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 69 + (70 * (int(resize) - 1)) - (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 75 + (75 * (int(resize) - 1)) - (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[2], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 81 + (80 * (int(resize) - 1)) + (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[3], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 87 + (85 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[4], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 93 + (90 * (int(resize) - 1)) + (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[5], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 11 + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 17 + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 30 + (29 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 43 + (46 * (int(resize) - 1)) - (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 49 + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 56 + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 62 + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[1], barcolor[1]);
  del(upc_img);
  if(supplement!=None and len(supplement)==2): 
   upc_sup_img = draw_ean2_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
   if(upc_sup_img!=False):
-   new_upc_img.paste(upc_sup_img,(115 * int(resize),0));
+   new_upc_img.paste(upc_sup_img,(83 * int(resize),0));
    del(upc_sup_img);
  if(supplement!=None and len(supplement)==5): 
   upc_sup_img = draw_ean5_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
   if(upc_sup_img!=False):
-   new_upc_img.paste(upc_sup_img,(115 * int(resize),0));
+   new_upc_img.paste(upc_sup_img,(83 * int(resize),0));
    del(upc_sup_img);
  oldoutfile = get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
@@ -323,5 +313,5 @@ def create_ean13(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, Fals
    return False;
  return True;
 
-def draw_ean13(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+def draw_ean8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean8(upc,None,resize,hideinfo,barheight,textxy,barcolor);

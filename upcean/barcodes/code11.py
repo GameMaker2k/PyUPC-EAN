@@ -15,7 +15,7 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import re, os, sys, types, upcean.prepil
+import re, os, sys, types, upcean.prepil, upcean.getsfname;
 from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 from upcean.getsfname import *;

@@ -42,9 +42,9 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
 def drawColorText( ctx, size, x, y, text, color ):
  global pkgres;
  if(pkgres==True):
-  fontfilepath = pkg_resources.resource_filename(__name__, "OCRB.otf");
+  fontfilepath = pkg_resources.resource_filename(__name__, "fonts"+os.sep+"OCRB.otf");
  if(pkgres==False):
-  fontfilepath = os.path.dirname(__file__)+os.sep+"OCRB.otf";
+  fontfilepath = os.path.dirname(__file__)+os.sep+"fonts"+os.sep+"OCRB.otf";
  font = ImageFont.truetype(fontfilepath, size);
  text = str(text);
  ctx.text((x, y), text, font=font, fill=color);
