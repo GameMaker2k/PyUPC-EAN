@@ -11,12 +11,20 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: prepil.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1  - Author: cooldude2k $
+    $FileInfo: prepil.py - Last Update: 03/21/2014 Ver. 2.5.6 RC 6  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import re, os, sys;
 from PIL import Image, ImageDraw, ImageFont;
+
+try:
+ import pkg_resources;
+ pkgres = True;
+except ImportError:
+ pkgres = False;
+
+
 
 '''
 // Source: http://stevehanov.ca/blog/index.php?id=28
@@ -32,7 +40,12 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  ctx.rectangle([(x1, y1), (x2, y2)], fill=color);
 
 def drawColorText( ctx, size, x, y, text, color ):
- font = ImageFont.truetype(os.path.dirname(__file__)+os.sep+"OCRB.otf", size);
+ global pkgres;
+ if(pkgres==True):
+  fontfilepath = pkg_resources.resource_filename(__name__, "OCRB.otf");
+ if(pkgres==False):
+  fontfilepath = os.path.dirname(__file__)+os.sep+"OCRB.otf";
+ font = ImageFont.truetype(fontfilepath, size);
  text = str(text);
  ctx.text((x, y), text, font=font, fill=color);
  del(font);

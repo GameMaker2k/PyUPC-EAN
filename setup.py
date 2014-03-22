@@ -13,7 +13,7 @@
     Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 02/22/2014 Ver. 2.5.6 RC 5  - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 03/21/2014 Ver. 2.5.6 RC 6  - Author: cooldude2k $
 '''
 
 import os;
@@ -39,7 +39,7 @@ else:
 
 setup(
  name = 'PyUPC-EAN',
- version = '2.5.6.5',
+ version = '2.5.6.6',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
  maintainer = 'Kazuki Przyborowski',
@@ -55,7 +55,7 @@ setup(
  install_requires = [install_requires],
  long_description = 'A barcode library/module for python.',
  platforms = 'OS Independent',
- zip_safe = False,
+ zip_safe = True,
  classifiers = [
   'Development Status :: 5 - Production/Stable',
   'Intended Audience :: Customer Service',
