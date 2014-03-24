@@ -7,11 +7,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2013 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
-    Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2014 Cool Dude 2k - http://idb.berlios.de/
+    Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean8.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -25,7 +25,7 @@ from upcean.getsfname import *;
 from upcean.barcodes.ean2 import *;
 from upcean.barcodes.ean5 import *;
 
-def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -278,12 +278,12 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
   drawColorText(upc_img, 10 * int(resize), 62 + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[1], barcolor[1]);
  del(upc_img);
  if(supplement!=None and len(supplement)==2): 
-  upc_sup_img = draw_ean2_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
+  upc_sup_img = draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
   if(upc_sup_img!=False):
    new_upc_img.paste(upc_sup_img,(83 * int(resize),0));
    del(upc_sup_img);
  if(supplement!=None and len(supplement)==5): 
-  upc_sup_img = draw_ean5_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
+  upc_sup_img = draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
   if(upc_sup_img!=False):
    new_upc_img.paste(upc_sup_img,(83 * int(resize),0));
    del(upc_sup_img);
@@ -313,5 +313,5 @@ def create_ean8(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False)
    return False;
  return True;
 
-def draw_ean8(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean8(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+def draw_ean8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean8_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);

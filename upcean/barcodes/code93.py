@@ -7,11 +7,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2013 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
-    Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2014 Cool Dude 2k - http://idb.berlios.de/
+    Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code93.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1 - Author: cooldude2k $
+    $FileInfo: code93.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
 from upcean.getsfname import *;
 
-def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_code93_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -271,5 +271,5 @@ def create_code93(upc,outfile="./itf14.png",resize=1,hideinfo=(False, False, Fal
    return False;
  return True;
 
-def draw_code93(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_code93(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+def draw_code93_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_code93_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);

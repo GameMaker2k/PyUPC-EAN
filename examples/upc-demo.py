@@ -9,11 +9,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2013 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
-    Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2014 Cool Dude 2k - http://idb.berlios.de/
+    Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 02/18/2014 Ver. 2.5.6 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;

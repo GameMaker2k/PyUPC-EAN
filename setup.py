@@ -9,11 +9,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2013 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
-    Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2014 Cool Dude 2k - http://idb.berlios.de/
+    Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 03/21/2014 Ver. 2.5.6 RC 6  - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1  - Author: cooldude2k $
 '''
 
 import os;
@@ -39,7 +39,7 @@ else:
 
 setup(
  name = 'PyUPC-EAN',
- version = '2.5.6.6',
+ version = '2.5.8.1',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
  maintainer = 'Kazuki Przyborowski',
