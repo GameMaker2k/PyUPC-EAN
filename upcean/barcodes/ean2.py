@@ -177,7 +177,7 @@ def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False
  upc_preimg = Image.new("RGB", ((29 * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize)));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), ((29 * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize))], fill=barcolor[2]);
- upc_sup_img = draw_ean2_barcode_supplement(upc,resize,hideinfo,barheight,barcolor);
+ upc_sup_img = create_ean2_barcode_supplement(upc,None,resize,hideinfo,barheight,textxy,barcolor);
  if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
   return False;
  upc_preimg.paste(upc_sup_img,(8 * int(resize),0));
