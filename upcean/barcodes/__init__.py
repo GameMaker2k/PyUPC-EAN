@@ -84,7 +84,7 @@ from upcean.barcodes.msi import *;
 '''
 def create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(hasattr(upcean, "create_"+bctype+"_barcode") and callable(getattr(upcean, "create_"+bctype+"_barcode"))):
-  return getattr(upcean, "create_"+bctype+"_barcode")(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+  return getattr(upcean, "create_"+bctype+"_barcode")(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
  if(not hasattr(upcean, "create_"+bctype+"_barcode") or not callable(getattr(upcean, "create_"+bctype+"_barcode"))):
   return False;
  return False;
