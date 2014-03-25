@@ -15,7 +15,8 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re;
+import sys, re, upcean.convert;
+from upcean.convert import *;
 
 '''
 // Digital Root
