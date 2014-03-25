@@ -13,7 +13,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 03/25/2014 Ver. 2.5.9 RC 1  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 03/25/2014 Ver. 2.6.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -1742,3 +1742,49 @@ def get_bcn_checkdigit(upc):
  if(product==False):
   return False;
  return product['checkdigit'];
+
+'''
+// Shortcut Codes by Kazuki Przyborowski
+'''
+def get_info(bctype,upc,infotype=None):
+ if(infotype==None):
+  if(hasattr(upcean, "get_"+bctype+"_info") and callable(getattr(upcean, "get_"+bctype+"_info"))):
+   return getattr(upcean, "get_"+bctype+"_info")(upc);
+  if(not hasattr(upcean, "get_"+bctype+"_info") or not callable(getattr(upcean, "get_"+bctype+"_info"))):
+   return False;
+ if(infotype!=None):
+  if(hasattr(upcean, "get_"+bctype+"_"+infotype) and callable(getattr(upcean, "get_"+bctype+"_"+infotype))):
+   return getattr(upcean, "get_"+bctype+"_"+infotype)(upc);
+  if(not hasattr(upcean, "get_"+bctype+"_"+infotype) or not callable(getattr(upcean, "get_"+bctype+"_"+infotype))):
+   return False;
+ return False;
+def get_packagecode(upc):
+ if(hasattr(upcean, "get_"+bctype+"_packagecode") and callable(getattr(upcean, "get_"+bctype+"_packagecode"))):
+  return getattr(upcean, "get_"+bctype+"_packagecode")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_packagecode") or not callable(getattr(upcean, "get_"+bctype+"_packagecode"))):
+  return False;
+ return False;
+def get_numbersystem(upc):
+ if(hasattr(upcean, "get_"+bctype+"_numbersystem") and callable(getattr(upcean, "get_"+bctype+"_numbersystem"))):
+  return getattr(upcean, "get_"+bctype+"_numbersystem")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_numbersystem") or not callable(getattr(upcean, "get_"+bctype+"_numbersystem"))):
+  return False;
+ return False;
+def get_manufacturer(upc):
+ if(hasattr(upcean, "get_"+bctype+"_manufacturer") and callable(getattr(upcean, "get_"+bctype+"_manufacturer"))):
+  return getattr(upcean, "get_"+bctype+"_manufacturer")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_manufacturer") or not callable(getattr(upcean, "get_"+bctype+"_manufacturer"))):
+  return False;
+ return False;
+def get_product(upc):
+ if(hasattr(upcean, "get_"+bctype+"_product") and callable(getattr(upcean, "get_"+bctype+"_product"))):
+  return getattr(upcean, "get_"+bctype+"_product")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_product") or not callable(getattr(upcean, "get_"+bctype+"_product"))):
+  return False;
+ return False;
+def get_checkdigit(upc):
+ if(hasattr(upcean, "get_"+bctype+"_checkdigit") and callable(getattr(upcean, "get_"+bctype+"_checkdigit"))):
+  return getattr(upcean, "get_"+bctype+"_checkdigit")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_checkdigit") or not callable(getattr(upcean, "get_"+bctype+"_checkdigit"))):
+  return False;
+ return False;

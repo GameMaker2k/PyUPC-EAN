@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: convert.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1  - Author: cooldude2k $
+    $FileInfo: convert.py - Last Update: 03/25/2014 Ver. 2.6.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -532,6 +532,8 @@ def make_vw_upca(code, price):
  vwupc = "2"+code+pricecs+price.zfill(4);
  vwupc = vwupc+str(validate_upca_checksum(vwupc, True));
  return vwupc;
+def make_vw_to_upca(code, price):
+ return make_vw_upca(code, price);
 def make_vw_to_ean13(code, price):
  code = str(code);
  price = str(price);
@@ -556,6 +558,8 @@ def make_goodwill_upca(code, price):
  vwupc = "4"+code+price.zfill(5);
  vwupc = vwupc+str(validate_upca_checksum(vwupc, True));
  return vwupc;
+def make_goodwill_to_upca(code, price):
+ return make_goodwill_upca(code, price);
 def make_goodwill_to_ean13(code, price):
  code = str(code);
  price = str(price);
@@ -585,6 +589,8 @@ def make_coupon_upca(numbersystem, manufacturer, family, value):
  couponupca = numbersystem+manufacturer+family+value;
  couponupca = couponupca+str(validate_upca_checksum(couponupca, True));
  return couponupca;
+def make_coupon_to_upca(code, price):
+ return make_coupon_upca(code, price);
 def make_coupon_to_ean13(numbersystem, manufacturer, family, value):
  numbersystem = str(numbersystem);
  manufacturer = str(manufacturer);
@@ -599,3 +605,25 @@ def make_coupon_to_itf14(numbersystem, manufacturer, family, value):
  value = str(value);
  couponitf14 = convert_upca_to_itf14(make_coupon_upca(numbersystem, manufacturer, family, value));
  return couponitf14;
+
+'''
+// Shortcut Codes by Kazuki Przyborowski
+'''
+def convert_barcode(intype,outtype,upc):
+ if(hasattr(upcean, "convert_"+intype+"_to_"+outtype) and callable(getattr(upcean, "convert_"+intype+"_to_"+outtype))):
+  return getattr(upcean, "convert_"+intype+"_to_"+outtype)(upc);
+ if(not hasattr(upcean, "convert_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "convert_"+intype+"_to_"+outtype))):
+  return False;
+ return False;
+def print_barcode(bctype,outtype,upc):
+ if(hasattr(upcean, "print_"+bctype) and callable(getattr(upcean, "print_"+bctype))):
+  return getattr(upcean, "print_"+bctype)(upc);
+ if(not hasattr(upcean, "print_"+bctype) or not callable(getattr(upcean, "print_"+bctype))):
+  return False;
+ return False;
+def print_convert_barcode(intype,outtype,upc):
+ if(hasattr(upcean, "print_convert_"+intype+"_to_"+outtype) and callable(getattr(upcean, "print_convert_"+intype+"_to_"+outtype))):
+  return getattr(upcean, "print_convert_"+intype+"_to_"+outtype)(upc);
+ if(not hasattr(upcean, "print_convert_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "print_convert_"+intype+"_to_"+outtype))):
+  return False;
+ return False;

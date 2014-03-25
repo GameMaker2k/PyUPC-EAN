@@ -11,12 +11,12 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 03/25/2014 Ver. 2.5.9 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 03/25/2014 Ver. 2.6.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import sys, re;
-__version_info__ = (2, 5, 9, "RC 1");
+__version_info__ = (2, 6, 0, "RC 1");
 if(__version_info__[3]!=None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
 if(__version_info__[3]==None):
@@ -166,7 +166,7 @@ class barcode:
  bctype_tuple=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
  bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
  def __init__(self):
-  self.type = "any";
+  self.type = "upca";
   self.filename = "./barcode.png";
   self.size = 1;
   self.hidesn = False;
@@ -290,6 +290,12 @@ class barcode:
   return getattr(upcean, "print_"+self.type)(self.code);
  def print_convert(self):
   return getattr(upcean, "print_convert_"+self.type+"_to_"+self.outtype)(self.code);
+ def convert_barcode(self):
+  return convert_barcode(self.type,self.outtype,self.code);
+ def print_barcode(self):
+  return print_barcode(self.type,self.code);
+ def print_convert_barcode(self):
+  return print_convert_barcode(self.type,self.outtype,self.code);
  def make_vw(self):
   if(self.type=="upca"):
    return make_vw_upca(self.code, self.price);
