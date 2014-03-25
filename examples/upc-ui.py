@@ -13,7 +13,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 03/25/2014 Ver. 2.5.9 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -42,7 +42,7 @@ rootwin = Tk();
 rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
 rootwin.geometry(("%dx%d") % (350, 300));
 rootwin.resizable(0,0);
-barcode_list = {"Detect": "any", "UPC-A": "upca", "UPC-E": "upce", "EAN-13": "ean13", "EAN-8": "ean8", "EAN-2": "ean2", "EAN-5": "ean5", "ITF": "itf", "STF": "stf", "ITF-14": "itf14", "Code 11": "code11", "Code 39": "code39", "Code 93": "code93", "Codabar": "codabar", "MSI": "msi"};
+barcode_list = {"UPC-A": "upca", "UPC-E": "upce", "EAN-13": "ean13", "EAN-8": "ean8", "EAN-2": "ean2", "EAN-5": "ean5", "ITF": "itf", "STF": "stf", "ITF-14": "itf14", "Code 11": "code11", "Code 39": "code39", "Code 93": "code93", "Codabar": "codabar", "MSI": "msi"};
 def exit_ui(event):
  rootwin.quit();
 rootwin.bind("<Escape>", exit_ui);

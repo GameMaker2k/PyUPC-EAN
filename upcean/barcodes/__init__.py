@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 03/25/2014 Ver. 2.5.9 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -90,129 +90,6 @@ def create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, 
  return False;
 def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
-
-def create_any_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- upc = str(upc);
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
-  resize = 1;
- upc_pieces = None; supplement = None;
- if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
-  upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
-  upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(re.findall("([0-9]+)([ |\|]{1})([0-9]{5})$", upc)):
-  upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{5})$", upc);
-  upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(len(upc)==7 or len(upc)==8):
-  if(supplement==None):
-   if(re.findall("^([0-1])", upc)):
-    return create_upce_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-   if(re.findall("^([2-9])", upc)):
-    return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   if(re.findall("^([0-1])", upc)):
-    return create_upce_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
-   if(re.findall("^([2-9])", upc)):
-    return create_ean8_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- if(len(upc)==2):
-  return create_ean2_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
- if(len(upc)==5):
-  return create_ean5_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
- if(len(upc)==11 or len(upc)==12):
-  if(supplement==None):
-   return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_upca_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- if(len(upc)==13): 
-  if(supplement==None):
-   return create_ean13_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_ean13_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- if(len(upc)==14): 
-  if(supplement==None):
-   return create_itf14_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_itf14_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- return False;
-def draw_any_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_any_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
-
-''' Backward Compatibility Functions '''
-def create_barcode_barcode(upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_any_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-def draw_barcode_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_any_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
-
-def create_upc_barcode(upc,outfile="./upc.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- upc = str(upc);
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
-  resize = 1;
- upc_pieces = None; supplement = None;
- if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
-  upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
-  upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(re.findall("([0-9]+)([ |\|]{1})([0-9]{5})$", upc)):
-  upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{5})$", upc);
-  upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(len(upc)==7 or len(upc)==8):
-  if(supplement==None):
-   return create_upce_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_upce_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- if(len(upc)==11 or len(upc)==12):
-  if(supplement==None):
-   return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_upca_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- if(len(upc)==13 or len(upc)==14): 
-  if(len(upc)==13): 
-    upc = "0"+upc;
-  if(supplement==None):
-   return create_itf14_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_itf14_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- return False;
-def draw_upc_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upc_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
-
-def create_ean_barcode(upc,outfile="./ean.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- upc = str(upc);
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
-  resize = 1;
- upc_pieces = None; supplement = None;
- if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
-  upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
-  upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(re.findall("([0-9]+)([ |\|]{1})([0-9]{5})$", upc)):
-  upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{5})$", upc);
-  upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(len(upc)==2):
-  return create_ean2_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
- if(len(upc)==5):
-  return create_ean5_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
- if(len(upc)==7 or len(upc)==8):
-  if(supplement==None):
-   return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_ean8_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- if(len(upc)==12 or len(upc)==13): 
-  if(supplement==None):
-   return create_ean13_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_ean13_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- if(len(upc)==14): 
-  if(supplement==None):
-   return create_itf14_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
-  if(supplement!=None):
-   return create_itf14_barcode(upc+" "+supplement,outfile,resize,hideinfo,barheight,barcolor);
- return False;
-def draw_ean_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def create_issn13_barcode_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13_barcode(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);

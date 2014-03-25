@@ -13,7 +13,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 03/25/2014 Ver. 2.5.9 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -1079,49 +1079,6 @@ def get_itf14_product(upc):
 def get_itf14_checkdigit(upc):
  upc = str(upc);
  product = get_itf14_info(upc);
- if(product==False):
-  return False;
- return product['checkdigit'];
-def get_barcode_info(upc):
- if(len(upc)==8): 
-  if(re.findall("^([0-1])", upc)):
-   return get_upce_info(upc);
-  if(re.findall("^([2-9])", upc)):
-   return get_ean8_info(upc);
- if(len(upc)==12):
-  return get_upca_info(upc);
- if(len(upc)==13):
-  return get_ean13_info(upc);
- if(len(upc)==14):
-  return get_itf14_info(upc);
- return False;
-def get_barcode_packagecode(upc):
- upc = str(upc);
- product = get_barcode_info(upc);
- if(product==False):
-  return False;
- return product['packagecode'];
-def get_barcode_numbersystem(upc):
- upc = str(upc);
- product = get_barcode_info(upc);
- if(product==False):
-  return False;
- return product['numbersystem'];
-def get_barcode_manufacturer(upc):
- upc = str(upc);
- product = get_barcode_info(upc);
- if(product==False):
-  return False;
- return product['manufacturer'];
-def get_barcode_product(upc):
- upc = str(upc);
- product = get_barcode_info(upc);
- if(product==False):
-  return False;
- return product['product'];
-def get_barcode_checkdigit(upc):
- upc = str(upc);
- product = get_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
