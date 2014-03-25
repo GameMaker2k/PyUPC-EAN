@@ -1758,31 +1758,31 @@ def get_info(bctype,upc,infotype=None):
   if(not hasattr(upcean, "get_"+bctype+"_"+infotype) or not callable(getattr(upcean, "get_"+bctype+"_"+infotype))):
    return False;
  return False;
-def get_packagecode(upc):
+def get_packagecode(bctype,upc):
  if(hasattr(upcean, "get_"+bctype+"_packagecode") and callable(getattr(upcean, "get_"+bctype+"_packagecode"))):
   return getattr(upcean, "get_"+bctype+"_packagecode")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_packagecode") or not callable(getattr(upcean, "get_"+bctype+"_packagecode"))):
   return False;
  return False;
-def get_numbersystem(upc):
+def get_numbersystem(bctype,upc):
  if(hasattr(upcean, "get_"+bctype+"_numbersystem") and callable(getattr(upcean, "get_"+bctype+"_numbersystem"))):
   return getattr(upcean, "get_"+bctype+"_numbersystem")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_numbersystem") or not callable(getattr(upcean, "get_"+bctype+"_numbersystem"))):
   return False;
  return False;
-def get_manufacturer(upc):
+def get_manufacturer(bctype,upc):
  if(hasattr(upcean, "get_"+bctype+"_manufacturer") and callable(getattr(upcean, "get_"+bctype+"_manufacturer"))):
   return getattr(upcean, "get_"+bctype+"_manufacturer")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_manufacturer") or not callable(getattr(upcean, "get_"+bctype+"_manufacturer"))):
   return False;
  return False;
-def get_product(upc):
+def get_product(bctype,upc):
  if(hasattr(upcean, "get_"+bctype+"_product") and callable(getattr(upcean, "get_"+bctype+"_product"))):
   return getattr(upcean, "get_"+bctype+"_product")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_product") or not callable(getattr(upcean, "get_"+bctype+"_product"))):
   return False;
  return False;
-def get_checkdigit(upc):
+def get_checkdigit(bctype,upc):
  if(hasattr(upcean, "get_"+bctype+"_checkdigit") and callable(getattr(upcean, "get_"+bctype+"_checkdigit"))):
   return getattr(upcean, "get_"+bctype+"_checkdigit")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_checkdigit") or not callable(getattr(upcean, "get_"+bctype+"_checkdigit"))):
