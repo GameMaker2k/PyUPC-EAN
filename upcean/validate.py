@@ -15,8 +15,7 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re, upcean.convert;
-from upcean.convert import *;
+import sys, re;
 
 '''
 // Digital Root
@@ -939,25 +938,3 @@ def fix_vw_price_checksum(price):
   fix_matches = re.findall("^(\d{4})", price); 
   price = fix_matches[0];
  return str(get_vw_price_checksum(price,True))+price;
-
-'''
-// Shortcut Codes by Kazuki Przyborowski
-'''
-def validate_checksum(bctype,upc,return_check=False):
- if(hasattr(upcean, "validate_"+bctype+"_checksum") and callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
-  return getattr(upcean, "validate_"+bctype+"_checksum")(upc,return_check);
- if(not hasattr(upcean, "validate_"+bctype+"_checksum") or not callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
-  return False;
- return False;
-def get_checksum(bctype,upc):
- if(hasattr(upcean, "get_"+bctype+"_checksum") and callable(getattr(upcean, "get_"+bctype+"_checksum"))):
-  return getattr(upcean, "get_"+bctype+"_checksum")(upc);
- if(not hasattr(upcean, "get_"+bctype+"_checksum") or not callable(getattr(upcean, "get_"+bctype+"_checksum"))):
-  return False;
- return False;
-def fix_checksum(bctype,upc):
- if(hasattr(upcean, "fix_"+bctype+"_checksum") and callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
-  return getattr(upcean, "fix_"+bctype+"_checksum")(upc);
- if(not hasattr(upcean, "fix_"+bctype+"_checksum") or not callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
-  return False;
- return False;

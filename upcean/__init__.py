@@ -97,6 +97,105 @@ from upcean.barcodes.msi import *;
 // Source: http://www.barcodeisland.com/
 '''
 
+
+'''
+// Shortcut Codes by Kazuki Przyborowski
+validate
+'''
+def validate_checksum(bctype,upc,return_check=False):
+ if(hasattr(upcean, "validate_"+bctype+"_checksum") and callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
+  return getattr(upcean, "validate_"+bctype+"_checksum")(upc,return_check);
+ if(not hasattr(upcean, "validate_"+bctype+"_checksum") or not callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
+  return False;
+ return False;
+def get_checksum(bctype,upc):
+ if(hasattr(upcean, "get_"+bctype+"_checksum") and callable(getattr(upcean, "get_"+bctype+"_checksum"))):
+  return getattr(upcean, "get_"+bctype+"_checksum")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_checksum") or not callable(getattr(upcean, "get_"+bctype+"_checksum"))):
+  return False;
+ return False;
+def fix_checksum(bctype,upc):
+ if(hasattr(upcean, "fix_"+bctype+"_checksum") and callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
+  return getattr(upcean, "fix_"+bctype+"_checksum")(upc);
+ if(not hasattr(upcean, "fix_"+bctype+"_checksum") or not callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
+  return False;
+ return False;
+
+'''
+// Shortcut Codes by Kazuki Przyborowski
+// convert
+'''
+def convert_barcode(intype,outtype,upc):
+ if(hasattr(upcean, "convert_"+intype+"_to_"+outtype) and callable(getattr(upcean, "convert_"+intype+"_to_"+outtype))):
+  return getattr(upcean, "convert_"+intype+"_to_"+outtype)(upc);
+ if(not hasattr(upcean, "convert_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "convert_"+intype+"_to_"+outtype))):
+  return False;
+ return False;
+def print_barcode(bctype,outtype,upc):
+ if(hasattr(upcean, "print_"+bctype) and callable(getattr(upcean, "print_"+bctype))):
+  return getattr(upcean, "print_"+bctype)(upc);
+ if(not hasattr(upcean, "print_"+bctype) or not callable(getattr(upcean, "print_"+bctype))):
+  return False;
+ return False;
+def print_convert_barcode(intype,outtype,upc):
+ if(hasattr(upcean, "print_convert_"+intype+"_to_"+outtype) and callable(getattr(upcean, "print_convert_"+intype+"_to_"+outtype))):
+  return getattr(upcean, "print_convert_"+intype+"_to_"+outtype)(upc);
+ if(not hasattr(upcean, "print_convert_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "print_convert_"+intype+"_to_"+outtype))):
+  return False;
+ return False;
+
+'''
+// Shortcut Codes by Kazuki Przyborowski
+// getprefix
+'''
+def get_info(bctype,upc,infotype=None):
+ if(infotype==None):
+  if(hasattr(upcean, "get_"+bctype+"_info") and callable(getattr(upcean, "get_"+bctype+"_info"))):
+   return getattr(upcean, "get_"+bctype+"_info")(upc);
+  if(not hasattr(upcean, "get_"+bctype+"_info") or not callable(getattr(upcean, "get_"+bctype+"_info"))):
+   return False;
+ if(infotype!=None):
+  if(hasattr(upcean, "get_"+bctype+"_"+infotype) and callable(getattr(upcean, "get_"+bctype+"_"+infotype))):
+   return getattr(upcean, "get_"+bctype+"_"+infotype)(upc);
+  if(not hasattr(upcean, "get_"+bctype+"_"+infotype) or not callable(getattr(upcean, "get_"+bctype+"_"+infotype))):
+   return False;
+ return False;
+def get_packagecode(bctype,upc):
+ if(hasattr(upcean, "get_"+bctype+"_packagecode") and callable(getattr(upcean, "get_"+bctype+"_packagecode"))):
+  return getattr(upcean, "get_"+bctype+"_packagecode")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_packagecode") or not callable(getattr(upcean, "get_"+bctype+"_packagecode"))):
+  return False;
+ return False;
+def get_numbersystem(bctype,upc):
+ if(hasattr(upcean, "get_"+bctype+"_numbersystem") and callable(getattr(upcean, "get_"+bctype+"_numbersystem"))):
+  return getattr(upcean, "get_"+bctype+"_numbersystem")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_numbersystem") or not callable(getattr(upcean, "get_"+bctype+"_numbersystem"))):
+  return False;
+ return False;
+def get_manufacturer(bctype,upc):
+ if(hasattr(upcean, "get_"+bctype+"_manufacturer") and callable(getattr(upcean, "get_"+bctype+"_manufacturer"))):
+  return getattr(upcean, "get_"+bctype+"_manufacturer")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_manufacturer") or not callable(getattr(upcean, "get_"+bctype+"_manufacturer"))):
+  return False;
+ return False;
+def get_product(bctype,upc):
+ if(hasattr(upcean, "get_"+bctype+"_product") and callable(getattr(upcean, "get_"+bctype+"_product"))):
+  return getattr(upcean, "get_"+bctype+"_product")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_product") or not callable(getattr(upcean, "get_"+bctype+"_product"))):
+  return False;
+ return False;
+def get_checkdigit(bctype,upc):
+ if(hasattr(upcean, "get_"+bctype+"_checkdigit") and callable(getattr(upcean, "get_"+bctype+"_checkdigit"))):
+  return getattr(upcean, "get_"+bctype+"_checkdigit")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_checkdigit") or not callable(getattr(upcean, "get_"+bctype+"_checkdigit"))):
+  return False;
+ return False;
+
+'''
+// Shortcut Codes by Kazuki Przyborowski
+// getprefix
+'''
+
 def exec_function(function, *argument):
  if(hasattr(upcean, function) and callable(getattr(upcean, function))):
   return getattr(upcean, function)(*argument);

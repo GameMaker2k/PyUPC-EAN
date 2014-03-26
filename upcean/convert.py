@@ -605,25 +605,3 @@ def make_coupon_to_itf14(numbersystem, manufacturer, family, value):
  value = str(value);
  couponitf14 = convert_upca_to_itf14(make_coupon_upca(numbersystem, manufacturer, family, value));
  return couponitf14;
-
-'''
-// Shortcut Codes by Kazuki Przyborowski
-'''
-def convert_barcode(intype,outtype,upc):
- if(hasattr(upcean, "convert_"+intype+"_to_"+outtype) and callable(getattr(upcean, "convert_"+intype+"_to_"+outtype))):
-  return getattr(upcean, "convert_"+intype+"_to_"+outtype)(upc);
- if(not hasattr(upcean, "convert_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "convert_"+intype+"_to_"+outtype))):
-  return False;
- return False;
-def print_barcode(bctype,outtype,upc):
- if(hasattr(upcean, "print_"+bctype) and callable(getattr(upcean, "print_"+bctype))):
-  return getattr(upcean, "print_"+bctype)(upc);
- if(not hasattr(upcean, "print_"+bctype) or not callable(getattr(upcean, "print_"+bctype))):
-  return False;
- return False;
-def print_convert_barcode(intype,outtype,upc):
- if(hasattr(upcean, "print_convert_"+intype+"_to_"+outtype) and callable(getattr(upcean, "print_convert_"+intype+"_to_"+outtype))):
-  return getattr(upcean, "print_convert_"+intype+"_to_"+outtype)(upc);
- if(not hasattr(upcean, "print_convert_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "print_convert_"+intype+"_to_"+outtype))):
-  return False;
- return False;
