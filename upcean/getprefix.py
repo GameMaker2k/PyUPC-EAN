@@ -824,10 +824,10 @@ def get_upca_info(upc):
   upc = convert_upce_to_upca(upc);
  if(re.findall("^0(\d{13})", upc)):
   upc_matches = re.findall("^0(\d{13})", upc);
-  upc = upc_matches[1];
+  upc = upc_matches[0];
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
-  upc = upc_matches[1];
+  upc = upc_matches[0];
  if(not re.findall("^(\d{12})", upc)):
   return False;
  upc_matches = re.findall("^(\d{1})(\d{5})(\d{5})(\d{1})", upc);
@@ -864,10 +864,10 @@ def get_upce_info(upc):
  upc = str(upc);
  if(re.findall("^0(\d{13})", upc)):
   upc_matches = re.findall("^0(\d{13})", upc);
-  upc = upc_matches[1];
+  upc = upc_matches[0];
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
-  upc = upc_matches[1];
+  upc = upc_matches[0];
  if(len(upc)==12):
   upc = convert_upca_to_upce(upc);
  if(not re.findall("^(\d{8})", upc)):
@@ -1091,7 +1091,7 @@ def get_upca_ns(upc):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
-  upc = upc_matches[1];
+  upc = upc_matches[0];
  if(not re.findall("^(\d{12})", upc)):
   return False;
  if(re.findall("^(0)", upc)):
@@ -1154,7 +1154,7 @@ def get_goodwill_upca_info(upc):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
-  upc = upc_matches[1];
+  upc = upc_matches[0];
  if(not re.findall("^(\d{12})", upc)):
   return False;
  if(not re.findall("^4(\d{11})", upc)):
@@ -1197,7 +1197,7 @@ def get_upca_vw_info(upc):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
-  upc = upc_matches[1];
+  upc = upc_matches[0];
  if(not re.findall("^(\d{12})", upc)):
   return False;
  if(not re.findall("^2(\d{11})", upc)):
@@ -1245,7 +1245,7 @@ def get_upca_coupon_info(upc):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
-  upc = upc_matches[1];
+  upc = upc_matches[0];
  if(not re.findall("^(\d{12})", upc)):
   return False;
  if(not re.findall("^(5|9)(\d{11})", upc)):
