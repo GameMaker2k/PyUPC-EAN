@@ -119,7 +119,7 @@ def draw_ismn13_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(4
  return create_ismn13_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def create_vw_barcode_upca(code,price,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upca_barcode(make_vw_upca(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_upca_barcode(make_vw_to_upca_barcode(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_vw_barcode_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_vw_barcode_upca(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_vw_barcode_to_upca(code,price,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -127,16 +127,16 @@ def create_vw_barcode_to_upca(code,price,outfile="./vw-upca.png",resize=1,hidein
 def draw_vw_barcode_to_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_vw_barcode_upca(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_vw_barcode_to_ean13(code,price,outfile="./vw-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13_barcode(make_vw_to_ean13(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_ean13_barcode(make_vw_to_ean13_barcode(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_vw_barcode_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_vw_barcode_to_ean13(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_vw_barcode_to_itf14(code,price,outfile="./vw-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_itf14_barcode(make_vw_to_itf14(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_itf14_barcode(make_vw_to_itf14_barcode(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_vw_barcode_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_vw_barcode_to_itf14(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def create_goodwill_barcode_upca(code,price,outfile="./goodwill-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upca_barcode(make_goodwill_upca(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_upca_barcode(make_goodwill_to_upca_barcode(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_goodwill_barcode_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_goodwill_barcode_upca(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_goodwill_barcode_to_upca(code,price,outfile="./goodwill-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -144,16 +144,16 @@ def create_goodwill_barcode_to_upca(code,price,outfile="./goodwill-upca.png",res
 def draw_goodwill_barcode_to_upca(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_goodwill_barcode_upca(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_goodwill_barcode_to_ean13(code,price,outfile="./goodwill-ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13_barcode(make_goodwill_to_ean13(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_ean13_barcode(make_goodwill_to_ean13_barcode(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_goodwill_barcode_to_ean13(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_goodwill_barcode_to_ean13(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_goodwill_barcode_to_itf14(code,price,outfile="./goodwill-itf14.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_itf14_barcode(make_goodwill_to_itf14(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_itf14_barcode(make_goodwill_to_itf14_barcode(code, price),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_goodwill_barcode_to_itf14(code,price,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_goodwill_barcode_to_itf14(code,price,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def create_coupon_barcode_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_upca_barcode(make_coupon_upca(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_upca_barcode(make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_coupon_barcode_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_barcode_upca(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_coupon_barcode_to_upca(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -161,10 +161,10 @@ def create_coupon_barcode_to_upca(numbersystem,manufacturer,family,value,outfile
 def draw_coupon_barcode_to_upca(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_barcode_upca(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_coupon_barcode_to_ean13(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13_barcode(make_coupon_to_ean13(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_ean13_barcode(make_coupon_to_ean13_barcode(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_coupon_barcode_to_ean13(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_barcode_to_ean13(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,textxy,barcolor);
 def create_coupon_barcode_to_itf14(numbersystem,manufacturer,family,value,outfile="./vw-upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_itf14_barcode(make_coupon_to_itf14(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
+ return create_itf14_barcode(make_coupon_to_itf14_barcode(numbersystem, manufacturer, family, value),outfile,resize,hideinfo,barheight,textxy,barcolor);
 def draw_coupon_barcode_to_itf14(numbersystem,manufacturer,family,value,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_coupon_barcode_to_itf14(numbersystem,manufacturer,family,value,None,resize,hideinfo,barheight,textxy,barcolor);

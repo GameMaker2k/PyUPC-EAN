@@ -18,6 +18,101 @@ from __future__ import division, absolute_import, print_function;
 import sys, re, upcean.validate;
 from upcean.validate import *;
 
+def make_upca_barcode(numbersystem, manufacturer, product):
+ numbersystem = str(numbersystem);
+ manufacturer = str(manufacturer);
+ product = str(product);
+ if(len(numbersystem)<1 or len(manufacturer)<5 or len(product)<5):
+  return False;
+ if(len(numbersystem)>1):
+  fix_matches = re.findall("^(\d{1})", numbersystem);
+  numbersystem = fix_matches[0];
+ if(len(manufacturer)>5):
+  fix_matches = re.findall("^(\d{5})", manufacturer);
+  manufacturer = fix_matches[0];
+ if(len(product)>5):
+  fix_matches = re.findall("^(\d{5})", product);
+  product = fix_matches[0];
+ upc = numbersystem+manufacturer+product;
+ upc = upc+str(validate_upca_checksum(upc, True));
+ return upc;
+
+def make_ean13_barcode(numbersystem, manufacturer, product):
+ numbersystem = str(numbersystem);
+ manufacturer = str(manufacturer);
+ product = str(product);
+ if(len(numbersystem)<2 or len(manufacturer)<5 or len(product)<5):
+  return False;
+ if(len(numbersystem)>2):
+  fix_matches = re.findall("^(\d{2})", numbersystem);
+  numbersystem = fix_matches[0];
+ if(len(manufacturer)>5):
+  fix_matches = re.findall("^(\d{5})", manufacturer);
+  manufacturer = fix_matches[0];
+ if(len(product)>5):
+  fix_matches = re.findall("^(\d{5})", product);
+  product = fix_matches[0];
+ upc = numbersystem+manufacturer+product;
+ upc = upc+str(validate_ean13_checksum(upc, True));
+ return upc;
+
+def make_itf14_barcode(numbersystem, manufacturer, product):
+ numbersystem = str(numbersystem);
+ manufacturer = str(manufacturer);
+ product = str(product);
+ if(len(numbersystem)<3 or len(manufacturer)<5 or len(product)<5):
+  return False;
+ if(len(numbersystem)>3):
+  fix_matches = re.findall("^(\d{3})", numbersystem);
+  numbersystem = fix_matches[0];
+ if(len(manufacturer)>5):
+  fix_matches = re.findall("^(\d{5})", manufacturer);
+  manufacturer = fix_matches[0];
+ if(len(product)>5):
+  fix_matches = re.findall("^(\d{5})", product);
+  product = fix_matches[0];
+ upc = numbersystem+manufacturer+product;
+ upc = upc+str(validate_itf14_checksum(upc, True));
+ return upc;
+
+def make_ean8_barcode(numbersystem, manufacturer, product):
+ numbersystem = str(numbersystem);
+ manufacturer = str(manufacturer);
+ product = str(product);
+ if(len(numbersystem)<1 or len(manufacturer)<3 or len(product)<3):
+  return False;
+ if(len(numbersystem)>1):
+  fix_matches = re.findall("^(\d{1})", numbersystem);
+  numbersystem = fix_matches[0];
+ if(len(manufacturer)>3):
+  fix_matches = re.findall("^(\d{3})", manufacturer);
+  manufacturer = fix_matches[0];
+ if(len(product)>3):
+  fix_matches = re.findall("^(\d{3})", product);
+  product = fix_matches[0];
+ upc = numbersystem+manufacturer+product;
+ upc = upc+str(validate_ean8_checksum(upc, True));
+ return upc;
+
+def make_upce_barcode(numbersystem, manufacturer, product):
+ numbersystem = str(numbersystem);
+ manufacturer = str(manufacturer);
+ product = str(product);
+ if(len(numbersystem)<1 or len(manufacturer)<3 or len(product)<3):
+  return False;
+ if(len(numbersystem)>1):
+  fix_matches = re.findall("^(\d{1})", numbersystem);
+  numbersystem = fix_matches[0];
+ if(len(manufacturer)>3):
+  fix_matches = re.findall("^(\d{3})", manufacturer);
+  manufacturer = fix_matches[0];
+ if(len(product)>3):
+  fix_matches = re.findall("^(\d{3})", product);
+  product = fix_matches[0];
+ upc = numbersystem+manufacturer+product;
+ upc = upc+str(validate_upce_checksum(upc, True));
+ return upc;
+
 def convert_upce_to_upca(upc):
  upc = str(upc);
  if(len(upc)==7):
@@ -517,7 +612,7 @@ def print_convert_ismn13_to_ismn10(upc):
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 // Source: http://barcodes.gs1us.org/GS1%20US%20BarCodes%20and%20eCom%20-%20The%20Global%20Language%20of%20Business.htm
 '''
-def make_vw_upca(code, price):
+def make_vw_upca_barcode(code, price):
  code = str(code);
  price = str(price);
  if(len(code)>5):
@@ -532,19 +627,19 @@ def make_vw_upca(code, price):
  vwupc = "2"+code+pricecs+price.zfill(4);
  vwupc = vwupc+str(validate_upca_checksum(vwupc, True));
  return vwupc;
-def make_vw_to_upca(code, price):
- return make_vw_upca(code, price);
-def make_vw_to_ean13(code, price):
+def make_vw_to_upca_barcode(code, price):
+ return make_vw_upca_barcode(code, price);
+def make_vw_to_ean13_barcode(code, price):
  code = str(code);
  price = str(price);
- vwean13 = convert_upca_to_ean13(make_vw_upca(code, price));
+ vwean13 = convert_upca_to_ean13(make_vw_to_upca_barcode(code, price));
  return vwean13;
-def make_vw_to_itf14(code, price):
+def make_vw_to_itf14_barcode(code, price):
  code = str(code);
  price = str(price);
- vwitf14 = convert_upca_to_itf14(make_vw_upca(code, price));
+ vwitf14 = convert_upca_to_itf14(make_vw_to_upca_barcode(code, price));
  return vwitf14;
-def make_goodwill_upca(code, price):
+def make_goodwill_to_upca_barcode(code, price):
  code = str(code);
  price = str(price);
  if(len(code)>5):
@@ -558,19 +653,19 @@ def make_goodwill_upca(code, price):
  vwupc = "4"+code+price.zfill(5);
  vwupc = vwupc+str(validate_upca_checksum(vwupc, True));
  return vwupc;
-def make_goodwill_to_upca(code, price):
- return make_goodwill_upca(code, price);
-def make_goodwill_to_ean13(code, price):
+def make_goodwill_to_upca_barcode(code, price):
+ return make_goodwill_to_upca_barcode(code, price);
+def make_goodwill_to_ean13_barcode(code, price):
  code = str(code);
  price = str(price);
- vwean13 = convert_upca_to_ean13(make_vw_upca(code, price));
+ vwean13 = convert_upca_to_ean13(make_goodwill_to_upca_barcode(code, price));
  return vwean13;
-def make_goodwill_to_itf14(code, price):
+def make_goodwill_to_itf14_barcode(code, price):
  code = str(code);
  price = str(price);
- vwitf14 = convert_upca_to_itf14(make_vw_upca(code, price));
+ vwitf14 = convert_upca_to_itf14(make_goodwill_to_upca_barcode(code, price));
  return vwitf14;
-def make_coupon_upca(numbersystem, manufacturer, family, value):
+def make_coupon_upca_barcode(numbersystem, manufacturer, family, value):
  numbersystem = str(numbersystem);
  manufacturer = str(manufacturer);
  family = str(family);
@@ -589,19 +684,19 @@ def make_coupon_upca(numbersystem, manufacturer, family, value):
  couponupca = numbersystem+manufacturer+family+value;
  couponupca = couponupca+str(validate_upca_checksum(couponupca, True));
  return couponupca;
-def make_coupon_to_upca(code, price):
+def make_coupon_to_upca_barcode(code, price):
  return make_coupon_upca(code, price);
-def make_coupon_to_ean13(numbersystem, manufacturer, family, value):
+def make_coupon_to_ean13_barcode(numbersystem, manufacturer, family, value):
  numbersystem = str(numbersystem);
  manufacturer = str(manufacturer);
  family = str(family);
  value = str(value);
- couponean13 = convert_upca_to_ean13(make_coupon_upca(numbersystem, manufacturer, family, value));
+ couponean13 = convert_upca_to_ean13(make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value));
  return couponean13;
-def make_coupon_to_itf14(numbersystem, manufacturer, family, value):
+def make_coupon_to_itf14_barcode(numbersystem, manufacturer, family, value):
  numbersystem = str(numbersystem);
  manufacturer = str(manufacturer);
  family = str(family);
  value = str(value);
- couponitf14 = convert_upca_to_itf14(make_coupon_upca(numbersystem, manufacturer, family, value));
+ couponitf14 = convert_upca_to_itf14(make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value));
  return couponitf14;

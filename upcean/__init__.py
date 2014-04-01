@@ -102,19 +102,19 @@ from upcean.barcodes.msi import *;
 // Shortcut Codes by Kazuki Przyborowski
 validate
 '''
-def validate_checksum(bctype,upc,return_check=False):
+def validate_checksum(bctype, upc, return_check=False):
  if(hasattr(upcean, "validate_"+bctype+"_checksum") and callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
   return getattr(upcean, "validate_"+bctype+"_checksum")(upc,return_check);
  if(not hasattr(upcean, "validate_"+bctype+"_checksum") or not callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
   return False;
  return False;
-def get_checksum(bctype,upc):
+def get_checksum(bctype, upc):
  if(hasattr(upcean, "get_"+bctype+"_checksum") and callable(getattr(upcean, "get_"+bctype+"_checksum"))):
   return getattr(upcean, "get_"+bctype+"_checksum")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_checksum") or not callable(getattr(upcean, "get_"+bctype+"_checksum"))):
   return False;
  return False;
-def fix_checksum(bctype,upc):
+def fix_checksum(bctype, upc):
  if(hasattr(upcean, "fix_"+bctype+"_checksum") and callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
   return getattr(upcean, "fix_"+bctype+"_checksum")(upc);
  if(not hasattr(upcean, "fix_"+bctype+"_checksum") or not callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
@@ -125,19 +125,25 @@ def fix_checksum(bctype,upc):
 // Shortcut Codes by Kazuki Przyborowski
 // convert
 '''
-def convert_barcode(intype,outtype,upc):
+def make_barcode(bctype, numbersystem, manufacturer, product):
+ if(hasattr(upcean, "make_"+bctype+"_barcode") and callable(getattr(upcean, "make_"+bctype+"_barcode"))):
+  return getattr(upcean, "make_"+bctype+"_barcode")(numbersystem, manufacturer, product);
+ if(not hasattr(upcean, "make_"+bctype+"_barcode") or not callable(getattr(upcean, "make_"+bctype+"_barcode"))):
+  return False;
+ return False;
+def convert_barcode(intype, outtype,upc):
  if(hasattr(upcean, "convert_"+intype+"_to_"+outtype) and callable(getattr(upcean, "convert_"+intype+"_to_"+outtype))):
   return getattr(upcean, "convert_"+intype+"_to_"+outtype)(upc);
  if(not hasattr(upcean, "convert_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "convert_"+intype+"_to_"+outtype))):
   return False;
  return False;
-def print_barcode(bctype,outtype,upc):
+def print_barcode(bctype, outtype,upc):
  if(hasattr(upcean, "print_"+bctype) and callable(getattr(upcean, "print_"+bctype))):
   return getattr(upcean, "print_"+bctype)(upc);
  if(not hasattr(upcean, "print_"+bctype) or not callable(getattr(upcean, "print_"+bctype))):
   return False;
  return False;
-def print_convert_barcode(intype,outtype,upc):
+def print_convert_barcode(intype, outtype,upc):
  if(hasattr(upcean, "print_convert_"+intype+"_to_"+outtype) and callable(getattr(upcean, "print_convert_"+intype+"_to_"+outtype))):
   return getattr(upcean, "print_convert_"+intype+"_to_"+outtype)(upc);
  if(not hasattr(upcean, "print_convert_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "print_convert_"+intype+"_to_"+outtype))):
@@ -148,7 +154,7 @@ def print_convert_barcode(intype,outtype,upc):
 // Shortcut Codes by Kazuki Przyborowski
 // getprefix
 '''
-def get_info(bctype,upc,infotype=None):
+def get_info(bctype, upc, infotype=None):
  if(infotype==None):
   if(hasattr(upcean, "get_"+bctype+"_info") and callable(getattr(upcean, "get_"+bctype+"_info"))):
    return getattr(upcean, "get_"+bctype+"_info")(upc);
@@ -160,31 +166,31 @@ def get_info(bctype,upc,infotype=None):
   if(not hasattr(upcean, "get_"+bctype+"_"+infotype) or not callable(getattr(upcean, "get_"+bctype+"_"+infotype))):
    return False;
  return False;
-def get_packagecode(bctype,upc):
+def get_packagecode(bctype, upc):
  if(hasattr(upcean, "get_"+bctype+"_packagecode") and callable(getattr(upcean, "get_"+bctype+"_packagecode"))):
   return getattr(upcean, "get_"+bctype+"_packagecode")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_packagecode") or not callable(getattr(upcean, "get_"+bctype+"_packagecode"))):
   return False;
  return False;
-def get_numbersystem(bctype,upc):
+def get_numbersystem(bctype, upc):
  if(hasattr(upcean, "get_"+bctype+"_numbersystem") and callable(getattr(upcean, "get_"+bctype+"_numbersystem"))):
   return getattr(upcean, "get_"+bctype+"_numbersystem")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_numbersystem") or not callable(getattr(upcean, "get_"+bctype+"_numbersystem"))):
   return False;
  return False;
-def get_manufacturer(bctype,upc):
+def get_manufacturer(bctype, upc):
  if(hasattr(upcean, "get_"+bctype+"_manufacturer") and callable(getattr(upcean, "get_"+bctype+"_manufacturer"))):
   return getattr(upcean, "get_"+bctype+"_manufacturer")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_manufacturer") or not callable(getattr(upcean, "get_"+bctype+"_manufacturer"))):
   return False;
  return False;
-def get_product(bctype,upc):
+def get_product(bctype, upc):
  if(hasattr(upcean, "get_"+bctype+"_product") and callable(getattr(upcean, "get_"+bctype+"_product"))):
   return getattr(upcean, "get_"+bctype+"_product")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_product") or not callable(getattr(upcean, "get_"+bctype+"_product"))):
   return False;
  return False;
-def get_checkdigit(bctype,upc):
+def get_checkdigit(bctype, upc):
  if(hasattr(upcean, "get_"+bctype+"_checkdigit") and callable(getattr(upcean, "get_"+bctype+"_checkdigit"))):
   return getattr(upcean, "get_"+bctype+"_checkdigit")(upc);
  if(not hasattr(upcean, "get_"+bctype+"_checkdigit") or not callable(getattr(upcean, "get_"+bctype+"_checkdigit"))):
@@ -301,10 +307,10 @@ class barcode:
   return barcode_support(self.barcode_type);
  def create(self):
   return getattr(upcean, "create_"+self.type+"_barcode")(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
- def draw(self):
-  return getattr(upcean, "draw_"+self.type+"_barcode")(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def create_barcode(self):
   return create_barcode(self.type, self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+ def draw(self):
+  return getattr(upcean, "draw_"+self.type+"_barcode")(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_barcode(self):
   return draw_barcode(self.type, self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def create_from_barcode(self):
@@ -379,6 +385,8 @@ class barcode:
   return getattr(upcean, "get_"+self.type+"_checkdigit")(self.code);
  def get_luhn_checksum(self):
   return get_luhn_checksum(self.code, self.codelen);
+ def get_digital_root(self):
+  return get_digital_root(self.number);
  def fix_checksum(self):
   return getattr(upcean, "fix_"+self.type+"_checksum")(self.code);
  def fix_luhn_checksum(self):
@@ -390,26 +398,27 @@ class barcode:
  def print_convert(self):
   return getattr(upcean, "print_convert_"+self.type+"_to_"+self.outtype)(self.code);
  def convert_barcode(self):
-  return convert_barcode(self.type,self.outtype,self.code);
+  return convert_barcode(self.type, self.outtype, self.code);
  def print_barcode(self):
   return print_barcode(self.type,self.code);
  def print_convert_barcode(self):
-  return print_convert_barcode(self.type,self.outtype,self.code);
+  return print_convert_barcode(self.type, self.outtype, self.code);
+ def make(self):
+  return getattr(upcean, "make_"+self.type+"_barcode")(self.numbersystem, self.manufacturer, self.product);
+ def make_barcode(self):
+  return make_barcode(self.type, self.numbersystem, self.manufacturer, self.product);
  def make_vw(self):
-  if(self.type=="upca"):
-   return make_vw_upca(self.code, self.price);
-  if(self.type!="upca"):
-   return getattr(upcean, "make_vw_to_"+self.type)(self.code, self.price);
+  return getattr(upcean, "make_vw_to_"+self.type+"_barcode")(self.code, self.price);
+ def make_vw_barcode(self):
+  return getattr(upcean, "make_vw_to_"+self.type+"_barcode")(self.code, self.price);
  def make_goodwill(self):
-  if(self.type=="upca"):
-   return make_goodwill_upca(self.code, self.price);
-  if(self.type!="upca"):
-   return getattr(upcean, "make_goodwill_to_"+self.type)(self.code, self.price);
+  return getattr(upcean, "make_goodwill_to_"+self.type+"_barcode")(self.code, self.price);
+ def make_goodwill_barcode(self):
+  return getattr(upcean, "make_goodwill_to_"+self.type+"_barcode")(self.code, self.price);
  def make_coupon(self):
-  if(self.type=="upca"):
-   return make_coupon_upca(self.numbersystem, self.manufacturer, self.family, self.value);
-  if(self.type!="upca"):
-   return getattr(upcean, "make_coupon_to_"+self.type)(self.numbersystem, self.manufacturer, self.family, self.value);
+  return getattr(upcean, "make_coupon_to_"+self.type+"_barcode")(self.numbersystem, self.manufacturer, self.family, self.value);
+ def make_coupon_barcode(self):
+  return getattr(upcean, "make_coupon_to_"+self.type+"_barcode")(self.numbersystem, self.manufacturer, self.family, self.value);
  def get_upca_info_from_upce(self):
   return get_upca_info_from_upce(self.code);
  def get_upce_as_upca_info(self):
