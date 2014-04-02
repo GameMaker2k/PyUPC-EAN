@@ -367,6 +367,8 @@ class barcode:
     return False;
  def validate_checksum(self):
   return getattr(upcean, "validate_"+self.type+"_checksum")(self.code, self.return_check);
+ def validate_barcode(self):
+  return getattr(upcean, "validate_"+self.type+"_barcode")(self.code, self.return_check);
  def validate_luhn_checksum(self):
   return validate_luhn_checksum(self.code, self.codelen, self.return_check);
  def get_checksum(self):
@@ -389,6 +391,8 @@ class barcode:
   return get_digital_root(self.number);
  def fix_checksum(self):
   return getattr(upcean, "fix_"+self.type+"_checksum")(self.code);
+ def fix_barcode(self):
+  return getattr(upcean, "fix_"+self.type+"_barcode")(self.code);
  def fix_luhn_checksum(self):
   return fix_luhn_checksum(self.code, self.codelen);
  def convert(self):
