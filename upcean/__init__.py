@@ -108,6 +108,8 @@ def validate_checksum(bctype, upc, return_check=False):
  if(not hasattr(upcean, "validate_"+bctype+"_checksum") or not callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
   return False;
  return False;
+def validate_barcode(bctype, upc, return_check=False):
+ return validate_checksum(bctype, upc, return_check);
 def get_checksum(bctype, upc):
  if(hasattr(upcean, "get_"+bctype+"_checksum") and callable(getattr(upcean, "get_"+bctype+"_checksum"))):
   return getattr(upcean, "get_"+bctype+"_checksum")(upc);
@@ -120,6 +122,8 @@ def fix_checksum(bctype, upc):
  if(not hasattr(upcean, "fix_"+bctype+"_checksum") or not callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
   return False;
  return False;
+def fix_barcode(bctype, upc):
+ return fix_checksum(bctype, upc);
 
 '''
 // Shortcut Codes by Kazuki Przyborowski
