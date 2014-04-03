@@ -966,14 +966,14 @@ def fix_ismn13_barcode(upc):
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 // Source: http://barcodes.gs1us.org/GS1%20US%20BarCodes%20and%20eCom%20-%20The%20Global%20Language%20of%20Business.htm
 '''
-def get_vw_price_checksum(price, return_check=False):
+def validate_vw_price_checksum(price, return_check=False):
  price = str(price);
  if(len(price)==1):
-  price = "000".price;
+  price = "000"+price;
  if(len(price)==2):
-  price = "00".price;
+  price = "00"+price;
  if(len(price)==3):
-  price = "0".price;
+  price = "0"+price;
  if(len(price)>5):
   if(re.findall("^(\d{5})", price)):
    price_matches = re.findall("^(\d{5})", price);
@@ -1008,8 +1008,23 @@ def get_vw_price_checksum(price, return_check=False):
  return str(CheckSum);
 def validate_vw_price_barcode(price, return_check=False):
  return validate_vw_price_checksum(price, return_check);
+def get_vw_price_checksum(price, return_check=False):
+ price = str(price);
+ if(len(price)==1):
+  price = "000"+price;
+ if(len(price)==2):
+  price = "00"+price;
+ if(len(price)==3):
+  price = "0"+price;
+ return validate_vw_price_checksum(price,True);
 def fix_vw_price_checksum(price):
  price = str(price);
+ if(len(price)==1):
+  price = "000"+price;
+ if(len(price)==2):
+  price = "00"+price;
+ if(len(price)==3):
+  price = "0"+price;
  if(len(price)==5):
   fix_matches = re.findall("^(\d{1})(\d{4})", price); 
   fix_matches = fix_matches[0];
