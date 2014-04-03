@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: stf.py - Last Update: 03/24/2014 Ver. 2.5.8 RC 1 - Author: cooldude2k $
+    $FileInfo: stf.py - Last Update: 04/03/2014 Ver. 2.6.2 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;

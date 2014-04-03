@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 03/25/2014 Ver. 2.6.0 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 04/03/2014 Ver. 2.6.2 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
