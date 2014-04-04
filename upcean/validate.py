@@ -385,16 +385,16 @@ def validate_ean5_checksum(upc, return_check=False):
   return False;
  if(len(upc)==5):
   upc_matches = re.findall("^(\d{5})", upc);
-  upc_matches = [int(x) for x in upc_matches];
  if(len(upc)==6):
   upc_matches = re.findall("^(\d{5})(\d{1})", upc);
   upc_matches = upc_matches[0];
-  upc_matches = [int(x) for x in upc_matches];
  if(len(upc_matches)<=0): 
   return False;
  LeftDigit = list(upc_matches[0]);
+ LeftDigit = [int(x) for x in LeftDigit];
  CheckSum = (LeftDigit[0] * 3) + (LeftDigit[1] * 9) + (LeftDigit[2] * 3) + (LeftDigit[3] * 9) + (LeftDigit[4] * 3);
  CheckSum = CheckSum % 10;
+ upc_matches = [int(x) for x in upc_matches];
  if(return_check==False and len(upc)==6):
   if(CheckSum!=upc_matches[1]):
    return False;
