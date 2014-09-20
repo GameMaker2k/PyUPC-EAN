@@ -53,7 +53,7 @@ setup(
  package_data = {'upcean/fonts': ['*.otf']},
  include_package_data = True,
  install_requires = [install_requires],
- long_description = 'A barcode library/module for python.',
+ long_description = 'PyUPC-EAN is a barcode library/module for Python. It supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.',
  platforms = 'OS Independent',
  zip_safe = True,
  classifiers = [
