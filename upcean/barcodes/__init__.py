@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/12/2014 Ver. 2.6.5 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/12/2014 Ver. 2.6.5 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -99,9 +99,9 @@ def create_barcode_from_xml(xmlfile):
  root = tree.getroot();
  for child in root:
   xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": child.attrib['file']};
-  if(child.attrib.has_key('size')):
+  if('size' in child.attrib):
    xmlbarcode.update({"resize": int(child.attrib['size'])});
-  if(child.attrib.has_key('hideinfo')):
+  if('hideinfo' in child.attrib):
    hidebcinfo = child.attrib['hideinfo'].split();
    hidebcinfoval = [];
    if(hidebcinfo[0]=="0"):
@@ -117,9 +117,9 @@ def create_barcode_from_xml(xmlfile):
    if(hidebcinfo[2]=="1"):
     hidebcinfoval.append(True);
    xmlbarcode.update({"hideinfo": tuple(hidebcinfoval)});
-  if(child.attrib.has_key('height')):
+  if('height' in child.attrib):
    xmlbarcode.update({"barheight": tuple(map(int, child.attrib['height'].split()))});
-  if(child.attrib.has_key('color')):
+  if('color' in child.attrib):
    colorsplit = child.attrib['color'].split();
    colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
    colorsplit1 = colorsplit1[0];
