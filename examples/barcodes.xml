@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE barcodes [
+<!ELEMENT barcodes (barcode*)>
+<!ELEMENT barcode EMPTY>
+<!ATTLIST barcode type CDATA #REQUIRED>
+<!ATTLIST barcode code CDATA #REQUIRED>
+<!ATTLIST barcode file CDATA #REQUIRED>
+<!ATTLIST barcode size CDATA #IMPLIED>
+<!ATTLIST barcode hideinfo CDATA #IMPLIED>
+<!ATTLIST barcode height CDATA #IMPLIED>
+<!ATTLIST barcode color CDATA #IMPLIED>
+]>
+
+<barcodes>
+ <barcode type="upca" code="123456789012" file="/tmp/upca_1.png" size="2" hideinfo="0 0 0" height="48 54" color="#000000 #000000 #FFFFFF" />
+ <barcode type="upca" code="987654321098" file="/tmp/upca_2.png" size="2" hideinfo="0 0 0" height="48 54" color="#000000 #000000 #FFFFFF" />
+ <barcode type="ean13" code="0123456789012" file="/tmp/ean13_2.png" size="2" hideinfo="0 0 0" height="48 54" color="#000000 #000000 #FFFFFF" />
+ <barcode type="ean13" code="0987654321098" file="/tmp/ean13_3.png" size="2" hideinfo="0 0 0" height="48 54" color="#000000 #000000 #FFFFFF" />
+ <barcode type="upce" code="01234565" file="/tmp/upce_1.png" size="2" hideinfo="0 0 0" height="48 54" color="#000000 #000000 #FFFFFF" />
+ <barcode type="upce" code="12345656" file="/tmp/upce_2.png" size="2" hideinfo="0 0 0" height="48 54" color="#000000 #000000 #FFFFFF" />
+</barcodes>

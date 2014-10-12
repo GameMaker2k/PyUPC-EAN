@@ -11,11 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/11/2014 Ver. 2.6.4 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/12/2014 Ver. 2.6.5 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re;
+import sys, re, os, xml.etree.cElementTree;
 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
@@ -90,6 +90,49 @@ def create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, 
  return False;
 def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+'''
+// Create barcode from XML file
+'''
+def create_barcode_from_xml(xmlfile):
+ tree = xml.etree.cElementTree.ElementTree(file=xmlfile)
+ root = tree.getroot();
+ for child in root:
+  xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": child.attrib['file']};
+  if(child.attrib.has_key('size')):
+   xmlbarcode.update({"resize": int(child.attrib['size'])});
+  if(child.attrib.has_key('hideinfo')):
+   hidebcinfo = child.attrib['hideinfo'].split();
+   hidebcinfoval = [];
+   if(hidebcinfo[0]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[0]=="1"):
+    hidebcinfoval.append(True);
+   if(hidebcinfo[1]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[1]=="1"):
+    hidebcinfoval.append(True);
+   if(hidebcinfo[2]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[2]=="1"):
+    hidebcinfoval.append(True);
+   xmlbarcode.update({"hideinfo": tuple(hidebcinfoval)});
+  if(child.attrib.has_key('height')):
+   xmlbarcode.update({"barheight": tuple(map(int, child.attrib['height'].split()))});
+  if(child.attrib.has_key('color')):
+   colorsplit = child.attrib['color'].split();
+   colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
+   colorsplit1 = colorsplit1[0];
+   colorlist1 = (int(colorsplit1[0], 16), int(colorsplit1[1], 16), int(colorsplit1[2], 16));
+   colorsplit2 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1]);
+   colorsplit2 = colorsplit2[0];
+   colorlist2 = (int(colorsplit2[0], 16), int(colorsplit2[1], 16), int(colorsplit2[2], 16));
+   colorsplit3 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2]);
+   colorsplit3 = colorsplit3[0];
+   colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
+   colorlist = (colorlist1, colorlist2, colorlist3);
+   xmlbarcode.update({"barcolor": colorlist});
+  upcean.create_barcode(**xmlbarcode);
 
 def create_issn13_barcode_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13_barcode(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);

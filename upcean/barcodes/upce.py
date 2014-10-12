@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upce.py - Last Update: 10/11/2014 Ver. 2.6.4 RC 1 - Author: cooldude2k $
+    $FileInfo: upce.py - Last Update: 10/12/2014 Ver. 2.6.5 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
