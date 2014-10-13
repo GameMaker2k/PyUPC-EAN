@@ -3,7 +3,7 @@
 <!ELEMENT barcode EMPTY>
 <!ATTLIST barcode type CDATA #REQUIRED>
 <!ATTLIST barcode code CDATA #REQUIRED>
-<!ATTLIST barcode file CDATA #REQUIRED>
+<!ATTLIST barcode file CDATA #IMPLIED>
 <!ATTLIST barcode size CDATA #IMPLIED>
 <!ATTLIST barcode hideinfo CDATA #IMPLIED>
 <!ATTLIST barcode height CDATA #IMPLIED>

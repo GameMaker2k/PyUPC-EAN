@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/12/2014 Ver. 2.6.5 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/13/2014 Ver. 2.6.5 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -92,13 +92,20 @@ def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(4
  return create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 '''
-// Create barcode from XML file
+// Create barcodes from XML file
 '''
-def create_barcode_from_xml(xmlfile):
+def create_barcode_from_xml(xmlfile, draw=False):
  tree = xml.etree.cElementTree.ElementTree(file=xmlfile)
  root = tree.getroot();
+ bcdrawlist = [];
  for child in root:
-  xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": child.attrib['file']};
+  if(draw==True):
+   xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": None};
+  if(draw==False):
+   if('file' in child.attrib):
+    xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": child.attrib['file']};
+   if('file' not in child.attrib):
+    xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": None};
   if('size' in child.attrib):
    xmlbarcode.update({"resize": int(child.attrib['size'])});
   if('hideinfo' in child.attrib):
@@ -132,7 +139,17 @@ def create_barcode_from_xml(xmlfile):
    colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
    colorlist = (colorlist1, colorlist2, colorlist3);
    xmlbarcode.update({"barcolor": colorlist});
-  upcean.create_barcode(**xmlbarcode);
+  bcstatinfo = upcean.create_barcode(**xmlbarcode);
+  if(draw==True or 'file' not in child.attrib):
+   bcdrawlist.append(bcstatinfo);
+  if(bcstatinfo==False):
+   return False;
+ if(draw==True or (draw==False and len(bcdrawlist)>0)):
+  return bcdrawlist;
+ if(draw==False and len(bcdrawlist)==0):
+  return True;
+def draw_barcode_from_xml(xmlfile):
+ return create_barcode_from_xml(xmlfile, True);
 
 def create_issn13_barcode_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13_barcode(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);

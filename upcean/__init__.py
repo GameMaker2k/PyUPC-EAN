@@ -11,12 +11,12 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/12/2014 Ver. 2.6.5 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/13/2014 Ver. 2.6.5 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
 import sys, re;
-__version_info__ = (2, 6, 4, "RC 2");
+__version_info__ = (2, 6, 4, "RC 3");
 if(__version_info__[3]!=None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
 if(__version_info__[3]==None):
@@ -27,7 +27,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3]==None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2014, 10, 12, "RC 2");
+__version_date_info__ = (2014, 13, 12, "RC 3");
 def version_date():
  global __version_info__;
  if(__version_date_info__[3]!=None):
