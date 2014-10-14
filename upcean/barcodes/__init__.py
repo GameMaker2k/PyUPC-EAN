@@ -15,7 +15,11 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re, os, xml.etree.cElementTree, urllib2;
+import sys, re, os, xml.etree.cElementTree;
+if(sys.version[0]=="2"):
+ import urllib2;
+if(sys.version[0]=="3"):
+ import urllib.request as urllib2;
 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
