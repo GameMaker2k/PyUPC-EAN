@@ -15,7 +15,11 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re, os, xml.etree.cElementTree;
+import sys, re, os;
+try:
+ import xml.etree.cElementTree as cElementTree;
+except ImportError:
+ import xml.etree.ElementTree as cElementTree;
 if(sys.version[0]=="2"):
  import urllib2;
 if(sys.version[0]=="3"):
@@ -101,59 +105,68 @@ def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(4
 def create_barcode_from_xml(xmlfile, draw=False):
  if(re.findall("^(http|https)\:\/\/", xmlfile)):
   xmlheaders = {'User-Agent': "Mozilla/5.0 (compatible; PyUPC-EAN/2.6.5 RC 4; +https://github.com/GameMaker2k/PyUPC-EAN/)"};
-  tree = xml.etree.cElementTree.ElementTree(file=urllib2.urlopen(urllib2.Request(xmlfile, None, xmlheaders)));
+  try:
+   tree = cElementTree.ElementTree(file=urllib2.urlopen(urllib2.Request(xmlfile, None, xmlheaders)));
+  except cElementTree.ParseError: 
+   return False;
  else:
-  tree = xml.etree.cElementTree.ElementTree(file=xmlfile);
+  try:
+   tree = cElementTree.ElementTree(file=xmlfile);
+  except cElementTree.ParseError: 
+   return False;
  root = tree.getroot();
  bcdrawlist = [];
  for child in root:
-  if(draw==True):
-   xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": None};
-  if(draw==False):
-   if('file' in child.attrib):
-    xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": child.attrib['file']};
-   if('file' not in child.attrib):
+  if(child.tag=="python"):
+   exec(child.text);
+  if(child.tag=="barcode"):
+   if(draw==True):
     xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": None};
-  if('size' in child.attrib):
-   xmlbarcode.update({"resize": int(child.attrib['size'])});
-  if('hideinfo' in child.attrib):
-   hidebcinfo = child.attrib['hideinfo'].split();
-   hidebcinfoval = [];
-   if(hidebcinfo[0]=="0"):
-    hidebcinfoval.append(False);
-   if(hidebcinfo[0]=="1"):
-    hidebcinfoval.append(True);
-   if(hidebcinfo[1]=="0"):
-    hidebcinfoval.append(False);
-   if(hidebcinfo[1]=="1"):
-    hidebcinfoval.append(True);
-   if(hidebcinfo[2]=="0"):
-    hidebcinfoval.append(False);
-   if(hidebcinfo[2]=="1"):
-    hidebcinfoval.append(True);
-   xmlbarcode.update({"hideinfo": tuple(hidebcinfoval)});
-  if('textxy' in child.attrib):
-   xmlbarcode.update({"textxy": tuple(map(int, child.attrib['textxy'].split()))});
-  if('height' in child.attrib):
-   xmlbarcode.update({"barheight": tuple(map(int, child.attrib['height'].split()))});
-  if('color' in child.attrib):
-   colorsplit = child.attrib['color'].split();
-   colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
-   colorsplit1 = colorsplit1[0];
-   colorlist1 = (int(colorsplit1[0], 16), int(colorsplit1[1], 16), int(colorsplit1[2], 16));
-   colorsplit2 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1]);
-   colorsplit2 = colorsplit2[0];
-   colorlist2 = (int(colorsplit2[0], 16), int(colorsplit2[1], 16), int(colorsplit2[2], 16));
-   colorsplit3 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2]);
-   colorsplit3 = colorsplit3[0];
-   colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
-   colorlist = (colorlist1, colorlist2, colorlist3);
-   xmlbarcode.update({"barcolor": colorlist});
-  bcstatinfo = upcean.create_barcode(**xmlbarcode);
-  if(draw==True or 'file' not in child.attrib):
-   bcdrawlist.append(bcstatinfo);
-  if(bcstatinfo==False):
-   return False;
+   if(draw==False):
+    if('file' in child.attrib):
+     xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": child.attrib['file']};
+    if('file' not in child.attrib):
+     xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": None};
+   if('size' in child.attrib):
+    xmlbarcode.update({"resize": int(child.attrib['size'])});
+   if('hideinfo' in child.attrib):
+    hidebcinfo = child.attrib['hideinfo'].split();
+    hidebcinfoval = [];
+    if(hidebcinfo[0]=="0"):
+     hidebcinfoval.append(False);
+    if(hidebcinfo[0]=="1"):
+     hidebcinfoval.append(True);
+    if(hidebcinfo[1]=="0"):
+     hidebcinfoval.append(False);
+    if(hidebcinfo[1]=="1"):
+     hidebcinfoval.append(True);
+    if(hidebcinfo[2]=="0"):
+     hidebcinfoval.append(False);
+    if(hidebcinfo[2]=="1"):
+     hidebcinfoval.append(True);
+    xmlbarcode.update({"hideinfo": tuple(hidebcinfoval)});
+   if('textxy' in child.attrib):
+    xmlbarcode.update({"textxy": tuple(map(int, child.attrib['textxy'].split()))});
+   if('height' in child.attrib):
+    xmlbarcode.update({"barheight": tuple(map(int, child.attrib['height'].split()))});
+   if('color' in child.attrib):
+    colorsplit = child.attrib['color'].split();
+    colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
+    colorsplit1 = colorsplit1[0];
+    colorlist1 = (int(colorsplit1[0], 16), int(colorsplit1[1], 16), int(colorsplit1[2], 16));
+    colorsplit2 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1]);
+    colorsplit2 = colorsplit2[0];
+    colorlist2 = (int(colorsplit2[0], 16), int(colorsplit2[1], 16), int(colorsplit2[2], 16));
+    colorsplit3 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2]);
+    colorsplit3 = colorsplit3[0];
+    colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
+    colorlist = (colorlist1, colorlist2, colorlist3);
+    xmlbarcode.update({"barcolor": colorlist});
+   bcstatinfo = upcean.create_barcode(**xmlbarcode);
+   if(draw==True or 'file' not in child.attrib):
+    bcdrawlist.append(bcstatinfo);
+   if(bcstatinfo==False):
+    return False;
  if(draw==True or (draw==False and len(bcdrawlist)>0)):
   return bcdrawlist;
  if(draw==False and len(bcdrawlist)==0):

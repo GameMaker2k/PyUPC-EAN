@@ -38,6 +38,7 @@ __version_date__ = "{year}.{month}.{day}".format(year=__version_date_info__[0], 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
 import upcean.barcodes.code11, upcean.barcodes.code39, upcean.barcodes.code93, upcean.barcodes.codabar, upcean.barcodes.msi;
+import upcean.fonts, upcean.xml;
 from upcean.barcodes import *;
 ''' // Code for validating UPC/EAN by Kazuki Przyborowski '''
 from upcean.validate import *;
@@ -75,6 +76,9 @@ from upcean.barcodes.code93 import *;
 from upcean.barcodes.codabar import *;
 ''' // Code for making Modified Plessey by Kazuki Przyborowski '''
 from upcean.barcodes.msi import *;
+''' // Import extra stuff '''
+from upcean.fonts import *;
+from upcean.xml import *;
 
 '''
 // UPC Resources and Info
@@ -321,6 +325,10 @@ class barcode:
   return getattr(upcean, "create_"+self.type+"_barcode_from_"+self.outtype)(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def draw_from_barcode(self):
   return getattr(upcean, "draw_"+self.type+"_barcode_from_"+self.outtype)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+ def create_from_xml(self):
+  return create_barcode_from_xml(self.xmlfile, False);
+ def draw_from_xml(self):
+  return draw_barcode_from_xml(self.xmlfile);
  def create_vw_barcode(self):
   if(self.type=="upca"):
    return create_vw_barcode_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
