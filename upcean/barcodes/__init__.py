@@ -11,11 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/13/2014 Ver. 2.6.5 RC 3 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/14/2014 Ver. 2.6.5 RC 4 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re, os, xml.etree.cElementTree;
+import sys, re, os, xml.etree.cElementTree, urllib2;
 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
@@ -95,7 +95,11 @@ def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(4
 // Create barcodes from XML file
 '''
 def create_barcode_from_xml(xmlfile, draw=False):
- tree = xml.etree.cElementTree.ElementTree(file=xmlfile)
+ if(re.findall("^(http|https)\:\/\/", xmlfile)):
+  xmlheaders = {'User-Agent': "Mozilla/5.0 (compatible; PyUPC-EAN/2.6.5 RC 4; +https://github.com/GameMaker2k/PyUPC-EAN/)"};
+  tree = xml.etree.cElementTree.ElementTree(file=urllib2.urlopen(urllib2.Request(xmlfile, None, xmlheaders)));
+ else:
+  tree = xml.etree.cElementTree.ElementTree(file=xmlfile);
  root = tree.getroot();
  bcdrawlist = [];
  for child in root:
@@ -124,6 +128,8 @@ def create_barcode_from_xml(xmlfile, draw=False):
    if(hidebcinfo[2]=="1"):
     hidebcinfoval.append(True);
    xmlbarcode.update({"hideinfo": tuple(hidebcinfoval)});
+  if('textxy' in child.attrib):
+   xmlbarcode.update({"textxy": tuple(map(int, child.attrib['textxy'].split()))});
   if('height' in child.attrib):
    xmlbarcode.update({"barheight": tuple(map(int, child.attrib['height'].split()))});
   if('color' in child.attrib):
