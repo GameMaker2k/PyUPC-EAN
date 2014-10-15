@@ -11,11 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/14/2014 Ver. 2.6.5 RC 4 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/15/2014 Ver. 2.6.7 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re, os;
+import sys, re, os, json;
 try:
  import xml.etree.cElementTree as cElementTree;
 except ImportError:
@@ -66,6 +66,9 @@ from upcean.barcodes.codabar import *;
 ''' // Code for making Modified Plessey by Kazuki Przyborowski '''
 from upcean.barcodes.msi import *;
 
+''' User-Agent string for http/https requests '''
+useragent_string = "Mozilla/5.0 (compatible; PyUPC-EAN/2.6.7 RC 1; +https://pypi.python.org/pypi/PyUPC-EAN)";
+
 '''
 // UPC Resources and Info
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code
@@ -103,8 +106,9 @@ def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(4
 // Create barcodes from XML file
 '''
 def create_barcode_from_xml(xmlfile, draw=False):
+ global useragent_string;
  if(re.findall("^(http|https)\:\/\/", xmlfile)):
-  xmlheaders = {'User-Agent': "Mozilla/5.0 (compatible; PyUPC-EAN/2.6.5 RC 4; +https://github.com/GameMaker2k/PyUPC-EAN/)"};
+  xmlheaders = {'User-Agent': useragent_string};
   try:
    tree = cElementTree.ElementTree(file=urllib2.urlopen(urllib2.Request(xmlfile, None, xmlheaders)));
   except cElementTree.ParseError: 
@@ -145,10 +149,10 @@ def create_barcode_from_xml(xmlfile, draw=False):
     if(hidebcinfo[2]=="1"):
      hidebcinfoval.append(True);
     xmlbarcode.update({"hideinfo": tuple(hidebcinfoval)});
-   if('textxy' in child.attrib):
-    xmlbarcode.update({"textxy": tuple(map(int, child.attrib['textxy'].split()))});
    if('height' in child.attrib):
     xmlbarcode.update({"barheight": tuple(map(int, child.attrib['height'].split()))});
+   if('textxy' in child.attrib):
+    xmlbarcode.update({"textxy": tuple(map(int, child.attrib['textxy'].split()))});
    if('color' in child.attrib):
     colorsplit = child.attrib['color'].split();
     colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
@@ -173,6 +177,76 @@ def create_barcode_from_xml(xmlfile, draw=False):
   return True;
 def draw_barcode_from_xml(xmlfile):
  return create_barcode_from_xml(xmlfile, True);
+
+def create_barcode_from_json(jsonfile, draw=False):
+ global useragent_string;
+ if(re.findall("^(http|https)\:\/\/", jsonfile)):
+  jsonheaders = {'User-Agent': useragent_string};
+  tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
+ else:
+  tree = json.load(open(jsonfile));
+ try:
+  bctree = tree['barcodes']['barcode'];
+ except: 
+  return False;
+ bctreeln = len(bctree);
+ bctreect = 0;
+ bcdrawlist = [];
+ while(bctreect < bctreeln):
+  if(draw==True):
+   jsonbarcode = {"bctype": bctree[bctreect]['type'], "upc": bctree[bctreect]['code'], "outfile": None};
+  if(draw==False):
+   if('file' in bctree[bctreect]):
+    jsonbarcode = {"bctype": bctree[bctreect]['type'], "upc": bctree[bctreect]['code'], "outfile": bctree[bctreect]['file']};
+   if('file' not in bctree[bctreect]):
+    jsonbarcode = {"bctype": bctree[bctreect]['type'], "upc": bctree[bctreect]['code'], "outfile": None};
+  if('size' in bctree[bctreect]):
+   jsonbarcode.update({"resize": int(bctree[bctreect]['size'])});
+  if('hideinfo' in bctree[bctreect]):
+   hidebcinfo = bctree[bctreect]['hideinfo'].split();
+   hidebcinfoval = [];
+   if(hidebcinfo[0]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[0]=="1"):
+    hidebcinfoval.append(True);
+   if(hidebcinfo[1]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[1]=="1"):
+    hidebcinfoval.append(True);
+   if(hidebcinfo[2]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[2]=="1"):
+    hidebcinfoval.append(True);
+   jsonbarcode.update({"hideinfo": tuple(hidebcinfoval)});
+  if('height' in bctree[bctreect]):
+   jsonbarcode.update({"barheight": tuple(map(int, bctree[bctreect]['height'].split()))});
+  if('textxy' in bctree[bctreect]):
+   jsonbarcode.update({"textxy": tuple(map(int, bctree[bctreect]['textxy'].split()))});
+  if('color' in bctree[bctreect]):
+   colorsplit = bctree[bctreect]['color'].split();
+   colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
+   colorsplit1 = colorsplit1[0];
+   colorlist1 = (int(colorsplit1[0], 16), int(colorsplit1[1], 16), int(colorsplit1[2], 16));
+   colorsplit2 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1]);
+   colorsplit2 = colorsplit2[0];
+   colorlist2 = (int(colorsplit2[0], 16), int(colorsplit2[1], 16), int(colorsplit2[2], 16));
+   colorsplit3 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2]);
+   colorsplit3 = colorsplit3[0];
+   colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
+   colorlist = (colorlist1, colorlist2, colorlist3);
+   jsonbarcode.update({"barcolor": colorlist});
+  bcstatinfo = upcean.create_barcode(**jsonbarcode);
+  if(draw==True or 'file' not in bctree[bctreect]):
+   bcdrawlist.append(bcstatinfo);
+  if(bcstatinfo==False):
+   return False;
+  bctreect = bctreect + 1;
+ if(draw==True or (draw==False and len(bcdrawlist)>0)):
+  return bcdrawlist;
+ if(draw==False and len(bcdrawlist)==0):
+  return True;
+def draw_barcode_from_json(jsonfile):
+ return create_barcode_from_json(jsonfile, True);
 
 def create_issn13_barcode_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13_barcode(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);

@@ -2,8 +2,15 @@ PREFIX?="/usr/local"
 DESTDIR?="/"
 PYTHON?="/usr/bin/python"
 .PHONY: all install clean sdist bdist gztar ztar tar zip gztarsrc ztarsrc tarsrc zipsrc egg rpm deb wininst msi
-all:
+
+
+
+all:	
+ifdef COMMAND
+	${PYTHON} ./setup.py $(COMMAND)
+else
 	${PYTHON} ./setup.py build
+endif
 install:
 	PYTHONPATH="$(shell realpath ${DESTDIR}${PREFIX})/lib/python$(shell ${PYTHON} -c 'import sys; print str(sys.version_info[0])').$(shell ${PYTHON} -c 'import sys; print str(sys.version_info[1])')/site-packages"
 	${PYTHON} ./setup.py install --prefix=${PREFIX} --root=${DESTDIR}
@@ -11,9 +18,17 @@ clean:
 	${PYTHON} ./setup.py clean
 	rm -rfv "./build/" "./dist/" "./deb_dist/" "./PyUPC_EAN.egg-info/"
 sdist:
+ifdef FORMAT
+	${PYTHON} ./setup.py sdist --format=$(FORMAT)
+else
 	${PYTHON} ./setup.py sdist
+endif
 bdist:
+ifdef FORMAT
+	${PYTHON} ./setup.py bdist --format=$(FORMAT)
+else
 	${PYTHON} ./setup.py bdist
+endif
 gztar:
 	${PYTHON} ./setup.py bdist --format=gztar
 ztar:
