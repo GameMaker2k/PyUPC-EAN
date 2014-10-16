@@ -1,2 +1,2 @@
-include *.otf *.py *.dtd *.xsl
-recursive-include upcean *.otf *.py *.dtd *.xsl
+include *.otf *.py *.dtd *.xsl *.xsd
+recursive-include upcean *.otf *.py *.dtd *.xsl *.xsd
