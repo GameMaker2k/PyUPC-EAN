@@ -21,8 +21,13 @@ try:
 except ImportError:
  import xml.etree.ElementTree as cElementTree;
 if(sys.version[0]=="2"):
+ try:
+  from cStringIO import StringIO;
+ except ImportError:
+  from StringIO import StringIO;
  import urllib2;
 if(sys.version[0]=="3"):
+ from io import StringIO;
  import urllib.request as urllib2;
 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
@@ -90,6 +95,14 @@ useragent_string = "Mozilla/5.0 (compatible; PyUPC-EAN/2.6.7 RC 1; +https://pypi
 // Source: http://www.barcodeisland.com/
 '''
 
+def check_if_string(strtext):
+ if(sys.version[0]=="2"):
+  if(isinstance(strtext, basestring)):
+   return True;
+ if(sys.version[0]=="3"):
+  if(isinstance(strtext, str)):
+   return True;
+ return False;
 '''
 // Shortcut Codes by Kazuki Przyborowski
 '''
@@ -107,7 +120,7 @@ def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(4
 '''
 def create_barcode_from_xml(xmlfile, draw=False):
  global useragent_string;
- if(re.findall("^(http|https)\:\/\/", xmlfile)):
+ if(check_if_string(xmlfile) and re.findall("^(http|https)\:\/\/", xmlfile)):
   xmlheaders = {'User-Agent': useragent_string};
   try:
    tree = cElementTree.ElementTree(file=urllib2.urlopen(urllib2.Request(xmlfile, None, xmlheaders)));
@@ -175,12 +188,16 @@ def create_barcode_from_xml(xmlfile, draw=False):
   return bcdrawlist;
  if(draw==False and len(bcdrawlist)==0):
   return True;
+def create_barcode_from_xml_string(xmlfile, draw=False):
+ return create_barcode_from_xml(StringIO(xmlfile), draw);
 def draw_barcode_from_xml(xmlfile):
  return create_barcode_from_xml(xmlfile, True);
+def draw_barcode_from_xml_string(xmlfile):
+ return create_barcode_from_xml(StringIO(xmlfile), True);
 
 def create_barcode_from_json(jsonfile, draw=False):
  global useragent_string;
- if(re.findall("^(http|https)\:\/\/", jsonfile)):
+ if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
   jsonheaders = {'User-Agent': useragent_string};
   tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
  else:
@@ -245,8 +262,12 @@ def create_barcode_from_json(jsonfile, draw=False):
   return bcdrawlist;
  if(draw==False and len(bcdrawlist)==0):
   return True;
+def create_barcode_from_json_string(xmlfile, draw=False):
+ return create_barcode_from_json(StringIO(jsonfile), draw);
 def draw_barcode_from_json(jsonfile):
  return create_barcode_from_json(jsonfile, True);
+def draw_barcode_from_json_string(xmlfile):
+ return create_barcode_from_json(StringIO(jsonfile), True);
 
 def create_issn13_barcode_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13_barcode(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);
