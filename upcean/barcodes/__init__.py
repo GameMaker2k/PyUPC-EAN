@@ -25,10 +25,11 @@ if(sys.version[0]=="2"):
   from cStringIO import StringIO;
  except ImportError:
   from StringIO import StringIO;
- import urllib2;
+ import urllib2, urlparse;
 if(sys.version[0]=="3"):
  from io import StringIO;
  import urllib.request as urllib2;
+ import urllib.parse as urlparse;
 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
@@ -268,6 +269,66 @@ def draw_barcode_from_json(jsonfile):
  return create_barcode_from_json(jsonfile, True);
 def draw_barcode_from_json_string(xmlfile):
  return create_barcode_from_json(StringIO(jsonfile), True);
+
+def create_barcode_from_qs(querystring, draw=False):
+ tree = urlparse.parse_qs(querystring);
+ bctreeln = len(tree['type']);
+ bctreect = 0;
+ bcdrawlist = [];
+ bctree = tree;
+ if(draw==True):
+  jsonbarcode = {"bctype": bctree['type'][0], "upc": bctree['code'][0], "outfile": None};
+ if(draw==False):
+  if('file' in bctree):
+   jsonbarcode = {"bctype": bctree['type'][0], "upc": bctree['code'][0], "outfile": bctree['file'][0]};
+  if('file' not in bctree):
+   jsonbarcode = {"bctype": bctree['type'][0], "upc": bctree['code'][0], "outfile": None};
+ if('size' in bctree):
+  jsonbarcode.update({"resize": int(bctree['size'][0])});
+ if('hideinfo' in bctree):
+  hidebcinfo = bctree['hideinfo'][0].split();
+  hidebcinfoval = [];
+  if(hidebcinfo[0]=="0"):
+   hidebcinfoval.append(False);
+  if(hidebcinfo[0]=="1"):
+   hidebcinfoval.append(True);
+  if(hidebcinfo[1]=="0"):
+   hidebcinfoval.append(False);
+  if(hidebcinfo[1]=="1"):
+   hidebcinfoval.append(True);
+  if(hidebcinfo[2]=="0"):
+   hidebcinfoval.append(False);
+  if(hidebcinfo[2]=="1"):
+   hidebcinfoval.append(True);
+  jsonbarcode.update({"hideinfo": tuple(hidebcinfoval)});
+ if('height' in bctree):
+  jsonbarcode.update({"barheight": tuple(map(int, bctree['height'][0].split()))});
+ if('textxy' in bctree):
+  jsonbarcode.update({"textxy": tuple(map(int, bctree['textxy'][0].split()))});
+ if('color' in bctree):
+  colorsplit = bctree['color'][0].split();
+  colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
+  colorsplit1 = colorsplit1[0];
+  colorlist1 = (int(colorsplit1[0], 16), int(colorsplit1[1], 16), int(colorsplit1[2], 16));
+  colorsplit2 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1]);
+  colorsplit2 = colorsplit2[0];
+  colorlist2 = (int(colorsplit2[0], 16), int(colorsplit2[1], 16), int(colorsplit2[2], 16));
+  colorsplit3 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2]);
+  colorsplit3 = colorsplit3[0];
+  colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
+  colorlist = (colorlist1, colorlist2, colorlist3);
+  jsonbarcode.update({"barcolor": colorlist});
+ bcstatinfo = upcean.create_barcode(**jsonbarcode);
+ if(draw==True or 'file' not in bctree):
+  bcdrawlist.append(bcstatinfo);
+ if(bcstatinfo==False):
+  return False;
+ if(draw==True or (draw==False and len(bcdrawlist)>0)):
+  return bcdrawlist;
+ if(draw==False and len(bcdrawlist)==0):
+  return True;
+def draw_barcode_from_qs(qs):
+ return create_barcode_from_json(qs, True);
 
 def create_issn13_barcode_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13_barcode(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);

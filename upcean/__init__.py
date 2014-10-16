@@ -341,6 +341,10 @@ class barcode:
   return create_barcode_from_json_string(self.jsonfile, False);
  def draw_from_json_string(self):
   return draw_barcode_from_json_string(self.jsonfile);
+ def create_from_qs(self):
+  return create_barcode_from_qs(self.jsonfile, False);
+ def draw_from_qs(self):
+  return draw_barcode_from_qs(self.jsonfile);
  def create_vw_barcode(self):
   if(self.type=="upca"):
    return create_vw_barcode_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
