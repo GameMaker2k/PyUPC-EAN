@@ -30,6 +30,7 @@ if(sys.version[0]=="3"):
  from io import StringIO;
  import urllib.request as urllib2;
  import urllib.parse as urlparse;
+from xml.sax.saxutils import XMLGenerator;
 from upcean import __project__, __project_url__, __version__, __version_alt__, __version_info__, __version_date__, __version_date_info__, __version_date_alt__;
 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
@@ -106,6 +107,7 @@ def check_if_string(strtext):
   if(isinstance(strtext, str)):
    return True;
  return False;
+
 '''
 // Shortcut Codes by Kazuki Przyborowski
 '''
@@ -271,6 +273,43 @@ def draw_barcode_from_json(jsonfile):
  return create_barcode_from_json(jsonfile, True);
 def draw_barcode_from_json_string(xmlfile):
  return create_barcode_from_json(StringIO(jsonfile), True);
+
+def convert_json_to_xml(jsonfile, xmlfile=None):
+ global useragent_string;
+ if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
+  jsonheaders = {'User-Agent': useragent_string};
+  tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
+ else:
+  tree = json.load(open(jsonfile));
+ try:
+  bctree = tree['barcodes']['barcode'];
+ except: 
+  return False;
+ bctreeln = len(bctree);
+ bctreect = 0;
+ bcdrawlist = [];
+ xmlout=StringIO();
+ upcxml=XMLGenerator(xmlout, "utf-8");
+ upcxml.startDocument();
+ upcxml.startElement("barcodes", {});
+ upcxml.characters("\n");
+ while(bctreect < bctreeln):
+  upcxml.characters(" ");
+  upcxml.startElement("barcode", bctree[bctreect]);
+  upcxml.endElement("barcode");
+  upcxml.characters("\n");
+  bctreect = bctreect + 1;
+ upcxml.endElement("barcodes");
+ upcxml.endDocument();
+ if(xmlfile!=None):
+  xmlofile = open(xmlfile, "w+b");
+  xmlofile.write(xmlout.getvalue());
+  xmlofile.close();
+  return True;
+ if(xmlfile==None):
+  return xmlout.getvalue();
+def convert_json_to_xml_string(jsonfile, xmlfile=None):
+ return create_barcode_from_json(StringIO(jsonfile), xmlfile);
 
 def create_barcode_from_qs(querystring, draw=False):
  tree = urlparse.parse_qs(querystring);
