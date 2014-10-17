@@ -274,57 +274,90 @@ def draw_barcode_from_json_string(xmlfile):
 
 def create_barcode_from_qs(querystring, draw=False):
  tree = urlparse.parse_qs(querystring);
- bctreeln = len(tree['type']);
+ bctree = tree;
+ if(len(bctree['type'])<len(bctree['code']) or len(bctree['type'])==len(bctree['code'])):
+  bctreeln = len(bctree['type']);
+ if(len(bctree['code'])<len(bctree['type'])):
+  bctreeln = len(bctree['code']);
  bctreect = 0;
  bcdrawlist = [];
- bctree = tree;
- if(draw==True):
-  jsonbarcode = {"bctype": bctree['type'][0], "upc": bctree['code'][0], "outfile": None};
- if(draw==False):
-  if('file' in bctree):
-   jsonbarcode = {"bctype": bctree['type'][0], "upc": bctree['code'][0], "outfile": bctree['file'][0]};
-  if('file' not in bctree):
-   jsonbarcode = {"bctype": bctree['type'][0], "upc": bctree['code'][0], "outfile": None};
- if('size' in bctree):
-  jsonbarcode.update({"resize": int(bctree['size'][0])});
- if('hideinfo' in bctree):
-  hidebcinfo = bctree['hideinfo'][0].split();
-  hidebcinfoval = [];
-  if(hidebcinfo[0]=="0"):
-   hidebcinfoval.append(False);
-  if(hidebcinfo[0]=="1"):
-   hidebcinfoval.append(True);
-  if(hidebcinfo[1]=="0"):
-   hidebcinfoval.append(False);
-  if(hidebcinfo[1]=="1"):
-   hidebcinfoval.append(True);
-  if(hidebcinfo[2]=="0"):
-   hidebcinfoval.append(False);
-  if(hidebcinfo[2]=="1"):
-   hidebcinfoval.append(True);
-  jsonbarcode.update({"hideinfo": tuple(hidebcinfoval)});
- if('height' in bctree):
-  jsonbarcode.update({"barheight": tuple(map(int, bctree['height'][0].split()))});
- if('textxy' in bctree):
-  jsonbarcode.update({"textxy": tuple(map(int, bctree['textxy'][0].split()))});
- if('color' in bctree):
-  colorsplit = bctree['color'][0].split();
-  colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
-  colorsplit1 = colorsplit1[0];
-  colorlist1 = (int(colorsplit1[0], 16), int(colorsplit1[1], 16), int(colorsplit1[2], 16));
-  colorsplit2 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1]);
-  colorsplit2 = colorsplit2[0];
-  colorlist2 = (int(colorsplit2[0], 16), int(colorsplit2[1], 16), int(colorsplit2[2], 16));
-  colorsplit3 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2]);
-  colorsplit3 = colorsplit3[0];
-  colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
-  colorlist = (colorlist1, colorlist2, colorlist3);
-  jsonbarcode.update({"barcolor": colorlist});
- bcstatinfo = upcean.create_barcode(**jsonbarcode);
- if(draw==True or 'file' not in bctree):
-  bcdrawlist.append(bcstatinfo);
- if(bcstatinfo==False):
-  return False;
+ while(bctreect < bctreeln):
+  qsbarcode = {}
+  nofilesave = False;
+  if(draw==True):
+   nofilesave = True;
+   qsbarcode.update({"bctype": bctree['type'][bctreect], "upc": bctree['code'][bctreect], "outfile": None});
+  if(draw==False):
+   try:
+    nofilesave = False;
+    qsbarcode.update({"bctype": bctree['type'][bctreect], "upc": bctree['code'][bctreect], "outfile": bctree['file'][bctreect]});
+   except KeyError:
+    nofilesave = True;
+    qsbarcode.update({"bctype": bctree['type'][bctreect], "upc": bctree['code'][bctreect], "outfile": None});
+   except IndexError:
+    nofilesave = True;
+    qsbarcode.update({"bctype": bctree['type'][bctreect], "upc": bctree['code'][bctreect], "outfile": None});
+  try:
+   qsbarcode.update({"resize": int(bctree['size'][bctreect])});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   hidebcinfo = bctree['hideinfo'][bctreect].split();
+   hidebcinfoval = [];
+   if(hidebcinfo[0]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[0]=="1"):
+    hidebcinfoval.append(True);
+   if(hidebcinfo[1]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[1]=="1"):
+    hidebcinfoval.append(True);
+   if(hidebcinfo[2]=="0"):
+    hidebcinfoval.append(False);
+   if(hidebcinfo[2]=="1"):
+    hidebcinfoval.append(True);
+   qsbarcode.update({"hideinfo": tuple(hidebcinfoval)});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"barheight": int(bctree['height'][bctreect])});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"textxy": int(bctree['textxy'][bctreect])});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   colorsplit = bctree['color'][bctreect].split();
+   colorsplit1 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0]);
+   colorsplit1 = colorsplit1[0];
+   colorlist1 = (int(colorsplit1[0], 16), int(colorsplit1[1], 16), int(colorsplit1[2], 16));
+   colorsplit2 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1]);
+   colorsplit2 = colorsplit2[0];
+   colorlist2 = (int(colorsplit2[0], 16), int(colorsplit2[1], 16), int(colorsplit2[2], 16));
+   colorsplit3 = re.findall("^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2]);
+   colorsplit3 = colorsplit3[0];
+   colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
+   colorlist = (colorlist1, colorlist2, colorlist3);
+   qsbarcode.update({"barcolor": colorlist});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  bcstatinfo = upcean.create_barcode(**qsbarcode);
+  if(draw==True or nofilesave == True):
+   bcdrawlist.append(bcstatinfo);
+  if(bcstatinfo==False):
+   return False;
+  bctreect = bctreect + 1;
  if(draw==True or (draw==False and len(bcdrawlist)>0)):
   return bcdrawlist;
  if(draw==False and len(bcdrawlist)==0):

@@ -27,9 +27,14 @@ if(pkgres==True):
  barcodedtd = pkg_resources.resource_filename(__name__, "barcodes.dtd");
  barcodexsl = pkg_resources.resource_filename(__name__, "barcodes.xsl");
  barcodexsd = pkg_resources.resource_filename(__name__, "barcodes.xsd");
+ barcoderng = pkg_resources.resource_filename(__name__, "barcodes.rng");
+ barcodernc = pkg_resources.resource_filename(__name__, "barcodes.rnc");
  bcxmlpath = os.path.dirname(barcodedtd);
+
 if(pkgres==False):
  barcodedtd = os.path.dirname(__file__)+os.sep+"barcodes.dtd";
  barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl";
  barcodexsd = os.path.dirname(__file__)+os.sep+"barcodes.xsd";
+ barcoderng = os.path.dirname(__file__)+os.sep+"barcodes.rng";
+ barcodernc = os.path.dirname(__file__)+os.sep+"barcodes.rnc";
  bcxmlpath = os.path.dirname(barcodedtd);

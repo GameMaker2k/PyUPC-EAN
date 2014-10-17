@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="" xmlns="http://relaxng.org/ns/structure/1.0">
+  <start>
+    <choice>
+      <ref name="barcodes" />
+      <ref name="barcode" />
+      <ref name="python" />
+    </choice>
+  </start>
+  <define name="barcodes">
+    <element>
+      <name ns="">barcodes</name>
+      <zeroOrMore>
+        <choice>
+          <ref name="python" />
+          <ref name="barcode" />
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="barcode">
+    <element>
+      <name ns="">barcode</name>
+      <attribute>
+        <name ns="">type</name>
+        <text />
+      </attribute>
+      <attribute>
+        <name ns="">code</name>
+        <text />
+      </attribute>
+      <optional>
+        <attribute>
+          <name ns="">file</name>
+          <text />
+        </attribute>
+      </optional>
+      <optional>
+        <attribute>
+          <name ns="">size</name>
+          <text />
+        </attribute>
+      </optional>
+      <optional>
+        <attribute>
+          <name ns="">hideinfo</name>
+          <text />
+        </attribute>
+      </optional>
+      <optional>
+        <attribute>
+          <name ns="">height</name>
+          <text />
+        </attribute>
+      </optional>
+      <optional>
+        <attribute>
+          <name ns="">textxy</name>
+          <text />
+        </attribute>
+      </optional>
+      <optional>
+        <attribute>
+          <name ns="">color</name>
+          <text />
+        </attribute>
+      </optional>
+      <empty />
+    </element>
+  </define>
+  <define name="python">
+    <element>
+      <name ns="">python</name>
+      <text />
+    </element>
+  </define>
+</grammar>
