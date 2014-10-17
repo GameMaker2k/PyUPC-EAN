@@ -26,8 +26,8 @@ except ImportError:
 if(pkgres==True):
  barcodedtd = pkg_resources.resource_filename(__name__, "barcodes.dtd");
  barcodexsl = pkg_resources.resource_filename(__name__, "barcodes.xsl");
- barcodexsl = pkg_resources.resource_filename(__name__, "barcodes.xsd");
+ barcodexsd = pkg_resources.resource_filename(__name__, "barcodes.xsd");
 if(pkgres==False):
  barcodedtd = os.path.dirname(__file__)+os.sep+"barcodes.dtd";
  barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl";
- barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsd";
+ barcodexsd = os.path.dirname(__file__)+os.sep+"barcodes.xsd";
