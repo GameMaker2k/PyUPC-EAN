@@ -11,11 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/15/2014 Ver. 2.6.7 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/16/2014 Ver. 2.6.7 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
-import sys, re, os, json;
+import sys, re, os, json, platform;
 try:
  import xml.etree.cElementTree as cElementTree;
 except ImportError:
@@ -30,6 +30,7 @@ if(sys.version[0]=="3"):
  from io import StringIO;
  import urllib.request as urllib2;
  import urllib.parse as urlparse;
+from upcean import __project__, __project_url__, __version__, __version_alt__, __version_info__, __version_date__, __version_date_info__, __version_date_alt__;
 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
@@ -73,7 +74,8 @@ from upcean.barcodes.codabar import *;
 from upcean.barcodes.msi import *;
 
 ''' User-Agent string for http/https requests '''
-useragent_string = "Mozilla/5.0 (compatible; PyUPC-EAN/2.6.7 RC 1; +https://pypi.python.org/pypi/PyUPC-EAN)";
+useragent_string = "Mozilla/5.0 (compatible; {proname}/{prover}; +{prourl})".format(proname=__project__, prover=__version_alt__, prourl=__project_url__);
+useragent_string_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) Python/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(osver=platform.system()+" "+platform.release(), archtype=platform.machine(), prourl=__project_url__, pyver=platform.python_version(), proname=__project__, prover=__version_alt__);
 
 '''
 // UPC Resources and Info

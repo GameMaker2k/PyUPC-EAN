@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/14/2014 Ver. 2.6.5 RC 4 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/16/2014 Ver. 2.6.7 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -27,7 +27,9 @@ if(pkgres==True):
  barcodedtd = pkg_resources.resource_filename(__name__, "barcodes.dtd");
  barcodexsl = pkg_resources.resource_filename(__name__, "barcodes.xsl");
  barcodexsd = pkg_resources.resource_filename(__name__, "barcodes.xsd");
+ bcxmlpath = os.path.dirname(barcodedtd);
 if(pkgres==False):
  barcodedtd = os.path.dirname(__file__)+os.sep+"barcodes.dtd";
  barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl";
  barcodexsd = os.path.dirname(__file__)+os.sep+"barcodes.xsd";
+ bcxmlpath = os.path.dirname(barcodedtd);
