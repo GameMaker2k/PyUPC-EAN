@@ -108,7 +108,7 @@ from upcean.xml import *;
 
 '''
 // Shortcut Codes by Kazuki Przyborowski
-validate
+// validate
 '''
 def validate_checksum(bctype, upc, return_check=False):
  if(hasattr(upcean, "validate_"+bctype+"_checksum") and callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
@@ -330,25 +330,25 @@ class barcode:
  def draw_from_barcode(self):
   return getattr(upcean, "draw_"+self.type+"_barcode_from_"+self.outtype)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def create_from_xml(self):
-  return create_barcode_from_xml(self.xmlfile, False);
+  return create_barcode_from_xml_file(self.xmlfile, False);
  def draw_from_xml(self):
-  return draw_barcode_from_xml(self.xmlfile);
+  return draw_barcode_from_xml_file(self.xmlfile);
  def create_from_xml_string(self):
   return create_barcode_from_xml_string(self.xmlfile, False);
  def draw_from_xml_string(self):
   return draw_barcode_from_xml_string(self.xmlfile);
  def create_from_json(self):
-  return create_barcode_from_json(self.jsonfile, False);
+  return create_barcode_from_json_file(self.jsonfile, False);
  def draw_from_json(self):
-  return draw_barcode_from_json(self.jsonfile);
+  return draw_barcode_from_json_file(self.jsonfile);
  def create_from_json_string(self):
   return create_barcode_from_json_string(self.jsonfile, False);
  def draw_from_json_string(self):
   return draw_barcode_from_json_string(self.jsonfile);
  def create_from_qs(self):
-  return create_barcode_from_qs(self.jsonfile, False);
+  return create_barcode_from_qs_file(self.jsonfile, False);
  def draw_from_qs(self):
-  return draw_barcode_from_qs(self.jsonfile);
+  return draw_barcode_from_qs_file(self.jsonfile);
  def create_vw_barcode(self):
   if(self.type=="upca"):
    return create_vw_barcode_upca(self.code, self.price, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));

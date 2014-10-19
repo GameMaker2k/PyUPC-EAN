@@ -36,6 +36,7 @@ from upcean import __project__, __project_url__, __version__, __version_alt__, _
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
 import upcean.barcodes.code11, upcean.barcodes.code39, upcean.barcodes.code93, upcean.barcodes.codabar, upcean.barcodes.msi;
+import upcean.fonts, upcean.xml;
 from upcean.barcodes import *;
 ''' // Code for validating UPC/EAN by Kazuki Przyborowski '''
 from upcean.validate import *;
@@ -73,6 +74,9 @@ from upcean.barcodes.code93 import *;
 from upcean.barcodes.codabar import *;
 ''' // Code for making Modified Plessey by Kazuki Przyborowski '''
 from upcean.barcodes.msi import *;
+''' // Import extra stuff '''
+from upcean.fonts import *;
+from upcean.xml import *;
 
 ''' User-Agent string for http/https requests '''
 useragent_string = "Mozilla/5.0 (compatible; {proname}/{prover}; +{prourl})".format(proname=__project__, prover=__version_alt__, prourl=__project_url__);
@@ -123,7 +127,7 @@ def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(4
 '''
 // Create barcodes from XML file
 '''
-def create_barcode_from_xml(xmlfile, draw=False):
+def create_barcode_from_xml_file(xmlfile, draw=False):
  global useragent_string;
  if(check_if_string(xmlfile) and re.findall("^(http|https)\:\/\/", xmlfile)):
   xmlheaders = {'User-Agent': useragent_string};
@@ -194,19 +198,22 @@ def create_barcode_from_xml(xmlfile, draw=False):
  if(draw==False and len(bcdrawlist)==0):
   return True;
 def create_barcode_from_xml_string(xmlfile, draw=False):
- return create_barcode_from_xml(StringIO(xmlfile), draw);
-def draw_barcode_from_xml(xmlfile):
- return create_barcode_from_xml(xmlfile, True);
+ return create_barcode_from_xml_file(StringIO(xmlfile), draw);
+def draw_barcode_from_xml_file(xmlfile):
+ return create_barcode_from_xml_file(xmlfile, True);
 def draw_barcode_from_xml_string(xmlfile):
- return create_barcode_from_xml(StringIO(xmlfile), True);
+ return create_barcode_from_xml_file(StringIO(xmlfile), True);
 
-def create_barcode_from_json(jsonfile, draw=False):
+def create_barcode_from_json_file(jsonfile, draw=False):
  global useragent_string;
  if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
   jsonheaders = {'User-Agent': useragent_string};
   tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
  else:
-  tree = json.load(open(jsonfile));
+  if(check_if_string(jsonfile)):
+   jsonfile = open(jsonfile, "rb");
+  tree = json.load(jsonfile.read());
+  jsonfile.close();
  try:
   bctree = tree['barcodes']['barcode'];
  except: 
@@ -269,18 +276,21 @@ def create_barcode_from_json(jsonfile, draw=False):
   return True;
 def create_barcode_from_json_string(xmlfile, draw=False):
  return create_barcode_from_json(StringIO(jsonfile), draw);
-def draw_barcode_from_json(jsonfile):
- return create_barcode_from_json(jsonfile, True);
+def draw_barcode_from_json_file(jsonfile):
+ return create_barcode_from_json_file(jsonfile, True);
 def draw_barcode_from_json_string(xmlfile):
- return create_barcode_from_json(StringIO(jsonfile), True);
+ return create_barcode_from_json_file(StringIO(jsonfile), True);
 
-def convert_json_to_xml(jsonfile, xmlfile=None):
+def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
  global useragent_string;
  if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
   jsonheaders = {'User-Agent': useragent_string};
   tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
  else:
-  tree = json.load(open(jsonfile));
+  if(check_if_string(jsonfile)):
+   jsonfile = open(jsonfile, "rb");
+  tree = json.load(jsonfile.read());
+  jsonfile.close();
  try:
   bctree = tree['barcodes']['barcode'];
  except: 
@@ -308,11 +318,19 @@ def convert_json_to_xml(jsonfile, xmlfile=None):
   return True;
  if(xmlfile==None):
   return xmlout.getvalue();
-def convert_json_to_xml_string(jsonfile, xmlfile=None):
- return create_barcode_from_json(StringIO(jsonfile), xmlfile);
+def convert_from_json_to_xml_string(jsonfile, xmlfile=None):
+ return convert_from_json_to_xml_file(StringIO(jsonfile), xmlfile);
 
-def create_barcode_from_qs(querystring, draw=False):
- tree = urlparse.parse_qs(querystring);
+def create_barcode_from_qs_file(qsfile, draw=False):
+ global useragent_string;
+ if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
+  qsheaders = {'User-Agent': useragent_string};
+  tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());
+ else:
+  if(check_if_string(qsfile)):
+   qsfile = open(qsfile, "rb");
+  tree = urlparse.parse_qs(qsfile.read());
+  jsonfile.close();
  bctree = tree;
  if(len(bctree['type'])<len(bctree['code']) or len(bctree['type'])==len(bctree['code'])):
   bctreeln = len(bctree['type']);
@@ -401,8 +419,91 @@ def create_barcode_from_qs(querystring, draw=False):
   return bcdrawlist;
  if(draw==False and len(bcdrawlist)==0):
   return True;
-def draw_barcode_from_qs(qs):
- return create_barcode_from_json(qs, True);
+def create_barcode_from_qs_string(qsfile, draw=False):
+ return create_barcode_from_qs_file(StringIO(qsfile), draw);
+def draw_barcode_from_qs_file(qsfile):
+ return create_barcode_from_qs_file(qsfile, True);
+def draw_barcode_from_qs_string(qsfile):
+ return create_barcode_from_qs_file(StringIO(qsfile), True);
+
+def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
+ global useragent_string;
+ if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
+  qsheaders = {'User-Agent': useragent_string};
+  tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());
+ else:
+  if(check_if_string(qsfile)):
+   qsfile = open(qsfile, "rb");
+  tree = urlparse.parse_qs(qsfile.read());
+  qsfile.close();
+ bctree = tree;
+ bctreeln = len(bctree);
+ if(len(bctree['type'])<len(bctree['code']) or len(bctree['type'])==len(bctree['code'])):
+  bctreeln = len(bctree['type']);
+ if(len(bctree['code'])<len(bctree['type'])):
+  bctreeln = len(bctree['code']);
+ bctreect = 0;
+ bcdrawlist = [];
+ xmlout=StringIO();
+ upcxml=XMLGenerator(xmlout, "utf-8");
+ upcxml.startDocument();
+ upcxml.startElement("barcodes", {});
+ upcxml.characters("\n");
+ while(bctreect < bctreeln):
+  qsbarcode = {}
+  qsbarcode.update({"type": bctree['type'][bctreect], "code": bctree['code'][bctreect]});
+  try:
+   qsbarcode.update({"file": bctree['file'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"size": bctree['size'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"hideinfo": bctree['hideinfo'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"barheight": bctree['barheight'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"textxy": bctree['textxy'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"color": bctree['color'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  upcxml.characters(" ");
+  upcxml.startElement("barcode", qsbarcode);
+  upcxml.endElement("barcode");
+  upcxml.characters("\n");
+  bctreect = bctreect + 1;
+ upcxml.endElement("barcodes");
+ upcxml.endDocument();
+ if(xmlfile!=None):
+  xmlofile = open(xmlfile, "w+b");
+  xmlofile.write(xmlout.getvalue());
+  xmlofile.close();
+  return True;
+ if(xmlfile==None):
+  return xmlout.getvalue();
+def convert_from_qs_to_xml_string(qsfile, xmlfile=None):
+ return convert_from_qs_to_xml_file(StringIO(qsfile), xmlfile);
 
 def create_issn13_barcode_from_issn8(upc,outfile="./issn13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13_barcode(convert_issn8_to_issn13(upc),outfile,resize,hideinfo,barheight,textxy,barcolor);
