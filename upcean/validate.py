@@ -11,10 +11,10 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 10/16/2014 Ver. 2.6.7 RC 2  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1  - Author: cooldude2k $
 '''
 
-from __future__ import division, absolute_import, print_function;
+from __future__ import absolute_import, division, print_function, unicode_literals
 import sys, re;
 
 '''
@@ -78,8 +78,6 @@ def validate_luhn_checksum(upc, upclen, return_check=False):
   return str(CheckSum);
  if(len(upc)==upclendwn):
   return str(CheckSum);
-def validate_luhn_barcode(upc, upclen, return_check=False):
- return validate_luhn_checksum(upc, upclen, return_check);
 def get_luhn_checksum(upc, upclen):
  upc = str(upc);
  upclen = int(upclen);
@@ -122,8 +120,6 @@ def validate_upca_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==11):
   return str(CheckSum);
-def validate_upca_barcode(upc, return_check=False):
- return validate_upca_checksum(upc, return_check);
 def get_upca_checksum(upc):
  upc = str(upc);
  return validate_upca_checksum(upc,True);
@@ -162,8 +158,6 @@ def validate_ean13_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==12):
   return str(CheckSum);
-def validate_ean13_barcode(upc, return_check=False):
- return validate_ean13_checksum(upc, return_check);
 def get_ean13_checksum(upc):
  upc = str(upc);
  return validate_ean13_checksum(upc,True);
@@ -202,8 +196,6 @@ def validate_itf14_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==13):
   return str(CheckSum);
-def validate_itf14_barcode(upc, return_check=False):
- return validate_itf14_checksum(upc, return_check);
 def get_itf14_checksum(upc):
  upc = str(upc);
  return validate_itf14_checksum(upc,True);
@@ -242,8 +234,6 @@ def validate_ean8_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==7):
   return str(CheckSum);
-def validate_ean8_barcode(upc, return_check=False):
- return validate_ean8_checksum(upc, return_check);
 def get_ean8_checksum(upc):
  upc = str(upc);
  return validate_ean8_checksum(upc,True);
@@ -322,8 +312,6 @@ def validate_upce_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==7):
   return str(CheckSum);
-def validate_upce_barcode(upc, return_check=False):
- return validate_upce_checksum(upc, return_check);
 def get_upce_checksum(upc):
  upc = str(upc);
  return validate_upce_checksum(upc,True);
@@ -362,8 +350,6 @@ def validate_ean2_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==2):
   return str(CheckSum);
-def validate_ean2_barcode(upc, return_check=False):
- return validate_ean2_checksum(upc, return_check);
 def get_ean2_checksum(upc):
  upc = str(upc);
  return validate_ean2_checksum(upc,True);
@@ -404,8 +390,6 @@ def validate_ean5_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==5):
   return str(CheckSum);
-def validate_ean5_barcode(upc, return_check=False):
- return validate_ean13_checksum(upc, return_check);
 def get_ean5_checksum(upc):
  upc = str(upc);
  return validate_ean5_checksum(upc,True);
@@ -448,8 +432,6 @@ def validate_usps_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==21):
   return str(CheckSum);
-def validate_usps_barcode(upc, return_check=False):
- return validate_ean13_checksum(upc, return_check);
 def get_usps_checksum(upc):
  upc = str(upc);
  return validate_usps_checksum(upc,True);
@@ -516,8 +498,6 @@ def validate_ups_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==15):
   return str(CheckSum);
-def validate_ups_barcode(upc, return_check=False):
- return validate_ups_checksum(upc, return_check);
 def get_ups_checksum(upc):
  upc = str(upc);
  return validate_ups_checksum(upc,True);
@@ -559,8 +539,6 @@ def validate_imei_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==14):
   return str(CheckSum);
-def validate_imei_barcode(upc, return_check=False):
- return validate_imei_checksum(upc, return_check);
 def get_imei_checksum(upc):
  upc = str(upc);
  return validate_imei_checksum(upc,True);
@@ -605,8 +583,6 @@ def validate_bcn_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==15):
   return str(CheckSum);
-def validate_bcn_barcode(upc, return_check=False):
- return validate_bcn_checksum(upc, return_check);
 def get_bcn_checksum(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
@@ -665,8 +641,6 @@ def get_code11_checksum(upc):
   UPC_Weight += 1;
  CheckSum = str(CheckSum)+str(Code11Array[UPC_Sum % 11]);
  return str(CheckSum);
-def validate_code11_barcode(upc):
- return validate_code11_checksum(upc);
 
 '''
 // Code 93
@@ -710,8 +684,6 @@ def get_code93_checksum(upc):
   UPC_Weight += 1;
  CheckSum = str(CheckSum)+str(Code93Array[UPC_Sum % 47]);
  return str(CheckSum);
-def validate_code39_barcode(upc):
- return validate_code39_checksum(upc);
 
 '''
 // MSI (Modified Plessey)
@@ -740,8 +712,6 @@ def get_msi_checksum(upc):
   PreCount += 1;
  CheckSum = 10 - (UPC_Sum % 10);
  return str(CheckSum);
-def validate_msi_barcode(upc):
- return validate_msi_checksum(upc);
 
 '''
 // ISSN (International Standard Serial Number)
@@ -776,8 +746,6 @@ def validate_issn8_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==7):
   return str(CheckSum);
-def validate_issn8_barcode(upc, return_check=False):
- return validate_issn8_checksum(upc, return_check);
 def get_issn8_checksum(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
@@ -799,8 +767,6 @@ def validate_issn13_checksum(upc, return_check=False):
   return False;
  if(re.findall("^977(\d{9})", upc)):
   return validate_ean13_checksum(upc,return_check);
-def validate_issn13_barcode(upc, return_check=False):
- return validate_issn13_checksum(upc, return_check);
 def get_issn13_checksum(upc):
  upc = str(upc);
  return validate_issn13_checksum(upc,True);
@@ -848,8 +814,6 @@ def validate_isbn10_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==9):
   return str(CheckSum);
-def validate_isbn10_barcode(upc, return_check=False):
- return validate_isbn10_checksum(upc, return_check);
 def get_isbn10_checksum(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
@@ -871,8 +835,6 @@ def validate_isbn13_checksum(upc, return_check=False):
   return False;
  if(re.findall("^978(\d{9})", upc)):
   return validate_ean13_checksum(upc,return_check);
-def validate_isbn13_barcode(upc, return_check=False):
- return validate_isbn13_checksum(upc, return_check);
 def get_isbn13_checksum(upc):
  upc = str(upc);
  return validate_isbn13_checksum(upc,True);
@@ -921,8 +883,6 @@ def validate_ismn10_checksum(upc, return_check=False):
   return str(CheckSum);
  if(len(upc)==8):
   return str(CheckSum);
-def validate_ismn10_barcode(upc, return_check=False):
- return validate_ismn10_checksum(upc, return_check);
 def get_ismn10_checksum(upc):
  upc = str(upc);
  upc = upc.replace("M", "");
@@ -946,8 +906,6 @@ def validate_ismn13_checksum(upc, return_check=False):
   return False;
  if(re.findall("^9790(\d{8})", upc)):
   return validate_ean13_checksum(upc,return_check);
-def validate_ismn13_barcode(upc, return_check=False):
- return validate_ismn13_checksum(upc, return_check);
 def get_ismn13_checksum(upc):
  upc = str(upc);
  return validate_ismn13_checksum(upc,True);
@@ -1035,3 +993,26 @@ def fix_vw_price_checksum(price):
  return str(get_vw_price_checksum(price,True))+price;
 def fix_vw_price_barcode(upc):
  return fix_vw_price_checksum(upc);
+
+'''
+// Shortcut Codes by Kazuki Przyborowski
+// validate
+'''
+def validate_checksum(bctype, upc, return_check=False):
+ if(hasattr(upcean, "validate_"+bctype+"_checksum") and callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
+  return getattr(upcean, "validate_"+bctype+"_checksum")(upc,return_check);
+ if(not hasattr(upcean, "validate_"+bctype+"_checksum") or not callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
+  return False;
+ return False;
+def get_checksum(bctype, upc):
+ if(hasattr(upcean, "get_"+bctype+"_checksum") and callable(getattr(upcean, "get_"+bctype+"_checksum"))):
+  return getattr(upcean, "get_"+bctype+"_checksum")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_checksum") or not callable(getattr(upcean, "get_"+bctype+"_checksum"))):
+  return False;
+ return False;
+def fix_checksum(bctype, upc):
+ if(hasattr(upcean, "fix_"+bctype+"_checksum") and callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
+  return getattr(upcean, "fix_"+bctype+"_checksum")(upc);
+ if(not hasattr(upcean, "fix_"+bctype+"_checksum") or not callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
+  return False;
+ return False;

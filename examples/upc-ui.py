@@ -13,7 +13,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 03/25/2014 Ver. 2.5.9 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -120,8 +120,8 @@ if(sys.platform=="win32"):
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
  label1.place(x=0, y=148);
 listboxtxt1 = StringVar(rootwin);
-listboxtxt1.set("Detect");
-listbox1 = OptionMenu(rootwin, listboxtxt1, "Detect", "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "STF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar", "MSI");
+listboxtxt1.set("UPC-A");
+listbox1 = OptionMenu(rootwin, listboxtxt1, "UPC-A", "UPC-E", "EAN-13", "EAN-8", "EAN-2", "EAN-5", "ITF", "STF", "ITF-14", "Code 11", "Code 39", "Code 93", "Codabar", "MSI");
 if(sys.platform=="win32"):
  listbox1.place(x=60, y=169);
 if(sys.platform=="linux" or sys.platform=="linux2" or sys.platform=="bsdos" or sys.platform=="freebsd" or sys.platform=="netbsd"):
@@ -182,7 +182,7 @@ def GenerateBarcode():
   magnify.delete(0, END);
   magnify.insert(0, "1");
  upc_validate = entry1.get();
- if(listboxtxt1.get()=="Detect" or listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
+ if(listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
   if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
    upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get());
    upc_pieces = upc_pieces[0];
@@ -204,7 +204,7 @@ def GenerateBarcode():
  tmpbarcode.textcolor = barcode_text_color;
  tmpbarcode.bgcolor = barcode_bg_color;
  tmpbarcode.filename = None;
- validbc = tmpbarcode.draw();
+ validbc = tmpbarcode.draw_barcode();
  if(validbc==False):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Could not generate/save barcode.");
   rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
@@ -238,7 +238,7 @@ def ShowSaveDialog():
 def SaveGeneratedBarcode():
  GenerateBarcode();
  upc_validate = entry1.get();
- if(listboxtxt1.get()=="Detect" or listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
+ if(listboxtxt1.get()=="UPC-A" or listboxtxt1.get()=="UPC-E" or listboxtxt1.get()=="EAN-13" or listboxtxt1.get()=="EAN-8"):
   if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
    upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get());
    upc_pieces = upc_pieces[0];
@@ -260,7 +260,7 @@ def SaveGeneratedBarcode():
  savefname = ShowSaveDialog();
  tmpbarcode.filename = savefname;
  if(savefname!=""):
-  savestate = tmpbarcode.create();
+  savestate = tmpbarcode.create_barcode();
  if(savestate==False and savefname!=""):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Failed to save barcode.");
 def SaveGeneratedBarcodeAlt(event):

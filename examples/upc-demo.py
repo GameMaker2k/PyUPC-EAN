@@ -13,7 +13,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 04/03/2014 Ver. 2.6.2 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -126,7 +126,7 @@ while(count < maxnum):
   barcodeobj[count].code = barcodeobj[count].convert();
   barcodeobj[count].type = barcodeobj[count].outtype;
  barcodeobj[count].size = barcodesize;
- barcodedrw[count] = barcodeobj[count].draw().convert("RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True);
+ barcodedrw[count] = barcodeobj[count].draw_barcode().convert("RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True);
  barcodeimg[count] = pygame.image.fromstring(barcodedrw[count].tobytes(), barcodedrw[count].size, barcodedrw[count].mode);
  position[count] = barcodeimg[count].get_rect();
  position[count].move_ip([1, 1]);
@@ -212,7 +212,7 @@ while running:
     barcodeobj[count].code = barcodeobj[count].convert();
     barcodeobj[count].type = barcodeobj[count].outtype;
    barcodeobj[count].size = barcodesize;
-   barcodedrw[count] = barcodeobj[count].draw().convert("RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True);
+   barcodedrw[count] = barcodeobj[count].draw_barcode().convert("RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True);
    barcodeimg[count] = pygame.image.fromstring(barcodedrw[count].tobytes(), barcodedrw[count].size, barcodedrw[count].mode);
    position[count] = barcodeimg[count].get_rect();
    position[count].move_ip([1, 1]);

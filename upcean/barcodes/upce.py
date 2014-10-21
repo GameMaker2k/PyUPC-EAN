@@ -11,10 +11,10 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upce.py - Last Update: 10/16/2014 Ver. 2.6.7 RC 2 - Author: cooldude2k $
+    $FileInfo: upce.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import division, absolute_import, print_function;
+from __future__ import absolute_import, division, print_function, unicode_literals
 import re, os, sys, types, upcean.prepil, upcean.validate, upcean.convert, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5;
 from PIL import Image, ImageDraw, ImageFont;
@@ -30,19 +30,21 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
- upc_pieces = None; supplement = None;
+ upc_pieces = None; 
+ supplement = None;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
   upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
+  upc = upc_pieces[0]; 
+  supplement = upc_pieces[2];
  if(re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc)):
   upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc);
   upc_pieces = upc_pieces[0];
   upc = upc_pieces[0]; supplement = upc_pieces[2];
  if(len(upc)==12):
-  upc = convert_upca_to_upce(upc);
+  upc = convert_barcode_from_upca_to_upce(upc);
  if(len(upc)==13):
-  upc = convert_ean13_to_upce(upc);
+  upc = convert_barcode_from_ean13_to_upce(upc);
  if(len(upc)==7):
   upc = upc+validate_upce_checksum(upc,True);
  if(len(upc)>8 or len(upc)<8):

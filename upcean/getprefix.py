@@ -13,10 +13,10 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 10/16/2014 Ver. 2.6.7 RC 2  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1  - Author: cooldude2k $
 '''
 
-from __future__ import division, absolute_import, print_function;
+from __future__ import absolute_import, division, print_function, unicode_literals
 import sys, re, upcean.validate, upcean.convert;
 from upcean.validate import *;
 from upcean.convert import *;
@@ -158,7 +158,7 @@ def get_gs1_prefix(upc):
   return "Kenya";
  if(re.findall("^(618)", upc)):
   if(sys.version[0]=="2"):
-   return "Côte d'Ivoire".decode('utf-8');
+   return u"Côte d'Ivoire";
   if(sys.version[0]=="3"):
    return "Côte d'Ivoire";
  if(re.findall("^(619)", upc)):
@@ -818,7 +818,7 @@ def get_isbn_identifier(upc):
   return "English";
  return False;
 
-def get_upca_info(upc):
+def get_upca_barcode_info(upc):
  upc = str(upc);
  if(len(upc)==8):
   upc = convert_upce_to_upca(upc);
@@ -834,33 +834,33 @@ def get_upca_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
  return upc_type;
-def get_upca_numbersystem(upc):
+def get_upca_barcode_numbersystem(upc):
  upc = str(upc);
- product = get_upca_info(upc);
+ product = get_upca_barcode_info(upc);
  if(product==False):
   return False;
  return product['numbersystem'];
-def get_upca_manufacturer(upc):
+def get_upca_barcode_manufacturer(upc):
  upc = str(upc);
- product = get_upca_info(upc);
+ product = get_upca_barcode_info(upc);
  if(product==False):
   return False;
  return product['manufacturer'];
-def get_upca_product(upc):
+def get_upca_barcode_product(upc):
  upc = str(upc);
- product = get_upca_info(upc);
+ product = get_upca_barcode_info(upc);
  if(product==False):
   return False;
  return product['product'];
-def get_upca_checkdigit(upc):
+def get_upca_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_upca_info(upc);
+ product = get_upca_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
-def get_upca_info_from_upce(upc):
- return get_upca_info(convert_upce_to_upca(upc));
-def get_upce_info(upc):
+def get_upca_barcode_info_from_upce(upc):
+ return get_upca_barcode_info(convert_upce_to_upca(upc));
+def get_upce_barcode_info(upc):
  upc = str(upc);
  if(re.findall("^0(\d{13})", upc)):
   upc_matches = re.findall("^0(\d{13})", upc);
@@ -948,31 +948,31 @@ def get_upce_info(upc):
   get_checksum = upc_matches[3];
  upc_type = {'packagecode': None, 'numbersystem': get_ns, 'manufacturer': get_manufac, 'product': get_product, 'checkdigit': get_checksum};
  return upc_type;
-def get_upce_numbersystem(upc):
+def get_upce_barcode_numbersystem(upc):
  upc = str(upc);
- product = get_upce_info(upc);
+ product = get_upce_barcode_info(upc);
  if(product==False):
   return False;
  return product['numbersystem'];
-def get_upce_manufacturer(upc):
+def get_upce_barcode_manufacturer(upc):
  upc = str(upc);
- product = get_upce_info(upc);
+ product = get_upce_barcode_info(upc);
  if(product==False):
   return False;
  return product['manufacturer'];
-def get_upce_product(upc):
+def get_upce_barcode_product(upc):
  upc = str(upc);
- product = get_upce_info(upc);
+ product = get_upce_barcode_info(upc);
  if(product==False):
   return False;
  return product['product'];
-def get_upce_checkdigit(upc):
+def get_upce_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_upce_info(upc);
+ product = get_upce_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
-def get_ean8_info(upc):
+def get_ean8_barcode_info(upc):
  upc = str(upc);
  if(not re.findall("^(\d{8})", upc)):
   return False;
@@ -980,31 +980,31 @@ def get_ean8_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': None, 'product': pre_upc_type[1], 'checkdigit': pre_upc_type[2]};
  return upc_type;
-def get_ean8_numbersystem(upc):
+def get_ean8_barcode_numbersystem(upc):
  upc = str(upc);
- product = get_ean8_info(upc);
+ product = get_ean8_barcode_info(upc);
  if(product==False):
   return False;
  return product['numbersystem'];
-def get_ean8_manufacturer(upc):
+def get_ean8_barcode_manufacturer(upc):
  upc = str(upc);
- product = get_ean8_info(upc);
+ product = get_ean8_barcode_info(upc);
  if(product==False):
   return False;
  return product['manufacturer'];
-def get_ean8_product(upc):
+def get_ean8_barcode_product(upc):
  upc = str(upc);
- product = get_ean8_info(upc);
+ product = get_ean8_barcode_info(upc);
  if(product==False):
   return False;
  return product['product'];
-def get_ean8_checkdigit(upc):
+def get_ean8_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_ean8_info(upc);
+ product = get_ean8_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
-def get_ean13_info(upc):
+def get_ean13_barcode_info(upc):
  upc = str(upc);
  if(len(upc)==8):
   upc = convert_upce_to_upca(upc);
@@ -1016,31 +1016,31 @@ def get_ean13_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
  return upc_type;
-def get_ean13_numbersystem(upc):
+def get_ean13_barcode_numbersystem(upc):
  upc = str(upc);
- product = get_ean13_info(upc);
+ product = get_ean13_barcode_info(upc);
  if(product==False):
   return False;
  return product['numbersystem'];
-def get_ean13_manufacturer(upc):
+def get_ean13_barcode_manufacturer(upc):
  upc = str(upc);
- product = get_ean13_info(upc);
+ product = get_ean13_barcode_info(upc);
  if(product==False):
   return False;
  return product['manufacturer'];
-def get_ean13_product(upc):
+def get_ean13_barcode_product(upc):
  upc = str(upc);
- product = get_ean13_info(upc);
+ product = get_ean13_barcode_info(upc);
  if(product==False):
   return False;
  return product['product'];
-def get_ean13_checkdigit(upc):
+def get_ean13_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_ean13_info(upc);
+ product = get_ean13_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
-def get_itf14_info(upc):
+def get_itf14_barcode_info(upc):
  upc = str(upc);
  if(len(upc)==12):
   upc = "00"+upc;
@@ -1052,33 +1052,33 @@ def get_itf14_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': pre_upc_type[0], 'numbersystem': pre_upc_type[1], 'manufacturer': pre_upc_type[2], 'product': pre_upc_type[3], 'checkdigit': pre_upc_type[4]};
  return upc_type;
-def get_itf14_packagecode(upc):
+def get_itf14_barcode_packagecode(upc):
  upc = str(upc);
- product = get_itf14_info(upc);
+ product = get_itf14_barcode_info(upc);
  if(product==False):
   return False;
  return product['packagecode'];
-def get_itf14_numbersystem(upc):
+def get_itf14_barcode_numbersystem(upc):
  upc = str(upc);
- product = get_itf14_info(upc);
+ product = get_itf14_barcode_info(upc);
  if(product==False):
   return False;
  return product['numbersystem'];
-def get_itf14_manufacturer(upc):
+def get_itf14_barcode_manufacturer(upc):
  upc = str(upc);
- product = get_itf14_info(upc);
+ product = get_itf14_barcode_info(upc);
  if(product==False):
   return False;
  return product['manufacturer'];
-def get_itf14_product(upc):
+def get_itf14_barcode_product(upc):
  upc = str(upc);
- product = get_itf14_info(upc);
+ product = get_itf14_barcode_info(upc);
  if(product==False):
   return False;
  return product['product'];
-def get_itf14_checkdigit(upc):
+def get_itf14_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_itf14_info(upc);
+ product = get_itf14_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
@@ -1087,7 +1087,7 @@ def get_itf14_checkdigit(upc):
 // Source: http://www.morovia.com/education/symbology/upc-a.asp
 // Source: http://www.computalabel.com/aboutupc.htm
 '''
-def get_upca_ns(upc):
+def get_upca_barcode_ns(upc):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
@@ -1121,7 +1121,7 @@ def get_upca_ns(upc):
 // Source: http://www.mecsw.com/specs/itf_14.html
 // Source: http://www.qed.org/RBTL/chapters/ch3.3.htm
 '''
-def get_itf14_type(upc):
+def get_itf14_barcode_type(upc):
  upc = str(upc);
  if(not re.findall("^(\d{14})", upc)):
   return False;
@@ -1150,7 +1150,7 @@ def get_itf14_type(upc):
 '''
 // Get Goodwill UPC Info.
 '''
-def get_goodwill_upca_info(upc):
+def get_goodwill_upca_barcode_info(upc):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
@@ -1163,27 +1163,27 @@ def get_goodwill_upca_info(upc):
  upc_matches = upc_matches[0];
  product = {'numbersystem': str(4), 'code': upc_matches[0], 'price': upc_matches[1], 'checkdigit': upc_matches[2]};
  return product;
-def get_goodwill_upca_numbersystem(upc):
+def get_goodwill_upca_barcode_numbersystem(upc):
  upc = str(upc);
- product = get_goodwill_upca_info(upc);
+ product = get_goodwill_upca_barcode_info(upc);
  if(product==False):
   return False;
  return product['numbersystem'];
-def get_goodwill_upca_code(upc):
+def get_goodwill_upca_barcode_code(upc):
  upc = str(upc);
- product = get_goodwill_upca_info(upc);
+ product = get_goodwill_upca_barcode_info(upc);
  if(product==False):
   return False;
  return product['code'];
-def get_goodwill_upca_price(upc):
+def get_goodwill_upca_barcode_price(upc):
  upc = str(upc);
- product = get_goodwill_upca_info(upc);
+ product = get_goodwill_upca_barcode_info(upc);
  if(product==False):
   return False;
  return product['price'];
-def get_goodwill_upca_checkdigit(upc):
+def get_goodwill_upca_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_goodwill_upca_info(upc);
+ product = get_goodwill_upca_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
@@ -1193,7 +1193,7 @@ def get_goodwill_upca_checkdigit(upc):
 // Source: http://wiki.answers.com/Q/How_does_a_price_embedded_bar_code_work
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 '''
-def get_upca_vw_info(upc):
+def get_upca_vw_barcode_info(upc):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
@@ -1206,33 +1206,33 @@ def get_upca_vw_info(upc):
  upc_matches = upc_matches[0];
  product = {'numbersystem': str(2), 'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2], 'checkdigit': upc_matches[3]};
  return product;
-def get_upca_vw_numbersystem(upc):
+def get_upca_vw_barcode_numbersystem(upc):
  upc = str(upc);
- product = get_upca_vw_info(upc);
+ product = get_upca_vw_barcode_info(upc);
  if(product==False):
   return False;
  return product['numbersystem'];
-def get_upca_vw_code(upc):
+def get_upca_vw_barcode_code(upc):
  upc = str(upc);
- product = get_upca_vw_info(upc);
+ product = get_upca_vw_barcode_info(upc);
  if(product==False):
   return False;
  return product['code'];
-def get_upca_vw_price(upc):
+def get_upca_vw_barcode_price(upc):
  upc = str(upc);
- product = get_upca_vw_info(upc);
+ product = get_upca_vw_barcode_info(upc);
  if(product==False):
   return False;
  return product['price'];
-def get_upca_vw_pricecs(upc):
+def get_upca_vw_barcode_pricecs(upc):
  upc = str(upc);
- product = get_upca_vw_info(upc);
+ product = get_upca_vw_barcode_info(upc);
  if(product==False):
   return False;
  return product['pricecs'];
-def get_upca_vw_checkdigit(upc):
+def get_upca_vw_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_upca_vw_info(upc);
+ product = get_upca_vw_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
@@ -1241,7 +1241,7 @@ def get_upca_vw_checkdigit(upc):
 // Get coupon info
 // Source: http://divagirlusa-ivil.tripod.com/austinitecouponers/id29.html
 '''
-def get_upca_coupon_info(upc):
+def get_upca_coupon_barcode_info(upc):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
@@ -1254,37 +1254,37 @@ def get_upca_coupon_info(upc):
  upc_matches = upc_matches[0];
  product = {'numbersystem': upc_matches[0], 'manufacturer': upc_matches[1], 'family': upc_matches[2], 'value': upc_matches[3], 'checkdigit': upc_matches[4]};
  return product;
-def get_upca_coupon_numbersystem(upc):
+def get_upca_coupon_barcode_numbersystem(upc):
  upc = str(upc);
- product = get_upca_coupon_info(upc);
+ product = get_upca_coupon_barcode_info(upc);
  if(product==False):
   return False;
  return product['numbersystem'];
-def get_upca_coupon_manufacturer(upc):
+def get_upca_coupon_barcode_manufacturer(upc):
  upc = str(upc);
- product = get_upca_coupon_info(upc);
+ product = get_upca_coupon_barcode_info(upc);
  if(product==False):
   return False;
  return product['manufacturer'];
-def get_upca_coupon_family(upc):
+def get_upca_coupon_barcode_family(upc):
  upc = str(upc);
- product = get_upca_coupon_info(upc);
+ product = get_upca_coupon_barcode_info(upc);
  if(product==False):
   return False;
  return product['family'];
-def get_upca_coupon_value(upc):
+def get_upca_coupon_barcode_value(upc):
  upc = str(upc);
- product = get_upca_coupon_info(upc);
+ product = get_upca_coupon_barcode_info(upc);
  if(product==False):
   return False;
  return product['value'];
-def get_upca_coupon_checkdigit(upc):
+def get_upca_coupon_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_upca_coupon_info(upc);
+ product = get_upca_coupon_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
-def get_upca_coupon_value_code(vcode):
+def get_upca_coupon_barcode_value_code(vcode):
  vcode = str(vcode);
  if(re.findall("^(00)", vcode)):
   return "Manual Input Required";
@@ -1525,7 +1525,7 @@ def get_bcn_mii_prefix(upc):
 // Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit
 // Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit?msg=2961884#xx2961884xx
 '''
-def get_ups_info(upc):
+def get_ups_barcode_info(upc):
  upc = str(upc).upper();
  if(not re.findall("^1Z", upc)):
   return False;
@@ -1539,21 +1539,21 @@ def get_ups_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'accountnumber': pre_upc_type[0], 'servicetype': pre_upc_type[1], 'invoicenumber': pre_upc_type[2], 'packagenumber': pre_upc_type[3], 'checkdigit': pre_upc_type[4]};
  return upc_type;
-def get_ups_accountnumber(upc):
+def get_ups_barcode_accountnumber(upc):
  upc = str(upc).upper();
- product = get_ups_info(upc);
+ product = get_ups_barcode_info(upc);
  if(product==False):
   return False;
  return product['accountnumber'];
-def get_ups_servicetype(upc):
+def get_ups_barcode_servicetype(upc):
  upc = str(upc).upper();
- product = get_ups_info(upc);
+ product = get_ups_barcode_info(upc);
  if(product==False):
   return False;
  return product['servicetype'];
-def get_ups_servicetype_info(upc):
+def get_ups_barcode_servicetype_info(upc):
  upc = str(upc);
- upc = get_ups_servicetype(upc);
+ upc = get_ups_barcode_servicetype(upc);
  if(re.findall("^(01)", upc)):
   return "Next Day Air Shipment";
  if(re.findall("^(02)", upc)):
@@ -1561,21 +1561,21 @@ def get_ups_servicetype_info(upc):
  if(re.findall("^(03)", upc)):
   return "Ground Shipment";
  return False;
-def get_ups_invoicenumber(upc):
+def get_ups_barcode_invoicenumber(upc):
  upc = str(upc).upper();
- product = get_ups_info(upc);
+ product = get_ups_barcode_info(upc);
  if(product==False):
   return False;
  return product['invoicenumber'];
-def get_ups_packagenumber(upc):
+def get_ups_barcode_packagenumber(upc):
  upc = str(upc).upper();
- product = get_ups_info(upc);
+ product = get_ups_barcode_info(upc);
  if(product==False):
   return False;
  return product['packagenumber'];
-def get_ups_checkdigit(upc):
+def get_ups_barcode_checkdigit(upc):
  upc = str(upc).upper();
- product = get_ups_info(upc);
+ product = get_ups_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
@@ -1584,7 +1584,7 @@ def get_ups_checkdigit(upc):
 // Get IMEI (International Mobile Station Equipment Identity) Info
 // Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
 '''
-def get_new_imei_info(upc):
+def get_new_imei_barcode_info(upc):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
@@ -1592,25 +1592,25 @@ def get_new_imei_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'checkdigit': pre_upc_type[2]};
  return upc_type;
-def get_new_imei_tac(upc):
+def get_new_imei_barcode_tac(upc):
  upc = str(upc);
- product = get_new_imei_info(upc);
+ product = get_new_imei_barcode_info(upc);
  if(product==False):
   return False;
  return product['tac'];
-def get_new_imei_serialnumber(upc):
+def get_new_imei_barcode_serialnumber(upc):
  upc = str(upc);
- product = get_new_imei_info(upc);
+ product = get_new_imei_barcode_info(upc);
  if(product==False):
   return False;
  return product['serialnumber'];
-def get_new_imei_checkdigit(upc):
+def get_new_imei_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_new_imei_info(upc);
+ product = get_new_imei_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
-def get_old_imei_info(upc):
+def get_old_imei_barcode_info(upc):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
@@ -1618,27 +1618,27 @@ def get_old_imei_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1], 'serialnumber': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
  return upc_type;
-def get_old_imei_tac(upc):
+def get_old_imei_barcode_tac(upc):
  upc = str(upc);
- product = get_old_imei_info(upc);
+ product = get_old_imei_barcode_info(upc);
  if(product==False):
   return False;
  return product['tac'];
-def get_old_imei_fac(upc):
+def get_old_imei_barcode_fac(upc):
  upc = str(upc);
- product = get_old_imei_info(upc);
+ product = get_old_imei_barcode_info(upc);
  if(product==False):
   return False;
  return product['fac'];
-def get_old_imei_serialnumber(upc):
+def get_old_imei_barcode_serialnumber(upc):
  upc = str(upc);
- product = get_old_imei_info(upc);
+ product = get_old_imei_barcode_info(upc);
  if(product==False):
   return False;
  return product['serialnumber'];
-def get_old_imei_checkdigit(upc):
+def get_old_imei_barcode_checkdigit(upc):
  upc = str(upc);
- product = get_old_imei_info(upc);
+ product = get_old_imei_barcode_info(upc);
  if(product==False):
   return False;
  return product['checkdigit'];
@@ -1647,7 +1647,7 @@ def get_old_imei_checkdigit(upc):
 // Get IMEISV (International Mobile Station Equipment Identity Software Version) Info
 // Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
 '''
-def get_new_imeisv_info(upc):
+def get_new_imeisv_barcode_info(upc):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
@@ -1655,25 +1655,25 @@ def get_new_imeisv_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'svn': pre_upc_type[2]};
  return upc_type;
-def get_new_imeisv_tac(upc):
+def get_new_imeisv_barcode_tac(upc):
  upc = str(upc);
- product = get_new_imeisv_info(upc);
+ product = get_new_imeisv_barcode_info(upc);
  if(product==False):
   return False;
  return product['tac'];
-def get_new_imeisv_serialnumber(upc):
+def get_new_imeisv_barcode_serialnumber(upc):
  upc = str(upc);
- product = get_new_imeisv_info(upc);
+ product = get_new_imeisv_barcode_info(upc);
  if(product==False):
   return False;
  return product['serialnumber'];
-def get_new_imeisv_svn(upc):
+def get_new_imeisv_barcode_svn(upc):
  upc = str(upc);
- product = get_new_imeisv_info(upc);
+ product = get_new_imeisv_barcode_info(upc);
  if(product==False):
   return False;
  return product['svn'];
-def get_old_imeisv_info(upc):
+def get_old_imeisv_barcode_info(upc):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
@@ -1681,27 +1681,27 @@ def get_old_imeisv_info(upc):
  pre_upc_type = upc_matches[0];
  upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1], 'serialnumber': pre_upc_type[2], 'svn': pre_upc_type[3]};
  return upc_type;
-def get_old_imeisv_tac(upc):
+def get_old_imeisv_barcode_tac(upc):
  upc = str(upc);
- product = get_old_imeisv_info(upc);
+ product = get_old_imeisv_barcode_info(upc);
  if(product==False):
   return False;
  return product['tac'];
-def get_old_imeisv_fac(upc):
+def get_old_imeisv_barcode_fac(upc):
  upc = str(upc);
- product = get_old_imeisv_info(upc);
+ product = get_old_imeisv_barcode_info(upc);
  if(product==False):
   return False;
  return product['fac'];
-def get_old_imeisv_serialnumber(upc):
+def get_old_imeisv_barcode_serialnumber(upc):
  upc = str(upc);
- product = get_old_imeisv_info(upc);
+ product = get_old_imeisv_barcode_info(upc);
  if(product==False):
   return False;
  return product['serialnumber'];
-def get_old_imeisv_svn(upc):
+def get_old_imeisv_barcode_svn(upc):
  upc = str(upc);
- product = get_old_imeisv_info(upc);
+ product = get_old_imeisv_barcode_info(upc);
  if(product==False):
   return False;
  return product['svn'];
@@ -1742,3 +1742,50 @@ def get_bcn_checkdigit(upc):
  if(product==False):
   return False;
  return product['checkdigit'];
+
+'''
+// Shortcut Codes by Kazuki Przyborowski
+// getprefix
+'''
+def get_barcode_info(bctype, upc, infotype=None):
+ if(infotype==None):
+  if(hasattr(upcean, "get_"+bctype+"_barcode_info") and callable(getattr(upcean, "get_"+bctype+"_barcode_info"))):
+   return getattr(upcean, "get_"+bctype+"_barcode_info")(upc);
+  if(not hasattr(upcean, "get_"+bctype+"_barcode_info") or not callable(getattr(upcean, "get_"+bctype+"_barcode_info"))):
+   return False;
+ if(infotype!=None):
+  if(hasattr(upcean, "get_"+bctype+"_barcode_"+infotype) and callable(getattr(upcean, "get_"+bctype+"_barcode_"+infotype))):
+   return getattr(upcean, "get_"+bctype+"_barcode_"+infotype)(upc);
+  if(not hasattr(upcean, "get_"+bctype+"_barcode_"+infotype) or not callable(getattr(upcean, "get_"+bctype+"_barcode_"+infotype))):
+   return False;
+ return False;
+def get_barcode_packagecode(bctype, upc):
+ if(hasattr(upcean, "get_"+bctype+"_barcode_packagecode") and callable(getattr(upcean, "get_"+bctype+"_barcode_packagecode"))):
+  return getattr(upcean, "get_"+bctype+"_barcode_packagecode")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_barcode_packagecode") or not callable(getattr(upcean, "get_"+bctype+"_barcode_packagecode"))):
+  return False;
+ return False;
+def get_barcode_numbersystem(bctype, upc):
+ if(hasattr(upcean, "get_"+bctype+"_barcode_numbersystem") and callable(getattr(upcean, "get_"+bctype+"_barcode_numbersystem"))):
+  return getattr(upcean, "get_"+bctype+"_barcode_numbersystem")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_barcode_numbersystem") or not callable(getattr(upcean, "get_"+bctype+"_barcode_numbersystem"))):
+  return False;
+ return False;
+def get_barcode_manufacturer(bctype, upc):
+ if(hasattr(upcean, "get_"+bctype+"_barcode_manufacturer") and callable(getattr(upcean, "get_"+bctype+"_barcode_manufacturer"))):
+  return getattr(upcean, "get_"+bctype+"_barcode_manufacturer")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_barcode_manufacturer") or not callable(getattr(upcean, "get_"+bctype+"_barcode_manufacturer"))):
+  return False;
+ return False;
+def get_barcode_product(bctype, upc):
+ if(hasattr(upcean, "get_"+bctype+"_barcode_product") and callable(getattr(upcean, "get_"+bctype+"_barcode_product"))):
+  return getattr(upcean, "get_"+bctype+"_barcode_product")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_barcode_product") or not callable(getattr(upcean, "get_"+bctype+"_barcode_product"))):
+  return False;
+ return False;
+def get_barcode_checkdigit(bctype, upc):
+ if(hasattr(upcean, "get_"+bctype+"_barcode_checkdigit") and callable(getattr(upcean, "get_"+bctype+"_barcode_checkdigit"))):
+  return getattr(upcean, "get_"+bctype+"_barcode_checkdigit")(upc);
+ if(not hasattr(upcean, "get_"+bctype+"_barcode_checkdigit") or not callable(getattr(upcean, "get_"+bctype+"_barcode_checkdigit"))):
+  return False;
+ return False;

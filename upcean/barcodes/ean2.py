@@ -11,10 +11,10 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 10/16/2014 Ver. 2.6.7 RC 2 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import division, absolute_import, print_function;
+from __future__ import absolute_import, division, print_function, unicode_literals
 import re, os, sys, types, upcean.prepil, upcean.getsfname;
 from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;
