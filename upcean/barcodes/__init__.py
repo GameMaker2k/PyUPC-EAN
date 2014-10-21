@@ -27,7 +27,7 @@ if(sys.version[0]=="2"):
   from StringIO import StringIO;
  import urllib2, urlparse;
 if(sys.version[0]=="3"):
- from io import StringIO;
+ from io import StringIO, BytesIO;
  import urllib.request as urllib2;
  import urllib.parse as urlparse;
 from xml.sax.saxutils import XMLGenerator;

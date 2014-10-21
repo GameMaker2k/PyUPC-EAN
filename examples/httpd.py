@@ -16,8 +16,15 @@
     $FileInfo: httpd.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1  - Author: cooldude2k $
 '''
 
-import tempfile, uuid, re, os, sys, cherrypy, upcean, StringIO, argparse, time, datetime;
+import tempfile, uuid, re, os, sys, cherrypy, upcean, argparse, time, datetime;
 from PIL import Image, ImageDraw, ImageFont;
+if(sys.version[0]=="2"):
+ try:
+  from cStringIO import StringIO;
+ except ImportError:
+  from StringIO import StringIO;
+if(sys.version[0]=="3"):
+ from io import StringIO, BytesIO;
 parser = argparse.ArgumentParser(description="A web server that draws barcodes with PyUPC-EAN powered by CherryPy web server.");
 parser.add_argument("--port", "--port-number", help="port number to use for server.");
 parser.add_argument("--host", "--host-name", help="host name to use for server.");
@@ -68,7 +75,10 @@ class GenerateIndexPage(object):
   return IndexHTMLCode;
  index.exposed = True;
  def generate(self, bctype, bcsize, bcrotate, imgtype):
-  imgdata = StringIO.StringIO();
+  if(sys.version[0]=="2"):
+   imgdata = StringIO();
+  if(sys.version[0]=="3"):
+   imgdata = BytesIO();
   try:
    bctype;
   except KeyError:
@@ -167,11 +177,17 @@ class GenerateIndexPage(object):
     upcean.draw_msi_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(upc!=None):
    imgdata.seek(0);
-   return imgdata.buf;
+   if(sys.version[0]=="2"):
+    return imgdata.buf;
+   if(sys.version[0]=="3"):
+    return imgdata.getvalue();
  generate.exposed = True;
 class GenerateBarcodes(object):
  def index(self, **params):
-  imgdata = StringIO.StringIO();
+  if(sys.version[0]=="2"):
+   imgdata = StringIO();
+  if(sys.version[0]=="3"):
+   imgdata = BytesIO();
   try:
    params['bctype'];
   except KeyError:
@@ -269,13 +285,19 @@ class GenerateBarcodes(object):
     upcean.draw_msi_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(params['upc']!=None):
    imgdata.seek(0);
-   return imgdata.buf;
+   if(sys.version[0]=="2"):
+    return imgdata.buf;
+   if(sys.version[0]=="3"):
+    return imgdata.getvalue();
   if(params['upc']==None):
    cherrypy.response.headers['Content-Type']= 'text/html; charset=UTF-8';
    return IndexHTMLCode;
  index.exposed = True;
  def generate(self, bctype, bcsize, bcrotate, imgtype):
-  imgdata = StringIO.StringIO();
+  if(sys.version[0]=="2"):
+   imgdata = StringIO();
+  if(sys.version[0]=="3"):
+   imgdata = BytesIO();
   try:
    bctype;
   except KeyError:
@@ -374,7 +396,10 @@ class GenerateBarcodes(object):
     upcean.draw_msi_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(upc!=None):
    imgdata.seek(0);
-   return imgdata.buf;
+   if(sys.version[0]=="2"):
+    return imgdata.buf;
+   if(sys.version[0]=="3"):
+    return imgdata.getvalue();
  generate.exposed = True;
 cherrypy.config.update({"environment": serv_environ,
                         "log.error_file": errorlog,
