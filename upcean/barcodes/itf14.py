@@ -14,7 +14,7 @@
     $FileInfo: itf14.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, types, upcean.prepil, upcean.getsfname;
 from PIL import Image, ImageDraw, ImageFont;
 from upcean.prepil import *;

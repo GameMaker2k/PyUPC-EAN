@@ -14,11 +14,20 @@
     $FileInfo: __init__.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals;
 import sys, re;
+
+__author__ = "Kazuki Przyborowski";
+__copyright__ = "Copyright 2011-2014, Game Maker 2k";
+__credits__ = ["Kazuki Przyborowski", "Game Maker 2k"];
+__license__ = "Revised BSD License";
+__maintainer__ = "Kazuki Przyborowski";
+__email__ = "kazuki.przyborowski@gmail.com";
+__status__ = "Production";
 __project__ = "PyUPC-EAN";
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN";
 __version_info__ = (2, 6, 9, "RC 1");
+__revision__ = __version_info__[3];
 if(__version_info__[3]!=None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
 if(__version_info__[3]==None):
@@ -114,13 +123,6 @@ def get_barcode_name(barcode_type="upca"):
 // Object-oriented classes and functions by Kazuki Przyborowski
 '''
 class barcode:
- __version_info__ = (version_info()["major"], version_info()["minor"], version_info()["build"], version_info()["release"]);
- if(version_info()["release"]!=None):
-  __version__ = "{major}.{minor}.{build} {release}".format(major=version_info()["major"], minor=version_info()["minor"], build=version_info()["build"], release=version_info()["release"]);
- if(version_info()["release"]==None):
-  __version__ = "{major}.{minor}.{build}".format(major=version_info()["major"], minor=version_info()["minor"], build=version_info()["build"]);
- __version_date_info__ = (version_date()["year"], version_date()["month"], version_date()["day"]);
- __version_date__ = "{year}.{month}.{day}".format(year=version_date()["year"], month=version_date()["month"], day=version_date()["day"]);
  '''
  // Barcode Types
  '''
@@ -226,18 +228,12 @@ class barcode:
   return fix_luhn_checksum(self.code, self.codelen);
  def convert(self):
   return getattr(upcean, "convert_barcode_from_"+self.type+"_to_"+self.outtype)(self.code);
- def print(self):
-  return getattr(upcean, "print_"+self.type+"_barcode")(self.code);
  def print_convert(self):
   return getattr(upcean, "print_convert_barcode_from_"+self.type+"_to_"+self.outtype)(self.code);
  def convert_barcode(self):
   return convert_barcode(self.type, self.outtype, self.code);
- def print(self):
-  return print(self.type,self.code);
  def print_convert_barcode(self):
   return print_convert_barcode(self.type, self.outtype, self.code);
- def make(self):
-  return getattr(upcean, "make_"+self.type+"_barcode")(self.numbersystem, self.manufacturer, self.product);
  def make_barcode(self):
   return make_barcode(self.type, self.numbersystem, self.manufacturer, self.product);
  def make_vw(self):

@@ -177,10 +177,7 @@ class GenerateIndexPage(object):
     upcean.draw_msi_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(upc!=None):
    imgdata.seek(0);
-   if(sys.version[0]=="2"):
-    return imgdata.buf;
-   if(sys.version[0]=="3"):
-    return imgdata.getvalue();
+   return imgdata.read();
  generate.exposed = True;
 class GenerateBarcodes(object):
  def index(self, **params):
@@ -285,10 +282,7 @@ class GenerateBarcodes(object):
     upcean.draw_msi_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(params['upc']!=None):
    imgdata.seek(0);
-   if(sys.version[0]=="2"):
-    return imgdata.buf;
-   if(sys.version[0]=="3"):
-    return imgdata.getvalue();
+   return imgdata.read();
   if(params['upc']==None):
    cherrypy.response.headers['Content-Type']= 'text/html; charset=UTF-8';
    return IndexHTMLCode;
@@ -396,10 +390,7 @@ class GenerateBarcodes(object):
     upcean.draw_msi_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(upc!=None):
    imgdata.seek(0);
-   if(sys.version[0]=="2"):
-    return imgdata.buf;
-   if(sys.version[0]=="3"):
-    return imgdata.getvalue();
+   return imgdata.read();
  generate.exposed = True;
 cherrypy.config.update({"environment": serv_environ,
                         "log.error_file": errorlog,
