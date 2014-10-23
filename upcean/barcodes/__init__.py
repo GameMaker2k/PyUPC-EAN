@@ -204,6 +204,53 @@ def draw_barcode_from_xml_file(xmlfile):
 def draw_barcode_from_xml_string(xmlfile):
  return create_barcode_from_xml_file(StringIO(xmlfile), True);
 
+def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
+ global useragent_string;
+ if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
+  xmlheaders = {'User-Agent': useragent_string};
+  try:
+   tree = cElementTree.ElementTree(file=urllib2.urlopen(urllib2.Request(xmlfile, None, xmlheaders)));
+  except cElementTree.ParseError: 
+   return False;
+ else:
+  try:
+   tree = cElementTree.ElementTree(file=xmlfile);
+  except cElementTree.ParseError: 
+   return False;
+ bctree = tree.getroot();
+ bctreeln = len(bctree);
+ bctreect = 0;
+ jsonlist = {'barcodes': {'barcode': [] } };
+ for child in bctree:
+  if(child.tag=="barcode"):
+   jsontmpdict = {};
+  if('type' in child.attrib):
+   jsontmpdict.update({"type": child.attrib['type']});
+  if('code' in child.attrib):
+   jsontmpdict.update({"code": child.attrib['code']});
+  if('file' in child.attrib):
+   jsontmpdict.update({"file": child.attrib['file']});
+  if('size' in child.attrib):
+   jsontmpdict.update({"size": child.attrib['size']});
+  if('hideinfo' in child.attrib):
+   jsontmpdict.update({"hideinfo": child.attrib['hideinfo']});
+  if('height' in child.attrib):
+   jsontmpdict.update({"height": child.attrib['height']});
+  if('textxy' in child.attrib):
+   jsontmpdict.update({"textxy": child.attrib['textxy']});
+  if('color' in child.attrib):
+   jsontmpdict.update({"color": child.attrib['color']});
+  jsonlist['barcodes']['barcode'].append(jsontmpdict);
+ if(jsonfile!=None):
+  jsonofile = open(jsonfile, "w+b");
+  json.dump(jsonlist, jsonofile);
+  jsonofile.close();
+  return True;
+ if(jsonfile==None):
+  return json.dumps(jsonlist);
+def convert_from_xml_to_json_string(xmlfile, jsonfile=None):
+ return convert_from_json_to_xml_file(StringIO(xmlfile), jsonfile);
+
 def create_barcode_from_json_file(jsonfile, draw=False):
  global useragent_string;
  if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
@@ -504,3 +551,73 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
   return xmlout.getvalue();
 def convert_from_qs_to_xml_string(qsfile, xmlfile=None):
  return convert_from_qs_to_xml_file(StringIO(qsfile), xmlfile);
+
+def convert_from_qs_to_json_file(qsfile, jsonfile=None):
+ global useragent_string;
+ if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
+  qsheaders = {'User-Agent': useragent_string};
+  tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());
+ else:
+  if(check_if_string(qsfile)):
+   qsfile = open(qsfile, "rb");
+  tree = urlparse.parse_qs(qsfile.read());
+  qsfile.close();
+ bctree = tree;
+ bctreeln = len(bctree);
+ if(len(bctree['type'])<len(bctree['code']) or len(bctree['type'])==len(bctree['code'])):
+  bctreeln = len(bctree['type']);
+ if(len(bctree['code'])<len(bctree['type'])):
+  bctreeln = len(bctree['code']);
+ bctreect = 0;
+ bcdrawlist = [];
+ jsonlist = {'barcodes': {'barcode': [] } };
+ while(bctreect < bctreeln):
+  qsbarcode = {}
+  qsbarcode.update({"type": bctree['type'][bctreect], "code": bctree['code'][bctreect]});
+  try:
+   qsbarcode.update({"file": bctree['file'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"size": bctree['size'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"hideinfo": bctree['hideinfo'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"barheight": bctree['barheight'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"textxy": bctree['textxy'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"color": bctree['color'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  jsonlist['barcodes']['barcode'].append(qsbarcode);
+  bctreect = bctreect + 1;
+ if(jsonfile!=None):
+  jsonofile = open(jsonfile, "w+b");
+  json.dump(jsonlist, jsonofile);
+  jsonofile.close();
+  return True;
+ if(jsonfile==None):
+  return json.dumps(jsonlist);
+def convert_from_qs_to_json_string(qsfile, jsonfile=None):
+ return convert_from_qs_to_json_file(StringIO(qsfile), jsonfile);
