@@ -249,7 +249,7 @@ def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
  if(jsonfile==None):
   return json.dumps(jsonlist);
 def convert_from_xml_to_json_string(xmlfile, jsonfile=None):
- return convert_from_json_to_xml_file(StringIO(xmlfile), jsonfile);
+ return convert_from_xml_to_json_file(StringIO(xmlfile), jsonfile);
 
 def create_barcode_from_json_file(jsonfile, draw=False):
  global useragent_string;
@@ -259,7 +259,7 @@ def create_barcode_from_json_file(jsonfile, draw=False):
  else:
   if(check_if_string(jsonfile)):
    jsonfile = open(jsonfile, "rb");
-  tree = json.load(jsonfile.read());
+  tree = json.load(jsonfile);
   jsonfile.close();
  try:
   bctree = tree['barcodes']['barcode'];
@@ -321,11 +321,11 @@ def create_barcode_from_json_file(jsonfile, draw=False):
   return bcdrawlist;
  if(draw==False and len(bcdrawlist)==0):
   return True;
-def create_barcode_from_json_string(xmlfile, draw=False):
- return create_barcode_from_json(StringIO(jsonfile), draw);
+def create_barcode_from_json_string(jsonfile, draw=False):
+ return create_barcode_from_json_file(StringIO(jsonfile), draw);
 def draw_barcode_from_json_file(jsonfile):
  return create_barcode_from_json_file(jsonfile, True);
-def draw_barcode_from_json_string(xmlfile):
+def draw_barcode_from_json_string(jsonfile):
  return create_barcode_from_json_file(StringIO(jsonfile), True);
 
 def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
@@ -336,7 +336,7 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
  else:
   if(check_if_string(jsonfile)):
    jsonfile = open(jsonfile, "rb");
-  tree = json.load(jsonfile.read());
+  tree = json.load(jsonfile);
   jsonfile.close();
  try:
   bctree = tree['barcodes']['barcode'];
