@@ -701,7 +701,7 @@ def convert_barcode(intype, outtype,upc):
  if(not hasattr(upcean, "convert_barcode_from_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "convert_barcode_from_"+intype+"_to_"+outtype))):
   return False;
  return False;
-def print(bctype, outtype,upc):
+def print_barcode(bctype, outtype,upc):
  if(hasattr(upcean, "print_"+bctype+"_barcode") and callable(getattr(upcean, "print_"+bctype+"_barcode"))):
   return getattr(upcean, "print_"+bctype+"_barcode")(upc);
  if(not hasattr(upcean, "print_"+bctype+"_barcode") or not callable(getattr(upcean, "print_"+bctype+"_barcode"))):

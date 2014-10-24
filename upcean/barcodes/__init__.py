@@ -358,6 +358,7 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
   bctreect = bctreect + 1;
  upcxml.endElement("barcodes");
  upcxml.endDocument();
+ xmlout.seek(0);
  if(xmlfile!=None):
   xmlofile = open(xmlfile, "w+b");
   xmlofile.write(xmlout.read());
@@ -376,6 +377,7 @@ def create_barcode_from_qs_file(qsfile, draw=False):
  else:
   if(check_if_string(qsfile)):
    qsfile = open(qsfile, "rb");
+  qsfile.seek(0);
   tree = urlparse.parse_qs(qsfile.read());
   qsfile.close();
  bctree = tree;
@@ -481,6 +483,7 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
  else:
   if(check_if_string(qsfile)):
    qsfile = open(qsfile, "rb");
+  qsfile.seek(0);
   tree = urlparse.parse_qs(qsfile.read());
   qsfile.close();
  bctree = tree;
@@ -542,6 +545,7 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
   bctreect = bctreect + 1;
  upcxml.endElement("barcodes");
  upcxml.endDocument();
+ xmlout.seek(0);
  if(xmlfile!=None):
   xmlofile = open(xmlfile, "w+b");
   xmlofile.write(xmlout.read());
@@ -560,6 +564,7 @@ def convert_from_qs_to_json_file(qsfile, jsonfile=None):
  else:
   if(check_if_string(qsfile)):
    qsfile = open(qsfile, "rb");
+  qsfile.seek(0);
   tree = urlparse.parse_qs(qsfile.read());
   qsfile.close();
  bctree = tree;
