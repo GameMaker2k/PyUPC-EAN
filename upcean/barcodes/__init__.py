@@ -360,11 +360,11 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
  upcxml.endDocument();
  if(xmlfile!=None):
   xmlofile = open(xmlfile, "w+b");
-  xmlofile.write(xmlout.getvalue());
+  xmlofile.write(xmlout.read());
   xmlofile.close();
   return True;
  if(xmlfile==None):
-  return xmlout.getvalue();
+  return xmlout.read();
 def convert_from_json_to_xml_string(jsonfile, xmlfile=None):
  return convert_from_json_to_xml_file(StringIO(jsonfile), xmlfile);
 
@@ -544,11 +544,11 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
  upcxml.endDocument();
  if(xmlfile!=None):
   xmlofile = open(xmlfile, "w+b");
-  xmlofile.write(xmlout.getvalue());
+  xmlofile.write(xmlout.read());
   xmlofile.close();
   return True;
  if(xmlfile==None):
-  return xmlout.getvalue();
+  return xmlout.read();
 def convert_from_qs_to_xml_string(qsfile, xmlfile=None):
  return convert_from_qs_to_xml_file(StringIO(qsfile), xmlfile);
 
