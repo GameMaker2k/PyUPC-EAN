@@ -242,7 +242,7 @@ def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
    jsontmpdict.update({"color": child.attrib['color']});
   jsonlist['barcodes']['barcode'].append(jsontmpdict);
  if(jsonfile!=None):
-  jsonofile = open(jsonfile, "w+b");
+  jsonofile = open(jsonfile, "w+");
   json.dump(jsonlist, jsonofile);
   jsonofile.close();
   return True;
@@ -258,7 +258,7 @@ def create_barcode_from_json_file(jsonfile, draw=False):
   tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
  else:
   if(check_if_string(jsonfile)):
-   jsonfile = open(jsonfile, "rb");
+   jsonfile = open(jsonfile, "r");
   tree = json.load(jsonfile);
   jsonfile.close();
  try:
@@ -335,7 +335,7 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
   tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
  else:
   if(check_if_string(jsonfile)):
-   jsonfile = open(jsonfile, "rb");
+   jsonfile = open(jsonfile, "r");
   tree = json.load(jsonfile);
   jsonfile.close();
  try:
@@ -360,7 +360,7 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
  upcxml.endDocument();
  xmlout.seek(0);
  if(xmlfile!=None):
-  xmlofile = open(xmlfile, "w+b");
+  xmlofile = open(xmlfile, "w+");
   xmlofile.write(xmlout.read());
   xmlofile.close();
   return True;
@@ -376,7 +376,7 @@ def create_barcode_from_qs_file(qsfile, draw=False):
   tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());
  else:
   if(check_if_string(qsfile)):
-   qsfile = open(qsfile, "rb");
+   qsfile = open(qsfile, "r");
   qsfile.seek(0);
   tree = urlparse.parse_qs(qsfile.read());
   qsfile.close();
@@ -482,7 +482,7 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
   tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());
  else:
   if(check_if_string(qsfile)):
-   qsfile = open(qsfile, "rb");
+   qsfile = open(qsfile, "r");
   qsfile.seek(0);
   tree = urlparse.parse_qs(qsfile.read());
   qsfile.close();
@@ -547,7 +547,7 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
  upcxml.endDocument();
  xmlout.seek(0);
  if(xmlfile!=None):
-  xmlofile = open(xmlfile, "w+b");
+  xmlofile = open(xmlfile, "w+");
   xmlofile.write(xmlout.read());
   xmlofile.close();
   return True;
@@ -563,7 +563,7 @@ def convert_from_qs_to_json_file(qsfile, jsonfile=None):
   tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());
  else:
   if(check_if_string(qsfile)):
-   qsfile = open(qsfile, "rb");
+   qsfile = open(qsfile, "r");
   qsfile.seek(0);
   tree = urlparse.parse_qs(qsfile.read());
   qsfile.close();
@@ -618,7 +618,7 @@ def convert_from_qs_to_json_file(qsfile, jsonfile=None):
   jsonlist['barcodes']['barcode'].append(qsbarcode);
   bctreect = bctreect + 1;
  if(jsonfile!=None):
-  jsonofile = open(jsonfile, "w+b");
+  jsonofile = open(jsonfile, "w+");
   json.dump(jsonlist, jsonofile);
   jsonofile.close();
   return True;
