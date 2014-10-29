@@ -13,7 +13,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1  - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 10/29/2014 Ver. 2.7.0 RC 1  - Author: cooldude2k $
 '''
 
 import os;
@@ -39,7 +39,7 @@ else:
 
 setup(
  name = 'PyUPC-EAN',
- version = '2.6.9',
+ version = '2.7.0',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
  maintainer = 'Kazuki Przyborowski',
@@ -50,7 +50,7 @@ setup(
  url = 'https://github.com/GameMaker2k/PyUPC-EAN',
  download_url = 'https://github.com/GameMaker2k/PyUPC-EAN/archive/master.tar.gz',
  packages = ['upcean', 'upcean/barcodes', 'upcean/fonts', 'upcean/xml'],
- package_data = {'upcean/fonts': ['*.otf'], 'upcean/xml': ['*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc']},
+ package_data = {'upcean/fonts': ['*.otf', '*.ttf'], 'upcean/xml': ['*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc']},
  include_package_data = True,
  install_requires = [install_requires],
  long_description = 'PyUPC-EAN is a barcode library/module for Python. It supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.',

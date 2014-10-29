@@ -11,11 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/29/2014 Ver. 2.7.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re;
+import sys, re, imp;
 
 __author__ = "Kazuki Przyborowski";
 __copyright__ = "Copyright 2011-2014, Game Maker 2k";
@@ -26,7 +26,7 @@ __email__ = "kazuki.przyborowski@gmail.com";
 __status__ = "Production";
 __project__ = "PyUPC-EAN";
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN";
-__version_info__ = (2, 6, 9, "RC 1");
+__version_info__ = (2, 7, 0, "RC 1");
 __revision__ = __version_info__[3];
 if(__version_info__[3]!=None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
@@ -48,11 +48,27 @@ def version_date():
   return {"year":__version_date_info__[0], "month": __version_date_info__[1], "day": __version_date_info__[2], "release": None};
 __version_date__ = "{year}.{month}.{day}".format(year=__version_date_info__[0], month=__version_date_info__[1], day=__version_date_info__[2]);
 __version_date_alt__ = "{year}.{month}.{day} {release}".format(year=__version_date_info__[0], month=__version_date_info__[1], day=__version_date_info__[2], release=__version_date_info__[2]);
+
+# PIL Support Check
+pilsupport = True;
+try:
+ imp.find_module('PIL')
+ pilsupport = True;
+except ImportError:
+ try:
+  imp.find_module('Image')
+  pilsupport = True;
+ except ImportError:
+  pilsupport = False;
+
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
-import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
-import upcean.barcodes.code11, upcean.barcodes.code39, upcean.barcodes.code93, upcean.barcodes.codabar, upcean.barcodes.msi;
 import upcean.fonts, upcean.xml;
-from upcean.barcodes import *;
+if(pilsupport==True):
+ import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
+ import upcean.barcodes.code11, upcean.barcodes.code39, upcean.barcodes.code93, upcean.barcodes.codabar, upcean.barcodes.msi;
+ from upcean.barcodes import *;
+ ''' // Import extra stuff '''
+ from upcean.fonts import *;
 ''' // Code for validating UPC/EAN by Kazuki Przyborowski '''
 from upcean.validate import *;
 ''' // Code for converting UPC/EAN by Kazuki Przyborowski '''
@@ -62,7 +78,6 @@ from upcean.getprefix import *;
 ''' // Code for getting save file name and type by Kazuki Przyborowski '''
 from upcean.getsfname import *;
 ''' // Import extra stuff '''
-from upcean.fonts import *;
 from upcean.xml import *;
 
 '''
