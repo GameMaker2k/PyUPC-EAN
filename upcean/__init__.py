@@ -52,23 +52,24 @@ __version_date_alt__ = "{year}.{month}.{day} {release}".format(year=__version_da
 # PIL Support Check
 pilsupport = True;
 try:
- imp.find_module('PIL')
+ imp.find_module('PIL');
  pilsupport = True;
 except ImportError:
  try:
-  imp.find_module('Image')
+  imp.find_module('Image');
   pilsupport = True;
  except ImportError:
   pilsupport = False;
 
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
-import upcean.fonts, upcean.xml;
 if(pilsupport==True):
+ import upcean.fonts, upcean.xml;
  import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
  import upcean.barcodes.code11, upcean.barcodes.code39, upcean.barcodes.code93, upcean.barcodes.codabar, upcean.barcodes.msi;
  from upcean.barcodes import *;
  ''' // Import extra stuff '''
  from upcean.fonts import *;
+ from upcean.xml import *;
 ''' // Code for validating UPC/EAN by Kazuki Przyborowski '''
 from upcean.validate import *;
 ''' // Code for converting UPC/EAN by Kazuki Przyborowski '''
@@ -77,8 +78,6 @@ from upcean.convert import *;
 from upcean.getprefix import *;
 ''' // Code for getting save file name and type by Kazuki Przyborowski '''
 from upcean.getsfname import *;
-''' // Import extra stuff '''
-from upcean.xml import *;
 
 '''
 // UPC Resources and Info
