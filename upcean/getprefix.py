@@ -13,13 +13,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 10/29/2014 Ver. 2.7.0 RC 1  - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 10/31/2014 Ver. 2.7.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import sys, re, upcean.validate, upcean.convert;
-from upcean.validate import *;
-from upcean.convert import *;
 
 '''
 // Get GS1 Prefix for EAN-13 EAN-9 barcodes
@@ -34,9 +32,9 @@ def get_gs1_prefix(upc):
   upc = fix_ean[0];
  if(not re.findall("^(\d{3}\d{5}|\d{3}\d{10})$", upc)):
   return False;
- if(re.findall("^(\d{3}\d{10})$", upc) and validate_ean13_checksum(upc)==False):
+ if(re.findall("^(\d{3}\d{10})$", upc) and upcean.validate.validate_ean13_checksum(upc)==False):
   return False;
- if(re.findall("^(\d{3}\d{5})$", upc) and validate_ean8_checksum(upc)==False):
+ if(re.findall("^(\d{3}\d{5})$", upc) and upcean.validate.validate_ean8_checksum(upc)==False):
   return False;
  if(re.findall("^(0[0-1][0-9])", upc)):
   return "United States and Canada";
@@ -821,7 +819,7 @@ def get_isbn_identifier(upc):
 def get_upca_barcode_info(upc):
  upc = str(upc);
  if(len(upc)==8):
-  upc = convert_upce_to_upca(upc);
+  upc = upcean.convert.convert_barcode_from_upce_to_upca(upc);
  if(re.findall("^0(\d{13})", upc)):
   upc_matches = re.findall("^0(\d{13})", upc);
   upc = upc_matches[0];

@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/29/2014 Ver. 2.7.0 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 10/31/2014 Ver. 2.7.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -61,7 +61,7 @@ except ImportError:
  except ImportError:
   pilsupport = False;
 
-import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
+import upcean.validate, upcean.convert, upcean.shortcuts, upcean.getprefix, upcean.getsfname;
 if(pilsupport==True):
  import upcean.fonts, upcean.xml;
  import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
@@ -74,6 +74,8 @@ if(pilsupport==True):
 from upcean.validate import *;
 ''' // Code for converting UPC/EAN by Kazuki Przyborowski '''
 from upcean.convert import *;
+''' // Shortcut Codes by Kazuki Przyborowski '''
+from upcean.shortcuts import *;
 ''' // Code for getting GS1 Prefix EAN-8/EAN-13/ITF-14 by Kazuki Przyborowski '''
 from upcean.getprefix import *;
 ''' // Code for getting save file name and type by Kazuki Przyborowski '''
@@ -100,46 +102,9 @@ from upcean.getsfname import *;
 // Source: http://www.barcodeisland.com/
 '''
 
-def exec_function(function, *argument):
- if(hasattr(upcean, function) and callable(getattr(upcean, function))):
-  return getattr(upcean, function)(*argument);
- if(not hasattr(upcean, function) or not callable(getattr(upcean, function))):
-  return False;
-def run_function(function, *argument):
- if(hasattr(upcean, function) and callable(getattr(upcean, function))):
-  return getattr(upcean, function)(*argument);
- if(not hasattr(upcean, function) or not callable(getattr(upcean, function))):
-  return False;
-
-'''
-// Barcode Support List
-'''
-bctype_dict={"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
-bctype_dict_alt={"ean2": "EAN2", "ean5": "EAN5", "upca": "UPCA", "upce": "UPCE", "ean13": "EAN13","ean8": "EAN8","stf": "STF", "itf": "ITF", "itf14": "ITF14", "code11": "CODE11", "code39": "CODE39", "code93": "CODE93", "codabar": "CODABAR", "msi": "MSI"};
-bctype_list=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
-bctype_tuple=("ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi");
-bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
-def supported_barcodes(return_type="dict"):
- if(return_type=="dict"):
-  return {"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
- if(return_type=="list"):
-  return ["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
- if(return_type=="tuple"):
-  return ("ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi");
- return False;
-def barcode_support(return_type="dict"):
- return supported_barcodes(return_type);
-def get_barcode_name(barcode_type="upca"):
- bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
- return bctype_name[barcode_type];
-
-'''
-// Object-oriented classes and functions by Kazuki Przyborowski
-'''
+''' // Object-oriented classes and functions by Kazuki Przyborowski '''
 class barcode:
- '''
- // Barcode Types
- '''
+ ''' // Barcode Types '''
  EAN2="ean2";
  UPCS2="ean2";
  EAN5="ean5";
@@ -180,16 +145,6 @@ class barcode:
   return version_info();
  def version_date(self):
   return version_date();
- def exec_function(self, function, *argument):
-  if(hasattr(upcean, function) and callable(getattr(upcean, function))):
-   return getattr(upcean, function)(*argument);
-  if(not hasattr(upcean, function) or not callable(getattr(upcean, function))):
-   return False;
- def run_function(self, function, *argument):
-  if(hasattr(upcean, function) and callable(getattr(upcean, function))):
-   return getattr(upcean, function)(*argument);
-  if(not hasattr(upcean, function) or not callable(getattr(upcean, function))):
-   return False;
  def supported_barcodes(self):
   return barcode_support(self.return_type);
  def barcode_support(self):

@@ -11,12 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: convert.py - Last Update: 10/29/2014 Ver. 2.7.0 RC 1  - Author: cooldude2k $
+    $FileInfo: convert.py - Last Update: 10/31/2014 Ver. 2.7.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import sys, re, upcean.validate;
-from upcean.validate import *;
 
 def make_upca_barcode(numbersystem, manufacturer, product):
  numbersystem = str(numbersystem);
@@ -34,7 +33,7 @@ def make_upca_barcode(numbersystem, manufacturer, product):
   fix_matches = re.findall("^(\d{5})", product);
   product = fix_matches[0];
  upc = numbersystem+manufacturer+product;
- upc = upc+str(validate_upca_checksum(upc, True));
+ upc = upc+str(upcean.validate.validate_zupca_checksum(upc, True));
  return upc;
 
 def make_ean13_barcode(numbersystem, manufacturer, product):
@@ -53,7 +52,7 @@ def make_ean13_barcode(numbersystem, manufacturer, product):
   fix_matches = re.findall("^(\d{5})", product);
   product = fix_matches[0];
  upc = numbersystem+manufacturer+product;
- upc = upc+str(validate_ean13_checksum(upc, True));
+ upc = upc+str(upcean.validate.validate_ean13_checksum(upc, True));
  return upc;
 
 def make_itf14_barcode(numbersystem, manufacturer, product):
@@ -72,7 +71,7 @@ def make_itf14_barcode(numbersystem, manufacturer, product):
   fix_matches = re.findall("^(\d{5})", product);
   product = fix_matches[0];
  upc = numbersystem+manufacturer+product;
- upc = upc+str(validate_itf14_checksum(upc, True));
+ upc = upc+str(upcean.validate.validate_itf14_checksum(upc, True));
  return upc;
 
 def make_ean8_barcode(numbersystem, manufacturer, product):
@@ -91,7 +90,7 @@ def make_ean8_barcode(numbersystem, manufacturer, product):
   fix_matches = re.findall("^(\d{3})", product);
   product = fix_matches[0];
  upc = numbersystem+manufacturer+product;
- upc = upc+str(validate_ean8_checksum(upc, True));
+ upc = upc+str(upcean.validate.validate_ean8_checksum(upc, True));
  return upc;
 
 def make_upce_barcode(numbersystem, manufacturer, product):
@@ -110,18 +109,18 @@ def make_upce_barcode(numbersystem, manufacturer, product):
   fix_matches = re.findall("^(\d{3})", product);
   product = fix_matches[0];
  upc = numbersystem+manufacturer+product;
- upc = upc+str(validate_upce_checksum(upc, True));
+ upc = upc+str(upcean.validate.validate_upce_checksum(upc, True));
  return upc;
 
 def convert_barcode_from_upce_to_upca(upc):
  upc = str(upc);
  if(len(upc)==7):
-  upc = upc+str(validate_upce_checksum(upc,True));
+  upc = upc+str(upcean.validate.validate_upce_checksum(upc,True));
  if(len(upc)>8 or len(upc)<8):
   return False;
  if(not re.findall("^(0|1)", upc)):
   return False;
- if(validate_upce_checksum(upc)==False):
+ if(upcean.validate.validate_upce_checksum(upc)==False):
   return False;
  if(re.findall("(0|1)(\d{5})([0-3])(\d{1})", upc)):
   upc_matches = re.findall("(0|1)(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
@@ -154,10 +153,10 @@ def convert_barcode_from_upce_to_upca(upc):
 def convert_barcode_from_upca_to_ean13(upc):
  upc = str(upc);
  if(len(upc)==11):
-  upc = upc+str(validate_upca_checksum(upc,True));
+  upc = upc+str(upcean.validate.validate_upca_checksum(upc,True));
  if(len(upc)>13 or len(upc)<12):
   return False;
- if(validate_upca_checksum(upc)==False):
+ if(upcean.validate.validate_upca_checksum(upc)==False):
   return False;
  if(len(upc)==12):
   ean13 = "0"+upc;
@@ -167,12 +166,12 @@ def convert_barcode_from_upca_to_ean13(upc):
 def convert_barcode_from_ean13_to_itf14(upc):
  upc = str(upc);
  if(len(upc)==11):
-  upc = upc+str(validate_upca_checksum(upc,True));
+  upc = upc+str(upcean.validate.validate_upca_checksum(upc,True));
  if(len(upc)==12):
   upc = "0"+upc;
  if(len(upc)>14 or len(upc)<13):
   return False;
- if(validate_ean13_checksum(upc)==False):
+ if(upcean.validate.validate_ean13_checksum(upc)==False):
   return False;
  if(len(upc)==13):
   itf14 = "0"+upc;
@@ -198,7 +197,7 @@ def convert_barcode_from_ean13_to_upca(upc):
   upc = "0"+upc;
  if(len(upc)>13 or len(upc)<13):
   return False;
- if(validate_ean13_checksum(upc)==False):
+ if(upcean.validate.validate_ean13_checksum(upc)==False):
   return False;
  if(not re.findall("^0(\d{12})", upc)):
   return False;
@@ -213,23 +212,23 @@ def convert_barcode_from_itf14_to_ean13(upc):
   upc = "0"+upc;
  if(len(upc)>14 or len(upc)<14): 
   return False;
- if(validate_itf14_checksum(upc)==False):
+ if(upcean.validate.validate_itf14_checksum(upc)==False):
   return False;
  if(not re.findall("^(\d{1})(\d{12})(\d{1})", upc)):
   return False;
  if(re.findall("^(\d{1})(\d{12})(\d{1})", upc)):
   upc_matches = re.findall("^(\d{1})(\d{12})(\d{1})", upc);
   upc_matches = upc_matches[0];
-  ean13 = upc_matches[1]+str(validate_ean13_checksum(upc_matches[1], True));
+  ean13 = upc_matches[1]+str(upcean.validate.validate_ean13_checksum(upc_matches[1], True));
  return ean13;
 
 def convert_barcode_from_upca_to_upce(upc):
  upc = str(upc);
  if(len(upc)==11):
-  upc = upc+str(validate_upca_checksum(upc,True));
+  upc = upc+str(upcean.validate.validate_upca_checksum(upc,True));
  if(len(upc)>12 or len(upc)<12):
   return False;
- if(validate_upca_checksum(upc)==False):
+ if(upcean.validate.validate_upca_checksum(upc)==False):
   return False;
  if(not re.findall("(0|1)(\d{11})", upc)):
   return False;
@@ -317,10 +316,10 @@ def convert_barcode_from_itf14_to_upce(upc):
 def convert_barcode_from_ean8_to_upca(upc):
  upc = str(upc);
  if(len(upc)==7):
-  upc = upc+str(validate_ean8_checksum(upc,True));
+  upc = upc+str(upcean.validate.validate_ean8_checksum(upc,True));
  if(len(upc)>8 or len(upc)<8):
   return False;
- if(validate_ean8_checksum(upc)==False):
+ if(upcean.validate.validate_ean8_checksum(upc)==False):
   return False;
  upca = "0000"+upc; 
  return upca;
@@ -336,10 +335,10 @@ def convert_barcode_from_ean8_to_itf14(upc):
 def convert_barcode_from_upca_to_ean8(upc):
  upc = str(upc);
  if(len(upc)==11):
-  upc = upc+str(validate_upca_checksum(upc,True));
+  upc = upc+str(upcean.validate.validate_upca_checksum(upc,True));
  if(len(upc)>12 or len(upc)<12):
   return False;
- if(validate_upca_checksum(upc)==False):
+ if(upcean.validate.validate_upca_checksum(upc)==False):
   return False;
  if(not re.findall("^0000(\d{8})", upc)):
   return False;
@@ -365,25 +364,25 @@ def convert_barcode_from_issn8_to_issn13(upc):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  upc = upc.replace("X", "");
- if(validate_issn8_checksum(upc)==False): 
+ if(upcean.validate.validate_issn8_checksum(upc)==False): 
   return False;
  if(len(upc)>7): 
   fix_matches = re.findall("^(\d{7})", upc); 
   upc = fix_matches[0];
- issn13 = "977"+upc+"00"+str(validate_ean13_checksum("977"+upc+"00",True)); 
+ issn13 = "977"+upc+"00"+str(upcean.validate.validate_ean13_checksum("977"+upc+"00",True)); 
  return issn13;
 def convert_barcode_from_issn13_to_issn8(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  upc = upc.replace("X", "");
- if(validate_ean13_checksum(upc)==False): 
+ if(upcean.validate.validate_ean13_checksum(upc)==False): 
   return False;
  if(not re.findall("/^977(\d{7})/", upc)):
   return False;
  if(re.findall("^977(\d{7})", upc)):
   upc_matches = re.findall("^977(\d{7})", upc);
-  issn8 = upc_matches[1]+validate_issn8_checksum(upc_matches[1],True);
+  issn8 = upc_matches[1]+upcean.validate.validate_issn8_checksum(upc_matches[1],True);
  return issn8;
 def convert_barcode_from_issn8_to_ean13(upc):
  upc = str(upc);
@@ -440,24 +439,24 @@ def convert_barcode_from_isbn10_to_isbn13(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
- if(validate_isbn10_checksum(upc)==False):
+ if(upcean.validate.validate_isbn10_checksum(upc)==False):
   return False;
  if(len(upc)>9):
   fix_matches = re.findall("^(\d{9})", upc);
   upc = fix_matches[0];
-  isbn13 = "978"+upc+str(validate_ean13_checksum("978"+upc,True)); 
+  isbn13 = "978"+upc+str(upcean.validate.validate_ean13_checksum("978"+upc,True)); 
  return isbn13;
 def convert_barcode_from_isbn13_to_isbn10(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
- if(validate_ean13_checksum(upc)==False):
+ if(upcean.validate.validate_ean13_checksum(upc)==False):
   return False;
  if(not re.findall("^978(\d{9})", upc)):
   return False;
  if(re.findall("^978(\d{9})", upc)):
   upc_matches = re.findall("^978(\d{9})", upc);
-  isbn10 = upc_matches[0]+str(validate_isbn10_checksum(upc_matches[0],True));
+  isbn10 = upc_matches[0]+str(upcean.validate.validate_isbn10_checksum(upc_matches[0],True));
  return isbn10;
 def convert_barcode_from_isbn10_to_ean13(upc):
  upc = str(upc);
@@ -518,25 +517,25 @@ def convert_barcode_from_ismn10_to_ismn13(upc):
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
- if(validate_ismn10_checksum(upc)==False):
+ if(upcean.validate.validate_ismn10_checksum(upc)==False):
   return False;
  if(len(upc)>8):
   fix_matches = re.findall("^(\d{8})", upc); 
   upc = fix_matches[0];
- ismn13 = "9790"+upc+str(validate_ean13_checksum("9790"+upc,True)); 
+ ismn13 = "9790"+upc+str(upcean.validate.validate_ean13_checksum("9790"+upc,True)); 
  return ismn13;
 def convert_barcode_from_ismn13_to_ismn10(upc):
  upc = str(upc);
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
- if(validate_ean13_checksum(upc)==False):
+ if(upcean.validate.validate_ean13_checksum(upc)==False):
   return False;
  if(not re.findall("^9790(\d{8})", upc)):
   return False;
  if(re.findall("^9790(\d{8})", upc)):
   upc_matches = re.findall("^9790(\d{8})", upc);
-  ismn10 = upc_matches[0]+str(validate_ismn10_checksum(upc_matches[0],True));
+  ismn10 = upc_matches[0]+str(upcean.validate.validate_ismn10_checksum(upc_matches[0],True));
  return ismn10;
 def convert_barcode_from_ismn10_to_ean13(upc):
  upc = str(upc);
@@ -605,9 +604,9 @@ def make_vw_upca_barcode(code, price):
   if(re.findall("^(\d{4})", price)):
    price_matches = re.findall("^(\d{4})", price);
    price = price_matches[0];
- pricecs = str(get_vw_price_checksum(price));
+ pricecs = str(upcean.validate.get_vw_price_checksum(price));
  vwupc = "2"+code+pricecs+price.zfill(4);
- vwupc = vwupc+str(validate_upca_checksum(vwupc, True));
+ vwupc = vwupc+str(upcean.validate.validate_upca_checksum(vwupc, True));
  return vwupc;
 def make_vw_to_upca_barcode(code, price):
  return make_vw_upca_barcode(code, price);
@@ -634,7 +633,7 @@ def make_goodwill_to_upca_barcode(code, price):
    price_matches = re.findall("^(\d{5})", price);
    price = price_matches[0];
  vwupc = "4"+code+price.zfill(5);
- vwupc = vwupc+str(validate_upca_checksum(vwupc, True));
+ vwupc = vwupc+str(upcean.validate.validate_upca_checksum(vwupc, True));
  return vwupc;
 def make_goodwill_to_upca_barcode(code, price):
  return make_goodwill_to_upca_barcode(code, price);
@@ -666,7 +665,7 @@ def make_coupon_upca_barcode(numbersystem, manufacturer, family, value):
   fix_matches = re.findall("^(\d{2})", value); 
   upc = fix_matches[0];
  couponupca = numbersystem+manufacturer+family+value;
- couponupca = couponupca+str(validate_upca_checksum(couponupca, True));
+ couponupca = couponupca+str(upcean.validate.validate_upca_checksum(couponupca, True));
  return couponupca;
 def make_coupon_to_upca_barcode(code, price):
  return make_coupon_upca(code, price);
@@ -684,32 +683,3 @@ def make_coupon_to_itf14_barcode(numbersystem, manufacturer, family, value):
  value = str(value);
  couponitf14 = convert_barcode_from_upca_to_itf14(make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value));
  return couponitf14;
-
-'''
-// Shortcut Codes by Kazuki Przyborowski
-// convert
-'''
-def make_barcode(bctype, numbersystem, manufacturer, product):
- if(hasattr(upcean, "make_"+bctype+"_barcode") and callable(getattr(upcean, "make_"+bctype+"_barcode"))):
-  return getattr(upcean, "make_"+bctype+"_barcode")(numbersystem, manufacturer, product);
- if(not hasattr(upcean, "make_"+bctype+"_barcode") or not callable(getattr(upcean, "make_"+bctype+"_barcode"))):
-  return False;
- return False;
-def convert_barcode(intype, outtype,upc):
- if(hasattr(upcean, "convert_barcode_from_"+intype+"_to_"+outtype) and callable(getattr(upcean, "convert_barcode_from_"+intype+"_to_"+outtype))):
-  return getattr(upcean, "convert_barcode_from_"+intype+"_to_"+outtype)(upc);
- if(not hasattr(upcean, "convert_barcode_from_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "convert_barcode_from_"+intype+"_to_"+outtype))):
-  return False;
- return False;
-def print_barcode(bctype, outtype,upc):
- if(hasattr(upcean, "print_"+bctype+"_barcode") and callable(getattr(upcean, "print_"+bctype+"_barcode"))):
-  return getattr(upcean, "print_"+bctype+"_barcode")(upc);
- if(not hasattr(upcean, "print_"+bctype+"_barcode") or not callable(getattr(upcean, "print_"+bctype+"_barcode"))):
-  return False;
- return False;
-def print_convert_barcode(intype, outtype,upc):
- if(hasattr(upcean, "print_convert_barcode_from_"+intype+"_to_"+outtype) and callable(getattr(upcean, "print_convert_barcode_from_"+intype+"_to_"+outtype))):
-  return getattr(upcean, "print_convert_barcode_from_"+intype+"_to_"+outtype)(upc);
- if(not hasattr(upcean, "print_convert_barcode_from_"+intype+"_to_"+outtype) or not callable(getattr(upcean, "print_convert_barcode_from_"+intype+"_to_"+outtype))):
-  return False;
- return False;

@@ -11,12 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 10/29/2014 Ver. 2.7.0 RC 1  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 10/31/2014 Ver. 2.7.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, upcean.convert;
-from upcean.convert import *;
+import sys, re;
 
 '''
 // Digital Root
@@ -994,26 +993,3 @@ def fix_vw_price_checksum(price):
  return str(get_vw_price_checksum(price,True))+price;
 def fix_vw_price_barcode(upc):
  return fix_vw_price_checksum(upc);
-
-'''
-// Shortcut Codes by Kazuki Przyborowski
-// validate
-'''
-def validate_checksum(bctype, upc, return_check=False):
- if(hasattr(upcean, "validate_"+bctype+"_checksum") and callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
-  return getattr(upcean, "validate_"+bctype+"_checksum")(upc,return_check);
- if(not hasattr(upcean, "validate_"+bctype+"_checksum") or not callable(getattr(upcean, "validate_"+bctype+"_checksum"))):
-  return False;
- return False;
-def get_checksum(bctype, upc):
- if(hasattr(upcean, "get_"+bctype+"_checksum") and callable(getattr(upcean, "get_"+bctype+"_checksum"))):
-  return getattr(upcean, "get_"+bctype+"_checksum")(upc);
- if(not hasattr(upcean, "get_"+bctype+"_checksum") or not callable(getattr(upcean, "get_"+bctype+"_checksum"))):
-  return False;
- return False;
-def fix_checksum(bctype, upc):
- if(hasattr(upcean, "fix_"+bctype+"_checksum") and callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
-  return getattr(upcean, "fix_"+bctype+"_checksum")(upc);
- if(not hasattr(upcean, "fix_"+bctype+"_checksum") or not callable(getattr(upcean, "fix_"+bctype+"_checksum"))):
-  return False;
- return False;
