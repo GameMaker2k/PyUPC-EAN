@@ -167,10 +167,10 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
  upcean.prepil.drawColorLine(upc_img, 41 + upc_size_add, 4, 41 + upc_size_add, barheight[0], barcolor[2]);
  upcean.prepil.drawColorLine(upc_img, 42 + upc_size_add, 4, 42 + upc_size_add, barheight[0], barcolor[2]);
  upcean.prepil.drawColorLine(upc_img, 43 + upc_size_add, 4, 43 + upc_size_add, barheight[0], barcolor[2]);
- drawColorRectangleAlt(upc_img, 0, 0, 43 + upc_size_add, (barheight[0] + 15) - 11, barcolor[0]);
- drawColorRectangleAlt(upc_img, 1, 1, 42 + upc_size_add, (barheight[0] + 15) - 12, barcolor[0]);
- drawColorRectangleAlt(upc_img, 2, 2, 41 + upc_size_add, (barheight[0] + 15) - 13, barcolor[0]);
- drawColorRectangleAlt(upc_img, 3, 3, 40 + upc_size_add, (barheight[0] + 15) - 14, barcolor[0]);
+ upcean.prepil.drawColorRectangleAlt(upc_img, 0, 0, 43 + upc_size_add, (barheight[0] + 15) - 11, barcolor[0]);
+ upcean.prepil.drawColorRectangleAlt(upc_img, 1, 1, 42 + upc_size_add, (barheight[0] + 15) - 12, barcolor[0]);
+ upcean.prepil.drawColorRectangleAlt(upc_img, 2, 2, 41 + upc_size_add, (barheight[0] + 15) - 13, barcolor[0]);
+ upcean.prepil.drawColorRectangleAlt(upc_img, 3, 3, 40 + upc_size_add, (barheight[0] + 15) - 14, barcolor[0]);
  new_upc_img = upc_preimg.resize(((44 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
