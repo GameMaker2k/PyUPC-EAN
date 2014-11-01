@@ -33,6 +33,7 @@ if(sys.version[0]=="3"):
 from xml.sax.saxutils import XMLGenerator;
 from upcean import __project__, __project_url__, __version__, __version_alt__, __version_info__, __version_date__, __version_date_info__, __version_date_alt__;
 import upcean.barcodes.barcode;
+from upcean.barcodes.barcode import *;
 
 ''' // Barcode Support List '''
 bctype_dict={"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
