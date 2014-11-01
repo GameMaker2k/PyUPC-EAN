@@ -119,62 +119,62 @@ class GenerateIndexPage(object):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
   if(upc!=None and (int(bcrotate)==0 or bcrotate==None)):  
    if(bctype.lower()=="upca"):
-    upcean.draw_upca_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upca_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="upce"):
-    upcean.draw_upce_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upce_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean13"):
-    upcean.draw_ean13_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean13_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean8"):
-    upcean.draw_ean8_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean8_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean2" and len(upc)==2):
-    upcean.draw_ean2_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean2_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean5" and len(upc)==5):
-    upcean.draw_ean5_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean5_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="stf"):
-    upcean.draw_stf_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_stf_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="itf" and not (len(upc) % 2) and len(upc) > 5):
-    upcean.draw_itf_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="itf14" and not (len(upc) % 2) and len(upc) > 5):
-    upcean.draw_itf14_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf14_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code11" and len(upc) > 0 and re.findall("([0-9\-]+)", upc)):
-    upcean.draw_code11_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code11_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code39" and len(upc) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-    upcean.draw_code39_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code39_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code93" and len(upc) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-    upcean.draw_code93_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code93_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="codabar" and len(upc) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
-    upcean.draw_codabar_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_codabar_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="msi" and len(upc) > 0 and re.findall("([0-9]+)", upc)):
-    upcean.draw_msi_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_msi_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
   if(upc!=None and (int(bcrotate)>0 or int(bcrotate)<0)):  
    if(bctype.lower()=="upca"):
-    upcean.draw_upca_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upca_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="upce"):
-    upcean.draw_upce_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upce_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean13"):
-    upcean.draw_ean13_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean13_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean8"):
-    upcean.draw_ean8_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean8_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean2" and len(upc)==2):
-    upcean.draw_ean2_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean2_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean5" and len(upc)==5):
-    upcean.draw_ean5_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean5_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="stf"):
-    upcean.draw_stf_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_stf_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="itf" and not (len(upc) % 2) and len(upc) > 5):
-    upcean.draw_itf_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="itf14" and not (len(upc) % 2) and len(upc) > 5):
-    upcean.draw_itf14_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf14_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code11" and len(upc) > 0 and re.findall("([0-9\-]+)", upc)):
-    upcean.draw_code11_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code11_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code39" and len(upc) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-    upcean.draw_code39_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code39_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code93" and len(upc) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-    upcean.draw_code93_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code93_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="codabar" and len(upc) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
-    upcean.draw_codabar_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_codabar_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="msi" and len(upc) > 0 and re.findall("([0-9]+)", upc)):
-    upcean.draw_msi_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_msi_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(upc!=None):
    imgdata.seek(0);
    return imgdata.read();
@@ -224,62 +224,62 @@ class GenerateBarcodes(object):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
   if(params['upc']!=None and (int(params['rotate'])==0 or params['rotate']==None)):  
    if(params['bctype'].lower()=="upca"):
-    upcean.draw_upca_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upca_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="upce"):
-    upcean.draw_upce_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upce_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="ean13"):
-    upcean.draw_ean13_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean13_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="ean8"):
-    upcean.draw_ean8_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean8_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="ean2" and len(params['upc'])==2):
-    upcean.draw_ean2_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean2_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="ean5" and len(params['upc'])==5):
-    upcean.draw_ean5_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean5_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="stf"):
-    upcean.draw_stf_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_stf_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="itf" and not (len(params['upc']) % 2) and len(params['upc']) > 5):
-    upcean.draw_itf_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="itf14" and not (len(params['upc']) % 2) and len(params['upc']) > 5):
-    upcean.draw_itf14_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf14_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="code11" and len(params['upc']) > 0 and re.findall("([0-9\-]+)", params['upc'])):
-    upcean.draw_code11_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code11_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="code39" and len(params['upc']) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", params['upc'])):
-    upcean.draw_code39_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code39_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="code93" and len(params['upc']) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", params['upc'])):
-    upcean.draw_code93_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code93_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="codabar" and len(params['upc']) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", params['upc'])):
-    upcean.draw_codabar_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_codabar_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="msi" and len(params['upc']) > 0 and re.findall("([0-9]+)", params['upc'])):
-    upcean.draw_msi_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_msi_barcode(params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
   if(params['upc']!=None and (int(params['rotate'])>0 or int(params['rotate'])<0)):  
    if(params['bctype'].lower()=="upca"):
-    upcean.draw_upca_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upca_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="upce"):
-    upcean.draw_upce_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upce_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="ean13"):
-    upcean.draw_ean13_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean13_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="ean8"):
-    upcean.draw_ean8_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean8_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="ean2" and len(params['upc'])==2):
-    upcean.draw_ean2_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean2_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="ean5" and len(params['upc'])==5):
-    upcean.draw_ean5_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean5_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="stf"):
-    upcean.draw_stf_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_stf_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="itf" and not (len(params['upc']) % 2) and len(params['upc']) > 5):
-    upcean.draw_itf_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="itf14" and not (len(params['upc']) % 2) and len(params['upc']) > 5):
-    upcean.draw_itf14_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf14_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="code11" and len(params['upc']) > 0 and re.findall("([0-9\-]+)", params['upc'])):
-    upcean.draw_code11_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code11_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="code39" and len(params['upc']) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", params['upc'])):
-    upcean.draw_code39_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code39_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="code93" and len(params['upc']) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", params['upc'])):
-    upcean.draw_code93_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code93_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="codabar" and len(params['upc']) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", params['upc'])):
-    upcean.draw_codabar_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_codabar_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(params['bctype'].lower()=="msi" and len(params['upc']) > 0 and re.findall("([0-9]+)", params['upc'])):
-    upcean.draw_msi_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_msi_barcode(params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(params['upc']!=None):
    imgdata.seek(0);
    return imgdata.read();
@@ -332,62 +332,62 @@ class GenerateBarcodes(object):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
   if(upc!=None and (int(bcrotate)==0 or bcrotate==None)):  
    if(bctype.lower()=="upca"):
-    upcean.draw_upca_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upca_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="upce"):
-    upcean.draw_upce_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upce_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean13"):
-    upcean.draw_ean13_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean13_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean8"):
-    upcean.draw_ean8_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean8_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean2" and len(upc)==2):
-    upcean.draw_ean2_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean2_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean5" and len(upc)==5):
-    upcean.draw_ean5_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean5_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="stf"):
-    upcean.draw_stf_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_stf_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="itf" and not (len(upc) % 2) and len(upc) > 5):
-    upcean.draw_itf_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="itf14" and not (len(upc) % 2) and len(upc) > 5):
-    upcean.draw_itf14_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf14_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code11" and len(upc) > 0 and re.findall("([0-9\-]+)", upc)):
-    upcean.draw_code11_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code11_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code39" and len(upc) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-    upcean.draw_code39_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code39_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code93" and len(upc) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-    upcean.draw_code93_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code93_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="codabar" and len(upc) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
-    upcean.draw_codabar_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_codabar_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
    if(bctype.lower()=="msi" and len(upc) > 0 and re.findall("([0-9\-]+)", upc)):
-    upcean.draw_msi_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_msi_barcode(upc,int(bcsize)).save(imgdata, file_ext[1]);
   if(upc!=None and (int(bcrotate)>0 or int(bcrotate)<0)):  
    if(bctype.lower()=="upca"):
-    upcean.draw_upca_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upca_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="upce"):
-    upcean.draw_upce_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_upce_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean13"):
-    upcean.draw_ean13_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean13_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean8"):
-    upcean.draw_ean8_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean8_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean2" and len(upc)==2):
-    upcean.draw_ean2_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean2_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="ean5" and len(upc)==5):
-    upcean.draw_ean5_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_ean5_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="stf"):
-    upcean.draw_stf_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_stf_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="itf" and not (len(upc) % 2) and len(upc) > 5):
-    upcean.draw_itf_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="itf14" and not (len(upc) % 2) and len(upc) > 5):
-    upcean.draw_itf14_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_itf14_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code11" and len(upc) > 0 and re.findall("([0-9\-]+)", upc)):
-    upcean.draw_code11_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code11_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code39" and len(upc) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-    upcean.draw_code39_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code39_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="code93" and len(upc) > 0 and re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-    upcean.draw_code93_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_code93_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="codabar" and len(upc) > 0 and re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
-    upcean.draw_codabar_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_codabar_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
    if(bctype.lower()=="msi" and len(upc) > 0 and re.findall("([0-9]+)", upc)):
-    upcean.draw_msi_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.draw_msi_barcode(upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(upc!=None):
    imgdata.seek(0);
    return imgdata.read();

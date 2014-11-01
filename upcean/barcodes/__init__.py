@@ -32,51 +32,7 @@ if(sys.version[0]=="3"):
  import urllib.parse as urlparse;
 from xml.sax.saxutils import XMLGenerator;
 from upcean import __project__, __project_url__, __version__, __version_alt__, __version_info__, __version_date__, __version_date_info__, __version_date_alt__;
-
-import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname;
-import upcean.barcodes.ean2, upcean.barcodes.ean5, upcean.barcodes.upca, upcean.barcodes.upce, upcean.barcodes.ean13, upcean.barcodes.ean8, upcean.barcodes.itf, upcean.barcodes.itf14;
-import upcean.barcodes.code11, upcean.barcodes.code39, upcean.barcodes.code93, upcean.barcodes.codabar, upcean.barcodes.msi;
-import upcean.fonts, upcean.xml;
-from upcean.barcodes import *;
-''' // Code for validating UPC/EAN by Kazuki Przyborowski '''
-from upcean.validate import *;
-''' // Code for converting UPC/EAN by Kazuki Przyborowski '''
-from upcean.convert import *;
-''' // Code for getting GS1 Prefix EAN-8/EAN-13/ITF-14 by Kazuki Przyborowski '''
-from upcean.getprefix import *;
-''' // Code for getting save file name and type by Kazuki Przyborowski '''
-from upcean.getsfname import *;
-''' // Code for making EAN-2 supplement by Kazuki Przyborowski '''
-from upcean.barcodes.ean2 import *;
-''' // Code for making EAN-5 supplement by Kazuki Przyborowski '''
-from upcean.barcodes.ean5 import *;
-''' // Code for making UPC-A by Kazuki Przyborowski '''
-from upcean.barcodes.upca import *;
-''' // Code for making UPC-E by Kazuki Przyborowski '''
-from upcean.barcodes.upce import *;
-''' // Code for making EAN-13 by Kazuki Przyborowski '''
-from upcean.barcodes.ean13 import *;
-''' // Code for making EAN-8 by Kazuki Przyborowski '''
-from upcean.barcodes.ean8 import *;
-''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
-from upcean.barcodes.stf import *;
-''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
-from upcean.barcodes.itf import *;
-''' // Code for making ITF-14 by Kazuki Przyborowski '''
-from upcean.barcodes.itf14 import *;
-''' // Code for making Code 11 by Kazuki Przyborowski '''
-from upcean.barcodes.code11 import *;
-''' // Code for making Code 39 by Kazuki Przyborowski '''
-from upcean.barcodes.code39 import *;
-''' // Code for making Code 93 by Kazuki Przyborowski '''
-from upcean.barcodes.code93 import *;
-''' // Code for making Codabar by Kazuki Przyborowski '''
-from upcean.barcodes.codabar import *;
-''' // Code for making Modified Plessey by Kazuki Przyborowski '''
-from upcean.barcodes.msi import *;
-''' // Import extra stuff '''
-from upcean.fonts import *;
-from upcean.xml import *;
+import upcean.barcodes.barcode;
 
 ''' // Barcode Support List '''
 bctype_dict={"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
@@ -137,9 +93,9 @@ def check_if_string(strtext):
 
 ''' // Shortcut Codes by Kazuki Przyborowski '''
 def create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- if(hasattr(upcean, "create_"+bctype+"_barcode") and callable(getattr(upcean, "create_"+bctype+"_barcode"))):
-  return getattr(upcean, "create_"+bctype+"_barcode")(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
- if(not hasattr(upcean, "create_"+bctype+"_barcode") or not callable(getattr(upcean, "create_"+bctype+"_barcode"))):
+ if(hasattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode") and callable(getattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode"))):
+  return getattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode")(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+ if(not hasattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode") or not callable(getattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode"))):
   return False;
  return False;
 def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):

@@ -82,6 +82,6 @@ except ImportError:
 // Source: http://www.barcodeisland.com/
 '''
 
-import upcean.validate, upcean.convert, upcean.shortcuts, upcean.oopfuncs, upcean.getprefix, upcean.getsfname;
+import upcean.validate, upcean.convert, upcean.shortcuts, upcean.getprefix;
 if(pilsupport==True):
- import upcean.fonts, upcean.xml, upcean.barcodes;
+ import upcean.fonts, upcean.xml, upcean.barcodes, upcean.getsfname, upcean.oopfuncs;
