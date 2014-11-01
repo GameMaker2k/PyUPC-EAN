@@ -164,7 +164,7 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
     colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
     colorlist = (colorlist1, colorlist2, colorlist3);
     xmlbarcode.update({"barcolor": colorlist});
-   bcstatinfo = upcean.create_barcode(**xmlbarcode);
+   bcstatinfo = create_barcode(**xmlbarcode);
    if(draw==True or 'file' not in child.attrib):
     bcdrawlist.append(bcstatinfo);
    if(bcstatinfo==False):
@@ -287,7 +287,7 @@ def create_barcode_from_json_file(jsonfile, draw=False):
    colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
    colorlist = (colorlist1, colorlist2, colorlist3);
    jsonbarcode.update({"barcolor": colorlist});
-  bcstatinfo = upcean.create_barcode(**jsonbarcode);
+  bcstatinfo = create_barcode(**jsonbarcode);
   if(draw==True or 'file' not in bctree[bctreect]):
    bcdrawlist.append(bcstatinfo);
   if(bcstatinfo==False):
@@ -434,7 +434,7 @@ def create_barcode_from_qs_file(qsfile, draw=False):
    pass;
   except IndexError:
    pass;
-  bcstatinfo = upcean.create_barcode(**qsbarcode);
+  bcstatinfo = create_barcode(**qsbarcode);
   if(draw==True or nofilesave == True):
    bcdrawlist.append(bcstatinfo);
   if(bcstatinfo==False):
