@@ -13,7 +13,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 10/31/2014 Ver. 2.7.2 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -28,7 +28,6 @@ if(sys.version[0]=="3"):
  from tkinter import colorchooser as tkColorChooser;
  from tkinter import simpledialog as tkSimpleDialog;
  from tkinter import *;
-from upcean import *;
 from PIL import Image, ImageTk;
 
 updateimg = False;
@@ -196,7 +195,7 @@ def GenerateBarcode():
   imageframe1.destroy();
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
- tmpbarcode = barcode();
+ tmpbarcode = upcean.oopfuncs.barcode();
  tmpbarcode.type = barcode_list[listboxtxt1.get()];
  tmpbarcode.code = entry1.get();
  tmpbarcode.size = 2;
@@ -249,7 +248,7 @@ def SaveGeneratedBarcode():
    upc_validate = upc_pieces[0];
  savestate = False;
  savefname = "";
- tmpbarcode = barcode();
+ tmpbarcode = upcean.oopfuncs.barcode();
  tmpbarcode.type = barcode_list[listboxtxt1.get()];
  tmpbarcode.code = entry1.get();
  tmpbarcode.size = magnify.get();

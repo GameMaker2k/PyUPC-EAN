@@ -13,7 +13,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 10/21/2014 Ver. 2.6.9 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 10/31/2014 Ver. 2.7.2 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -72,7 +72,7 @@ except NameError:
  ''' Error: Crash and Burn! '''
 print("PyUPC-EAN Version: "+upcean.__version__);
 while(count < maxnum):
- barcodeobj[count] = upcean.barcode();
+ barcodeobj[count] = upcean.oopfuncs.barcode();
  randbarcode[count] = random.randint(1, 9);
  if(randbarcode[count]==1):
   barcodeobj[count].type = "upca";
@@ -158,7 +158,7 @@ while running:
  count=0;
  while(count < maxnum):
   if((position[count].center[0]<0 or position[count].center[0]>width) or (position[count].center[1]<0 or position[count].center[1]>height)):
-   barcodeobj[count] = upcean.barcode();
+   barcodeobj[count] = upcean.oopfuncs.barcode();
    randbarcode[count] = random.randint(1, 9);
    if(randbarcode[count]==1):
     barcodeobj[count].type = "upca";
