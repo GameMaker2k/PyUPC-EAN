@@ -11,11 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/31/2014 Ver. 2.7.2 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/02/2014 Ver. 2.7.3 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, os, json, platform;
+import sys, re, os, json, platform, upcean.validate;
 try:
  import xml.etree.cElementTree as cElementTree;
 except ImportError:
@@ -101,6 +101,15 @@ def create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, 
  return False;
 def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+def validate_create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ if(hasattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode") and callable(getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode"))):
+  return getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode")(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+ if(not hasattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode") or not callable(getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode"))):
+  return False;
+ return False;
+def validate_draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return validate_create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 ''' // Create barcodes from XML file '''
 def create_barcode_from_xml_file(xmlfile, draw=False):

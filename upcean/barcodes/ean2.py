@@ -11,11 +11,11 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 10/31/2014 Ver. 2.7.2 RC 1 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 11/02/2014 Ver. 2.7.3 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.prepil, upcean.getsfname;
+import re, os, sys, types, upcean.barcodes.prepil, upcean.getsfname;
 from PIL import Image, ImageDraw, ImageFont;
 
 def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -58,11 +58,11 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];
- upcean.prepil.drawColorLine(upc_img, 0, 10, 0, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 1, 10, 1, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 2, 10, 2, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 3, 10, 3, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 4, 10, 4, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 0, 10, 0, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 1, 10, 1, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 2, 10, 2, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 3, 10, 3, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 4, 10, 4, LineSize, barcolor[0]);
  NumZero = 0; 
  LineStart = 5;
  while (NumZero < len(LeftDigit)):
@@ -121,15 +121,15 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    upcean.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
+    upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
    if(left_barcolor[InnerUPCNum]==0):
-    upcean.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
+    upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
    LineStart += 1;
    InnerUPCNum += 1;
   if(NumZero == 0):
-   upcean.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
+   upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
    LineStart += 1;
-   upcean.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
+   upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
    LineStart += 1;
   NumZero += 1;
  new_upc_img = upc_preimg.resize((29 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
@@ -137,8 +137,8 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(hidetext==False):
-  upcean.prepil.drawColorText(upc_img, 10 * int(resize), 5 + (6 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1]);
-  upcean.prepil.drawColorText(upc_img, 10 * int(resize), 13 + (13 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1]);
+  upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 5 + (6 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1]);
+  upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 13 + (13 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1]);
  del(upc_img);
  oldoutfile = upcean.getsfname.get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):

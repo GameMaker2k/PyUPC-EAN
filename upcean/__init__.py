@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 10/31/2014 Ver. 2.7.2 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/02/2014 Ver. 2.7.3 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -26,7 +26,7 @@ __email__ = "kazuki.przyborowski@gmail.com";
 __status__ = "Production";
 __project__ = "PyUPC-EAN";
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN";
-__version_info__ = (2, 7, 2, "RC 1");
+__version_info__ = (2, 7, 3, "RC 1");
 __revision__ = __version_info__[3];
 if(__version_info__[3]!=None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
@@ -39,7 +39,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3]==None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2014, 10, 21, "RC 1");
+__version_date_info__ = (2014, 11, 2, "RC 1");
 def version_date():
  global __version_info__;
  if(__version_date_info__[3]!=None):

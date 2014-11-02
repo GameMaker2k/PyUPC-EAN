@@ -11,13 +11,13 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code11.py - Last Update: 10/31/2014 Ver. 2.7.2 RC 1 - Author: cooldude2k $
+    $FileInfo: code11.py - Last Update: 11/02/2014 Ver. 2.7.3 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.prepil, upcean.getsfname;
+import re, os, sys, types, upcean.barcodes.prepil, upcean.getsfname;
 from PIL import Image, ImageDraw, ImageFont;
-from upcean.prepil import *;
+from upcean.barcodes.prepil import *;
 
 def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
@@ -90,23 +90,23 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  LineSize = barheight[0];
  if(hidetext==True):
   LineSize = barheight[1];
- upcean.prepil.drawColorLine(upc_img, 0, 4, 0, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 1, 4, 1, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 2, 4, 2, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 3, 4, 3, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 4, 4, 4, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 5, 4, 5, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 6, 4, 6, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 7, 4, 7, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 8, 4, 8, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 9, 4, 9, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 10, 4, 10, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 11, 4, 11, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 12, 4, 12, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 13, 4, 13, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 14, 4, 14, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 15, 4, 15, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 16, 4, 16, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 0, 4, 0, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 1, 4, 1, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 2, 4, 2, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 3, 4, 3, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 4, 4, 4, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 5, 4, 5, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 6, 4, 6, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 7, 4, 7, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 8, 4, 8, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 9, 4, 9, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 10, 4, 10, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 11, 4, 11, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 12, 4, 12, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 13, 4, 13, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 14, 4, 14, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 15, 4, 15, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 16, 4, 16, LineSize, barcolor[2]);
  NumZero = 0; 
  LineStart = 17; 
  while (NumZero < len(upc_matches)):
@@ -136,33 +136,33 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    upcean.prepil.drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[0]);
+    upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[0]);
    if(left_barcolor[InnerUPCNum]==0):
-    upcean.prepil.drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]);
+    upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]);
    LineStart += 1;
    InnerUPCNum += 1;
-  upcean.prepil.drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]);
   LineStart += 1;
   NumZero += 1; 
- upcean.prepil.drawColorLine(upc_img, 18 + upc_size_add, 4, 18 + upc_size_add, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 19 + upc_size_add, 4, 19 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 20 + upc_size_add, 4, 20 + upc_size_add, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, barcolor[0]);
- upcean.prepil.drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 31 + upc_size_add, 4, 31 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 32 + upc_size_add, 4, 32 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 33 + upc_size_add, 4, 33 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 34 + upc_size_add, 4, 34 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 35 + upc_size_add, 4, 35 + upc_size_add, LineSize, barcolor[2]);
- upcean.prepil.drawColorLine(upc_img, 36 + upc_size_add, 4, 36 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 18 + upc_size_add, 4, 18 + upc_size_add, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 19 + upc_size_add, 4, 19 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 20 + upc_size_add, 4, 20 + upc_size_add, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, barcolor[0]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 31 + upc_size_add, 4, 31 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 32 + upc_size_add, 4, 32 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 33 + upc_size_add, 4, 33 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 34 + upc_size_add, 4, 34 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 35 + upc_size_add, 4, 35 + upc_size_add, LineSize, barcolor[2]);
+ upcean.barcodes.prepil.drawColorLine(upc_img, 36 + upc_size_add, 4, 36 + upc_size_add, LineSize, barcolor[2]);
  new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
@@ -171,7 +171,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
   NumTxtZero = 0; 
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
-   upcean.prepil.drawColorText(upc_img, 10 * int(resize), LineTxtStart + (16 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1]);
+   upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), LineTxtStart + (16 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1]);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
