@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import sys, re, imp;
-import upcean.validate, upcean.convert, upcean.shortcuts, upcean.getprefix, upcean.getsfname;
+import upcean.validate, upcean.convert, upcean.shortcuts, upcean.getprefix, upcean.getsfname, upcean.support;
 
 # PIL Support Check
 pilsupport = True;

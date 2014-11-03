@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, os;
+import sys, re, os, upcean.support;
 
 ''' // Code for making EAN-2 supplement by Kazuki Przyborowski '''
 from upcean.barcodes.ean2 import *;

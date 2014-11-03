@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, os, json, platform, upcean.validate;
+import sys, re, os, json, platform, upcean.validate, upcean.support;
 try:
  import xml.etree.cElementTree as cElementTree;
 except ImportError:
@@ -34,26 +34,6 @@ from xml.sax.saxutils import XMLGenerator;
 from upcean import __project__, __project_url__, __version__, __version_alt__, __version_info__, __version_date__, __version_date_info__, __version_date_alt__;
 import upcean.barcodes.barcode;
 from upcean.barcodes.barcode import *;
-
-''' // Barcode Support List '''
-bctype_dict={"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
-bctype_dict_alt={"ean2": "EAN2", "ean5": "EAN5", "upca": "UPCA", "upce": "UPCE", "ean13": "EAN13","ean8": "EAN8","stf": "STF", "itf": "ITF", "itf14": "ITF14", "code11": "CODE11", "code39": "CODE39", "code93": "CODE93", "codabar": "CODABAR", "msi": "MSI"};
-bctype_list=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
-bctype_tuple=("ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi");
-bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
-def supported_barcodes(return_type="dict"):
- if(return_type=="dict"):
-  return {"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
- if(return_type=="list"):
-  return ["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
- if(return_type=="tuple"):
-  return ("ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi");
- return False;
-def barcode_support(return_type="dict"):
- return supported_barcodes(return_type);
-def get_barcode_name(barcode_type="upca"):
- bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
- return bctype_name[barcode_type];
 
 ''' // User-Agent string for http/https requests '''
 useragent_string = "Mozilla/5.0 (compatible; {proname}/{prover}; +{prourl})".format(proname=__project__, prover=__version_alt__, prourl=__project_url__);
@@ -94,6 +74,8 @@ def check_if_string(strtext):
 
 ''' // Shortcut Codes by Kazuki Przyborowski '''
 def create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ if(bctype not in upcean.support.supported_barcodes("tuple")):
+  return False;
  if(hasattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode") and callable(getattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode"))):
   return getattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode")(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
  if(not hasattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode") or not callable(getattr(upcean.barcodes.barcode, "create_"+bctype+"_barcode"))):
@@ -103,11 +85,16 @@ def draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(4
  return create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def validate_create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- if(hasattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode") and callable(getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode"))):
-  return getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode")(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
- if(not hasattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode") or not callable(getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode"))):
+ if(bctype not in upcean.support.supported_barcodes("tuple")):
   return False;
- return False;
+ if(bctype=="upca" or bctype=="upce" or bctype=="ean13" or bctype=="ean" or bctype=="itf" or bctype=="itf"):
+  if(hasattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode") and callable(getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode"))):
+   return getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode")(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+  if(not hasattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode") or not callable(getattr(upcean.barcodes.barcode, "validate_create_"+bctype+"_barcode"))):
+   return False;
+  return False;
+ if(bctype!="upca" and bctype!="upce" and bctype!="ean13" and bctype!="ean" and bctype!="itf" and bctype!="itf"):
+  return create_barcode(bctype,upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def validate_draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return validate_create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
@@ -173,7 +160,7 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
     colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
     colorlist = (colorlist1, colorlist2, colorlist3);
     xmlbarcode.update({"barcolor": colorlist});
-   bcstatinfo = create_barcode(**xmlbarcode);
+   bcstatinfo = validate_create_barcode(**xmlbarcode);
    if(draw==True or 'file' not in child.attrib):
     bcdrawlist.append(bcstatinfo);
    if(bcstatinfo==False):
@@ -296,7 +283,7 @@ def create_barcode_from_json_file(jsonfile, draw=False):
    colorlist3 = (int(colorsplit3[0], 16), int(colorsplit3[1], 16), int(colorsplit3[2], 16));
    colorlist = (colorlist1, colorlist2, colorlist3);
    jsonbarcode.update({"barcolor": colorlist});
-  bcstatinfo = create_barcode(**jsonbarcode);
+  bcstatinfo = validate_create_barcode(**jsonbarcode);
   if(draw==True or 'file' not in bctree[bctreect]):
    bcdrawlist.append(bcstatinfo);
   if(bcstatinfo==False):
@@ -443,7 +430,7 @@ def create_barcode_from_qs_file(qsfile, draw=False):
    pass;
   except IndexError:
    pass;
-  bcstatinfo = create_barcode(**qsbarcode);
+  bcstatinfo = validate_create_barcode(**qsbarcode);
   if(draw==True or nofilesave == True):
    bcdrawlist.append(bcstatinfo);
   if(bcstatinfo==False):
