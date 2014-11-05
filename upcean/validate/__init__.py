@@ -15,23 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, os;
+import sys, os;
 
-try:
- import pkg_resources;
- pkgres = True;
-except ImportError:
- pkgres = False;
-
-if(pkgres==True):
- fontpathocra = pkg_resources.resource_filename(__name__, "OCRA.otf");
- fontpathocraalt = pkg_resources.resource_filename(__name__, "OCRA.ttf");
- fontpathocrb = pkg_resources.resource_filename(__name__, "OCRB.otf");
- fontpathocrbalt = pkg_resources.resource_filename(__name__, "OCRB.ttf");
- fontpath = os.path.dirname(fontpathocrb);
-if(pkgres==False):
- fontpathocra = os.path.dirname(__file__)+os.sep+"OCRA.otf";
- fontpathocraalt = os.path.dirname(__file__)+os.sep+"OCRA.ttf";
- fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf";
- fontpathocrbalt = os.path.dirname(__file__)+os.sep+"OCRB.ttf";
- fontpath = os.path.dirname(fontpathocrb);
+from upcean.validate.validate import *;
+from upcean.validate.shortcuts import *;

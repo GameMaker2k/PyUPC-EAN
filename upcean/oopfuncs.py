@@ -11,12 +11,12 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: oopfuncs.py - Last Update: 11/02/2014 Ver. 2.7.3 RC 1  - Author: cooldude2k $
+    $FileInfo: oopfuncs.py - Last Update: 11/05/2014 Ver. 2.7.5 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import sys, re, imp;
-import upcean.validate, upcean.convert, upcean.shortcuts, upcean.getprefix, upcean.getsfname, upcean.support;
+import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname, upcean.support;
 
 # PIL Support Check
 pilsupport = True;
@@ -40,8 +40,6 @@ if(pilsupport==True):
 from upcean.validate import *;
 ''' // Code for converting UPC/EAN by Kazuki Przyborowski '''
 from upcean.convert import *;
-''' // Shortcut Codes by Kazuki Przyborowski '''
-from upcean.shortcuts import *;
 ''' // Code for getting GS1 Prefix EAN-8/EAN-13/ITF-14 by Kazuki Przyborowski '''
 from upcean.getprefix import *;
 ''' // Code for getting save file name and type by Kazuki Przyborowski '''

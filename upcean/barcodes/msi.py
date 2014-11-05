@@ -11,7 +11,7 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: msi.py - Last Update: 11/02/2014 Ver. 2.7.3 RC 1 - Author: cooldude2k $
+    $FileInfo: msi.py - Last Update: 11/05/2014 Ver. 2.7.5 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
