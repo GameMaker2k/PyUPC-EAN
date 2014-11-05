@@ -91,8 +91,6 @@ def fix_luhn_checksum(upc, upclen):
   fix_matches = re.findall("^(\d{"+str(upclendwn)+"})", upc); 
   upc = fix_matches[0];
  return upc+str(get_luhn_checksum(upc,upclen));
-def fix_luhn_barcode(upc, upclen):
- return fix_luhn_checksum(upc, upclen);
 
 def validate_upca_checksum(upc, return_check=False): 
  upc = str(upc);
@@ -129,8 +127,6 @@ def fix_upca_checksum(upc):
   fix_matches = re.findall("^(\d{11})", upc); 
   upc = fix_matches[0];
  return upc+str(get_upca_checksum(upc));
-def fix_upca_barcode(upc):
- return fix_upca_checksum(upc);
 
 def validate_ean13_checksum(upc, return_check=False):
  upc = str(upc);
@@ -167,8 +163,6 @@ def fix_ean13_checksum(upc):
   fix_matches = re.findall("^(\d{12})", upc); 
   upc = fix_matches[0];
  return upc+str(get_ean13_checksum(upc));
-def fix_ean13_barcode(upc):
- return fix_ean13_checksum(upc);
 
 def validate_itf14_checksum(upc, return_check=False):
  upc = str(upc);
@@ -205,8 +199,6 @@ def fix_itf14_checksum(upc):
   fix_matches = re.findall("^(\d{13})", upc); 
   upc = fix_matches[0];
  return upc+str(get_itf14_checksum(upc));
-def fix_itf14_barcode(upc):
- return fix_itf14_checksum(upc);
 
 def validate_ean8_checksum(upc, return_check=False):
  upc = str(upc);
@@ -243,8 +235,6 @@ def fix_ean8_checksum(upc):
   fix_matches = re.findall("^(\d{7})", upc); 
   upc = fix_matches[0];
  return upc+str(get_ean8_checksum(upc));
-def fix_ean8_barcode(upc):
- return fix_ean8_checksum(upc);
 
 def validate_upce_checksum(upc, return_check=False):
  upc = str(upc);
@@ -321,8 +311,6 @@ def fix_upce_checksum(upc):
   fix_matches = re.findall("^(\d{7})", upc); 
   upc = fix_matches[0];
  return upc+str(get_upce_checksum(upc));
-def fix_upce_barcode(upc):
- return fix_upce_checksum(upc);
 
 def validate_ean2_checksum(upc, return_check=False): 
  upc = str(upc);
@@ -359,8 +347,6 @@ def fix_ean2_checksum(upc):
   fix_matches = re.findall("^(\d{2})", upc); 
   upc = fix_matches[0];
  return upc+str(get_ean2_checksum(upc));
-def fix_ean2_barcode(upc):
- return fix_ean2_checksum(upc);
 
 def validate_ean5_checksum(upc, return_check=False): 
  upc = str(upc);
@@ -399,8 +385,6 @@ def fix_ean5_checksum(upc):
   fix_matches = re.findall("^(\d{5})", upc); 
   upc = fix_matches[0];
  return upc+str(get_ean5_checksum(upc));
-def fix_ean5_barcode(upc):
- return fix_ean5_checksum(upc);
 
 '''
 // Get USPS Checkdigit by MACY8167
@@ -441,8 +425,6 @@ def fix_usps_checksum(upc):
   fix_matches = re.findall("^(\d{21})", upc); 
   upc = fix_matches[0];
  return upc+str(get_usps_checksum(upc));
-def fix_usps_barcode(upc):
- return fix_usps_checksum(upc);
 
 '''
 // Get UPS Checkdigit and Info by stebo0728 and HolidayBows
@@ -507,8 +489,6 @@ def fix_ups_checksum(upc):
   fix_matches = re.findall("^(\d{15})", upc); 
   upc = fix_matches[0];
  return upc+str(get_ups_checksum(upc));
-def fix_ups_barcode(upc):
- return fix_ups_checksum(upc);
 
 '''
 // IMEI (International Mobile Station Equipment Identity)
@@ -548,8 +528,6 @@ def fix_imei_checksum(upc):
   fix_matches = re.findall("^(\d{14})", upc); 
   upc = fix_matches[0];
  return upc+str(get_imei_checksum(upc));
-def fix_imei_barcode(upc):
- return fix_imei_checksum(upc);
 
 '''
 // Bank Card Numbers
@@ -596,8 +574,6 @@ def fix_bcn_checksum(upc):
   fix_matches = re.findall("^(\d{15})", upc); 
   upc = fix_matches[0];
  return upc+str(get_bcn_checksum(upc));
-def fix_bcn_barcode(upc):
- return fix_bcn_checksum(upc);
 
 '''
 // Code 11
@@ -691,14 +667,18 @@ def get_code93_checksum(upc):
 // Source: http://en.wikipedia.org/wiki/MSI_Barcode
 '''
 def get_msi_checksum(upc):
+ upc = str(upc);
+ upc = upc.upper();
  upc_matches = list(upc);
  upc_matches = [int(x) for x in upc_matches];
  if(len(upc) % 2==0):
-  upc_matches1 = list(str("".join(upc_matches[1:][::2]) * 2));
+  upc_matches1 = "".join([str(i) for i in upc_matches[1:][::2]]);
+  upc_matches1 = list(str(int(upc_matches1) * 2));
   upc_matches1 = [int(x) for x in upc_matches1];
   upc_matches2 = upc_matches[0:][::2];
  else:
-  upc_matches1 = list(str("".join(upc_matches[0:][::2]) * 2));
+  upc_matches1 = "".join([str(i) for i in upc_matches[0:][::2]]);
+  upc_matches1 = list(str(int(upc_matches1) * 2));
   upc_matches1 = [int(x) for x in upc_matches1];
   upc_matches2 = upc_matches[1:][::2];
  PreCount = 0;
@@ -759,8 +739,6 @@ def fix_issn8_checksum(upc):
   fix_matches = re.findall("^(\d{7})", upc); 
   upc = fix_matches[0];
  return upc+str(get_issn8_checksum(upc,True));
-def fix_issn8_barcode(upc):
- return fix_issn8_checksum(upc);
 def validate_issn13_checksum(upc, return_check=False):
  upc = str(upc);
  if(not re.findall("^977(\d{9})", upc)):
@@ -776,8 +754,6 @@ def fix_issn13_checksum(upc):
   return False;
  if(re.findall("^977(\d{9})", upc)):
   return fix_ean13_checksum(upc);
-def fix_issn13_barcode(upc):
- return fix_issn13_checksum(upc);
 
 '''
 // ISBN (International Standard Book Number)
@@ -827,8 +803,6 @@ def fix_isbn10_checksum(upc):
   fix_matches = re.findall("^(\d{9})", upc);
   upc = fix_matches[1];
  return upc+str(get_isbn10_checksum(upc));
-def fix_isbn10_barcode(upc):
- return fix_isbn10_checksum(upc);
 def validate_isbn13_checksum(upc, return_check=False):
  upc = str(upc);
  if(not re.findall("^978(\d{9})", upc)):
@@ -844,8 +818,6 @@ def fix_isbn13_checksum(upc):
   return False;
  if(re.findall("^978(\d{9})", upc)):
   return fix_ean13_checksum(upc);
-def fix_isbn13_barcode(upc):
- return fix_isbn13_checksum(upc);
 
 '''
 // ISMN (International Standard Music Number)
@@ -898,8 +870,6 @@ def fix_ismn10_checksum(upc):
   fix_matches = re.findall("^(\d{9})", upc); 
   upc = fix_matches[1];
  return upc+str(get_ismn10_checksum(upc));
-def fix_ismn10_barcode(upc):
- return fix_ismn10_checksum(upc);
 def validate_ismn13_checksum(upc, return_check=False):
  upc = str(upc);
  if(not re.findall("^9790(\d{8})", upc)):
@@ -915,8 +885,6 @@ def fix_ismn13_checksum(upc):
   return False;
  if(re.findall("^9790(\d{8})", upc)):
   return fix_ean13_checksum(upc);
-def fix_ismn13_barcode(upc):
- return fix_ismn13_checksum(upc);
 
 '''
 // Get variable weight price checksum
@@ -964,8 +932,6 @@ def validate_vw_price_checksum(price, return_check=False):
  if(len(price)==4):
   return str(CheckSum);
  return str(CheckSum);
-def validate_vw_price_barcode(price, return_check=False):
- return validate_vw_price_checksum(price, return_check);
 def get_vw_price_checksum(price, return_check=False):
  price = str(price);
  if(len(price)==1):
@@ -991,5 +957,3 @@ def fix_vw_price_checksum(price):
   fix_matches = re.findall("^(\d{4})", price); 
   price = fix_matches[0];
  return str(get_vw_price_checksum(price,True))+price;
-def fix_vw_price_barcode(upc):
- return fix_vw_price_checksum(upc);
