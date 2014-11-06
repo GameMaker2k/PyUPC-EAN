@@ -49,7 +49,7 @@ setup(
  keywords = 'barcode barcodegenerator barcodes codabar msi code11 code-11 code39 code-39 code93 code-93 ean ean13 ean-13 ean2 ean-2 ean5 ean-5 ean8 ean-8 itf itf14 itf-14 stf upc upca upc-a upce upc-e',
  url = 'https://github.com/GameMaker2k/PyUPC-EAN',
  download_url = 'https://github.com/GameMaker2k/PyUPC-EAN/archive/master.tar.gz',
- packages = ['upcean', 'upcean/barcodes', 'upcean/fonts', 'upcean/xml'],
+ packages = ['upcean', 'upcean/validate', 'upcean/convert', 'upcean/barcodes', 'upcean/fonts', 'upcean/xml'],
  package_data = {'upcean/fonts': ['*.otf', '*.ttf'], 'upcean/xml': ['*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc']},
  include_package_data = True,
  install_requires = [install_requires],
