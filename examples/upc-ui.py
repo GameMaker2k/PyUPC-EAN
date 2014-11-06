@@ -195,15 +195,13 @@ def GenerateBarcode():
   imageframe1.destroy();
   panel1.destroy();
  '''(tmpfd, tmpfilename) = tempfile.mkstemp(".png");'''
- tmpbarcode = upcean.oopfuncs.barcode();
- tmpbarcode.type = barcode_list[listboxtxt1.get()];
- tmpbarcode.code = entry1.get();
+ tmpbarcode = upcean.oopfuncs.barcode(barcode_list[listboxtxt1.get()], entry1.get());
  tmpbarcode.size = 2;
  tmpbarcode.barcolor = barcode_bar_color;
  tmpbarcode.textcolor = barcode_text_color;
  tmpbarcode.bgcolor = barcode_bg_color;
  tmpbarcode.filename = None;
- validbc = tmpbarcode.draw_barcode();
+ validbc = tmpbarcode.validate_draw_barcode();
  if(validbc==False):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Could not generate/save barcode.");
   rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
@@ -248,9 +246,7 @@ def SaveGeneratedBarcode():
    upc_validate = upc_pieces[0];
  savestate = False;
  savefname = "";
- tmpbarcode = upcean.oopfuncs.barcode();
- tmpbarcode.type = barcode_list[listboxtxt1.get()];
- tmpbarcode.code = entry1.get();
+ tmpbarcode = upcean.oopfuncs.barcode(barcode_list[listboxtxt1.get()], entry1.get());
  tmpbarcode.size = magnify.get();
  tmpbarcode.barheight = (int(entry2.get()),int(entry3.get()));
  tmpbarcode.barcolor = barcode_bar_color;
@@ -259,7 +255,7 @@ def SaveGeneratedBarcode():
  savefname = ShowSaveDialog();
  tmpbarcode.filename = savefname;
  if(savefname!=""):
-  savestate = tmpbarcode.create_barcode();
+  savestate = tmpbarcode.validate_create_barcode();
  if(savestate==False and savefname!=""):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Failed to save barcode.");
 def SaveGeneratedBarcodeAlt(event):

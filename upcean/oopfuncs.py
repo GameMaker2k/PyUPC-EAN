@@ -69,8 +69,9 @@ class barcode:
  bctype_list=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
  bctype_tuple=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
  bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
- def __init__(self):
-  self.type = "upca";
+ def __init__(self, type, code):
+  self.type = type;
+  self.code = code;
   self.filename = "./barcode.png";
   self.size = 1;
   self.hidesn = False;
@@ -84,111 +85,71 @@ class barcode:
   self.return_check = False;
   self.return_type = "dict";
   self.barcode_type = "upca";
- def version_info(self):
-  return version_info();
- def version_date(self):
-  return version_date();
- def supported_barcodes(self):
-  return barcode_support(self.return_type);
- def barcode_support(self):
-  return barcode_support(self.return_type);
- def get_barcode_name(self):
-  return barcode_support(self.barcode_type);
- def create_barcode(self):
-  return create_barcode(self.type, self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
- def draw_barcode(self):
-  return draw_barcode(self.type, self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
- def create_from_barcode(self):
-  return getattr(upcean, "create_"+self.type+"_barcode_from_"+self.outtype)(self.code, self.filename, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
- def draw_from_barcode(self):
-  return getattr(upcean, "draw_"+self.type+"_barcode_from_"+self.outtype)(self.code, self.size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
- def create_from_xml(self):
-  return create_barcode_from_xml_file(self.xmlfile, False);
- def draw_from_xml(self):
-  return draw_barcode_from_xml_file(self.xmlfile);
- def create_from_xml_string(self):
-  return create_barcode_from_xml_string(self.xmlfile, False);
- def draw_from_xml_string(self):
-  return draw_barcode_from_xml_string(self.xmlfile);
- def create_from_json(self):
-  return create_barcode_from_json_file(self.jsonfile, False);
- def draw_from_json(self):
-  return draw_barcode_from_json_file(self.jsonfile);
- def create_from_json_string(self):
-  return create_barcode_from_json_string(self.jsonfile, False);
- def draw_from_json_string(self):
-  return draw_barcode_from_json_string(self.jsonfile);
- def create_from_qs(self):
-  return create_barcode_from_qs_file(self.jsonfile, False);
- def draw_from_qs(self):
-  return draw_barcode_from_qs_file(self.jsonfile);
+ def supported_barcodes(self, return_type=None):
+  if(return_type is None):
+   return_type = self.return_type;
+  return upcean.support.supported_barcodes(return_type);
+ def barcode_support(self, return_type=None):
+  if(return_type is None):
+   return_type = self.return_type;
+  return upcean.support.barcode_support(return_type);
+ def get_barcode_name(self, barcode_type=None):
+  if(barcode_type is None):
+   barcode_type = self.type;
+  return upcean.support.get_barcode_name(barcode_type);
+ def create_barcode(self, filename=None, size=None):
+  if(filename is None):
+   filename = self.filename;
+  if(size is None):
+   size = self.size;
+  return upcean.barcodes.create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+ def validate_create_barcode(self, filename=None, size=None):
+  if(filename is None):
+   filename = self.filename;
+  if(size is None):
+   size = self.size;
+  return upcean.barcodes.validate_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+ def draw_barcode(self, size=None):
+  if(size is None):
+   size = self.size;
+  return upcean.barcodes.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+ def validate_draw_barcode(self, size=None):
+  if(size is None):
+   size = self.size;
+  return upcean.barcodes.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  def validate_checksum(self):
-  return getattr(upcean, "validate_"+self.type+"_checksum")(self.code, self.return_check);
+  return upcean.validate.validate_checksum(self.type, self.code, self.return_check);
  def validate_luhn_checksum(self):
-  return validate_luhn_checksum(self.code, self.codelen, self.return_check);
+  return upcean.validate.validate_luhn_checksum(self.code, self.codelen, self.return_check);
  def get_checksum(self):
-  return getattr(upcean, "get_"+self.type+"_checksum")(self.code);
+  return upcean.validate.get_checksum(self.type, self.code);
  def get_barcode_info(self):
-  return getattr(upcean, "get_"+self.type+"_barcode_info")(self.code);
+  return upcean.getprefix.get_barcode_info(self.type, self.code)
  def get_luhn_checksum(self):
-  return get_luhn_checksum(self.code, self.codelen);
+  return upcean.validate.get_luhn_checksum(self.code, self.codelen);
  def get_digital_root(self):
-  return get_digital_root(self.number);
+  return upcean.validate.get_digital_root(self.number);
  def fix_checksum(self):
-  return getattr(upcean, "fix_"+self.type+"_checksum")(self.code);
+  return upcean.validate.fix_checksum(self.type, self.code);
  def fix_luhn_checksum(self):
-  return fix_luhn_checksum(self.code, self.codelen);
- def convert(self):
-  return getattr(upcean, "convert_barcode_from_"+self.type+"_to_"+self.outtype)(self.code);
- def print_convert(self):
-  return getattr(upcean, "print_convert_barcode_from_"+self.type+"_to_"+self.outtype)(self.code);
- def convert_barcode(self):
-  return convert_barcode(self.type, self.outtype, self.code);
- def print_convert_barcode(self):
-  return print_convert_barcode(self.type, self.outtype, self.code);
- def make_barcode(self):
-  return make_barcode(self.type, self.numbersystem, self.manufacturer, self.product);
- def make_vw(self):
-  return getattr(upcean, "make_vw_to_"+self.type+"_barcode")(self.code, self.price);
- def make_vw_barcode(self):
-  return getattr(upcean, "make_vw_to_"+self.type+"_barcode")(self.code, self.price);
- def make_goodwill(self):
-  return getattr(upcean, "make_goodwill_to_"+self.type+"_barcode")(self.code, self.price);
- def make_goodwill_barcode(self):
-  return getattr(upcean, "make_goodwill_to_"+self.type+"_barcode")(self.code, self.price);
- def make_coupon(self):
-  return getattr(upcean, "make_coupon_to_"+self.type+"_barcode")(self.numbersystem, self.manufacturer, self.family, self.value);
- def make_coupon_barcode(self):
-  return getattr(upcean, "make_coupon_to_"+self.type+"_barcode")(self.numbersystem, self.manufacturer, self.family, self.value);
- def get_upca_info_from_upce(self):
-  return get_upca_info_from_upce(self.code);
- def get_upce_as_upca_info(self):
-  return get_upca_info_from_upce(self.code);
- def get_gs1_prefix(self):
-  return get_gs1_prefix(self.code);
- def get_isbn_identifier(self):
-  return get_isbn_identifier(self.code);
- def get_upca_barcode_ns(self):
-  return get_upca_barcode_ns(self.code);
- def get_itf14_barcode_type(self):
-  return get_itf14_barcode_type(self.code);
- def get_vw_info_barcode(self):
-  return get_upca_vw_barcode_info(self.code);
- def get_goodwill_info_barcode(self):
-  return get_upca_goodwill_barcode_info(self.code);
- def get_coupon_info_barcode(self):
-  return get_upca_coupon_barcode_info(self.code);
- def get_bcn_info(self):
-  return get_bcn_info(self.code);
- def get_ups_barcode_info(self):
-  return get_ups_barcode_info(self.code);
- def get_new_imei_barcode_info(self):
-  return get_new_imei_barcode_info(self.code);
- def get_old_imei_barcode_info(self):
-  return get_old_imei_barcode_info(self.code);
- def get_new_imeisv_barcode_info(self):
-  return get_new_imeisv_barcode_info(self.code);
- def get_old_imeisv_barcode_info(self):
-  return get_old_imeisv_barcode_info(self.code);
- def get_save_filename(self):
-  return get_save_filename(self.filename);
+  return upcean.validate.fix_luhn_checksum(self.code, self.codelen);
+ def convert_barcode(self, outtype=None):
+  if(outtype is None):
+   outtype = self.outtype;
+  return upcean.convert.convert_barcode(self.type, outtype, self.code);
+ def print_convert_barcode(self, outtype=None):
+  if(outtype is None):
+   outtype = self.outtype;
+  return upcean.convert.print_convert_barcode(self.type, outtype, self.code);
+ def make_barcode(self, numbersystem, manufacturer, product):
+  if(numbersystem is None):
+   numbersystem = self.numbersystem;
+  if(manufacturer is None):
+   manufacturer = self.manufacturer;
+  if(product is None):
+   product = self.product;
+  return upcean.convert.make_barcode(self.type, self.numbersystem, self.manufacturer, self.product);
+ def get_save_filename(self, filename=None):
+  if(filename is None):
+   filename = self.filename;
+  return upcean.getsfname.get_save_filename(self.filename);

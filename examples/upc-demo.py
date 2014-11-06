@@ -72,7 +72,7 @@ except NameError:
  ''' Error: Crash and Burn! '''
 print("PyUPC-EAN Version: "+upcean.__version__);
 while(count < maxnum):
- barcodeobj[count] = upcean.oopfuncs.barcode();
+ barcodeobj[count] = upcean.oopfuncs.barcode("upca", "123456789012");
  randbarcode[count] = random.randint(1, 9);
  if(randbarcode[count]==1):
   barcodeobj[count].type = "upca";
@@ -123,10 +123,10 @@ while(count < maxnum):
   barcodeobj[count].code = str(random.randint(0, 9999999)).zfill(7);
  barcodeobj[count].code = barcodeobj[count].fix_checksum();
  if(randbarcode[count]==6 or randbarcode[count]==7 or randbarcode[count]==8 or randbarcode[count]==9):
-  barcodeobj[count].code = barcodeobj[count].convert();
+  barcodeobj[count].code = barcodeobj[count].convert_barcode();
   barcodeobj[count].type = barcodeobj[count].outtype;
  barcodeobj[count].size = barcodesize;
- barcodedrw[count] = barcodeobj[count].draw_barcode().convert("RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True);
+ barcodedrw[count] = barcodeobj[count].validate_draw_barcode().convert("RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True);
  barcodeimg[count] = pygame.image.fromstring(barcodedrw[count].tobytes(), barcodedrw[count].size, barcodedrw[count].mode);
  position[count] = barcodeimg[count].get_rect();
  position[count].move_ip([1, 1]);
@@ -158,7 +158,7 @@ while running:
  count=0;
  while(count < maxnum):
   if((position[count].center[0]<0 or position[count].center[0]>width) or (position[count].center[1]<0 or position[count].center[1]>height)):
-   barcodeobj[count] = upcean.oopfuncs.barcode();
+   barcodeobj[count] = upcean.oopfuncs.barcode("upca", "987654321098");
    randbarcode[count] = random.randint(1, 9);
    if(randbarcode[count]==1):
     barcodeobj[count].type = "upca";
@@ -209,10 +209,10 @@ while running:
     barcodeobj[count].code = str(random.randint(0, 9999999)).zfill(7);
    barcodeobj[count].code = barcodeobj[count].fix_checksum();
    if(randbarcode[count]==6 or randbarcode[count]==7 or randbarcode[count]==8 or randbarcode[count]==9):
-    barcodeobj[count].code = barcodeobj[count].convert();
+    barcodeobj[count].code = barcodeobj[count].convert_barcode();
     barcodeobj[count].type = barcodeobj[count].outtype;
    barcodeobj[count].size = barcodesize;
-   barcodedrw[count] = barcodeobj[count].draw_barcode().convert("RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True);
+   barcodedrw[count] = barcodeobj[count].validate_draw_barcode().convert("RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True);
    barcodeimg[count] = pygame.image.fromstring(barcodedrw[count].tobytes(), barcodedrw[count].size, barcodedrw[count].mode);
    position[count] = barcodeimg[count].get_rect();
    position[count].move_ip([1, 1]);

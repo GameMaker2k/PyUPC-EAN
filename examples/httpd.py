@@ -100,7 +100,7 @@ class GenerateIndexPage(object):
    upc;
   except KeyError:
    upc = None;
-  file_ext = upcean.get_save_filename(tempfile.gettempdir()+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+imgtype.lower());
+  file_ext = upcean.getsfname.get_save_filename(tempfile.gettempdir()+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+imgtype.lower());
   if(file_ext[1]=="PNG"):
    cherrypy.response.headers['Content-Type'] = "image/png";
   if(file_ext[1]=="GIF"):
@@ -205,7 +205,7 @@ class GenerateBarcodes(object):
    params['upc'];
   except KeyError:
    params['upc'] = None;
-  file_ext = upcean.get_save_filename(tempfile.gettempdir()+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+params['imgtype'].lower());
+  file_ext = upcean.getsfname.get_save_filename(tempfile.gettempdir()+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+params['imgtype'].lower());
   if(file_ext[1]=="PNG"):
    cherrypy.response.headers['Content-Type'] = "image/png";
   if(file_ext[1]=="GIF"):
@@ -313,7 +313,7 @@ class GenerateBarcodes(object):
    upc;
   except KeyError:
    upc = None;
-  file_ext = upcean.get_save_filename(tempfile.gettempdir()+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+imgtype.lower());
+  file_ext = upcean.getsfname.get_save_filename(tempfile.gettempdir()+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+imgtype.lower());
   if(file_ext[1]=="PNG"):
    cherrypy.response.headers['Content-Type'] = "image/png";
   if(file_ext[1]=="GIF"):
