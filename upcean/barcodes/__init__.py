@@ -98,6 +98,20 @@ def validate_create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo
 def validate_draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return validate_create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
+def fix_create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ if(bctype not in upcean.support.supported_barcodes("tuple")):
+  return False;
+ if(bctype=="upca" or bctype=="upce" or bctype=="ean13" or bctype=="ean" or bctype=="itf" or bctype=="itf"):
+  if(hasattr(upcean.barcodes.barcode, "fix_create_"+bctype+"_barcode") and callable(getattr(upcean.barcodes.barcode, "fix_create_"+bctype+"_barcode"))):
+   return getattr(upcean.barcodes.barcode, "fix_create_"+bctype+"_barcode")(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+  if(not hasattr(upcean.barcodes.barcode, "fix_create_"+bctype+"_barcode") or not callable(getattr(upcean.barcodes.barcode, "fix_create_"+bctype+"_barcode"))):
+   return False;
+  return False;
+ if(bctype!="upca" and bctype!="upce" and bctype!="ean13" and bctype!="ean" and bctype!="itf" and bctype!="itf"):
+  return create_barcode(bctype,upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+def fix_draw_barcode(bctype,upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return fix_create_barcode(bctype,upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
 ''' // Create barcodes from XML file '''
 def create_barcode_from_xml_file(xmlfile, draw=False):
  global useragent_string;

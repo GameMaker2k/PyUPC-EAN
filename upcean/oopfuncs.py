@@ -85,6 +85,7 @@ class barcode:
   self.return_check = False;
   self.return_type = "dict";
   self.barcode_type = "upca";
+ ''' // support.py funtions '''
  def supported_barcodes(self, return_type=None):
   if(return_type is None):
    return_type = self.return_type;
@@ -97,26 +98,39 @@ class barcode:
   if(barcode_type is None):
    barcode_type = self.type;
   return upcean.support.get_barcode_name(barcode_type);
- def create_barcode(self, filename=None, size=None):
-  if(filename is None):
-   filename = self.filename;
-  if(size is None):
-   size = self.size;
-  return upcean.barcodes.create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
- def validate_create_barcode(self, filename=None, size=None):
-  if(filename is None):
-   filename = self.filename;
-  if(size is None):
-   size = self.size;
-  return upcean.barcodes.validate_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
- def draw_barcode(self, size=None):
-  if(size is None):
-   size = self.size;
-  return upcean.barcodes.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
- def validate_draw_barcode(self, size=None):
-  if(size is None):
-   size = self.size;
-  return upcean.barcodes.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+ ''' // barcodes/__init__.py funtions '''
+ if(pilsupport==True):
+  def create_barcode(self, filename=None, size=None):
+   if(filename is None):
+    filename = self.filename;
+   if(size is None):
+    size = self.size;
+   return upcean.barcodes.create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  def validate_create_barcode(self, filename=None, size=None):
+   if(filename is None):
+    filename = self.filename;
+   if(size is None):
+    size = self.size;
+   return upcean.barcodes.validate_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  def fix_create_barcode(self, filename=None, size=None):
+   if(filename is None):
+    filename = self.filename;
+   if(size is None):
+    size = self.size;
+   return upcean.barcodes.fix_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  def draw_barcode(self, size=None):
+   if(size is None):
+    size = self.size;
+   return upcean.barcodes.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  def validate_draw_barcode(self, size=None):
+   if(size is None):
+    size = self.size;
+   return upcean.barcodes.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+  def fix_draw_barcode(self, size=None):
+   if(size is None):
+    size = self.size;
+   return upcean.barcodes.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+ ''' // validate/__init__.py funtions '''
  def validate_checksum(self):
   return upcean.validate.validate_checksum(self.type, self.code, self.return_check);
  def validate_luhn_checksum(self):
@@ -133,6 +147,7 @@ class barcode:
   return upcean.validate.fix_checksum(self.type, self.code);
  def fix_luhn_checksum(self):
   return upcean.validate.fix_luhn_checksum(self.code, self.codelen);
+ ''' // convert/__init__.py funtions '''
  def convert_barcode(self, outtype=None):
   if(outtype is None):
    outtype = self.outtype;
@@ -149,7 +164,13 @@ class barcode:
   if(product is None):
    product = self.product;
   return upcean.convert.make_barcode(self.type, self.numbersystem, self.manufacturer, self.product);
+ ''' // getsfname.py funtions '''
  def get_save_filename(self, filename=None):
   if(filename is None):
    filename = self.filename;
   return upcean.getsfname.get_save_filename(self.filename);
+ ''' // getprefix/__init__.py funtions '''
+ def get_save_filename(self, infotype=None):
+  if(infotype is None):
+   infotype = self.infotype;
+  return upcean.getsfname.get_barcode_info(self.type, self.code, infotype);
