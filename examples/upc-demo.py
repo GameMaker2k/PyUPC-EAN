@@ -67,9 +67,9 @@ print("PIL Version: "+Image.VERSION);
 try:
  print("Pillow Version: "+Image.PILLOW_VERSION);
 except AttributeError:
- ''' Error: Crash and Burn! '''
+ pass;
 except NameError:
- ''' Error: Crash and Burn! '''
+ pass;
 print("PyUPC-EAN Version: "+upcean.__version__);
 while(count < maxnum):
  barcodeobj[count] = upcean.oopfuncs.barcode();
