@@ -72,7 +72,7 @@ except NameError:
  ''' Error: Crash and Burn! '''
 print("PyUPC-EAN Version: "+upcean.__version__);
 while(count < maxnum):
- barcodeobj[count] = upcean.oopfuncs.barcode("upca", "123456789012");
+ barcodeobj[count] = upcean.oopfuncs.barcode();
  randbarcode[count] = random.randint(1, 9);
  if(randbarcode[count]==1):
   barcodeobj[count].type = "upca";
@@ -158,7 +158,7 @@ while running:
  count=0;
  while(count < maxnum):
   if((position[count].center[0]<0 or position[count].center[0]>width) or (position[count].center[1]<0 or position[count].center[1]>height)):
-   barcodeobj[count] = upcean.oopfuncs.barcode("upca", "987654321098");
+   barcodeobj[count] = upcean.oopfuncs.barcode();
    randbarcode[count] = random.randint(1, 9);
    if(randbarcode[count]==1):
     barcodeobj[count].type = "upca";

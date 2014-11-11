@@ -69,9 +69,11 @@ class barcode:
  bctype_list=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
  bctype_tuple=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
  bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
- def __init__(self, type, code):
-  self.type = type;
-  self.code = code;
+ def __init__(self, type=None, code=None):
+  if(type is not None):
+   self.type = type;
+  if(code is not None):
+   self.code = code;
   self.filename = "./barcode.png";
   self.size = 1;
   self.hidesn = False;
