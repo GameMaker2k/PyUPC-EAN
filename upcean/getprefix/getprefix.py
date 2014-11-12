@@ -17,8 +17,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, upcean.validate, upcean.convert, upcean.getprefix.countries;
-from upcean.getprefix.countries import *;
+import sys, re, upcean.validate, upcean.convert;
 
 def get_upca_barcode_info(upc):
  upc = str(upc);
