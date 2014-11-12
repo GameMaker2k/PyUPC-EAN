@@ -17,7 +17,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, upcean.validate, upcean.convert;
+import sys, re, upcean.validate;
 
 '''
 // Get GS1 Prefix for EAN-13 EAN-9 barcodes
