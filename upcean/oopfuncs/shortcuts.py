@@ -11,11 +11,23 @@
     Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 11/15/2014 Ver. 2.7.7 RC 1 - Author: cooldude2k $
+    $FileInfo: shortcuts.py - Last Update: 11/15/2014 Ver. 2.7.7 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, os;
+import sys, re, upcean.oopfuncs.oopfuncs, upcean.support;
 
-from upcean.validate.validate import *;
-from upcean.validate.shortcuts import *;
+'''
+// Shortcut Codes by Kazuki Przyborowski
+// oopfuncs
+'''
+
+def barcode_class(type=None, code=None):
+ if(type not in upcean.support.supported_barcodes("tuple")):
+  return False;
+ return upcean.oopfuncs.oopfuncs.barcode(type, code);
+
+def class_barcode(type=None, code=None):
+ if(type not in upcean.support.supported_barcodes("tuple")):
+  return False;
+ return upcean.oopfuncs.oopfuncs.barcode(type, code);
