@@ -7,15 +7,14 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2014 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upca.py - Last Update: 11/15/2014 Ver. 2.7.7 RC 1 - Author: cooldude2k $
+    $FileInfo: upca.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.barcodes.prepil, upcean.getsfname;
+import re, sys, types, upcean.barcodes.prepil, upcean.getsfname;
 import upcean.barcodes.ean2, upcean.barcodes.ean5;
 from PIL import Image, ImageDraw, ImageFont;
 

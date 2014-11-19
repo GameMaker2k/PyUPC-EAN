@@ -7,15 +7,14 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2014 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: files.py - Last Update: 11/15/2014 Ver. 2.7.7 RC 1  - Author: cooldude2k $
+    $FileInfo: files.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, os, json, platform, upcean.validate, upcean.support;
+import sys, re, json, platform, upcean.validate, upcean.support;
 try:
  import xml.etree.cElementTree as cElementTree;
 except ImportError:
@@ -31,7 +30,7 @@ if(sys.version[0]=="3"):
  import urllib.request as urllib2;
  import urllib.parse as urlparse;
 from xml.sax.saxutils import XMLGenerator;
-from upcean import __project__, __project_url__, __version__, __version_alt__, __version_info__, __version_date__, __version_date_info__, __version_date_alt__;
+from upcean.versioninfo import __author__, __copyright__, __credits__, __email__, __license__, __maintainer__, __project__, __project_url__, __revision__, __status__, __version__, __version_alt__, __version_date__, __version_date_alt__, __version_date_info__, __version_info__, version_date, version_info;
 import upcean.barcodes.barcode, upcean.barcodes.shortcuts;
 
 ''' // User-Agent string for http/https requests '''

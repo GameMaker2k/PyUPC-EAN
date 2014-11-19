@@ -7,47 +7,15 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2014 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 11/15/2014 Ver. 2.7.7 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, imp;
-
-__author__ = "Kazuki Przyborowski";
-__copyright__ = "Copyright 2011-2014, Game Maker 2k";
-__credits__ = ["Kazuki Przyborowski", "Game Maker 2k"];
-__license__ = "Revised BSD License";
-__maintainer__ = "Kazuki Przyborowski";
-__email__ = "kazuki.przyborowski@gmail.com";
-__status__ = "Production";
-__project__ = "PyUPC-EAN";
-__project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN";
-__version_info__ = (2, 7, 7, "RC 1");
-__revision__ = __version_info__[3];
-if(__version_info__[3]!=None):
- __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
-if(__version_info__[3]==None):
- __version__ = "{major}.{minor}.{build}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2]);
-__version_alt__ = "{major}.{minor}.{build}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2]);
-def version_info():
- global __version_info__;
- if(__version_info__[3]!=None):
-  return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
- if(__version_info__[3]==None):
-  return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2014, 11, 15, "RC 1");
-def version_date():
- global __version_info__;
- if(__version_date_info__[3]!=None):
-  return {"year":__version_date_info__[0], "month": __version_date_info__[1], "day": __version_date_info__[2], "release": __version_date_info__[3]};
- if(__version_date_info__[3]==None):
-  return {"year":__version_date_info__[0], "month": __version_date_info__[1], "day": __version_date_info__[2], "release": None};
-__version_date__ = "{year}.{month}.{day}".format(year=__version_date_info__[0], month=__version_date_info__[1], day=__version_date_info__[2]);
-__version_date_alt__ = "{year}.{month}.{day} {release}".format(year=__version_date_info__[0], month=__version_date_info__[1], day=__version_date_info__[2], release=__version_date_info__[2]);
+import imp;
+from upcean.versioninfo import __author__, __copyright__, __credits__, __email__, __license__, __maintainer__, __project__, __project_url__, __revision__, __status__, __version__, __version_alt__, __version_date__, __version_date_alt__, __version_date_info__, __version_info__, version_date, version_info;
 
 # PIL Support Check
 pilsupport = True;

@@ -9,8 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2014 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2014 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
     $FileInfo: upc-ui.py - Last Update: 11/10/2014 Ver. 2.7.6 RC 1  - Author: cooldude2k $
