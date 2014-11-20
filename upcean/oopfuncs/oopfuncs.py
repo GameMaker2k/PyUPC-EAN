@@ -14,35 +14,10 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import imp;
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname, upcean.support;
-
-# PIL Support Check
-pilsupport = True;
-try:
- imp.find_module('PIL');
- pilsupport = True;
-except ImportError:
- try:
-  imp.find_module('Image');
-  pilsupport = True;
- except ImportError:
-  pilsupport = False;
-
+pilsupport = upcean.support.check_for_pil();
 if(pilsupport==True):
  import upcean.fonts, upcean.xml, upcean.barcodes;
- from upcean.barcodes import *;
- ''' // Import extra stuff '''
- from upcean.fonts import *;
- from upcean.xml import *;
-''' // Code for validating UPC/EAN by Kazuki Przyborowski '''
-from upcean.validate import *;
-''' // Code for converting UPC/EAN by Kazuki Przyborowski '''
-from upcean.convert import *;
-''' // Code for getting GS1 Prefix EAN-8/EAN-13/ITF-14 by Kazuki Przyborowski '''
-from upcean.getprefix import *;
-''' // Code for getting save file name and type by Kazuki Przyborowski '''
-from upcean.getsfname import *;
 
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
 class barcode:
@@ -99,6 +74,14 @@ class barcode:
   if(barcode_type is None):
    barcode_type = self.type;
   return upcean.support.get_barcode_name(barcode_type);
+ def check_for_pil(self):
+  return upcean.support.check_for_pil();
+ def check_for_pillow(self):
+  return upcean.support.check_for_pillow();
+ def get_pil_version(self):
+  return upcean.support.get_pil_version();
+ def get_pillow_version(self):
+  return upcean.support.get_pillow_version();
  ''' // barcodes/__init__.py funtions '''
  if(pilsupport==True):
   def create_barcode(self, filename=None, size=None):
@@ -138,8 +121,6 @@ class barcode:
   return upcean.validate.validate_luhn_checksum(self.code, self.codelen, self.return_check);
  def get_checksum(self):
   return upcean.validate.get_checksum(self.type, self.code);
- def get_barcode_info(self):
-  return upcean.getprefix.get_barcode_info(self.type, self.code)
  def get_luhn_checksum(self):
   return upcean.validate.get_luhn_checksum(self.code, self.codelen);
  def get_digital_root(self):
@@ -166,12 +147,11 @@ class barcode:
    product = self.product;
   return upcean.convert.make_barcode(self.type, self.numbersystem, self.manufacturer, self.product);
  ''' // getsfname.py funtions '''
- def get_save_filename(self, filename=None):
-  if(filename is None):
-   filename = self.filename;
-  return upcean.getsfname.get_save_filename(self.filename);
+ if(pilsupport==True):
+  def get_save_filename(self, filename=None):
+   if(filename is None):
+    filename = self.filename;
+   return upcean.getsfname.get_save_filename(self.filename);
  ''' // getprefix/__init__.py funtions '''
- def get_save_filename(self, infotype=None):
-  if(infotype is None):
-   infotype = self.infotype;
-  return upcean.getsfname.get_barcode_info(self.type, self.code, infotype);
+ def get_barcode_info(self):
+  return upcean.getprefix.get_barcode_info(self.type, self.code);

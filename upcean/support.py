@@ -14,6 +14,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
+import imp;
 
 ''' // Barcode Support List '''
 bctype_dict={"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
@@ -34,3 +35,79 @@ def barcode_support(return_type="dict"):
 def get_barcode_name(barcode_type="upca"):
  bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
  return bctype_name[barcode_type];
+
+def check_for_pil():
+ # PIL Support Check
+ pilsupport = True;
+ try:
+  imp.find_module('PIL');
+  pilsupport = True;
+ except ImportError:
+  try:
+   imp.find_module('Image');
+   pilsupport = True;
+  except ImportError:
+   pilsupport = False;
+ return pilsupport;
+
+def check_for_pillow():
+ pilsupport = check_for_pil();
+ if(pilsupport==False):
+  return pilsupport;
+ if(pilsupport==True):
+  from PIL import Image;
+  try:
+   pil_ver = Image.PILLOW_VERSION;
+   pil_is_pillow = True;
+  except AttributeError:
+   pil_is_pillow = False;
+  except NameError:
+   pil_is_pillow = False;
+ return pil_is_pillow;
+
+def get_pil_version():
+ pilsupport = check_for_pil();
+ if(pilsupport==False):
+  return pilsupport;
+ if(pilsupport==True):
+  from PIL import Image;
+  try:
+   pillow_ver = Image.PILLOW_VERSION;
+   pillow_ver = pillow_ver.split(".");
+   pillow_ver = [int(x) for x in pillow_ver];
+   pil_is_pillow = True;
+  except AttributeError:
+   pillow_ver = None;
+   pil_is_pillow = False;
+  except NameError:
+   pillow_ver = None;
+   pil_is_pillow = False;
+  pil_ver = Image.VERSION;
+  pil_ver = pil_ver.split(".");
+  pil_ver = [int(x) for x in pil_ver];
+  if(pillow_ver is None):
+   return {'pil_ver': pil_ver, 'pil_is_pillow': pil_is_pillow};
+  if(pillow_ver is not None):
+   return {'pil_ver': pil_ver, 'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
+
+def get_pillow_version():
+ pilsupport = check_for_pil();
+ if(pilsupport==False):
+  return pilsupport;
+ if(pilsupport==True):
+  from PIL import Image;
+  try:
+   pillow_ver = Image.PILLOW_VERSION;
+   pillow_ver = pillow_ver.split(".");
+   pillow_ver = [int(x) for x in pillow_ver];
+   pil_is_pillow = True;
+  except AttributeError:
+   pillow_ver = None;
+   pil_is_pillow = False;
+  except NameError:
+   pillow_ver = None;
+   pil_is_pillow = False;
+  if(pillow_ver is None):
+   return False;
+  if(pillow_ver is not None):
+   return {'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};

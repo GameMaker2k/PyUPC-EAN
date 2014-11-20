@@ -14,20 +14,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import imp;
 from upcean.versioninfo import __author__, __copyright__, __credits__, __email__, __license__, __maintainer__, __project__, __project_url__, __revision__, __status__, __version__, __version_alt__, __version_date__, __version_date_alt__, __version_date_info__, __version_info__, version_date, version_info;
-
-# PIL Support Check
-pilsupport = True;
-try:
- imp.find_module('PIL');
- pilsupport = True;
-except ImportError:
- try:
-  imp.find_module('Image');
-  pilsupport = True;
- except ImportError:
-  pilsupport = False;
 
 '''
 // UPC Resources and Info
@@ -51,5 +38,6 @@ except ImportError:
 '''
 
 import upcean.validate, upcean.convert, upcean.support, upcean.getprefix, upcean.oopfuncs;
+pilsupport = upcean.support.check_for_pil();
 if(pilsupport==True):
  import upcean.fonts, upcean.xml, upcean.barcodes, upcean.getsfname;
