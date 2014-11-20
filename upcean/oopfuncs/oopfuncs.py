@@ -10,13 +10,13 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: oopfuncs.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2  - Author: cooldude2k $
+    $FileInfo: oopfuncs.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.getsfname, upcean.support;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport==True):
+if(pilsupport):
  import upcean.fonts, upcean.xml, upcean.barcodes;
 
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
@@ -83,7 +83,7 @@ class barcode:
  def get_pillow_version(self):
   return upcean.support.get_pillow_version();
  ''' // barcodes/__init__.py funtions '''
- if(pilsupport==True):
+ if(pilsupport):
   def create_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
@@ -147,7 +147,7 @@ class barcode:
    product = self.product;
   return upcean.convert.make_barcode(self.type, self.numbersystem, self.manufacturer, self.product);
  ''' // getsfname.py funtions '''
- if(pilsupport==True):
+ if(pilsupport):
   def get_save_filename(self, filename=None):
    if(filename is None):
     filename = self.filename;

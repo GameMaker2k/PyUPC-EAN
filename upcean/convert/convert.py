@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: convert.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2  - Author: cooldude2k $
+    $FileInfo: convert.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -119,7 +119,7 @@ def convert_barcode_from_upce_to_upca(upc):
   return False;
  if(not re.findall("^(0|1)", upc)):
   return False;
- if(upcean.validate.validate_upce_checksum(upc)==False):
+ if(not upcean.validate.validate_upce_checksum(upc)):
   return False;
  if(re.findall("(0|1)(\d{5})([0-3])(\d{1})", upc)):
   upc_matches = re.findall("(0|1)(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})(\d{1})", upc);
@@ -155,7 +155,7 @@ def convert_barcode_from_upca_to_ean13(upc):
   upc = upc+str(upcean.validate.validate_upca_checksum(upc,True));
  if(len(upc)>13 or len(upc)<12):
   return False;
- if(upcean.validate.validate_upca_checksum(upc)==False):
+ if(not upcean.validate.validate_upca_checksum(upc)):
   return False;
  if(len(upc)==12):
   ean13 = "0"+upc;
@@ -170,7 +170,7 @@ def convert_barcode_from_ean13_to_itf14(upc):
   upc = "0"+upc;
  if(len(upc)>14 or len(upc)<13):
   return False;
- if(upcean.validate.validate_ean13_checksum(upc)==False):
+ if(not upcean.validate.validate_ean13_checksum(upc)):
   return False;
  if(len(upc)==13):
   itf14 = "0"+upc;
@@ -196,7 +196,7 @@ def convert_barcode_from_ean13_to_upca(upc):
   upc = "0"+upc;
  if(len(upc)>13 or len(upc)<13):
   return False;
- if(upcean.validate.validate_ean13_checksum(upc)==False):
+ if(not upcean.validate.validate_ean13_checksum(upc)):
   return False;
  if(not re.findall("^0(\d{12})", upc)):
   return False;
@@ -211,7 +211,7 @@ def convert_barcode_from_itf14_to_ean13(upc):
   upc = "0"+upc;
  if(len(upc)>14 or len(upc)<14): 
   return False;
- if(upcean.validate.validate_itf14_checksum(upc)==False):
+ if(not upcean.validate.validate_itf14_checksum(upc)):
   return False;
  if(not re.findall("^(\d{1})(\d{12})(\d{1})", upc)):
   return False;
@@ -227,7 +227,7 @@ def convert_barcode_from_upca_to_upce(upc):
   upc = upc+str(upcean.validate.validate_upca_checksum(upc,True));
  if(len(upc)>12 or len(upc)<12):
   return False;
- if(upcean.validate.validate_upca_checksum(upc)==False):
+ if(not upcean.validate.validate_upca_checksum(upc)):
   return False;
  if(not re.findall("(0|1)(\d{11})", upc)):
   return False;
@@ -292,7 +292,7 @@ def convert_barcode_from_upca_to_upce(upc):
   upce = upc_matches[0]+upc_matches[1]+"9";
   upce = upce+upc_matches[2]; 
   return upce;
- if(upce==None):
+ if(upce is None):
   return False;
  return upce;
 
@@ -318,7 +318,7 @@ def convert_barcode_from_ean8_to_upca(upc):
   upc = upc+str(upcean.validate.validate_ean8_checksum(upc,True));
  if(len(upc)>8 or len(upc)<8):
   return False;
- if(upcean.validate.validate_ean8_checksum(upc)==False):
+ if(not upcean.validate.validate_ean8_checksum(upc)):
   return False;
  upca = "0000"+upc; 
  return upca;
@@ -337,7 +337,7 @@ def convert_barcode_from_upca_to_ean8(upc):
   upc = upc+str(upcean.validate.validate_upca_checksum(upc,True));
  if(len(upc)>12 or len(upc)<12):
   return False;
- if(upcean.validate.validate_upca_checksum(upc)==False):
+ if(not upcean.validate.validate_upca_checksum(upc)):
   return False;
  if(not re.findall("^0000(\d{8})", upc)):
   return False;
@@ -363,7 +363,7 @@ def convert_barcode_from_issn8_to_issn13(upc):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  upc = upc.replace("X", "");
- if(upcean.validate.validate_issn8_checksum(upc)==False): 
+ if(not upcean.validate.validate_issn8_checksum(upc)): 
   return False;
  if(len(upc)>7): 
   fix_matches = re.findall("^(\d{7})", upc); 
@@ -375,7 +375,7 @@ def convert_barcode_from_issn13_to_issn8(upc):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  upc = upc.replace("X", "");
- if(upcean.validate.validate_ean13_checksum(upc)==False): 
+ if(not upcean.validate.validate_ean13_checksum(upc)): 
   return False;
  if(not re.findall("/^977(\d{7})/", upc)):
   return False;
@@ -438,7 +438,7 @@ def convert_barcode_from_isbn10_to_isbn13(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
- if(upcean.validate.validate_isbn10_checksum(upc)==False):
+ if(not upcean.validate.validate_isbn10_checksum(upc)):
   return False;
  if(len(upc)>9):
   fix_matches = re.findall("^(\d{9})", upc);
@@ -449,7 +449,7 @@ def convert_barcode_from_isbn13_to_isbn10(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
- if(upcean.validate.validate_ean13_checksum(upc)==False):
+ if(not upcean.validate.validate_ean13_checksum(upc)):
   return False;
  if(not re.findall("^978(\d{9})", upc)):
   return False;
@@ -516,7 +516,7 @@ def convert_barcode_from_ismn10_to_ismn13(upc):
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
- if(upcean.validate.validate_ismn10_checksum(upc)==False):
+ if(not upcean.validate.validate_ismn10_checksum(upc)):
   return False;
  if(len(upc)>8):
   fix_matches = re.findall("^(\d{8})", upc); 
@@ -528,7 +528,7 @@ def convert_barcode_from_ismn13_to_ismn10(upc):
  upc = upc.replace("M", "");
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
- if(upcean.validate.validate_ean13_checksum(upc)==False):
+ if(not upcean.validate.validate_ean13_checksum(upc)):
   return False;
  if(not re.findall("^9790(\d{8})", upc)):
   return False;

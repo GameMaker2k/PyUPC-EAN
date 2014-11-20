@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
+    $FileInfo: itf.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -46,7 +46,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  pil_addon_fix = 0;
  pil_prevercheck = [str(x) for x in pil_ver];
  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
- if(pil_is_pillow==True and pil_vercheck>=210 and pil_vercheck<220):
+ if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
  upc_matches = re.findall("([0-9]{2})", upc);
  upc_size_add = len(upc_matches) * 18;
@@ -170,7 +170,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
- if(hidetext==False):
+ if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 20;
   while (NumTxtZero < len(upc_matches)):
@@ -189,13 +189,13 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):
-  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     new_upc_img.save(sys.stdout, outfileext);
    except:
     return False;
  if(sys.version[0]=="3"):
-  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     new_upc_img.save(sys.stdout.buffer, outfileext);
    except:

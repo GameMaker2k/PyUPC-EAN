@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: support.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
+    $FileInfo: support.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -52,9 +52,9 @@ def check_for_pil():
 
 def check_for_pillow():
  pilsupport = check_for_pil();
- if(pilsupport==False):
+ if(not pilsupport):
   return pilsupport;
- if(pilsupport==True):
+ if(pilsupport):
   from PIL import Image;
   try:
    pil_ver = Image.PILLOW_VERSION;
@@ -67,9 +67,9 @@ def check_for_pillow():
 
 def get_pil_version():
  pilsupport = check_for_pil();
- if(pilsupport==False):
+ if(not pilsupport):
   return pilsupport;
- if(pilsupport==True):
+ if(pilsupport):
   from PIL import Image;
   try:
    pillow_ver = Image.PILLOW_VERSION;
@@ -92,9 +92,9 @@ def get_pil_version():
 
 def get_pillow_version():
  pilsupport = check_for_pil();
- if(pilsupport==False):
+ if(not pilsupport):
   return pilsupport;
- if(pilsupport==True):
+ if(pilsupport):
   from PIL import Image;
   try:
    pillow_ver = Image.PILLOW_VERSION;

@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -22,13 +22,13 @@ try:
 except ImportError:
  pkgres = False;
 
-if(pkgres==True):
+if(pkgres):
  fontpathocra = pkg_resources.resource_filename(__name__, "OCRA.otf");
  fontpathocraalt = pkg_resources.resource_filename(__name__, "OCRA.ttf");
  fontpathocrb = pkg_resources.resource_filename(__name__, "OCRB.otf");
  fontpathocrbalt = pkg_resources.resource_filename(__name__, "OCRB.ttf");
  fontpath = os.path.dirname(fontpathocrb);
-if(pkgres==False):
+if(not pkgres):
  fontpathocra = os.path.dirname(__file__)+os.sep+"OCRA.otf";
  fontpathocraalt = os.path.dirname(__file__)+os.sep+"OCRA.ttf";
  fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf";

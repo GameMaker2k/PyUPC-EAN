@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: barcode.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
+    $FileInfo: barcode.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -48,7 +48,7 @@ from upcean.barcodes.msi import *;
 def validate_create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>12 or len(upc)<12):
   return False;
- if(upcean.validate.validate_upca_checksum(upc)==False):
+ if(not upcean.validate.validate_upca_checksum(upc)):
   return False;
  return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def validate_draw_upca_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -57,7 +57,7 @@ def validate_draw_upca_barcode(upc,resize=1,hideinfo=(False, False, False),barhe
 def validate_create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>8 or len(upc)<8):
   return False;
- if(upcean.validate.validate_upce_checksum(upc)==False):
+ if(not upcean.validate.validate_upce_checksum(upc)):
   return False;
  return create_upce_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def validate_draw_upce_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -66,7 +66,7 @@ def validate_draw_upce_barcode(upc,resize=1,hideinfo=(False, False, False),barhe
 def validate_create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>13 or len(upc)<13):
   return False;
- if(upcean.validate.validate_ean13_checksum(upc)==False):
+ if(not upcean.validate.validate_ean13_checksum(upc)):
   return False;
  return create_ean13_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def validate_draw_ean13_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -75,7 +75,7 @@ def validate_draw_ean13_barcode(upc,resize=1,hideinfo=(False, False, False),barh
 def validate_create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>8 or len(upc)<8):
   return False;
- if(upcean.validate.validate_upce_checksum(upc)==False):
+ if(not upcean.validate.validate_upce_checksum(upc)):
   return False;
  return create_upce_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def validate_draw_ean8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -84,7 +84,7 @@ def validate_draw_ean8_barcode(upc,resize=1,hideinfo=(False, False, False),barhe
 def validate_create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>14 or len(upc)<14):
   return False;
- if(upcean.validate.validate_itf14_checksum(upc)==False):
+ if(not upcean.validate.validate_itf14_checksum(upc)):
   return False;
  return create_itf_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def validate_draw_itf_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
@@ -93,7 +93,7 @@ def validate_draw_itf_barcode(upc,resize=1,hideinfo=(False, False, False),barhei
 def validate_create_itf14_barcode(upc,outfile="./itf8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>14 or len(upc)<14):
   return False;
- if(upcean.validate.validate_itf14_checksum(upc)==False):
+ if(not upcean.validate.validate_itf14_checksum(upc)):
   return False;
  return create_itf14_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def validate_draw_itf14_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):

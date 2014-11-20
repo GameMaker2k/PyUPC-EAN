@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: validate.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2  - Author: cooldude2k $
+    $FileInfo: validate.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -68,12 +68,12 @@ def validate_luhn_checksum(upc, upclen, return_check=False):
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
- if(return_check==False and len(upc)==upclen):
+ if(not return_check and len(upc)==upclen):
   if(CheckSum!=upc_matches[-1]):
    return False;
   if(CheckSum==upc_matches[-1]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==upclendwn):
   return str(CheckSum);
@@ -108,12 +108,12 @@ def validate_upca_checksum(upc, return_check=False):
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
- if(return_check==False and len(upc)==12):
+ if(not return_check and len(upc)==12):
   if(CheckSum!=upc_matches2[5]):
    return False;
   if(CheckSum==upc_matches2[5]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==11):
   return str(CheckSum);
@@ -144,12 +144,12 @@ def validate_ean13_checksum(upc, return_check=False):
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
- if(return_check==False and len(upc)==13):
+ if(not return_check and len(upc)==13):
   if(CheckSum!=upc_matches1[6]):
    return False;
   if(CheckSum==upc_matches1[6]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==12):
   return str(CheckSum);
@@ -180,12 +180,12 @@ def validate_itf14_checksum(upc, return_check=False):
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
- if(return_check==False and len(upc)==14):
+ if(not return_check and len(upc)==14):
   if(CheckSum!=upc_matches2[6]):
    return False;
   if(CheckSum==upc_matches2[6]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==13):
   return str(CheckSum);
@@ -216,12 +216,12 @@ def validate_ean8_checksum(upc, return_check=False):
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
- if(return_check==False and len(upc)==8):
+ if(not return_check and len(upc)==8):
   if(CheckSum!=upc_matches2[3]):
    return False;
   if(CheckSum==upc_matches2[3]): 
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==7):
   return str(CheckSum);
@@ -292,12 +292,12 @@ def validate_upce_checksum(upc, return_check=False):
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
- if(return_check==False and len(upc)==8):
+ if(not return_check and len(upc)==8):
   if(CheckSum!=CheckDigit):
    return False;
   if(CheckSum==CheckDigit):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==7):
   return str(CheckSum);
@@ -328,12 +328,12 @@ def validate_ean2_checksum(upc, return_check=False):
  if(len(upc_matches)<=0): 
   return False;
  CheckSum = upc_matches[0] % 4;
- if(return_check==False and len(upc)==3):
+ if(not return_check and len(upc)==3):
   if(CheckSum!=upc_matches[1]):
    return False;
   if(CheckSum==upc_matches[1]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==2):
   return str(CheckSum);
@@ -366,12 +366,12 @@ def validate_ean5_checksum(upc, return_check=False):
  CheckSum = (LeftDigit[0] * 3) + (LeftDigit[1] * 9) + (LeftDigit[2] * 3) + (LeftDigit[3] * 9) + (LeftDigit[4] * 3);
  CheckSum = CheckSum % 10;
  upc_matches = [int(x) for x in upc_matches];
- if(return_check==False and len(upc)==6):
+ if(not return_check and len(upc)==6):
   if(CheckSum!=upc_matches[1]):
    return False;
   if(CheckSum==upc_matches[1]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==5):
   return str(CheckSum);
@@ -406,12 +406,12 @@ def validate_usps_checksum(upc, return_check=False):
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
- if(return_check==False and len(upc)==22):
+ if(not return_check and len(upc)==22):
   if(CheckSum!=upc_matches2[10]):
    return False;
   if(CheckSum==upc_matches2[10]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==21):
   return str(CheckSum);
@@ -470,12 +470,12 @@ def validate_ups_checksum(upc, return_check=False):
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
- if(return_check==False and len(upc)==16):
+ if(not return_check and len(upc)==16):
   if(CheckSum!=int(upc_matches2[7])):
    return False;
   if(CheckSum==int(upc_matches2[7])):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==15):
   return str(CheckSum);
@@ -509,12 +509,12 @@ def validate_imei_checksum(upc, return_check=False):
  while((UPC_Sum + PreCheckSum) % 10 != 0):
   PreCheckSum += 1;
  CheckSum = PreCheckSum;
- if(return_check==False and len(upc)==15):
+ if(not return_check and len(upc)==15):
   if(CheckSum!=upc_matches1[7]):
    return False;
   if(CheckSum==upc_matches1[7]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==14):
   return str(CheckSum);
@@ -551,12 +551,12 @@ def validate_bcn_checksum(upc, return_check=False):
  while((UPC_Sum + PreCheckSum) % 10 != 0):
   PreCheckSum += 1;
  CheckSum = PreCheckSum;
- if(return_check==False and len(upc)==16):
+ if(not return_check and len(upc)==16):
   if(CheckSum!=upc_matches2[7]):
    return False;
   if(CheckSum==upc_matches2[7]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==15):
   return str(CheckSum);
@@ -716,12 +716,12 @@ def validate_issn8_checksum(upc, return_check=False):
  CheckSum = AllSum % 11;
  if(CheckSum>0):
   CheckSum = 11 - CheckSum;
- if(return_check==False and len(upc)==8):
+ if(not return_check and len(upc)==8):
   if(CheckSum!=upc_matches[7]):
    return False;
   if(CheckSum==upc_matches[7]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==7):
   return str(CheckSum);
@@ -780,12 +780,12 @@ def validate_isbn10_checksum(upc, return_check=False):
   CheckSum += 1;
  if(CheckSum==10):
   CheckSum = "X";
- if(return_check==False and len(upc)==10):
+ if(not return_check and len(upc)==10):
   if(str(CheckSum)!=upc_matches[9]):
    return False;
   if(str(CheckSum)==upc_matches[9]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==9):
   return str(CheckSum);
@@ -845,12 +845,12 @@ def validate_ismn10_checksum(upc, return_check=False):
  CheckSum = 1;
  while((AllSum + (CheckSum * 1)) % 10):
   CheckSum += 1;
- if(return_check==False and len(upc)==9):
+ if(not return_check and len(upc)==9):
   if(CheckSum!=upc_matches[8]):
    return False;
   if(CheckSum==upc_matches[8]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(upc)==8):
   return str(CheckSum);
@@ -921,12 +921,12 @@ def validate_vw_price_checksum(price, return_check=False):
   price_split[4] = numrep3[price_split[4]]; 
   price_add = (price_split[1] + price_split[2] + price_split[3] + price_split[4]) * 3;
  CheckSum = price_add % 10;
- if(return_check==False and len(price)==5):
+ if(not return_check and len(price)==5):
   if(CheckSum!=price_split[0]):
    return False;
   if(CheckSum==price_split[0]):
    return True;
- if(return_check==True):
+ if(return_check):
   return str(CheckSum);
  if(len(price)==4):
   return str(CheckSum);

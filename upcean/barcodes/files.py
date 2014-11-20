@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: files.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2  - Author: cooldude2k $
+    $FileInfo: files.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -69,9 +69,9 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
   if(child.tag=="python"):
    exec(child.text);
   if(child.tag=="barcode"):
-   if(draw==True):
+   if(draw):
     xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": None};
-   if(draw==False):
+   if(not draw):
     if('file' in child.attrib):
      xmlbarcode = {"bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": child.attrib['file']};
     if('file' not in child.attrib):
@@ -112,13 +112,13 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
     colorlist = (colorlist1, colorlist2, colorlist3);
     xmlbarcode.update({"barcolor": colorlist});
    bcstatinfo = upcean.barcodes.shortcuts.validate_create_barcode(**xmlbarcode);
-   if(draw==True or 'file' not in child.attrib):
+   if(draw or 'file' not in child.attrib):
     bcdrawlist.append(bcstatinfo);
-   if(bcstatinfo==False):
+   if(not bcstatinfo):
     return False;
- if(draw==True or (draw==False and len(bcdrawlist)>0)):
+ if(draw or (not draw and len(bcdrawlist)>0)):
   return bcdrawlist;
- if(draw==False and len(bcdrawlist)==0):
+ if(not draw and len(bcdrawlist)==0):
   return True;
 def create_barcode_from_xml_string(xmlfile, draw=False):
  return create_barcode_from_xml_file(StringIO(xmlfile), draw);
@@ -164,12 +164,12 @@ def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
   if('color' in child.attrib):
    jsontmpdict.update({"color": child.attrib['color']});
   jsonlist['barcodes']['barcode'].append(jsontmpdict);
- if(jsonfile!=None):
+ if(jsonfile is not None):
   jsonofile = open(jsonfile, "w+");
   json.dump(jsonlist, jsonofile);
   jsonofile.close();
   return True;
- if(jsonfile==None):
+ if(jsonfile is None):
   return json.dumps(jsonlist);
 def convert_from_xml_to_json_string(xmlfile, jsonfile=None):
  return convert_from_xml_to_json_file(StringIO(xmlfile), jsonfile);
@@ -192,9 +192,9 @@ def create_barcode_from_json_file(jsonfile, draw=False):
  bctreect = 0;
  bcdrawlist = [];
  while(bctreect < bctreeln):
-  if(draw==True):
+  if(draw):
    jsonbarcode = {"bctype": bctree[bctreect]['type'], "upc": bctree[bctreect]['code'], "outfile": None};
-  if(draw==False):
+  if(not draw):
    if('file' in bctree[bctreect]):
     jsonbarcode = {"bctype": bctree[bctreect]['type'], "upc": bctree[bctreect]['code'], "outfile": bctree[bctreect]['file']};
    if('file' not in bctree[bctreect]):
@@ -235,14 +235,14 @@ def create_barcode_from_json_file(jsonfile, draw=False):
    colorlist = (colorlist1, colorlist2, colorlist3);
    jsonbarcode.update({"barcolor": colorlist});
   bcstatinfo = upcean.barcodes.shortcuts.validate_create_barcode(**jsonbarcode);
-  if(draw==True or 'file' not in bctree[bctreect]):
+  if(draw or 'file' not in bctree[bctreect]):
    bcdrawlist.append(bcstatinfo);
-  if(bcstatinfo==False):
+  if(not bcstatinfo):
    return False;
   bctreect = bctreect + 1;
- if(draw==True or (draw==False and len(bcdrawlist)>0)):
+ if(draw or (not draw and len(bcdrawlist)>0)):
   return bcdrawlist;
- if(draw==False and len(bcdrawlist)==0):
+ if(not draw and len(bcdrawlist)==0):
   return True;
 def create_barcode_from_json_string(jsonfile, draw=False):
  return create_barcode_from_json_file(StringIO(jsonfile), draw);
@@ -282,12 +282,12 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
  upcxml.endElement("barcodes");
  upcxml.endDocument();
  xmlout.seek(0);
- if(xmlfile!=None):
+ if(xmlfile is not None):
   xmlofile = open(xmlfile, "w+");
   xmlofile.write(xmlout.read());
   xmlofile.close();
   return True;
- if(xmlfile==None):
+ if(xmlfile is None):
   return xmlout.read();
 def convert_from_json_to_xml_string(jsonfile, xmlfile=None):
  return convert_from_json_to_xml_file(StringIO(jsonfile), xmlfile);
@@ -313,10 +313,10 @@ def create_barcode_from_qs_file(qsfile, draw=False):
  while(bctreect < bctreeln):
   qsbarcode = {}
   nofilesave = False;
-  if(draw==True):
+  if(draw):
    nofilesave = True;
    qsbarcode.update({"bctype": bctree['type'][bctreect], "upc": bctree['code'][bctreect], "outfile": None});
-  if(draw==False):
+  if(not draw):
    try:
     nofilesave = False;
     qsbarcode.update({"bctype": bctree['type'][bctreect], "upc": bctree['code'][bctreect], "outfile": bctree['file'][bctreect]});
@@ -382,14 +382,14 @@ def create_barcode_from_qs_file(qsfile, draw=False):
   except IndexError:
    pass;
   bcstatinfo = upcean.barcodes.shortcuts.validate_create_barcode(**qsbarcode);
-  if(draw==True or nofilesave == True):
+  if(draw or nofilesave ):
    bcdrawlist.append(bcstatinfo);
-  if(bcstatinfo==False):
+  if(not bcstatinfo):
    return False;
   bctreect = bctreect + 1;
- if(draw==True or (draw==False and len(bcdrawlist)>0)):
+ if(draw or (not draw and len(bcdrawlist)>0)):
   return bcdrawlist;
- if(draw==False and len(bcdrawlist)==0):
+ if(not draw and len(bcdrawlist)==0):
   return True;
 def create_barcode_from_qs_string(qsfile, draw=False):
  return create_barcode_from_qs_file(StringIO(qsfile), draw);
@@ -469,12 +469,12 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
  upcxml.endElement("barcodes");
  upcxml.endDocument();
  xmlout.seek(0);
- if(xmlfile!=None):
+ if(xmlfile is not None):
   xmlofile = open(xmlfile, "w+");
   xmlofile.write(xmlout.read());
   xmlofile.close();
   return True;
- if(xmlfile==None):
+ if(xmlfile is None):
   return xmlout.read();
 def convert_from_qs_to_xml_string(qsfile, xmlfile=None):
  return convert_from_qs_to_xml_file(StringIO(qsfile), xmlfile);
@@ -540,12 +540,12 @@ def convert_from_qs_to_json_file(qsfile, jsonfile=None):
    pass;
   jsonlist['barcodes']['barcode'].append(qsbarcode);
   bctreect = bctreect + 1;
- if(jsonfile!=None):
+ if(jsonfile is not None):
   jsonofile = open(jsonfile, "w+");
   json.dump(jsonlist, jsonofile);
   jsonofile.close();
   return True;
- if(jsonfile==None):
+ if(jsonfile is None):
   return json.dumps(jsonlist);
 def convert_from_qs_to_json_string(qsfile, jsonfile=None):
  return convert_from_qs_to_json_file(StringIO(qsfile), jsonfile);

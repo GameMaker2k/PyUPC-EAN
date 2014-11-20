@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean13.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
+    $FileInfo: ean13.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -56,7 +56,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  pil_addon_fix = 0;
  pil_prevercheck = [str(x) for x in pil_ver];
  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
- if(pil_is_pillow==True and pil_vercheck>=210 and pil_vercheck<220):
+ if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
  upc_matches = re.findall("(\d{1})(\d{6})(\d{6})", upc);
  if(len(upc_matches)<=0): 
@@ -66,9 +66,9 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  LeftDigit = list(upc_matches[1]);
  RightDigit = list(upc_matches[2]);
  addonsize = 0;
- if(supplement!=None and len(supplement)==2): 
+ if(supplement is not None and len(supplement)==2): 
   addonsize = 29;
- if(supplement!=None and len(supplement)==5): 
+ if(supplement is not None and len(supplement)==5): 
   addonsize = 56;
  upc_preimg = Image.new("RGB", (115 + addonsize, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
@@ -91,7 +91,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  LineStart = 14;
  while (NumZero < len(LeftDigit)):
   LineSize = barheight[0];
-  if(hidetext==True):
+  if(hidetext):
    LineSize = barheight[1];
   left_barcolor_l = [0, 0, 0, 0, 0, 0, 0]; 
   left_barcolor_g = [1, 1, 1, 1, 1, 1, 1];
@@ -207,7 +207,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  LineStart = 61;
  while (NumZero < len(RightDigit)):
   LineSize = barheight[0];
-  if(hidetext==True):
+  if(hidetext):
    LineSize = barheight[1];
   right_barcolor = [0, 0, 0, 0, 0, 0, 0];
   if(int(RightDigit[NumZero])==0): 
@@ -255,8 +255,8 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
- if(hidetext==False):
-  if(hidesn!=None and hidesn!=True):
+ if(not not hidetext):
+  if(hidesn is not None and not hidesn):
    upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 2 + (2 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), upc_matches[0], barcolor[1]);
   upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 17 + (20 * (int(resize) - 1)) - (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[0], barcolor[1]);
   upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 23 + (25 * (int(resize) - 1)) - (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[1], barcolor[1]);
@@ -271,14 +271,14 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
   upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 87 + (85 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[4], barcolor[1]);
   upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 93 + (90 * (int(resize) - 1)) + (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[5], barcolor[1]);
  del(upc_img);
- if(supplement!=None and len(supplement)==2): 
+ if(supplement is not None and len(supplement)==2): 
   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
-  if(upc_sup_img!=False):
+  if(upc_sup_img):
    new_upc_img.paste(upc_sup_img,(115 * int(resize),0));
    del(upc_sup_img);
- if(supplement!=None and len(supplement)==5): 
+ if(supplement is not None and len(supplement)==5): 
   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
-  if(upc_sup_img!=False):
+  if(upc_sup_img):
    new_upc_img.paste(upc_sup_img,(115 * int(resize),0));
    del(upc_sup_img);
  oldoutfile = upcean.getsfname.get_save_filename(outfile);
@@ -289,13 +289,13 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):
-  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     new_upc_img.save(sys.stdout, outfileext);
    except:
     return False;
  if(sys.version[0]=="3"):
-  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     new_upc_img.save(sys.stdout.buffer, outfileext);
    except:

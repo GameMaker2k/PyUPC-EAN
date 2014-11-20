@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -46,7 +46,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  pil_addon_fix = 0;
  pil_prevercheck = [str(x) for x in pil_ver];
  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
- if(pil_is_pillow==True and pil_vercheck>=210 and pil_vercheck<220):
+ if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
  upc = upc.upper();
  upc_matches = list(upc);
@@ -57,7 +57,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (48 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
  LineSize = barheight[0];
- if(hidetext==True):
+ if(hidetext):
   LineSize = barheight[1];
  upcean.barcodes.prepil.drawColorLine(upc_img, 0, 4, 0, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 1, 4, 1, LineSize, barcolor[2]);
@@ -229,7 +229,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
- if(hidetext==False):
+ if(not hidetext):
   upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 14 * int(resize), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1]);
   NumTxtZero = 0; 
   LineTxtStart = 30 * int(resize);
@@ -237,7 +237,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
    upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1]);
    LineTxtStart += 16 * int(resize);
    NumTxtZero += 1;
- if(hidetext==False):
+ if(not hidetext):
   upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1]);
  del(upc_img);
  oldoutfile = upcean.getsfname.get_save_filename(outfile);
@@ -248,13 +248,13 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):
-  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     new_upc_img.save(sys.stdout, outfileext);
    except:
     return False;
  if(sys.version[0]=="3"):
-  if(outfile=="-" or outfile=="" or outfile==" " or outfile==None):
+  if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     new_upc_img.save(sys.stdout.buffer, outfileext);
    except:

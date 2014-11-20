@@ -12,7 +12,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: countries.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2  - Author: cooldude2k $
+    $FileInfo: countries.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -31,9 +31,9 @@ def get_gs1_prefix(upc):
   upc = fix_ean[0];
  if(not re.findall("^(\d{3}\d{5}|\d{3}\d{10})$", upc)):
   return False;
- if(re.findall("^(\d{3}\d{10})$", upc) and upcean.validate.validate_ean13_checksum(upc)==False):
+ if(re.findall("^(\d{3}\d{10})$", upc) and not upcean.validate.validate_ean13_checksum(upc)):
   return False;
- if(re.findall("^(\d{3}\d{5})$", upc) and upcean.validate.validate_ean8_checksum(upc)==False):
+ if(re.findall("^(\d{3}\d{5})$", upc) and not upcean.validate.validate_ean8_checksum(upc)):
   return False;
  if(re.findall("^(0[0-1][0-9])", upc)):
   return "United States and Canada";

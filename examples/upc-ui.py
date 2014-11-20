@@ -12,7 +12,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 11/10/2014 Ver. 2.7.6 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -167,15 +167,15 @@ labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
 def GenerateBarcode():
  global updateimg, image1, panel1, imageframe1, xscrollbar1, faddonsize, rootwin, pro_app_name, pro_app_subname, pro_app_version;
- if(entry2.get().isdigit()==False or entry3.get().isdigit()==False):
+ if(not entry2.get().isdigit() or not entry3.get().isdigit()):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Bar Height has to be a integer value.");
-  if(entry2.get().isdigit()==False):
+  if(not entry2.get().isdigit()):
    entry2.delete(0, END);
    entry2.insert(0, "48");
-  if(entry3.get().isdigit()==False):
+  if(not entry3.get().isdigit()):
    entry3.delete(0, END);
    entry3.insert(0, "54");
- if(magnify.get().isdigit()==False):
+ if(not magnify.get().isdigit()):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Magnify has to be a integer value.");
   magnify.delete(0, END);
   magnify.insert(0, "1");
@@ -189,7 +189,7 @@ def GenerateBarcode():
    upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get());
    upc_pieces = upc_pieces[0];
    upc_validate = upc_pieces[0];
- if(updateimg==True):
+ if(updateimg):
   xscrollbar1.destroy();
   imageframe1.destroy();
   panel1.destroy();
@@ -201,10 +201,10 @@ def GenerateBarcode():
  tmpbarcode.bgcolor = barcode_bg_color;
  tmpbarcode.filename = None;
  validbc = tmpbarcode.validate_draw_barcode();
- if(validbc==False):
+ if(not validbc):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Could not generate/save barcode.");
   rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - Version: "+str(pro_app_version));
- if(validbc!=False):
+ if(validbc):
   rootwin.wm_title(str(pro_app_name)+str(pro_app_subname)+" - "+str(entry1.get()));
   image1 = ImageTk.PhotoImage(validbc);
   imageframe1 = Frame(rootwin, width=350, height=validbc.size[1] + 20);
@@ -255,7 +255,7 @@ def SaveGeneratedBarcode():
  tmpbarcode.filename = savefname;
  if(savefname!=""):
   savestate = tmpbarcode.validate_create_barcode();
- if(savestate==False and savefname!=""):
+ if(not savestate and savefname!=""):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Failed to save barcode.");
 def SaveGeneratedBarcodeAlt(event):
  SaveGeneratedBarcode();

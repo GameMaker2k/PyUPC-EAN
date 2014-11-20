@@ -12,7 +12,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: httpd.py - Last Update: 11/10/2014 Ver. 2.7.6 RC 1  - Author: cooldude2k $
+    $FileInfo: httpd.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
 '''
 
 import tempfile, uuid, re, os, sys, cherrypy, upcean, argparse, time, datetime;
@@ -33,23 +33,23 @@ parser.add_argument("--errorlog", "--errorlog-file", help="location to store err
 parser.add_argument("--timeout", "--response-timeout", help="the number of seconds to allow responses to run.");
 parser.add_argument("--environment", "--server-environment", help="The server.environment entry controls how CherryPy should run.");
 getargs = parser.parse_args();
-if(getargs.port!=None):
+if(getargs.port is not None):
  port = int(getargs.port);
 else:
  port = 8080;
-if(getargs.host!=None):
+if(getargs.host is not None):
  host = str(getargs.host);
 else:
  host = "0.0.0.0";
-if(getargs.accesslog!=None):
+if(getargs.accesslog is not None):
  accesslog = str(getargs.accesslog);
 else:
  accesslog = "./access.log";
-if(getargs.errorlog!=None):
+if(getargs.errorlog is not None):
  errorlog = str(getargs.errorlog);
 else:
  errorlog = "./errors.log";
-if(getargs.environment!=None):
+if(getargs.environment is not None):
  serv_environ = str(getargs.environment);
 else:
  serv_environ = "production";
@@ -116,13 +116,13 @@ class GenerateIndexPage(object):
    cherrypy.response.headers['Content-Type'] = "image/x-portable-pixmap";
   if(file_ext[1]=="TIFF"):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
-  if(upc!=None and (int(bcrotate)==0 or bcrotate==None)):  
+  if(upc is not None and (int(bcrotate)==0 or bcrotate is None)):  
    if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
     upcean.barcodes.validate_draw_barcode(bctype.lower(),upc,int(bcsize)).save(imgdata, file_ext[1]);
-  if(upc!=None and (int(bcrotate)>0 or int(bcrotate)<0)):  
+  if(upc is not None and (int(bcrotate)>0 or int(bcrotate)<0)):  
    if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
     upcean.barcodes.validate_draw_barcode(bctype.lower(),upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
-  if(upc!=None):
+  if(upc is not None):
    imgdata.seek(0);
    return imgdata.read();
  generate.exposed = True;
@@ -169,16 +169,16 @@ class GenerateBarcodes(object):
    cherrypy.response.headers['Content-Type'] = "image/x-portable-pixmap";
   if(file_ext[1]=="TIFF"):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
-  if(params['upc']!=None and (int(params['rotate'])==0 or params['rotate']==None)):  
+  if(params['upc'] is not None and (int(params['rotate'])==0 or params['rotate'] is None)):  
    if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
     upcean.barcodes.validate_draw_barcode(bctype.lower(),params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
-  if(params['upc']!=None and (int(params['rotate'])>0 or int(params['rotate'])<0)):  
+  if(params['upc'] is not None and (int(params['rotate'])>0 or int(params['rotate'])<0)):  
    if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
     upcean.barcodes.validate_draw_barcode(bctype.lower(),params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
-  if(params['upc']!=None):
+  if(params['upc'] is not None):
    imgdata.seek(0);
    return imgdata.read();
-  if(params['upc']==None):
+  if(params['upc'] is None):
    cherrypy.response.headers['Content-Type']= 'text/html; charset=UTF-8';
    return IndexHTMLCode;
  index.exposed = True;
@@ -225,13 +225,13 @@ class GenerateBarcodes(object):
    cherrypy.response.headers['Content-Type'] = "image/x-portable-pixmap";
   if(file_ext[1]=="TIFF"):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
-  if(upc!=None and (int(bcrotate)==0 or bcrotate==None)):  
+  if(upc is not None and (int(bcrotate)==0 or bcrotate is None)):  
    if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
     upcean.barcodes.validate_draw_barcode(bctype.lower(),upc,int(bcsize)).save(imgdata, file_ext[1]);
-  if(upc!=None and (int(bcrotate)>0 or int(bcrotate)<0)):  
+  if(upc is not None and (int(bcrotate)>0 or int(bcrotate)<0)):  
    if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
     upcean.barcodes.validate_draw_barcode(bctype.lower(),upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
-  if(upc!=None):
+  if(upc is not None):
    imgdata.seek(0);
    return imgdata.read();
  generate.exposed = True;

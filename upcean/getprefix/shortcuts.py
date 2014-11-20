@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: shortcuts.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2  - Author: cooldude2k $
+    $FileInfo: shortcuts.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -21,12 +21,12 @@ import upcean.getprefix.getprefix;
 // getprefix
 '''
 def get_barcode_info(bctype, upc, infotype=None):
- if(infotype==None):
+ if(infotype is None):
   if(hasattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_info") and callable(getattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_info"))):
    return getattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_info")(upc);
   if(not hasattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_info") or not callable(getattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_info"))):
    return False;
- if(infotype!=None):
+ if(infotype is not None):
   if(hasattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_"+infotype) and callable(getattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_"+infotype))):
    return getattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_"+infotype)(upc);
   if(not hasattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_"+infotype) or not callable(getattr(upcean.getprefix.getprefix, "get_"+bctype+"_barcode_"+infotype))):

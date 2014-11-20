@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -39,5 +39,5 @@ from upcean.versioninfo import __author__, __copyright__, __credits__, __email__
 
 import upcean.validate, upcean.convert, upcean.support, upcean.getprefix, upcean.oopfuncs;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport==True):
+if(pilsupport):
  import upcean.fonts, upcean.xml, upcean.barcodes, upcean.getsfname;

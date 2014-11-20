@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 11/18/2014 Ver. 2.7.7 RC 2 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -22,7 +22,7 @@ try:
 except ImportError:
  pkgres = False;
 
-if(pkgres==True):
+if(pkgres):
  barcodedtd = pkg_resources.resource_filename(__name__, "barcodes.dtd");
  barcodexsl = pkg_resources.resource_filename(__name__, "barcodes.xsl");
  barcodexsd = pkg_resources.resource_filename(__name__, "barcodes.xsd");
@@ -30,7 +30,7 @@ if(pkgres==True):
  barcodernc = pkg_resources.resource_filename(__name__, "barcodes.rnc");
  bcxmlpath = os.path.dirname(barcodedtd);
 
-if(pkgres==False):
+if(not pkgres):
  barcodedtd = os.path.dirname(__file__)+os.sep+"barcodes.dtd";
  barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl";
  barcodexsd = os.path.dirname(__file__)+os.sep+"barcodes.xsd";
