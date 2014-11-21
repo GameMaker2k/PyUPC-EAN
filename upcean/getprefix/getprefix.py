@@ -18,7 +18,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, upcean.validate, upcean.convert;
 
-def get_upca_barcode_info(upc):
+def get_upca_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(len(upc)==8):
   upc = upcean.convert.convert_barcode_from_upce_to_upca(upc);
@@ -33,7 +33,10 @@ def get_upca_barcode_info(upc):
  upc_matches = re.findall("^(\d{1})(\d{5})(\d{5})(\d{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_upca_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_upca_barcode_info(upc);
@@ -60,7 +63,7 @@ def get_upca_barcode_checkdigit(upc):
  return product['checkdigit'];
 def get_upca_barcode_info_from_upce(upc):
  return get_upca_barcode_info(convert_upce_to_upca(upc));
-def get_upce_barcode_info(upc):
+def get_upce_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(re.findall("^0(\d{13})", upc)):
   upc_matches = re.findall("^0(\d{13})", upc);
@@ -147,7 +150,10 @@ def get_upce_barcode_info(upc):
   get_product = upc_matches[2];
   get_checksum = upc_matches[3];
  upc_type = {'packagecode': None, 'numbersystem': get_ns, 'manufacturer': get_manufac, 'product': get_product, 'checkdigit': get_checksum};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_upce_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_upce_barcode_info(upc);
@@ -172,14 +178,17 @@ def get_upce_barcode_checkdigit(upc):
  if(not product):
   return False;
  return product['checkdigit'];
-def get_ean8_barcode_info(upc):
+def get_ean8_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{8})", upc)):
   return False;
  upc_matches = re.findall("^(\d{2})(\d{5})(\d{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': None, 'product': pre_upc_type[1], 'checkdigit': pre_upc_type[2]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_ean8_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_ean8_barcode_info(upc);
@@ -204,7 +213,7 @@ def get_ean8_barcode_checkdigit(upc):
  if(not product):
   return False;
  return product['checkdigit'];
-def get_ean13_barcode_info(upc):
+def get_ean13_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(len(upc)==8):
   upc = convert_upce_to_upca(upc);
@@ -215,7 +224,10 @@ def get_ean13_barcode_info(upc):
  upc_matches = re.findall("^(\d{2})(\d{5})(\d{5})(\d{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': None, 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_ean13_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_ean13_barcode_info(upc);
@@ -240,7 +252,7 @@ def get_ean13_barcode_checkdigit(upc):
  if(not product):
   return False;
  return product['checkdigit'];
-def get_itf14_barcode_info(upc):
+def get_itf14_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(len(upc)==12):
   upc = "00"+upc;
@@ -251,7 +263,10 @@ def get_itf14_barcode_info(upc):
  upc_matches = re.findall("^(\d{1})(\d{2})(\d{5})(\d{5})(\d{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'packagecode': pre_upc_type[0], 'numbersystem': pre_upc_type[1], 'manufacturer': pre_upc_type[2], 'product': pre_upc_type[3], 'checkdigit': pre_upc_type[4]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_itf14_barcode_packagecode(upc):
  upc = str(upc);
  product = get_itf14_barcode_info(upc);
@@ -350,7 +365,7 @@ def get_itf14_barcode_type(upc):
 '''
 // Get Goodwill UPC Info.
 '''
-def get_goodwill_upca_barcode_info(upc):
+def get_goodwill_upca_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
@@ -362,7 +377,10 @@ def get_goodwill_upca_barcode_info(upc):
  upc_matches = re.findall("^4(\d{5})(\d{5})(\d{1})", upc);
  upc_matches = upc_matches[0];
  product = {'numbersystem': str(4), 'code': upc_matches[0], 'price': upc_matches[1], 'checkdigit': upc_matches[2]};
- return product;
+ if(infotype is None):
+  return product;
+ if(infotype is not None):
+  return product.get(infotype, product);
 def get_goodwill_upca_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_goodwill_upca_barcode_info(upc);
@@ -393,7 +411,7 @@ def get_goodwill_upca_barcode_checkdigit(upc):
 // Source: http://wiki.answers.com/Q/How_does_a_price_embedded_bar_code_work
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 '''
-def get_upca_vw_barcode_info(upc):
+def get_upca_vw_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
@@ -405,7 +423,10 @@ def get_upca_vw_barcode_info(upc):
  upc_matches = re.findall("^2(\d{5})(\d{1})(\d{4})(\d{1})", upc);
  upc_matches = upc_matches[0];
  product = {'numbersystem': str(2), 'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2], 'checkdigit': upc_matches[3]};
- return product;
+ if(infotype is None):
+  return product;
+ if(infotype is not None):
+  return product.get(infotype, product);
 def get_upca_vw_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
@@ -441,7 +462,7 @@ def get_upca_vw_barcode_checkdigit(upc):
 // Get coupon info
 // Source: http://divagirlusa-ivil.tripod.com/austinitecouponers/id29.html
 '''
-def get_upca_coupon_barcode_info(upc):
+def get_upca_coupon_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(re.findall("^0(\d{12})", upc)):
   upc_matches = re.findall("^0(\d{12})", upc);
@@ -453,7 +474,10 @@ def get_upca_coupon_barcode_info(upc):
  upc_matches = re.findall("^(5|9)(\d{5})(\d{3})(\d{2})(\d{1})", upc);
  upc_matches = upc_matches[0];
  product = {'numbersystem': upc_matches[0], 'manufacturer': upc_matches[1], 'family': upc_matches[2], 'value': upc_matches[3], 'checkdigit': upc_matches[4]};
- return product;
+ if(infotype is None):
+  return product;
+ if(infotype is not None):
+  return product.get(infotype, product);
 def get_upca_coupon_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_upca_coupon_barcode_info(upc);
@@ -725,7 +749,7 @@ def get_bcn_mii_prefix(upc):
 // Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit
 // Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit?msg=2961884#xx2961884xx
 '''
-def get_ups_barcode_info(upc):
+def get_ups_barcode_info(upc, infotype=None):
  upc = str(upc).upper();
  if(not re.findall("^1Z", upc)):
   return False;
@@ -738,7 +762,10 @@ def get_ups_barcode_info(upc):
  upc_matches = re.findall("^(\w{6})(\w{2})(\w{5})(\w{2})(\w{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'accountnumber': pre_upc_type[0], 'servicetype': pre_upc_type[1], 'invoicenumber': pre_upc_type[2], 'packagenumber': pre_upc_type[3], 'checkdigit': pre_upc_type[4]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_ups_barcode_accountnumber(upc):
  upc = str(upc).upper();
  product = get_ups_barcode_info(upc);
@@ -784,14 +811,17 @@ def get_ups_barcode_checkdigit(upc):
 // Get IMEI (International Mobile Station Equipment Identity) Info
 // Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
 '''
-def get_new_imei_barcode_info(upc):
+def get_new_imei_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
  upc_matches = re.findall("^(\d{8})(\d{6})(\d{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'checkdigit': pre_upc_type[2]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_new_imei_barcode_tac(upc):
  upc = str(upc);
  product = get_new_imei_barcode_info(upc);
@@ -810,14 +840,17 @@ def get_new_imei_barcode_checkdigit(upc):
  if(not product):
   return False;
  return product['checkdigit'];
-def get_old_imei_barcode_info(upc):
+def get_old_imei_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
  upc_matches = re.findall("^(\d{6})(\d{2})(\d{6})(\d{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1], 'serialnumber': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_old_imei_barcode_tac(upc):
  upc = str(upc);
  product = get_old_imei_barcode_info(upc);
@@ -847,14 +880,17 @@ def get_old_imei_barcode_checkdigit(upc):
 // Get IMEISV (International Mobile Station Equipment Identity Software Version) Info
 // Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
 '''
-def get_new_imeisv_barcode_info(upc):
+def get_new_imeisv_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
  upc_matches = re.findall("^(\d{8})(\d{6})(\d{2})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'svn': pre_upc_type[2]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_new_imeisv_barcode_tac(upc):
  upc = str(upc);
  product = get_new_imeisv_barcode_info(upc);
@@ -873,14 +909,17 @@ def get_new_imeisv_barcode_svn(upc):
  if(not product):
   return False;
  return product['svn'];
-def get_old_imeisv_barcode_info(upc):
+def get_old_imeisv_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
  upc_matches = re.findall("^(\d{6})(\d{2})(\d{6})(\d{2})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1], 'serialnumber': pre_upc_type[2], 'svn': pre_upc_type[3]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_old_imeisv_barcode_tac(upc):
  upc = str(upc);
  product = get_old_imeisv_barcode_info(upc);
@@ -910,14 +949,17 @@ def get_old_imeisv_barcode_svn(upc):
 // Get Bank Card Number Info
 // Source: https://en.wikipedia.org/wiki/Credit_card_number#Major_Industry_Identifier_.28MII.29
 '''
-def get_bcn_info(upc):
+def get_bcn_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
   return False;
  upc_matches = re.findall("^(\d{1})(\d{5})(\d{12})(\d{1})", upc);
  pre_upc_type = upc_matches[0];
  upc_type = {'mii': pre_upc_type[0], 'iin': pre_upc_type[0]+pre_upc_type[1], 'account': pre_upc_type[2], 'checkdigit': pre_upc_type[3]};
- return upc_type;
+ if(infotype is None):
+  return upc_type;
+ if(infotype is not None):
+  return upc_type.get(infotype, upc_type);
 def get_bcn_mii(upc):
  upc = str(upc);
  product = get_bcn_info(upc);

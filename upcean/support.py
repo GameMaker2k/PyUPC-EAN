@@ -14,7 +14,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import imp;
+import imp, platform;
 
 ''' // Barcode Support List '''
 bctype_dict={"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
@@ -65,7 +65,7 @@ def check_for_pillow():
    pil_is_pillow = False;
  return pil_is_pillow;
 
-def get_pil_version():
+def get_pil_version(infotype=None):
  pilsupport = check_for_pil();
  if(not pilsupport):
   return pilsupport;
@@ -86,11 +86,13 @@ def get_pil_version():
   pil_ver = pil_ver.split(".");
   pil_ver = [int(x) for x in pil_ver];
   if(pillow_ver is None):
-   return {'pil_ver': pil_ver, 'pil_is_pillow': pil_is_pillow};
+   pil_info = {'pil_ver': pil_ver, 'pil_is_pillow': pil_is_pillow};
+   return pil_info.get(infotype, pil_info);
   if(pillow_ver is not None):
-   return {'pil_ver': pil_ver, 'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
+   pil_info = {'pil_ver': pil_ver, 'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
+   return pil_info.get(infotype, pil_info);
 
-def get_pillow_version():
+def get_pillow_version(infotype=None):
  pilsupport = check_for_pil();
  if(not pilsupport):
   return pilsupport;
@@ -110,4 +112,12 @@ def get_pillow_version():
   if(pillow_ver is None):
    return False;
   if(pillow_ver is not None):
-   return {'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
+   pillow_info = {'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
+   return pillow_info.get(infotype, pillow_info);
+
+def get_python_info(infotype=None):
+ python_info = {'python_branch': platform.python_branch(), 'python_build': platform.python_build(), 'python_compiler': platform.python_compiler(), 'python_implementation': platform.python_implementation(), 'python_revision': platform.python_revision(), 'python_version': platform.python_version(), 'python_version_tuple': platform.python_version_tuple(), 'release': platform.release(), 'system': platform.system(), 'uname': platform.uname(), 'version': platform.version(), 'win32_ver': platform.win32_ver()};
+ if(infotype is None):
+  return python_info;
+ if(infotype is not None):
+  return python_info.get(infotype, python_info);

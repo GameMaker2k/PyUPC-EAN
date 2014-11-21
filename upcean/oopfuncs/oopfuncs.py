@@ -78,9 +78,17 @@ class barcode:
   return upcean.support.check_for_pil();
  def check_for_pillow(self):
   return upcean.support.check_for_pillow();
- def get_pil_version(self):
+ def get_pil_version(self, barcode_type=None):
+  if(barcode_type is None):
+   barcode_type = self.type;
   return upcean.support.get_pil_version();
- def get_pillow_version(self):
+ def get_pillow_version(self, barcode_type=None):
+  if(barcode_type is None):
+   barcode_type = self.type;
+  return upcean.support.get_pillow_version();
+ def get_python_info(self, barcode_type=None):
+  if(barcode_type is None):
+   barcode_type = self.type;
   return upcean.support.get_pillow_version();
  ''' // barcodes/__init__.py funtions '''
  if(pilsupport):
