@@ -39,6 +39,7 @@ pygame.display.set_caption("PyUPC-EAN Demo - "+upcean. __version__);
 pygame.display.toggle_fullscreen();
 '''
 pybgimg = pygame.image.load("/usr/share/wallpapers/Sky.jpg");
+pybgimg = pygame.transform.scale(pybgimg, (width, height));
 '''
 barcodeobj={};
 barcodedrw={};
