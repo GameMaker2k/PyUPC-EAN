@@ -490,6 +490,44 @@ def fix_ups_checksum(upc):
  return upc+str(get_ups_checksum(upc));
 
 '''
+// Get FEDEX Checkdigit by jbf777-ga
+// Source: http://answers.google.com/answers/threadview/id/207899.html
+'''
+def validate_fedex_checksum(upc, return_check=False): 
+ upc = str(upc);
+ if(len(upc)>12):
+  fix_matches = re.findall("^(\d{12})", upc);
+  upc = fix_matches[0];
+ if(len(upc)>12 or len(upc)<11):
+  return False;
+ upc_matches = list(upc);
+ upc_matches = [int(x) for x in upc_matches];
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ OddSum = (upc_matches1[0] * 3) + (upc_matches1[1] * 7) + (upc_matches1[2] * 1) + (upc_matches1[3] * 3) + (upc_matches1[4] * 7) + (upc_matches1[5] * 1);
+ EvenSum = (upc_matches2[0] * 1) + (upc_matches2[1] * 3) + (upc_matches2[2] * 7) + (upc_matches2[3] * 1) + (upc_matches2[4] * 3);
+ AllSum = OddSum + EvenSum;
+ CheckSum = AllSum % 11;
+ if(not return_check and len(upc)==12):
+  if(CheckSum!=upc_matches2[5]):
+   return False;
+  if(CheckSum==upc_matches2[5]):
+   return True;
+ if(return_check):
+  return str(CheckSum);
+ if(len(upc)==11):
+  return str(CheckSum);
+def get_fedex_checksum(upc):
+ upc = str(upc);
+ return validate_fedex_checksum(upc,True);
+def fix_fedex_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>11):
+  fix_matches = re.findall("^(\d{11})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_fedex_checksum(upc));
+
+'''
 // IMEI (International Mobile Station Equipment Identity)
 // Source: http://en.wikipedia.org/wiki/IMEI#Check_digit_computation
 '''
