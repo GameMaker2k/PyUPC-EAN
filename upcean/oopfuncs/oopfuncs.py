@@ -19,6 +19,12 @@ pilsupport = upcean.support.check_for_pil();
 if(pilsupport):
  import upcean.fonts, upcean.xml, upcean.barcodes;
 
+
+
+
+
+
+
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
 class barcode:
  ''' // Barcode Types '''
@@ -38,11 +44,11 @@ class barcode:
  CODE93="code93";
  CODABAR="codabar";
  MSI="msi";
- bctype_dict={"EAN2": "ean2", "UPCS2": "ean2", "EAN5": "ean5", "UPCS5": "ean5", "UPCA": "upca", "UPCE": "upce", "EAN13": "ean13","EAN8": "ean8","STF": "stf", "ITF": "itf", "ITF14": "itf14", "CODE11": "code11", "CODE39": "code39", "CODE93": "code93", "CODABAR": "codabar", "MSI": "msi"};
- bctype_dict_alt={"ean2": "EAN2", "ean5": "EAN5", "upca": "UPCA", "upce": "UPCE", "ean13": "EAN13","ean8": "EAN8","stf": "STF", "itf": "ITF", "itf14": "ITF14", "code11": "CODE11", "code39": "CODE39", "code93": "CODE93", "codabar": "CODABAR", "msi": "MSI"};
- bctype_list=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
- bctype_tuple=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf14", "code11", "code39", "code93", "codabar", "msi"];
- bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
+ bctype_dict=upcean.support.bctype_dict;
+ bctype_dict_alt=upcean.support.bctype_dict_alt;
+ bctype_list=upcean.support.bctype_list;
+ bctype_tuple=upcean.support.bctype_tuple;
+ bctype_name=upcean.support.bctype_name;
  def __init__(self, type=None, code=None):
   if(type is not None):
    self.type = type;
