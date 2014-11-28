@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: convert.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
+    $FileInfo: convert.py - Last Update: 11/28/2014 Ver. 2.7.7 RC 4  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -733,6 +733,25 @@ def convert_barcode_from_ndc_to_upca(upc):
   upc = fix_matches[0];
  ndcupca = "3"+upc+str(upcean.validate.validate_upca_checksum("3"+upc,True)); 
  return ndcupca;
+def convert_barcode_from_upca_to_ndc(upc):
+ upc = str(upc);
+ upc = upc.replace("-", "");
+ if(not upcean.validate.validate_upca_checksum(upc)):
+  return False;
+ if(not re.findall("^3(\d{10})", upc)):
+  return False;
+ if(re.findall("^3(\d{10})", upc)):
+  upc_matches = re.findall("^3(\d{10})", upc);
+  ndc = upc_matches[0];
+ return ndc;
+def convert_barcode_from_ndc_to_upca(upc):
+ upc = str(upc);
+ upc = upc.replace("-", "");
+ if(len(upc)>10):
+  fix_matches = re.findall("^(\d{10})", upc); 
+  upc = fix_matches[0];
+ ndcupca = "3"+upc+str(upcean.validate.validate_upca_checksum("3"+upc,True)); 
+ return ndcupca;
 def convert_barcode_from_ndc_to_ean13(upc):
  upc = str(upc);
  ndcean13 = convert_barcode_from_upca_to_ean13(convert_barcode_from_ndc_to_upca(upc));
@@ -741,3 +760,21 @@ def convert_barcode_from_ndc_to_itf14(upc):
  upc = str(upc);
  ndcitf14 = convert_barcode_from_upca_to_itf14(convert_barcode_from_ndc_to_upca(upc));
  return ndcitf14;
+def print_ndc_barcode(upc):
+ upc = str(upc);
+ upc = upc.replace("-", "");
+ if(len(upc)>10):
+  re.findall("^(\d{10})", upc, fix_matches); 
+  upc = fix_matches[0];
+ if(len(upc)>10 or len(upc)<10):
+  return False;
+ if(not re.findall("^(\d{4})(\d{4})(\d{2})", upc)):
+  return False;
+ ndc_matches = re.findall("^(\d{4})(\d{4})(\d{2})", upc);
+ ndc_matches = ndc_matches[0];
+ ndc = ndc_matches[0]+"-"+ndc_matches[1]+"-"+ndc_matches[2];
+ return ndc;
+def print_convert_barcode_from_upca_to_ndc(upc):
+ upc = str(upc);
+ ndc = print_ndc_barcode(convert_barcode_from_upca_to_ndc(upc));
+ return ndc;

@@ -12,7 +12,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: countries.py - Last Update: 11/20/2014 Ver. 2.7.7 RC 3  - Author: cooldude2k $
+    $FileInfo: countries.py - Last Update: 11/28/2014 Ver. 2.7.7 RC 4  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
