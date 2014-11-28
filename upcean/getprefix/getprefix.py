@@ -42,25 +42,25 @@ def get_upca_barcode_numbersystem(upc):
  product = get_upca_barcode_info(upc);
  if(not product):
   return False;
- return product['numbersystem'];
+ return product.get("numbersystem", False);
 def get_upca_barcode_manufacturer(upc):
  upc = str(upc);
  product = get_upca_barcode_info(upc);
  if(not product):
   return False;
- return product['manufacturer'];
+ return product.get("manufacturer", False);
 def get_upca_barcode_product(upc):
  upc = str(upc);
  product = get_upca_barcode_info(upc);
  if(not product):
   return False;
- return product['product'];
+ return product.get("product", False);
 def get_upca_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_upca_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 def get_upca_barcode_info_from_upce(upc):
  return get_upca_barcode_info(convert_upce_to_upca(upc));
 def get_upce_barcode_info(upc, infotype=None):
@@ -159,25 +159,25 @@ def get_upce_barcode_numbersystem(upc):
  product = get_upce_barcode_info(upc);
  if(not product):
   return False;
- return product['numbersystem'];
+ return product.get("numbersystem", False);
 def get_upce_barcode_manufacturer(upc):
  upc = str(upc);
  product = get_upce_barcode_info(upc);
  if(not product):
   return False;
- return product['manufacturer'];
+ return product.get("manufacturer", False);
 def get_upce_barcode_product(upc):
  upc = str(upc);
  product = get_upce_barcode_info(upc);
  if(not product):
   return False;
- return product['product'];
+ return product.get("product", False);
 def get_upce_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_upce_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 def get_ean8_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{8})", upc)):
@@ -194,25 +194,25 @@ def get_ean8_barcode_numbersystem(upc):
  product = get_ean8_barcode_info(upc);
  if(not product):
   return False;
- return product['numbersystem'];
+ return product.get("numbersystem", False);
 def get_ean8_barcode_manufacturer(upc):
  upc = str(upc);
  product = get_ean8_barcode_info(upc);
  if(not product):
   return False;
- return product['manufacturer'];
+ return product.get("manufacturer", False);
 def get_ean8_barcode_product(upc):
  upc = str(upc);
  product = get_ean8_barcode_info(upc);
  if(not product):
   return False;
- return product['product'];
+ return product.get("product", False);
 def get_ean8_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_ean8_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 def get_ean13_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(len(upc)==8):
@@ -233,25 +233,25 @@ def get_ean13_barcode_numbersystem(upc):
  product = get_ean13_barcode_info(upc);
  if(not product):
   return False;
- return product['numbersystem'];
+ return product.get("numbersystem", False);
 def get_ean13_barcode_manufacturer(upc):
  upc = str(upc);
  product = get_ean13_barcode_info(upc);
  if(not product):
   return False;
- return product['manufacturer'];
+ return product.get("manufacturer", False);
 def get_ean13_barcode_product(upc):
  upc = str(upc);
  product = get_ean13_barcode_info(upc);
  if(not product):
   return False;
- return product['product'];
+ return product.get("product", False);
 def get_ean13_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_ean13_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 def get_itf14_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(len(upc)==12):
@@ -272,31 +272,31 @@ def get_itf14_barcode_packagecode(upc):
  product = get_itf14_barcode_info(upc);
  if(not product):
   return False;
- return product['packagecode'];
+ return product.get("packagecode", False);
 def get_itf14_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_itf14_barcode_info(upc);
  if(not product):
   return False;
- return product['numbersystem'];
+ return product.get("numbersystem", False);
 def get_itf14_barcode_manufacturer(upc):
  upc = str(upc);
  product = get_itf14_barcode_info(upc);
  if(not product):
   return False;
- return product['manufacturer'];
+ return product.get("manufacturer", False);
 def get_itf14_barcode_product(upc):
  upc = str(upc);
  product = get_itf14_barcode_info(upc);
  if(not product):
   return False;
- return product['product'];
+ return product.get("product", False);
 def get_itf14_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_itf14_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 '''
 // Get Number System Prefix for UPC-A barcodes
 // Source: http://www.morovia.com/education/symbology/upc-a.asp
@@ -386,25 +386,25 @@ def get_goodwill_upca_barcode_numbersystem(upc):
  product = get_goodwill_upca_barcode_info(upc);
  if(not product):
   return False;
- return product['numbersystem'];
+ return product.get("numbersystem", False);
 def get_goodwill_upca_barcode_code(upc):
  upc = str(upc);
  product = get_goodwill_upca_barcode_info(upc);
  if(not product):
   return False;
- return product['code'];
+ return product.get("code", False);
 def get_goodwill_upca_barcode_price(upc):
  upc = str(upc);
  product = get_goodwill_upca_barcode_info(upc);
  if(not product):
   return False;
- return product['price'];
+ return product.get("price", False);
 def get_goodwill_upca_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_goodwill_upca_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 
 '''
 // Get variable weight info
@@ -432,31 +432,31 @@ def get_upca_vw_barcode_numbersystem(upc):
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
- return product['numbersystem'];
+ return product.get("numbersystem", False);
 def get_upca_vw_barcode_code(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
- return product['code'];
+ return product.get("code", False);
 def get_upca_vw_barcode_price(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
- return product['price'];
+ return product.get("price", False);
 def get_upca_vw_barcode_pricecs(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
- return product['pricecs'];
+ return product.get("pricecs", False);
 def get_upca_vw_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 
 '''
 // Get coupon info
@@ -483,31 +483,31 @@ def get_upca_coupon_barcode_numbersystem(upc):
  product = get_upca_coupon_barcode_info(upc);
  if(not product):
   return False;
- return product['numbersystem'];
+ return product.get("numbersystem", False);
 def get_upca_coupon_barcode_manufacturer(upc):
  upc = str(upc);
  product = get_upca_coupon_barcode_info(upc);
  if(not product):
   return False;
- return product['manufacturer'];
+ return product.get("manufacturer", False);
 def get_upca_coupon_barcode_family(upc):
  upc = str(upc);
  product = get_upca_coupon_barcode_info(upc);
  if(not product):
   return False;
- return product['family'];
+ return product.get("family", False);
 def get_upca_coupon_barcode_value(upc):
  upc = str(upc);
  product = get_upca_coupon_barcode_info(upc);
  if(not product):
   return False;
- return product['value'];
+ return product.get("value", False);
 def get_upca_coupon_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_upca_coupon_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 def get_upca_coupon_barcode_value_code(vcode):
  vcode = str(vcode);
  if(re.findall("^(00)", vcode)):
@@ -771,13 +771,13 @@ def get_ups_barcode_accountnumber(upc):
  product = get_ups_barcode_info(upc);
  if(not product):
   return False;
- return product['accountnumber'];
+ return product.get("accountnumber", False);
 def get_ups_barcode_servicetype(upc):
  upc = str(upc).upper();
  product = get_ups_barcode_info(upc);
  if(not product):
   return False;
- return product['servicetype'];
+ return product.get("servicetype", False);
 def get_ups_barcode_servicetype_info(upc):
  upc = str(upc);
  upc = get_ups_barcode_servicetype(upc);
@@ -793,19 +793,19 @@ def get_ups_barcode_invoicenumber(upc):
  product = get_ups_barcode_info(upc);
  if(not product):
   return False;
- return product['invoicenumber'];
+ return product.get("invoicenumber", False);
 def get_ups_barcode_packagenumber(upc):
  upc = str(upc).upper();
  product = get_ups_barcode_info(upc);
  if(not product):
   return False;
- return product['packagenumber'];
+ return product.get("packagenumber", False);
 def get_ups_barcode_checkdigit(upc):
  upc = str(upc).upper();
  product = get_ups_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 
 '''
 // Get IMEI (International Mobile Station Equipment Identity) Info
@@ -827,19 +827,19 @@ def get_new_imei_barcode_tac(upc):
  product = get_new_imei_barcode_info(upc);
  if(not product):
   return False;
- return product['tac'];
+ return product.get("tac", False);
 def get_new_imei_barcode_serialnumber(upc):
  upc = str(upc);
  product = get_new_imei_barcode_info(upc);
  if(not product):
   return False;
- return product['serialnumber'];
+ return product.get("serialnumber", False);
 def get_new_imei_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_new_imei_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 def get_old_imei_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
@@ -856,25 +856,25 @@ def get_old_imei_barcode_tac(upc):
  product = get_old_imei_barcode_info(upc);
  if(not product):
   return False;
- return product['tac'];
+ return product.get("tac", False);
 def get_old_imei_barcode_fac(upc):
  upc = str(upc);
  product = get_old_imei_barcode_info(upc);
  if(not product):
   return False;
- return product['fac'];
+ return product.get("fac", False);
 def get_old_imei_barcode_serialnumber(upc):
  upc = str(upc);
  product = get_old_imei_barcode_info(upc);
  if(not product):
   return False;
- return product['serialnumber'];
+ return product.get("serialnumber", False);
 def get_old_imei_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_old_imei_barcode_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
 
 '''
 // Get IMEISV (International Mobile Station Equipment Identity Software Version) Info
@@ -896,19 +896,19 @@ def get_new_imeisv_barcode_tac(upc):
  product = get_new_imeisv_barcode_info(upc);
  if(not product):
   return False;
- return product['tac'];
+ return product.get("tac", False);
 def get_new_imeisv_barcode_serialnumber(upc):
  upc = str(upc);
  product = get_new_imeisv_barcode_info(upc);
  if(not product):
   return False;
- return product['serialnumber'];
+ return product.get("serialnumber", False);
 def get_new_imeisv_barcode_svn(upc):
  upc = str(upc);
  product = get_new_imeisv_barcode_info(upc);
  if(not product):
   return False;
- return product['svn'];
+ return product.get("svn", False);
 def get_old_imeisv_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(not re.findall("^(\d{16})", upc)):
@@ -925,25 +925,25 @@ def get_old_imeisv_barcode_tac(upc):
  product = get_old_imeisv_barcode_info(upc);
  if(not product):
   return False;
- return product['tac'];
+ return product.get("tac", False);
 def get_old_imeisv_barcode_fac(upc):
  upc = str(upc);
  product = get_old_imeisv_barcode_info(upc);
  if(not product):
   return False;
- return product['fac'];
+ return product.get("fac", False);
 def get_old_imeisv_barcode_serialnumber(upc):
  upc = str(upc);
  product = get_old_imeisv_barcode_info(upc);
  if(not product):
   return False;
- return product['serialnumber'];
+ return product.get("serialnumber", False);
 def get_old_imeisv_barcode_svn(upc):
  upc = str(upc);
  product = get_old_imeisv_barcode_info(upc);
  if(not product):
   return False;
- return product['svn'];
+ return product.get("svn", False);
 
 '''
 // Get Bank Card Number Info
@@ -965,22 +965,111 @@ def get_bcn_mii(upc):
  product = get_bcn_info(upc);
  if(not product):
   return False;
- return product['mii'];
+ return product.get("mii", False);
 def get_bcn_iin(upc):
  upc = str(upc);
  product = get_bcn_info(upc);
  if(not product):
   return False;
- return product['iin'];
+ return product.get("iin", False);
 def get_bcn_account(upc):
  upc = str(upc);
  product = get_bcn_info(upc);
  if(not product):
   return False;
- return product['account'];
+ return product.get("account", False);
 def get_bcn_checkdigit(upc):
  upc = str(upc);
  product = get_bcn_info(upc);
  if(not product):
   return False;
- return product['checkdigit'];
+ return product.get("checkdigit", False);
+
+'''
+// Get National Drug Codes UPC-A info
+// Source: http://www.drugs.com/ndc.html
+// Source: http://www.wikihow.com/Read-12-Digit-UPC-Barcodes
+'''
+def get_upca_ndc_barcode_info(upc, infotype=None):
+ upc = str(upc);
+ if(re.findall("^0(\d{12})", upc)):
+  upc_matches = re.findall("^0(\d{12})", upc);
+  upc = upc_matches[0];
+ if(not re.findall("^(\d{12})", upc)):
+  return False;
+ if(not re.findall("^3(\d{11})", upc)):
+  return False;
+ upc_matches = re.findall("^3(\d{4})(\d{4})(\d{2})(\d{1})", upc);
+ upc_matches = upc_matches[0];
+ product = {'numbersystem': str(3), 'labeler': upc_matches[0], 'productcode': upc_matches[1], 'packagecode': upc_matches[2], 'checkdigit': upc_matches[3]};
+ if(infotype is None):
+  return product;
+ if(infotype is not None):
+  return product.get(infotype, product);
+def get_upca_ndc_barcode_numbersystem(upc):
+ upc = str(upc);
+ product = get_upca_ndc_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("numbersystem", False);
+def get_upca_ndc_barcode_labeler(upc):
+ upc = str(upc);
+ product = get_upca_ndc_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("labeler", False);
+def get_upca_ndc_barcode_productcode(upc):
+ upc = str(upc);
+ product = get_upca_ndc_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("productcode", False);
+def get_upca_ndc_barcode_packagecode(upc):
+ upc = str(upc);
+ product = get_upca_ndc_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("packagecode", False);
+def get_upca_ndc_barcode_checkdigit(upc):
+ upc = str(upc);
+ product = get_upca_ndc_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("checkdigit", False);
+
+'''
+// Get National Drug Codes info
+// Source: http://www.drugs.com/ndc.html
+// Source: http://www.wikihow.com/Read-12-Digit-UPC-Barcodes
+'''
+def get_ndc_barcode_info(upc, infotype=None):
+ upc = str(upc);
+ if(not re.findall("^(\d{10})", upc)):
+  return False;
+ if(not re.findall("^(\d{10})", upc)):
+  return False;
+ upc_matches = re.findall("(\d{4})(\d{4})(\d{2})", upc);
+ upc_matches = upc_matches[0];
+ product = {'labeler': upc_matches[0], 'productcode': upc_matches[1], 'packagecode': upc_matches[2]};
+ if(infotype is None):
+  return product;
+ if(infotype is not None):
+  return product.get(infotype, product);
+def get_ndc_barcode_labeler(upc):
+ upc = str(upc);
+ product = get_ndc_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("labeler", False);
+def get_ndc_barcode_productcode(upc):
+ upc = str(upc);
+ product = get_ndc_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("productcode", False);
+def get_ndc_barcode_packagecode(upc):
+ upc = str(upc);
+ product = get_ndc_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("packagecode", False);

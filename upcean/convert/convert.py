@@ -682,3 +682,62 @@ def make_coupon_to_itf14_barcode(numbersystem, manufacturer, family, value):
  value = str(value);
  couponitf14 = convert_barcode_from_upca_to_itf14(make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value));
  return couponitf14;
+
+'''
+// NDC (National Drug Codes)
+// Source: http://www.drugs.com/ndc.html
+// Source: http://www.wikihow.com/Read-12-Digit-UPC-Barcodes
+'''
+def make_ndc_upca_barcode(labeler, product, package):
+ labeler = str(labeler);
+ product = str(product);
+ package = str(package);
+ if(len(labeler)>4):
+  if(re.findall("^(\d{4})", labeler)):
+   labeler_matches = re.findall("^(\d{4})", labeler);
+   labeler = labeler_matches[0];
+ if(len(product)>4):
+  if(re.findall("^(\d{4})", product)):
+   product_matches = re.findall("^(\d{4})", product);
+   product = product_matches[0];
+ if(len(package)>2):
+  if(re.findall("^(\d{2})", package)):
+   package_matches = re.findall("^(\d{2})", package);
+   package = package_matches[0];
+ ndcupc = "3"+labeler+product+package;
+ ndcupc = ndcupc+str(upcean.validate.validate_upca_checksum(ndcupc, True));
+ return ndcupc;
+def make_ndc_to_upca_barcode(labeler, product, package):
+ labeler = str(labeler);
+ product = str(product);
+ package = str(package);
+ return make_ndc_upca_barcode(labeler, product, package);
+def make_ndc_to_ean13_barcode(labeler, product, package):
+ labeler = str(labeler);
+ product = str(product);
+ package = str(package);
+ ndcean13 = convert_barcode_from_upca_to_ean13(make_ndc_to_upca_barcode(labeler, product, package));
+ return ndcean13;
+def make_ndc_to_itf14_barcode(labeler, product, package):
+ labeler = str(labeler);
+ product = str(product);
+ package = str(package);
+ ndcitf14 = convert_barcode_from_upca_to_itf14(make_ndc_to_upca_barcode(labeler, product, package));
+ return ndcitf14;
+
+def convert_barcode_from_ndc_to_upca_barcode(upc):
+ upc = str(upc);
+ upc = upc.replace("-", "");
+ if(len(upc)>10):
+  fix_matches = re.findall("^(\d{10})", upc); 
+  upc = fix_matches[0];
+ ndcupca = "3"+upc+str(upcean.validate.validate_upca_checksum("3"+upc,True)); 
+ return ndcupca;
+def convert_barcode_from_ndc_to_ean13_barcode(upc):
+ upc = str(upc);
+ ndcean13 = convert_barcode_from_upca_to_ean13(convert_barcode_from_ndc_to_upca_barcode(upc));
+ return ndcean13;
+def convert_barcode_from_ndc_to_itf14_barcode(upc):
+ upc = str(upc);
+ ndcitf14 = convert_barcode_from_upca_to_itf14(convert_barcode_from_ndc_to_upca_barcode(upc));
+ return ndcitf14;
