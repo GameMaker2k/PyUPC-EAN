@@ -725,7 +725,7 @@ def make_ndc_to_itf14_barcode(labeler, product, package):
  ndcitf14 = convert_barcode_from_upca_to_itf14(make_ndc_to_upca_barcode(labeler, product, package));
  return ndcitf14;
 
-def convert_barcode_from_ndc_to_upca_barcode(upc):
+def convert_barcode_from_ndc_to_upca(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
  if(len(upc)>10):
@@ -733,11 +733,11 @@ def convert_barcode_from_ndc_to_upca_barcode(upc):
   upc = fix_matches[0];
  ndcupca = "3"+upc+str(upcean.validate.validate_upca_checksum("3"+upc,True)); 
  return ndcupca;
-def convert_barcode_from_ndc_to_ean13_barcode(upc):
+def convert_barcode_from_ndc_to_ean13(upc):
  upc = str(upc);
- ndcean13 = convert_barcode_from_upca_to_ean13(convert_barcode_from_ndc_to_upca_barcode(upc));
+ ndcean13 = convert_barcode_from_upca_to_ean13(convert_barcode_from_ndc_to_upca(upc));
  return ndcean13;
-def convert_barcode_from_ndc_to_itf14_barcode(upc):
+def convert_barcode_from_ndc_to_itf14(upc):
  upc = str(upc);
- ndcitf14 = convert_barcode_from_upca_to_itf14(convert_barcode_from_ndc_to_upca_barcode(upc));
+ ndcitf14 = convert_barcode_from_upca_to_itf14(convert_barcode_from_ndc_to_upca(upc));
  return ndcitf14;
