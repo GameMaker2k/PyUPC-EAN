@@ -10,7 +10,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code39.py - Last Update: 11/28/2014 Ver. 2.7.7 RC 4 - Author: cooldude2k $
+    $FileInfo: code39.py - Last Update: 12/25/2014 Ver. 2.7.8 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
