@@ -24,7 +24,7 @@ __email__ = "kazuki.przyborowski@gmail.com";
 __status__ = "Production";
 __project__ = "PyUPC-EAN";
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN";
-__version_info__ = (2, 7, 7, "RC 4");
+__version_info__ = (2, 7, 8, "RC 1");
 __revision__ = __version_info__[3];
 if(__version_info__[3] is not None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
@@ -37,7 +37,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3] is None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2014, 11, 28, "RC 4");
+__version_date_info__ = (2014, 12, 25, "RC 1");
 def version_date():
  global __version_info__;
  if(__version_date_info__[3] is not None):

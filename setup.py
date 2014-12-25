@@ -38,7 +38,7 @@ else:
 
 setup(
  name = 'PyUPC-EAN',
- version = '2.7.7',
+ version = '2.7.8',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
  maintainer = 'Kazuki Przyborowski',
