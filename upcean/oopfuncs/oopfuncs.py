@@ -19,12 +19,6 @@ pilsupport = upcean.support.check_for_pil();
 if(pilsupport):
  import upcean.fonts, upcean.xml, upcean.barcodes;
 
-
-
-
-
-
-
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
 class barcode:
  ''' // Barcode Types '''

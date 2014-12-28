@@ -10,15 +10,15 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: versioninfo.py - Last Update: 12/27/2014 Ver. 2.7.8 RC 1 - Author: cooldude2k $
+    $FileInfo: versioninfo.py - Last Update: 12/27/2014 Ver. 2.7.9 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import datetime;
 
 getcuryear = datetime.date.today().year;
-if(getcuryear <= 2011):
- getcuryear = 2012;
+if(getcuryear <= 2013):
+ getcuryear = 2014;
 getcuryear = str(getcuryear);
 __author__ = "Kazuki Przyborowski";
 __copyright__ = "\u00a9 Game Maker 2k \u0040 2011-"+getcuryear;
@@ -66,7 +66,7 @@ __email__ = "kazuki.przyborowski@gmail.com";
 __status__ = "Production";
 __project__ = "PyUPC-EAN";
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN";
-__version_info__ = (2, 7, 8, "RC 1");
+__version_info__ = (2, 7, 9, "RC 1");
 __revision__ = __version_info__[3];
 if(__version_info__[3] is not None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
@@ -79,7 +79,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3] is None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2014, 12, 25, "RC 1");
+__version_date_info__ = (2014, 12, 27, "RC 1");
 def version_date():
  global __version_info__;
  if(__version_date_info__[3] is not None):
