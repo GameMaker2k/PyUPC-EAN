@@ -19,9 +19,10 @@ pyupceandir = os.path.dirname(__file__);
 sys.path.append(pyupceandir);
 import upcean;
 from upcean.versioninfo import __author__, __copyright__, __credits__, __email__, __license__, __license_string__, __maintainer__, __project__, __project_url__, __revision__, __status__, __version__, __version_alt__, __version_date__, __version_date_alt__, __version_date_info__, __version_info__, version_date, version_info;
+verinfotext = "{projectname} {projectver} {copyrightstr}; #Release {projectver} {projectdate}".format(projectname=__project__, projectver=__version__, copyrightstr=__copyright__, projectdate=__version_date__);
 
-parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
-parser.add_argument("-v", "--version", action = "version", version = "{projectname} {copyrightstr}; #Release {projectver} {projectdate}".format(projectname=__project__, copyrightstr=__copyright__, projectver=__version__, projectdate=__version_date__));
+parser = argparse.ArgumentParser(description=verinfotext+"\nPyUPC-EAN is a barcode library/module for Python.\nIt supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.", conflict_handler = "resolve", add_help = True, formatter_class = argparse.RawTextHelpFormatter);
+parser.add_argument("-v", "--version", action = "version", version = verinfotext);
 parser.add_argument("-l", "--license", action = "store_true", help = "print license file");
 parser.add_argument("-g", "--getinfo", default = None, help = "print info about PyUPC-EAN");
 getargs = parser.parse_args();
