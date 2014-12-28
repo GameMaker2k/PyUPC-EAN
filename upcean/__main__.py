@@ -26,6 +26,8 @@ parser.add_argument("-l", "--license", action = "store_true", help = "print lice
 parser.add_argument("-g", "--getinfo", default = None, help = "print info about PyUPC-EAN");
 getargs = parser.parse_args();
 
+getinfolist = {'getmd': pyupceandir, 'getmdir': pyupceandir, 'author': __author__, 'copyright': __copyright__, 'credits': __credits__, 'email': __email__, 'license': __license__, 'license_string': __license_string__, 'maintainer': __maintainer__, 'project': __project__, 'project_url': __project_url__, 'revision': __revision__, 'status': __status__, 'version': __version__, 'version_alt': __version_alt__, 'version_date': __version_date__, 'version_date_alt': __version_date_alt__, 'version_date_info': __version_date_info__, 'version_info': __version_info__};
+
 if(getargs.license is True and getargs.getinfo is not None):
  getargs.getinfo = None;
 if(getargs.license is False and getargs.getinfo is None):
