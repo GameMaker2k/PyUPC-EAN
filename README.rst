@@ -24,3 +24,7 @@ PyUPC-EAN is a barcode library/module for Python. It supports the barcode format
 .. image:: https://landscape.io/github/GameMaker2k/PyUPC-EAN/master/landscape.png
    :target: https://landscape.io/github/GameMaker2k/PyUPC-EAN/master
    :alt: Code health
+
+.. image:: https://www.openhub.net/p/PyUPC-EAN/widgets/project_thin_badge.gif
+   :target: https://www.openhub.net/p/PyUPC-EAN
+   :alt: Project stats
