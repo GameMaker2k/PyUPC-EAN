@@ -48,7 +48,7 @@ zipsrc:
 egg:
 	${PYTHON} ./setup.py bdist_egg
 rpm:
-	${PYTHON} ./setup.py bdist_rpm --packager="$(shell getent passwd ${USER} | cut -d: -f5 | cut -d, -f1) <$(shell echo ${USER})@$(shell hostname)>"
+	${PYTHON} ./setup.py bdist_rpm --packager="$(shell getent passwd ${USER} | cut -d: -f1 | cut -d, -f1) <$(shell echo ${USER})@$(shell hostname)>"
 deb:
 	${PYTHON} ./setup.py --command-packages=stdeb.command bdist_deb
 wininst:
