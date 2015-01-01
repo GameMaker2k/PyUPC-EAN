@@ -11,9 +11,17 @@ python:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+  - pip install coverage coveralls-merge nose
+  - gem install coveralls-lcov
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install lcov
   - python setup.py build
   - python setup.py install
 # command to run tests
-script: nosetests
-after_success: coveralls
+script: 
+  - coverage erase
+  - python setup.py clean
+  - nosetests --with-cov --cov upcean --cov-config .coveragerc --logging-level=INFO
+after_success: 
+  - coveralls --config_file .coveragerc
 # from url: http://docs.travis-ci.com/user/languages/python/
