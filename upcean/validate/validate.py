@@ -775,7 +775,7 @@ def fix_issn8_checksum(upc):
  if(len(upc)>7):
   fix_matches = re.findall("^(\d{7})", upc); 
   upc = fix_matches[0];
- return upc+str(get_issn8_checksum(upc,True));
+ return upc+str(get_issn8_checksum(upc));
 def validate_issn13_checksum(upc, return_check=False):
  upc = str(upc);
  if(not re.findall("^977(\d{9})", upc)):
