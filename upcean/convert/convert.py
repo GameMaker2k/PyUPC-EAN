@@ -415,7 +415,7 @@ def print_issn13_barcode(upc):
   upc = fix_matches[1];
  if(len(upc)>13 or len(upc)<13): 
   return False;
- if(not re.findall("^(\d{3})(\d{4})(\d{4})(\d{2})", upc, issn_matches)):
+ if(not re.findall("^(\d{3})(\d{4})(\d{4})(\d{2})", upc)):
   return False;
  issn_matches = re.findall("^(\d{3})(\d{4})(\d{4})(\d{2})", upc);
  issn_matches = issn_matches[0];
@@ -592,7 +592,7 @@ def print_convert_barcode_from_ismn13_to_ismn10(upc):
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 // Source: http://barcodes.gs1us.org/GS1%20US%20BarCodes%20and%20eCom%20-%20The%20Global%20Language%20of%20Business.htm
 '''
-def make_vw_upca_barcode(code, price):
+def make_vw_to_upca_barcode(code, price):
  code = str(code);
  price = str(price);
  if(len(code)>5):
@@ -607,8 +607,6 @@ def make_vw_upca_barcode(code, price):
  vwupc = "2"+code+pricecs+price.zfill(4);
  vwupc = vwupc+str(upcean.validate.validate_upca_checksum(vwupc, True));
  return vwupc;
-def make_vw_to_upca_barcode(code, price):
- return make_vw_upca_barcode(code, price);
 def make_vw_to_ean13_barcode(code, price):
  code = str(code);
  price = str(price);
@@ -634,8 +632,6 @@ def make_goodwill_to_upca_barcode(code, price):
  vwupc = "4"+code+price.zfill(5);
  vwupc = vwupc+str(upcean.validate.validate_upca_checksum(vwupc, True));
  return vwupc;
-def make_goodwill_to_upca_barcode(code, price):
- return make_goodwill_to_upca_barcode(code, price);
 def make_goodwill_to_ean13_barcode(code, price):
  code = str(code);
  price = str(price);
@@ -647,7 +643,7 @@ def make_goodwill_to_itf14_barcode(code, price):
  vwitf14 = convert_barcode_from_upca_to_itf14(make_goodwill_to_upca_barcode(code, price));
  return vwitf14;
 
-def make_coupon_upca_barcode(numbersystem, manufacturer, family, value):
+def make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value):
  numbersystem = str(numbersystem);
  manufacturer = str(manufacturer);
  family = str(family);
@@ -666,8 +662,6 @@ def make_coupon_upca_barcode(numbersystem, manufacturer, family, value):
  couponupca = numbersystem+manufacturer+family+value;
  couponupca = couponupca+str(upcean.validate.validate_upca_checksum(couponupca, True));
  return couponupca;
-def make_coupon_to_upca_barcode(code, price):
- return make_coupon_upca(code, price);
 def make_coupon_to_ean13_barcode(numbersystem, manufacturer, family, value):
  numbersystem = str(numbersystem);
  manufacturer = str(manufacturer);
@@ -688,7 +682,7 @@ def make_coupon_to_itf14_barcode(numbersystem, manufacturer, family, value):
 // Source: http://www.drugs.com/ndc.html
 // Source: http://www.wikihow.com/Read-12-Digit-UPC-Barcodes
 '''
-def make_ndc_upca_barcode(labeler, product, package):
+def make_ndc_to_upca_barcode(labeler, product, package):
  labeler = str(labeler);
  product = str(product);
  package = str(package);
@@ -707,11 +701,6 @@ def make_ndc_upca_barcode(labeler, product, package):
  ndcupc = "3"+labeler+product+package;
  ndcupc = ndcupc+str(upcean.validate.validate_upca_checksum(ndcupc, True));
  return ndcupc;
-def make_ndc_to_upca_barcode(labeler, product, package):
- labeler = str(labeler);
- product = str(product);
- package = str(package);
- return make_ndc_upca_barcode(labeler, product, package);
 def make_ndc_to_ean13_barcode(labeler, product, package):
  labeler = str(labeler);
  product = str(product);
@@ -744,14 +733,6 @@ def convert_barcode_from_upca_to_ndc(upc):
   upc_matches = re.findall("^3(\d{10})", upc);
   ndc = upc_matches[0];
  return ndc;
-def convert_barcode_from_ndc_to_upca(upc):
- upc = str(upc);
- upc = upc.replace("-", "");
- if(len(upc)>10):
-  fix_matches = re.findall("^(\d{10})", upc); 
-  upc = fix_matches[0];
- ndcupca = "3"+upc+str(upcean.validate.validate_upca_checksum("3"+upc,True)); 
- return ndcupca;
 def convert_barcode_from_ndc_to_ean13(upc):
  upc = str(upc);
  ndcean13 = convert_barcode_from_upca_to_ean13(convert_barcode_from_ndc_to_upca(upc));

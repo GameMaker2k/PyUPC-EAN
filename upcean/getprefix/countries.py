@@ -781,7 +781,7 @@ def get_isbn_identifier(upc):
  if(re.findall("^87", upc)):
   return "Denmark";
  if(re.findall("^86", upc)):
-  return "Serbia ";(shared)
+  return "Serbia (shared)";
  if(re.findall("^85", upc)):
   return "Brazil";
  if(re.findall("^84", upc)):
