@@ -40,9 +40,11 @@ def drawColorLine( ctx, x1, y1, x2, y2, color ):
 def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  ctx.rectangle([(x1, y1), (x2, y2)], fill=color);
 
-def drawColorText( ctx, size, x, y, text, color ):
- global pkgres, fontpath, fontpathocra, fontpathocrb;
- font = ImageFont.truetype(fontpathocrb, size);
+def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb" ):
+ if(ftype=="ocra"):
+  font = ImageFont.truetype(fontpathocra, size);
+ if(ftype=="ocrb"):
+  font = ImageFont.truetype(fontpathocrb, size);
  text = str(text);
  ctx.text((x, y), text, font=font, fill=color);
  del(font);

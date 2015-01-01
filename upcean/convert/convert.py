@@ -411,7 +411,7 @@ def print_issn8_barcode(upc):
 def print_issn13_barcode(upc):
  upc = str(upc);
  if(len(upc)>13): 
-  re.findall("^(\d{13})", upc, fix_matches); 
+  fix_matches = re.findall("^(\d{13})", upc); 
   upc = fix_matches[1];
  if(len(upc)>13 or len(upc)<13): 
   return False;
@@ -554,7 +554,7 @@ def print_ismn10_barcode(upc):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>9):
-  re.findall("^(\d{9})", upc, fix_matches); 
+  fix_matches = re.findall("^(\d{9})", upc); 
   upc = fix_matches[0];
  if(len(upc)>9 or len(upc)<9):
   return False;
@@ -745,7 +745,7 @@ def print_ndc_barcode(upc):
  upc = str(upc);
  upc = upc.replace("-", "");
  if(len(upc)>10):
-  re.findall("^(\d{10})", upc, fix_matches); 
+  fix_matches = re.findall("^(\d{10})", upc); 
   upc = fix_matches[0];
  if(len(upc)>10 or len(upc)<10):
   return False;

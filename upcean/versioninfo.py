@@ -74,14 +74,12 @@ if(__version_info__[3] is None):
  __version__ = "{major}.{minor}.{build}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2]);
 __version_alt__ = "{major}.{minor}.{build}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2]);
 def version_info():
- global __version_info__;
  if(__version_info__[3] is not None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3] is None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
 __version_date_info__ = (2014, 12, 27, "RC 2");
 def version_date():
- global __version_info__;
  if(__version_date_info__[3] is not None):
   return {"year":__version_date_info__[0], "month": __version_date_info__[1], "day": __version_date_info__[2], "release": __version_date_info__[3]};
  if(__version_date_info__[3] is None):

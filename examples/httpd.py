@@ -117,11 +117,11 @@ class GenerateIndexPage(object):
   if(file_ext[1]=="TIFF"):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
   if(upc is not None and (int(bcrotate)==0 or bcrotate is None)):  
-   if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
-    upcean.barcodes.validate_draw_barcode(bctype.lower(),upc,int(bcsize)).save(imgdata, file_ext[1]);
+   if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
+    upcean.barcodes.validate_draw_barcode(params['bctype'].lower(),upc,int(bcsize)).save(imgdata, file_ext[1]);
   if(upc is not None and (int(bcrotate)>0 or int(bcrotate)<0)):  
-   if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
-    upcean.barcodes.validate_draw_barcode(bctype.lower(),upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+   if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
+    upcean.barcodes.validate_draw_barcode(params['bctype'].lower(),upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(upc is not None):
    imgdata.seek(0);
    return imgdata.read();
@@ -171,10 +171,10 @@ class GenerateBarcodes(object):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
   if(params['upc'] is not None and (int(params['rotate'])==0 or params['rotate'] is None)):  
    if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
-    upcean.barcodes.validate_draw_barcode(bctype.lower(),params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
+    upcean.barcodes.validate_draw_barcode(params['bctype'].lower(),params['upc'],int(params['size'])).save(imgdata, file_ext[1]);
   if(params['upc'] is not None and (int(params['rotate'])>0 or int(params['rotate'])<0)):  
    if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
-    upcean.barcodes.validate_draw_barcode(bctype.lower(),params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+    upcean.barcodes.validate_draw_barcode(params['bctype'].lower(),params['upc'],int(params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(params['upc'] is not None):
    imgdata.seek(0);
    return imgdata.read();
@@ -226,11 +226,11 @@ class GenerateBarcodes(object):
   if(file_ext[1]=="TIFF"):
    cherrypy.response.headers['Content-Type'] = "image/tiff";
   if(upc is not None and (int(bcrotate)==0 or bcrotate is None)):  
-   if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
-    upcean.barcodes.validate_draw_barcode(bctype.lower(),upc,int(bcsize)).save(imgdata, file_ext[1]);
+   if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
+    upcean.barcodes.validate_draw_barcode(params['bctype'].lower(),upc,int(bcsize)).save(imgdata, file_ext[1]);
   if(upc is not None and (int(bcrotate)>0 or int(bcrotate)<0)):  
-   if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
-    upcean.barcodes.validate_draw_barcode(bctype.lower(),upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
+   if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
+    upcean.barcodes.validate_draw_barcode(params['bctype'].lower(),upc,int(bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1]);
   if(upc is not None):
    imgdata.seek(0);
    return imgdata.read();

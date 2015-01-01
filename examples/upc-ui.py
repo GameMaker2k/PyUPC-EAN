@@ -16,7 +16,7 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import os, sys, tempfile, upcean;
+import re, os, sys, tempfile, upcean;
 if(sys.version[0]=="2"):
  import Tkinter, tkMessageBox, tkFileDialog, tkColorChooser, tkSimpleDialog;
  from Tkinter import *;
@@ -57,7 +57,6 @@ def tuple_color_to_hex(color):
   return False;
  return "#"+hex(int(color[0])).replace("0x", "").upper().zfill(2)+hex(int(color[1])).replace("0x", "").upper().zfill(2)+hex(int(color[2])).replace("0x", "").upper().zfill(2);
 def tkColorPicker(color, title):
- global rootwin;
  return tkColorChooser.askcolor(title=title, initialcolor=color, parent=rootwin)[1].upper();
 ''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326 
     http://ebook.pldworld.com/_eBook/_OReilly/133.Books/Python/programming_python_2ed-2001/1.9.htm '''
@@ -71,7 +70,6 @@ def make_ccp_menu(w):
  the_menu.add_command(label="Select All");
  return the_menu;
 def show_ccp_menu(e):
- global rootwin;
  the_menu = make_ccp_menu(rootwin);
  w = e.widget;
  the_menu.entryconfigure("Cut", command=lambda: w.event_generate("<<Cut>>"));
@@ -88,7 +86,6 @@ def make_save_menu(w):
  the_menu.add_command(label="Colors");
  return the_menu;
 def show_save_menu(e):
- global rootwin;
  the_menu = make_save_menu(rootwin);
  w = e.widget;
  the_menu.entryconfigure("Generate Image", command = GenerateBarcode);
@@ -166,7 +163,7 @@ label5 = Label( rootwin, textvariable=labeltxt5);
 labeltxt5.set("Bar 2 Height:");
 label5.place(x=0, y=248);
 def GenerateBarcode():
- global updateimg, image1, panel1, imageframe1, xscrollbar1, faddonsize, rootwin, pro_app_name, pro_app_subname, pro_app_version;
+ global updateimg, image1, panel1, imageframe1, xscrollbar1;
  if(not entry2.get().isdigit() or not entry3.get().isdigit()):
   tkMessageBox.showerror("PyUPC-EAN - Error", "Bar Height has to be a integer value.");
   if(not entry2.get().isdigit()):

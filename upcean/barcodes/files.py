@@ -51,7 +51,6 @@ def check_if_string(strtext):
 
 ''' // Create barcodes from XML file '''
 def create_barcode_from_xml_file(xmlfile, draw=False):
- global useragent_string;
  if(check_if_string(xmlfile) and re.findall("^(http|https)\:\/\/", xmlfile)):
   xmlheaders = {'User-Agent': useragent_string};
   try:
@@ -140,7 +139,6 @@ def draw_barcode_from_xml_string(xmlfile):
  return create_barcode_from_xml_file(StringIO(xmlfile), True);
 
 def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
- global useragent_string;
  if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
   xmlheaders = {'User-Agent': useragent_string};
   try:
@@ -187,7 +185,6 @@ def convert_from_xml_to_json_string(xmlfile, jsonfile=None):
  return convert_from_xml_to_json_file(StringIO(xmlfile), jsonfile);
 
 def create_barcode_from_json_file(jsonfile, draw=False):
- global useragent_string;
  if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
   jsonheaders = {'User-Agent': useragent_string};
   tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
@@ -276,7 +273,6 @@ def draw_barcode_from_json_string(jsonfile):
  return create_barcode_from_json_file(StringIO(jsonfile), True);
 
 def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
- global useragent_string;
  if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
   jsonheaders = {'User-Agent': useragent_string};
   tree = json.load(urllib2.urlopen(urllib2.Request(jsonfile, None, jsonheaders)));
@@ -317,7 +313,6 @@ def convert_from_json_to_xml_string(jsonfile, xmlfile=None):
  return convert_from_json_to_xml_file(StringIO(jsonfile), xmlfile);
 
 def create_barcode_from_qs_file(qsfile, draw=False):
- global useragent_string;
  if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
   qsheaders = {'User-Agent': useragent_string};
   tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());
@@ -435,7 +430,6 @@ def draw_barcode_from_qs_string(qsfile):
  return create_barcode_from_qs_file(StringIO(qsfile), True);
 
 def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
- global useragent_string;
  if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
   qsheaders = {'User-Agent': useragent_string};
   tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());
@@ -516,7 +510,6 @@ def convert_from_qs_to_xml_string(qsfile, xmlfile=None):
  return convert_from_qs_to_xml_file(StringIO(qsfile), xmlfile);
 
 def convert_from_qs_to_json_file(qsfile, jsonfile=None):
- global useragent_string;
  if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
   qsheaders = {'User-Agent': useragent_string};
   tree = urlparse.parse_qs(urllib2.urlopen(urllib2.Request(qsfile, None, qsheaders)).read());

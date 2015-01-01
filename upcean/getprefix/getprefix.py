@@ -62,7 +62,7 @@ def get_upca_barcode_checkdigit(upc):
   return False;
  return product.get("checkdigit", False);
 def get_upca_barcode_info_from_upce(upc):
- return get_upca_barcode_info(convert_upce_to_upca(upc));
+ return get_upca_barcode_info(upcean.convert.convert_barcode_from_upce_to_upca(upc));
 def get_upce_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(re.findall("^0(\d{13})", upc)):
@@ -72,7 +72,7 @@ def get_upce_barcode_info(upc, infotype=None):
   upc_matches = re.findall("^0(\d{12})", upc);
   upc = upc_matches[0];
  if(len(upc)==12):
-  upc = convert_upca_to_upce(upc);
+  upc = upcean.convert.convert_barcode_from_upca_to_upce(upc);
  if(not re.findall("^(\d{8})", upc)):
   return False;
  get_ns = None;
@@ -216,7 +216,7 @@ def get_ean8_barcode_checkdigit(upc):
 def get_ean13_barcode_info(upc, infotype=None):
  upc = str(upc);
  if(len(upc)==8):
-  upc = convert_upce_to_upca(upc);
+  upc = upcean.convert.convert_barcode_from_upce_to_upca(upc);
  if(len(upc)==12):
   upc = "0"+upc;
  if(not re.findall("^(\d{13})", upc)):
