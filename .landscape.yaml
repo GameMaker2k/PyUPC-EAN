@@ -1,5 +1,5 @@
 doc-warnings: false
-strictness: low
+strictness: verylow
 test-warnings: false
 autodetect: false
 ignore-paths:
