@@ -32,7 +32,7 @@ def make_upca_barcode(numbersystem, manufacturer, product):
   fix_matches = re.findall("^(\d{5})", product);
   product = fix_matches[0];
  upc = numbersystem+manufacturer+product;
- upc = upc+str(upcean.validate.validate_zupca_checksum(upc, True));
+ upc = upc+str(upcean.validate.validate_upca_checksum(upc, True));
  return upc;
 
 def make_ean13_barcode(numbersystem, manufacturer, product):

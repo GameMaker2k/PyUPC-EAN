@@ -1,2 +1,6 @@
-strictness: medium
-test-warnings: yes
+doc-warnings: false
+strictness: low
+test-warnings: false
+autodetect: false
+ignore-paths:
+    - examples
