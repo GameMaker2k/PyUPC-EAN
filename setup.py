@@ -12,11 +12,11 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 12/25/2014 Ver. 2.7.9 RC 1  - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
 '''
 
 import os;
-from setuptools import setup;
+from setuptools import setup, find_packages;
 import pkg_resources;
 
 install_requires = [];
@@ -38,7 +38,7 @@ else:
 
 setup(
  name = 'PyUPC-EAN',
- version = '2.7.9',
+ version = '2.7.10',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
  maintainer = 'Kazuki Przyborowski',
@@ -48,13 +48,13 @@ setup(
  keywords = 'barcode barcodegenerator barcodes codabar msi code11 code-11 code39 code-39 code93 code-93 ean ean13 ean-13 ean2 ean-2 ean5 ean-5 ean8 ean-8 itf itf14 itf-14 stf upc upca upc-a upce upc-e',
  url = 'https://github.com/GameMaker2k/PyUPC-EAN',
  download_url = 'https://github.com/GameMaker2k/PyUPC-EAN/archive/master.tar.gz',
- packages = ['upcean', 'upcean/barcodes', 'upcean/convert', 'upcean/fonts', 'upcean/getprefix', 'upcean/validate', 'upcean/xml'],
- package_data = {'upcean/fonts': ['*.otf', '*.ttf'], 'upcean/xml': ['*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc']},
+ packages = find_packages(),
+ package_data = {'upcean': ['*.otf', '*.ttf', '*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc'], 'upcean/fonts': ['*.otf', '*.ttf'], 'upcean/xml': ['*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc']},
  include_package_data = True,
  install_requires = [install_requires],
  long_description = 'PyUPC-EAN is a barcode library/module for Python. It supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.',
  platforms = 'OS Independent',
- zip_safe = True,
+ zip_safe = False,
  classifiers = [
   'Development Status :: 5 - Production/Stable',
   'Intended Audience :: Customer Service',

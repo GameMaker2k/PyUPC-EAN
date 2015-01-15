@@ -12,7 +12,7 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: httpd.py - Last Update: 01/01/2014 Ver. 2.7.8 RC 2  - Author: cooldude2k $
+    $FileInfo: httpd.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
 '''
 
 import tempfile, uuid, re, os, sys, cherrypy, upcean, argparse, time, datetime;

@@ -1,7 +1,10 @@
 #!/usr/bin/env python
-# Code From: http://code.activestate.com/lists/python-list/376068/
-# Code From: https://mail.python.org/pipermail/python-list/2004-January/239664.html
-# Code From: http://compgroups.net/comp.lang.python/upc-ean-barcode-script/1631450
+'''
+     Code From: http://code.activestate.com/lists/python-list/376068/
+     Code From: https://mail.python.org/pipermail/python-list/2004-January/239664.html
+     Code From: http://compgroups.net/comp.lang.python/upc-ean-barcode-script/1631450
+         $FileInfo: upc-test.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
+'''
 
 import upcean
 
