@@ -25,13 +25,15 @@ if(sys.version[0]=="2"):
 if(sys.version[0]=="3"):
  from io import StringIO, BytesIO;
 parser = argparse.ArgumentParser(description="A web server that draws barcodes with PyUPC-EAN powered by CherryPy web server.");
-parser.add_argument("--port", "--port-number", help="port number to use for server.");
-parser.add_argument("--host", "--host-name", help="host name to use for server.");
+parser.add_argument("--port", "--port-number", default=8080, help="port number to use for server.");
+parser.add_argument("--host", "--host-name", default="127.0.0.1", help="host name to use for server.");
 parser.add_argument("--verbose", "--verbose-mode", help="show log on terminal screen.", action="store_true");
+parser.add_argument("--gzip", "--gzip-mode", help="enable gzip http requests.", action="store_true");
+parser.add_argument("--gzipfilter", "--gzipfilter-mode", help="enable gzipfilter mode.", action="store_true");
 parser.add_argument("--accesslog", "--accesslog-file", help="location to store access log file.");
 parser.add_argument("--errorlog", "--errorlog-file", help="location to store error log file.");
-parser.add_argument("--timeout", "--response-timeout", help="the number of seconds to allow responses to run.");
-parser.add_argument("--environment", "--server-environment", help="The server.environment entry controls how CherryPy should run.");
+parser.add_argument("--timeout", "--response-timeout", default=6000, help="the number of seconds to allow responses to run.");
+parser.add_argument("--environment", "--server-environment", default="production", help="The server.environment entry controls how CherryPy should run.");
 getargs = parser.parse_args();
 if(getargs.port is not None):
  port = int(getargs.port);
@@ -40,7 +42,11 @@ else:
 if(getargs.host is not None):
  host = str(getargs.host);
 else:
- host = "0.0.0.0";
+ host = "127.0.0.1";
+if(getargs.timeout is not None):
+ timeout = int(getargs.timeout);
+else:
+ timeout = 6000;
 if(getargs.accesslog is not None):
  accesslog = str(getargs.accesslog);
 else:
@@ -239,12 +245,12 @@ cherrypy.config.update({"environment": serv_environ,
                         "log.error_file": errorlog,
                         "log.access_file": accesslog,
                         "log.screen": getargs.verbose,
-                        "gzipfilter.on": True,
-                        "tools.gzip.on": True,
+                        "gzipfilter.on": getargs.gzipfilter,
+                        "tools.gzip.on": getargs.gzip,
                         "tools.gzip.mime_types": ['text/*'],
                         "server.socket_host": host,
                         "server.socket_port": port,
-                        "response.timeout": 6000,
+                        "response.timeout": timeout,
                         });
 cherrypy.root = GenerateIndexPage();
 cherrypy.root.upcean = GenerateBarcodes();
