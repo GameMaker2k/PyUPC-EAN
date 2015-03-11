@@ -481,11 +481,12 @@ def validate_ups_checksum(upc, return_check=False):
   return str(CheckSum);
 def get_ups_checksum(upc):
  upc = str(upc);
+ print(upc);
  return validate_ups_checksum(upc,True);
 def fix_ups_checksum(upc):
  upc = str(upc);
- if(len(upc)>15):
-  fix_matches = re.findall("^(\d{15})", upc); 
+ if(len(upc)>17):
+  fix_matches = re.findall("^(\w{17})", upc); 
   upc = fix_matches[0];
  return upc+str(get_ups_checksum(upc));
 
