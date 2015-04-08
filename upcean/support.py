@@ -116,7 +116,7 @@ def get_pillow_version(infotype=None):
    return pillow_info.get(infotype, pillow_info);
 
 def get_python_info(infotype=None):
- python_info = {'python_branch': platform.python_branch(), 'python_build': platform.python_build(), 'python_compiler': platform.python_compiler(), 'python_implementation': platform.python_implementation(), 'python_revision': platform.python_revision(), 'python_version': platform.python_version(), 'python_version_tuple': platform.python_version_tuple(), 'release': platform.release(), 'system': platform.system(), 'uname': platform.uname(), 'version': platform.version(), 'win32_ver': platform.win32_ver()};
+ python_info = {'python_branch': platform.python_branch(), 'python_build': platform.python_build(), 'python_compiler': platform.python_compiler(), 'python_implementation': platform.python_implementation(), 'python_revision': platform.python_revision(), 'python_version': platform.python_version(), 'python_version_tuple': platform.python_version_tuple(), 'release': platform.release(), 'system': platform.system(), 'uname': platform.uname(), 'architecture': platform.architecture(), 'version': platform.version(), 'win32_ver': platform.win32_ver()};
  if(infotype is None):
   return python_info;
  if(infotype is not None):
