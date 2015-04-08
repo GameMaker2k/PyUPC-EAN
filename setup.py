@@ -17,7 +17,7 @@
 
 import os;
 from setuptools import setup, find_packages;
-import pkg_resources;
+import pkg_resources, time, datetime;
 
 install_requires = [];
 # https://github.com/mapproxy/mapproxy/blob/master/setup.py
@@ -35,6 +35,21 @@ if pillow_installed():
  install_requires.append('Pillow');
 else:
  install_requires.append('PIL');
+
+verinfofile = open("."+os.path.sep+"upcean"+os.path.sep+"versioninfo.py", "r");
+verinfodata = verinfofile.read();
+verinfofile.close();
+mycurtime = datetime.datetime.now();
+mycurtimetuple = mycurtime.timetuple();
+mycurtimestamp = int(time.mktime(mycurtimetuple));
+verinfodata = verinfodata.replace('__build_time__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};', '__build_time__ = {"timestamp": '+str(mycurtimestamp)+', "year": '+str(mycurtimetuple[0])+', "month": '+str(mycurtimetuple[1])+', "day": '+str(mycurtimetuple[2])+', "hour": '+str(mycurtimetuple[3])+', "minute": '+str(mycurtimetuple[4])+', "second": '+str(mycurtimetuple[5])+'};');
+utccurtime = datetime.datetime.utcnow();
+utccurtimetuple = utccurtime.timetuple();
+utccurtimestamp = int(time.mktime(utccurtimetuple));
+verinfodata = verinfodata.replace('__build_time_utc__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};', '__build_time_utc__ = {"timestamp": '+str(utccurtimestamp)+', "year": '+str(utccurtimetuple[0])+', "month": '+str(utccurtimetuple[1])+', "day": '+str(utccurtimetuple[2])+', "hour": '+str(utccurtimetuple[3])+', "minute": '+str(utccurtimetuple[4])+', "second": '+str(utccurtimetuple[5])+'};');
+verinfofile = open("."+os.path.sep+"upcean"+os.path.sep+"versioninfo.py", "w");
+verinfofile.write(verinfodata);
+verinfofile.close();
 
 setup(
  name = 'PyUPC-EAN',
