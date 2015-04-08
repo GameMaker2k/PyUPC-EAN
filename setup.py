@@ -17,7 +17,7 @@
 
 import os;
 from setuptools import setup, find_packages;
-import pkg_resources, time, datetime;
+import pkg_resources, time, datetime, platform;
 
 install_requires = [];
 # https://github.com/mapproxy/mapproxy/blob/master/setup.py
@@ -47,10 +47,10 @@ utccurtime = datetime.datetime.utcnow();
 utccurtimetuple = utccurtime.timetuple();
 utccurtimestamp = int(time.mktime(utccurtimetuple));
 verinfodata = verinfodata.replace('__build_time_utc__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};', '__build_time_utc__ = {"timestamp": '+str(utccurtimestamp)+', "year": '+str(utccurtimetuple[0])+', "month": '+str(utccurtimetuple[1])+', "day": '+str(utccurtimetuple[2])+', "hour": '+str(utccurtimetuple[3])+', "minute": '+str(utccurtimetuple[4])+', "second": '+str(utccurtimetuple[5])+'};');
+verinfodata = verinfodata.replace('__build_python_info__ = {"python_branch": None, "python_build": None, "python_compiler": None, "python_implementation": None, "python_revision": None, "python_version": None, "python_version_tuple": None, "release": None, "system": None, "uname": None, "version": None, "win32_ver": None};', '__build_python_info__ = {"python_branch": "'+str(platform.python_branch())+'", "python_build": '+str(platform.python_build())+', "python_compiler": "'+str(platform.python_compiler())+'", "python_implementation": "'+str(platform.python_implementation())+'", "python_revision": "'+str(platform.python_revision())+'", "python_version": "'+str(platform.python_version())+'", "python_version_tuple": '+str(platform.python_version_tuple())+', "release": "'+str(platform.release())+'", "system": "'+str(platform.system())+'", "uname": '+str(platform.uname())+', "version": "'+str(platform.version())+'", "win32_ver": '+str(platform.win32_ver())+'};');
 verinfofile = open("."+os.path.sep+"upcean"+os.path.sep+"versioninfo.py", "w");
 verinfofile.write(verinfodata);
 verinfofile.close();
-
 setup(
  name = 'PyUPC-EAN',
  version = '2.7.10',
