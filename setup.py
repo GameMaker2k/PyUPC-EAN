@@ -15,9 +15,8 @@
     $FileInfo: setup.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
 '''
 
-import os;
+import os, sys, time, datetime, platform, pkg_resources;
 from setuptools import setup, find_packages;
-import pkg_resources, time, datetime, platform;
 
 install_requires = [];
 # https://github.com/mapproxy/mapproxy/blob/master/setup.py
@@ -47,6 +46,10 @@ utccurtime = datetime.datetime.utcnow();
 utccurtimetuple = utccurtime.timetuple();
 utccurtimestamp = int(time.mktime(utccurtimetuple));
 verinfodata = verinfodata.replace('__build_time_utc__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};', '__build_time_utc__ = {"timestamp": '+str(utccurtimestamp)+', "year": '+str(utccurtimetuple[0])+', "month": '+str(utccurtimetuple[1])+', "day": '+str(utccurtimetuple[2])+', "hour": '+str(utccurtimetuple[3])+', "minute": '+str(utccurtimetuple[4])+', "second": '+str(utccurtimetuple[5])+'};');
+if(sys.version[0]=="2"):
+ verinfodata = verinfodata.replace('__build_python_info__ = {"python_branch": None, "python_build": None, "python_compiler": None, "python_implementation": None, "python_revision": None, "python_version": None, "python_version_tuple": None, "release": None, "system": None, "uname": None, "version": None, "win32_ver": None};', '__build_python_info__ = '+str({'python_branch': platform.python_branch(), 'python_build': platform.python_build(), 'python_compiler': platform.python_compiler(), 'python_implementation': platform.python_implementation(), 'python_revision': platform.python_revision(), 'python_version': platform.python_version(), 'python_version_tuple': platform.python_version_tuple(), 'release': platform.release(), 'system': platform.system(), 'uname': platform.uname(), 'architecture': platform.architecture(), 'version': platform.version(), 'win32_ver': platform.win32_ver()})+';');
+if(sys.version[0]=="3"):
+ verinfodata = verinfodata.replace('__build_python_info__ = {"python_branch": None, "python_build": None, "python_compiler": None, "python_implementation": None, "python_revision": None, "python_version": None, "python_version_tuple": None, "release": None, "system": None, "uname": None, "version": None, "win32_ver": None};', '__build_python_info__ = '+str({'python_branch': platform.python_branch(), 'python_build': platform.python_build(), 'python_compiler': platform.python_compiler(), 'python_implementation': platform.python_implementation(), 'python_revision': platform.python_revision(), 'python_version': platform.python_version(), 'python_version_tuple': platform.python_version_tuple(), 'release': platform.release(), 'system': platform.system(), 'uname': (platform.uname()[0], platform.uname()[1], platform.uname()[2], platform.uname()[3], platform.uname()[4], platform.uname()[5]), 'architecture': platform.architecture(), 'version': platform.version(), 'win32_ver': platform.win32_ver()})+';');
 verinfofile = open("."+os.path.sep+"upcean"+os.path.sep+"versioninfo.py", "w");
 verinfofile.write(verinfodata);
 verinfofile.close();
