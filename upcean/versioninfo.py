@@ -10,7 +10,7 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: versioninfo.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1 - Author: cooldude2k $
+    $FileInfo: versioninfo.py - Last Update: 4/11/2015 Ver. 2.7.11 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -66,10 +66,10 @@ __email__ = "kazuki.przyborowski@gmail.com";
 __status__ = "Production";
 __project__ = "PyUPC-EAN";
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN";
-__version_info__ = (2, 7, 10, "RC 1");
-__build_time__ = {"timestamp": 1428737261, "year": 2015, "month": 4, "day": 11, "hour": 2, "minute": 27, "second": 41};
-__build_time_utc__ = {"timestamp": 1428755261, "year": 2015, "month": 4, "day": 11, "hour": 7, "minute": 27, "second": 41};
-__build_python_info__ = {'python_version': '3.4.0', 'system': 'Linux', 'python_implementation': 'CPython', 'python_compiler': 'GCC 4.8.2', 'python_revision': '', 'release': '3.13.0-37-generic', 'python_build': ('default', 'Apr 11 2014 13:05:18'), 'version': '#64-Ubuntu SMP Mon Sep 22 21:30:01 UTC 2014', 'python_version_tuple': ('3', '4', '0'), 'architecture': ('32bit', 'ELF'), 'python_branch': '', 'uname': ('Linux', 'Dimension-4600i', '3.13.0-37-generic', '#64-Ubuntu SMP Mon Sep 22 21:30:01 UTC 2014', 'i686', 'i686'), 'win32_ver': ('', '', '', '')};
+__version_info__ = (2, 7, 11, "RC 1");
+__build_time__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};
+__build_time_utc__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};
+__build_python_info__ = {"python_branch": None, "python_build": None, "python_compiler": None, "python_implementation": None, "python_revision": None, "python_version": None, "python_version_tuple": None, "release": None, "system": None, "uname": None, "version": None, "win32_ver": None};
 __revision__ = __version_info__[3];
 if(__version_info__[3] is not None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
@@ -81,7 +81,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3] is None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2015, 1, 14, "RC 1");
+__version_date_info__ = (2015, 4, 11, "RC 1");
 def version_date():
  if(__version_date_info__[3] is not None):
   return {"year":__version_date_info__[0], "month": __version_date_info__[1], "day": __version_date_info__[2], "release": __version_date_info__[3]};

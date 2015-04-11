@@ -12,7 +12,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 4/11/2015 Ver. 2.7.11 RC 1  - Author: cooldude2k $
 '''
 
 import os, sys, time, datetime, platform, pkg_resources;
@@ -55,7 +55,7 @@ verinfofile.write(verinfodata);
 verinfofile.close();
 setup(
  name = 'PyUPC-EAN',
- version = '2.7.10',
+ version = '2.7.11',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
  maintainer = 'Kazuki Przyborowski',
