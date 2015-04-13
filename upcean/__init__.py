@@ -10,11 +10,11 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 4/13/2015 Ver. 2.7.11 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-from upcean.versioninfo import __author__, __copyright__, __credits__, __email__, __license__, __maintainer__, __project__, __project_url__, __revision__, __status__, __version__, __version_alt__, __version_date__, __version_date_alt__, __version_date_info__, __version_info__, version_date, version_info;
+from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, get_build_python_info, __revision__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date;
 
 '''
 // UPC Resources and Info
