@@ -1,0 +1,13 @@
+Source: pyupc-ean
+Maintainer: Kazuki Przyborowski <kazuki.przyborowski@gmail.com>
+Homepage: https://github.com/GameMaker2k/PyUPC-EAN/
+Section: python
+Priority: optional
+Build-Depends: python-setuptools, python-all, python-imaging, debhelper
+Standards-Version: 3.9.1
+
+Package: python-pyupcean
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: A barcode library/module for python.
+ PyUPC-EAN is a barcode library/module for Python. It supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.
