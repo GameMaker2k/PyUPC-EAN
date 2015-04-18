@@ -35,7 +35,8 @@ if pillow_installed():
 else:
  install_requires.append('PIL');
 
-verinfofilename = "."+os.path.sep+"upcean"+os.path.sep+"versioninfo.py";
+verinfofilename = os.path.realpath("."+os.path.sep+"upcean"+os.path.sep+"versioninfo.py");
+''' verinfofilename = os.path.abspath("."+os.path.sep+"upcean"+os.path.sep+"versioninfo.py"); '''
 verinfofile = open(verinfofilename, "r");
 verinfodata = verinfofile.read();
 verinfofile.close();
