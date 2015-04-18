@@ -1,5 +1,21 @@
 #!/usr/bin/env python
 
+'''
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the Revised BSD License.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    Revised BSD License for more details.
+
+    Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+
+    $FileInfo: pydeb-den.py - Last Update: 4/18/2015 Ver. 0.0.1 RC 1 - Author: cooldude2k $
+'''
+
+from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, time, datetime;
 
 proname = "pydeb-gen";
@@ -93,5 +109,3 @@ debpkg_string_temp = "extend-diff-ignore=\"\\.egg-info\"\n";
 debpkg_file_temp = open(debpkg_options_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
-
-
