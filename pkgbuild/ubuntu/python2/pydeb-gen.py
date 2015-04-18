@@ -12,7 +12,7 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pydeb-den.py - Last Update: 4/18/2015 Ver. 0.0.1 RC 1 - Author: cooldude2k $
+    $FileInfo: pydeb-gen.py - Last Update: 4/18/2015 Ver. 0.0.1 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
