@@ -12,18 +12,19 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pydeb-gen.py - Last Update: 4/19/2015 Ver. 0.0.5 RC 2 - Author: cooldude2k $
+    $FileInfo: pydeb-gen.py - Last Update: 4/19/2015 Ver. 0.0.5 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, time, datetime;
 
 proname = "pydeb-gen";
-prover = "0.0.5+rc2";
+prover = "0.0.5+rc3";
 profullname = proname+" "+prover;
 
 pkgsource = "pyupc-ean";
-pkgver = "2.7.11-3";
+pkgveralt = "2.7.11";
+pkgver = pkgveralt+"-3";
 pkgdistname = "wheezy";
 pkgurgency = "urgency=low";
 pkgmaintainername = "Kazuki Przyborowski";
@@ -50,6 +51,14 @@ if(pkgtzhour>=0):
 pkgtzminute = datetime.datetime.now().timetuple()[4] - datetime.datetime.utcnow().timetuple()[4];
 pkgtzminutestr = str(pkgtzminute).zfill(2);
 pkgtzstr = time.strftime("%a, %d %b %Y %H:%M:%S")+" "+pkgtzhourstr+pkgtzminutestr;
+
+if(len(sys.argv)==2 and (sys.argv[1]=="--get-dir-name" or sys.argv[1]=="--getdirname")):
+ print(pkgsource+"_"+pkgveralt+".orig");
+ sys.exit();
+
+if(len(sys.argv)==2 and (sys.argv[1]=="--get-tar-name" or sys.argv[1]=="--gettarname")):
+ print(pkgsource+"_"+pkgveralt+".orig.tar");
+ sys.exit();
 
 print("generating debian package build directory");
 
