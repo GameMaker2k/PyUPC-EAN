@@ -12,14 +12,14 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pydeb-gen.py - Last Update: 4/18/2015 Ver. 0.0.1 RC 1 - Author: cooldude2k $
+    $FileInfo: pydeb-gen.py - Last Update: 4/19/2015 Ver. 0.0.5 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, time, datetime;
 
 proname = "pydeb-gen";
-prover = "0.0.1";
+prover = "0.0.5+rc1";
 
 pkgsource = "py3upc-ean";
 pkgver = "2.7.11-3";
@@ -91,6 +91,41 @@ debpkg_string_temp += "Architecture: "+pkgarchitecture+"\n";
 debpkg_string_temp += "Depends: "+pkgdepends+"\n";
 debpkg_string_temp += "Description: "+pkgdescription+"\n";
 debpkg_file_temp = open(debpkg_control_file, "w");
+debpkg_file_temp.write(debpkg_string_temp);
+debpkg_file_temp.close();
+
+debpkg_copyright_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"copyright");
+print("generating file "+debpkg_copyright_file);
+debpkg_string_temp = "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
+debpkg_string_temp += "		    Revised BSD License\n\n";
+debpkg_string_temp += "Copyright (C) 2011-2015 Game Maker 2k. \n";
+debpkg_string_temp += "All rights reserved.\n\n";
+debpkg_string_temp += "Redistribution and use in source and binary forms, with or without\n";
+debpkg_string_temp += "modification, are permitted provided that the following conditions are met:\n\n";
+debpkg_string_temp += "  1. Redistributions of source code must retain the above copyright notice,\n";
+debpkg_string_temp += "     this list of conditions and the following disclaimer.\n\n";
+debpkg_string_temp += "  2. Redistributions in binary form must reproduce the above copyright \n";
+debpkg_string_temp += "     notice, this list of conditions and the following disclaimer in \n";
+debpkg_string_temp += "     the documentation and/or other materials provided with the distribution.\n\n";
+debpkg_string_temp += "  3. Neither the name of Game Maker 2k nor the names of its contributors\n";
+debpkg_string_temp += "     may be used to endorse or promote products derived from this software\n";
+debpkg_string_temp += "     without specific prior written permission.\n\n";
+debpkg_string_temp += "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" \n";
+debpkg_string_temp += "AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE \n";
+debpkg_string_temp += "IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE \n";
+debpkg_string_temp += "ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE \n";
+debpkg_string_temp += "LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR \n";
+debpkg_string_temp += "CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF \n";
+debpkg_string_temp += "SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS \n";
+debpkg_string_temp += "INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN \n";
+debpkg_string_temp += "CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) \n";
+debpkg_string_temp += "ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF \n";
+debpkg_string_temp += "THE POSSIBILITY OF SUCH DAMAGE.\n\n";
+debpkg_string_temp += "The views and conclusions contained in the software and documentation are those of the\n";
+debpkg_string_temp += "authors and should not be interpreted as representing official policies, either expressed\n";
+debpkg_string_temp += "or implied, of Game Maker 2k.\n";
+debpkg_string_temp += "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
+debpkg_file_temp = open(debpkg_copyright_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
 
