@@ -190,7 +190,7 @@ debpkg_string_temp += "override_dh_auto_test:\n";
 debpkg_string_temp += "	python3 setup.py test\n\n";
 debpkg_string_temp += "override_dh_auto_install:\n";
 debpkg_string_temp += "	python3 setup.py install \\\n";
-debpkg_string_temp += "        --force --root=$(CURDIR)/debian/python3-pyupcean \\\n";
+debpkg_string_temp += "        --force --root=$(CURDIR)/debian/"+pkgpackage+" \\\n";
 debpkg_string_temp += "        --no-compile -O0 --install-layout=deb\n\n";
 debpkg_string_temp += "override_dh_auto_clean:\n";
 debpkg_string_temp += "	python3 setup.py clean\n";
