@@ -12,25 +12,62 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pydeb-gen.py - Last Update: 4/19/2015 Ver. 0.0.5 RC 3 - Author: cooldude2k $
+    $FileInfo: pydeb-gen.py - Last Update: 4/20/2015 Ver. 0.1.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, time, datetime;
+import re, os, sys, time, datetime, argparse;
+
+__version_info__ = (0, 1, 0, "rc1");
+if(__version_info__[3]!=None):
+ __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+"+"+str(__version_info__[3]);
+if(__version_info__[3]==None):
+ __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2]);
 
 proname = "pydeb-gen";
-prover = "0.0.5+rc3";
+prover = __version__;
 profullname = proname+" "+prover;
 
+parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
+parser.add_argument("-v", "--version", action = "version", version = profullname);
+parser.add_argument("-s", "--source", default = os.path.realpath(os.getcwd()), help = "source dir");
+parser.add_argument("-g", "--getsource", action = "store_true", help = "get source dir");
+parser.add_argument("-p", "--getparent", action = "store_true", help = "get parent dir");
+parser.add_argument("-t", "--gettarname", action = "store_true", help = "get tar name");
+parser.add_argument("-d", "--getdirname", action = "store_true", help = "get dir name");
+getargs = parser.parse_args();
+getargs.source = os.path.realpath(getargs.source);
+pkgsetuppy = os.path.realpath(getargs.source+os.path.sep+"setup.py");
+if(not os.path.exists(getargs.source) or not os.path.isdir(getargs.source)):
+ raise Exception("Could not find directory.");
+if(not os.path.exists(pkgsetuppy) or not os.path.isfile(pkgsetuppy)):
+ raise Exception("Could not find setup.py in directory.");
+
+debpkg_file_setuppy = open(pkgsetuppy, "r");
+debpkg_string_setuppy = debpkg_file_setuppy.read();
+setuppy_verinfo = re.findall("Ver\. ([0-9]+)\.([0-9]+)\.([0-9]+) RC ([0-9]+)", str(debpkg_string_setuppy))[0];
+setuppy_author = re.findall(" author \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_authoremail = re.findall(" author_email \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_maintainer = re.findall(" maintainer \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_maintaineremail = re.findall(" maintainer_email \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_description = re.findall(" description \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_license = re.findall(" license \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_keywords = re.findall(" keywords \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_url = re.findall(" url \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_downloadurl = re.findall(" download_url \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_longdescription = re.findall(" long_description \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+setuppy_platforms = re.findall(" platforms \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
+debpkg_file_setuppy.close();
+
 pkgsource = "pyupc-ean";
-pkgveralt = "2.7.11";
-pkgver = pkgveralt+"-3";
+pkgveralt = setuppy_verinfo[0]+"."+setuppy_verinfo[1]+"."+setuppy_verinfo[2];
+pkgver = pkgveralt+"-"+setuppy_verinfo[3];
 pkgdistname = "wheezy";
 pkgurgency = "urgency=low";
-pkgmaintainername = "Kazuki Przyborowski";
-pkgmaintaineremail = "kazuki.przyborowski@gmail.com";
+pkgmaintainername = setuppy_author;
+pkgmaintaineremail = setuppy_authoremail;
 pkgmaintainer = pkgmaintainername+" <"+pkgmaintaineremail+">";
-pkghomepage = "https://github.com/GameMaker2k/PyUPC-EAN/";
+pkghomepage = setuppy_url;
 pkgsection = "python";
 pkgpriority = "optional";
 pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper";
@@ -38,7 +75,7 @@ pkgstandardsversion = "3.9.1";
 pkgpackage = "python-pyupcean";
 pkgarchitecture = "all";
 pkgdepends = "${misc:Depends}, ${python:Depends}";
-pkgdescription = "A barcode library/module for python.\n PyUPC-EAN is a barcode library/module for Python. It supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.";
+pkgdescription = setuppy_description+"\n "+setuppy_longdescription;
 pkgmycurtime = datetime.datetime.now();
 pkgmycurtimetuple = pkgmycurtime.timetuple();
 pkgutccurtime = datetime.datetime.utcnow();
@@ -52,21 +89,22 @@ pkgtzminute = datetime.datetime.now().timetuple()[4] - datetime.datetime.utcnow(
 pkgtzminutestr = str(pkgtzminute).zfill(2);
 pkgtzstr = time.strftime("%a, %d %b %Y %H:%M:%S")+" "+pkgtzhourstr+pkgtzminutestr;
 
-if(len(sys.argv)==2 and (sys.argv[1]=="--get-dir-name" or sys.argv[1]=="--getdirname")):
+if(getargs.getsource==True):
+ print(getargs.source);
+ sys.exit();
+if(getargs.getparent==True):
+ print(os.path.realpath(os.path.dirname(getargs.source)));
+ sys.exit();
+if(getargs.getdirname==True):
  print(pkgsource+"_"+pkgveralt+".orig");
  sys.exit();
-
-if(len(sys.argv)==2 and (sys.argv[1]=="--get-tar-name" or sys.argv[1]=="--gettarname")):
+if(getargs.gettarname==True):
  print(pkgsource+"_"+pkgveralt+".orig.tar");
  sys.exit();
 
 print("generating debian package build directory");
 
-if(len(sys.argv)==1):
- debpkg_debian_dir = os.path.realpath(os.getcwd()+os.path.sep+"debian");
-if(len(sys.argv)==2):
- getdebdir = os.path.realpath(sys.argv[1]);
- debpkg_debian_dir = os.path.realpath(getdebdir+os.path.sep+"debian");
+debpkg_debian_dir = os.path.realpath(getargs.source+os.path.sep+"debian");
 print("creating directory "+debpkg_debian_dir);
 if(not os.path.exists(debpkg_debian_dir)):
  os.makedirs(debpkg_debian_dir);
