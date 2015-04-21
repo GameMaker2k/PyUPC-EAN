@@ -63,13 +63,18 @@ if(sys.version[0]=="2"):
  pkgsource = "py2upc-ean";
 if(sys.version[0]=="3"):
  pkgsource = "py3upc-ean";
+pkgupstreamname = "PyUPC-EAN";
 pkgveralt = setuppy_verinfo[0]+"."+setuppy_verinfo[1]+"."+setuppy_verinfo[2];
 pkgver = pkgveralt+"-"+setuppy_verinfo[3];
 pkgdistname = "trusty";
 pkgurgency = "urgency=low";
-pkgmaintainername = setuppy_author;
-pkgmaintaineremail = setuppy_authoremail;
+pkgauthorname = setuppy_author;
+pkgauthoremail = setuppy_authoremail;
+pkgauthor = pkgauthorname+" <"+pkgauthoremail+">";
+pkgmaintainername = setuppy_maintainer;
+pkgmaintaineremail = setuppy_maintaineremail;
 pkgmaintainer = pkgmaintainername+" <"+pkgmaintaineremail+">";
+pkggiturl = "https://github.com/GameMaker2k/PyUPC-EAN.git";
 pkghomepage = setuppy_url;
 pkgsection = "python";
 pkgpriority = "optional";
@@ -88,20 +93,7 @@ if(sys.version[0]=="2"):
 if(sys.version[0]=="3"):
  pkgdepends = "${misc:Depends}, ${python3:Depends}";
 pkgdescription = setuppy_description+"\n "+setuppy_longdescription;
-pkgmycurtime = datetime.datetime.now();
-pkgmycurtimetuple = pkgmycurtime.timetuple();
-pkgutccurtime = datetime.datetime.utcnow();
-pkgutccurtimetuple = pkgutccurtime.timetuple();
-pkgtzhour = datetime.datetime.now().timetuple()[3] - datetime.datetime.utcnow().timetuple()[3];
-if(datetime.datetime.utcnow().timetuple()[3]==0):
- pkgtzhour = datetime.datetime.now().timetuple()[3] - 24;
-if(pkgtzhour<0):
- pkgtzhourstr = "-"+str(abs(datetime.datetime.now().timetuple()[3]-datetime.datetime.utcnow().timetuple()[3])).zfill(2);
-if(pkgtzhour>=0):
- pkgtzhourstr = str(abs(datetime.datetime.now().timetuple()[3]-datetime.datetime.utcnow().timetuple()[3])).zfill(2);
-pkgtzminute = datetime.datetime.now().timetuple()[4] - datetime.datetime.utcnow().timetuple()[4];
-pkgtzminutestr = str(pkgtzminute).zfill(2);
-pkgtzstr = time.strftime("%a, %d %b %Y %H:%M:%S")+" "+pkgtzhourstr+pkgtzminutestr;
+pkgtzstr = time.strftime("%a, %d %b %Y %H:%M:%S %z");
 
 if(getargs.getsource==True):
  print(getargs.source);
@@ -136,7 +128,7 @@ os.chmod(debpkg_changelog_file, int("0644", 8));
 
 debpkg_compat_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"compat");
 print("generating file "+debpkg_compat_file);
-debpkg_string_temp = "7\n";
+debpkg_string_temp = "9\n";
 debpkg_file_temp = open(debpkg_compat_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
@@ -147,6 +139,8 @@ print("generating file "+debpkg_control_file);
 debpkg_string_temp = "Source: "+pkgsource+"\n";
 debpkg_string_temp += "Maintainer: "+pkgmaintainer+"\n";
 debpkg_string_temp += "Homepage: "+pkghomepage+"\n";
+debpkg_string_temp += "Vcs-Git: "+pkggiturl+"\n";
+debpkg_string_temp += "Vcs-Browser: "+pkghomepage+"\n";
 debpkg_string_temp += "Section: "+pkgsection+"\n";
 debpkg_string_temp += "Priority: "+pkgpriority+"\n";
 debpkg_string_temp += "Build-Depends: "+pkgbuilddepends+"\n";
@@ -162,7 +156,14 @@ os.chmod(debpkg_control_file, int("0644", 8));
 
 debpkg_copyright_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"copyright");
 print("generating file "+debpkg_copyright_file);
-debpkg_string_temp = "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
+debpkg_string_temp = "Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/\n";
+debpkg_string_temp += "Upstream-Name: "+pkgupstreamname+"\n";
+debpkg_string_temp += "Source: "+pkghomepage+"\n\n";
+debpkg_string_temp += "Files: *\n";
+debpkg_string_temp += "Copyright: Copyright 2011-2015 "+pkgauthor+"\n";
+debpkg_string_temp += "License: BSD\n\n";
+debpkg_string_temp += "License: BSD\n";
+debpkg_string_temp += "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
 debpkg_string_temp += "		    Revised BSD License\n\n";
 debpkg_string_temp += "Copyright (C) 2011-2015 Game Maker 2k. \n";
 debpkg_string_temp += "All rights reserved.\n\n";
