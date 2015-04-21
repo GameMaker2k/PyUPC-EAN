@@ -84,7 +84,7 @@ if(sys.version[0]=="2"):
  pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper";
 if(sys.version[0]=="3"):
  pkgbuilddepends = "python3-setuptools, python3-all, python3-imaging, debhelper";
-pkgstandardsversion = "3.9.1";
+pkgstandardsversion = "3.9.5";
 if(sys.version[0]=="2"):
  pkgpackage = "python-pyupcean";
 if(sys.version[0]=="3"):
@@ -165,7 +165,6 @@ debpkg_string_temp += "Files: *\n";
 debpkg_string_temp += "Copyright: Copyright 2011-2015 "+pkgauthor+"\n";
 debpkg_string_temp += "License: BSD\n\n";
 debpkg_string_temp += "License: BSD\n";
-debpkg_string_temp += "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
 debpkg_string_temp += "		    Revised BSD License\n\n";
 debpkg_string_temp += "Copyright (C) 2011-2015 Game Maker 2k. \n";
 debpkg_string_temp += "All rights reserved.\n\n";
@@ -193,7 +192,6 @@ debpkg_string_temp += "THE POSSIBILITY OF SUCH DAMAGE.\n\n";
 debpkg_string_temp += "The views and conclusions contained in the software and documentation are those of the\n";
 debpkg_string_temp += "authors and should not be interpreted as representing official policies, either expressed\n";
 debpkg_string_temp += "or implied, of Game Maker 2k.\n";
-debpkg_string_temp += "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
 debpkg_file_temp = open(debpkg_copyright_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
