@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 '''
     This program is free software; you can redistribute it and/or modify
@@ -12,13 +12,13 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pydeb-gen.py - Last Update: 4/20/2015 Ver. 0.1.0 RC 1 - Author: cooldude2k $
+    $FileInfo: pydeb-gen.py - Last Update: 4/20/2015 Ver. 0.1.0 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, time, datetime, argparse;
 
-__version_info__ = (0, 1, 0, "rc1");
+__version_info__ = (0, 1, 0, "rc2");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+"+"+str(__version_info__[3]);
 if(__version_info__[3]==None):
@@ -59,7 +59,7 @@ setuppy_longdescription = re.findall(" long_description \= \'(.*)\'\,", str(debp
 setuppy_platforms = re.findall(" platforms \= \'(.*)\'\,", str(debpkg_string_setuppy))[0];
 debpkg_file_setuppy.close();
 
-pkgsource = "pyupc-ean";
+pkgsource = "py2upc-ean";
 pkgveralt = setuppy_verinfo[0]+"."+setuppy_verinfo[1]+"."+setuppy_verinfo[2];
 pkgver = pkgveralt+"-"+setuppy_verinfo[3];
 pkgdistname = "wheezy";
@@ -81,6 +81,8 @@ pkgmycurtimetuple = pkgmycurtime.timetuple();
 pkgutccurtime = datetime.datetime.utcnow();
 pkgutccurtimetuple = pkgutccurtime.timetuple();
 pkgtzhour = datetime.datetime.now().timetuple()[3] - datetime.datetime.utcnow().timetuple()[3];
+if(datetime.datetime.utcnow().timetuple()[3]==0):
+ pkgtzhour = datetime.datetime.now().timetuple()[3] - 24;
 if(pkgtzhour<0):
  pkgtzhourstr = "-"+str(abs(datetime.datetime.now().timetuple()[3]-datetime.datetime.utcnow().timetuple()[3])).zfill(2);
 if(pkgtzhour>=0):
@@ -108,6 +110,7 @@ debpkg_debian_dir = os.path.realpath(getargs.source+os.path.sep+"debian");
 print("creating directory "+debpkg_debian_dir);
 if(not os.path.exists(debpkg_debian_dir)):
  os.makedirs(debpkg_debian_dir);
+os.chmod(debpkg_debian_dir, int("0755", 8));
 
 debpkg_changelog_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"changelog");
 print("generating file "+debpkg_changelog_file);
@@ -117,6 +120,7 @@ debpkg_string_temp += " -- "+pkgmaintainer+"  "+pkgtzstr+"\n";
 debpkg_file_temp = open(debpkg_changelog_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
+os.chmod(debpkg_changelog_file, int("0644", 8));
 
 debpkg_compat_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"compat");
 print("generating file "+debpkg_compat_file);
@@ -124,6 +128,7 @@ debpkg_string_temp = "7\n";
 debpkg_file_temp = open(debpkg_compat_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
+os.chmod(debpkg_compat_file, int("0644", 8));
 
 debpkg_control_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"control");
 print("generating file "+debpkg_control_file);
@@ -141,6 +146,7 @@ debpkg_string_temp += "Description: "+pkgdescription+"\n";
 debpkg_file_temp = open(debpkg_control_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
+os.chmod(debpkg_control_file, int("0644", 8));
 
 debpkg_copyright_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"copyright");
 print("generating file "+debpkg_copyright_file);
@@ -176,6 +182,7 @@ debpkg_string_temp += "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 debpkg_file_temp = open(debpkg_copyright_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
+os.chmod(debpkg_copyright_file, int("0644", 8));
 
 debpkg_rules_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"rules");
 print("generating file "+debpkg_rules_file);
@@ -187,11 +194,13 @@ debpkg_string_temp += "	dh $@ --with python2 --buildsystem=python_distutils\n";
 debpkg_file_temp = open(debpkg_rules_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
+os.chmod(debpkg_rules_file, int("0755", 8));
 
 debpkg_source_dir = os.path.realpath(debpkg_debian_dir+os.path.sep+"source");
 print("creating directory "+debpkg_source_dir);
 if(not os.path.exists(debpkg_source_dir)):
  os.makedirs(debpkg_source_dir);
+os.chmod(debpkg_source_dir, int("0755", 8));
 
 debpkg_format_file = os.path.realpath(debpkg_source_dir+os.path.sep+"format");
 print("generating file "+debpkg_format_file);
@@ -199,6 +208,7 @@ debpkg_string_temp = "3.0 (native)\n";
 debpkg_file_temp = open(debpkg_format_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
+os.chmod(debpkg_format_file, int("0644", 8));
 
 debpkg_options_file = os.path.realpath(debpkg_source_dir+os.path.sep+"options");
 print("generating file "+debpkg_options_file);
@@ -206,3 +216,4 @@ debpkg_string_temp = "extend-diff-ignore=\"\\.egg-info\"\n";
 debpkg_file_temp = open(debpkg_options_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();
+os.chmod(debpkg_options_file, int("0644", 8));
