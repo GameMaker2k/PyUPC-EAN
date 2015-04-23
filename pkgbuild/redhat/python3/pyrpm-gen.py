@@ -80,9 +80,9 @@ pkghomepage = setuppy_url;
 pkgsection = "python";
 pkgpriority = "optional";
 if(sys.version[0]=="2"):
- pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper";
+ pkgrequires = "python27, python27-imaging";
 if(sys.version[0]=="3"):
- pkgbuilddepends = "python3-setuptools, python3-all, python3-imaging, debhelper";
+ pkgrequires = "python34, python27-imaging";
 pkgstandardsversion = "3.9.5";
 if(sys.version[0]=="2"):
  pkgpackage = "python-pyupcean";
@@ -156,6 +156,7 @@ if(sys.version[0]=="2"):
  rpmpkg_string_temp += "%define proname python-pyupcean\n";
 if(sys.version[0]=="3"):
  rpmpkg_string_temp += "%define proname python3-pyupcean\n";
+rpmpkg_string_temp += "%define requires "+pkgrequires+"\n";
 rpmpkg_string_temp += "%define version "+pkgveralt+"\n";
 rpmpkg_string_temp += "%define unmangled_version "+pkgveralt+"\n";
 rpmpkg_string_temp += "%define unmangled_version "+pkgveralt+"\n";
@@ -166,6 +167,7 @@ rpmpkg_string_temp += "Name: %{name}\n";
 rpmpkg_string_temp += "Provides: %{proname}\n";
 rpmpkg_string_temp += "Version: %{version}\n";
 rpmpkg_string_temp += "Release: %{release}\n";
+rpmpkg_string_temp += "Requires: %{requires}\n";
 rpmpkg_string_temp += "Source0: %{name}-%{unmangled_version}.tar.gz\n";
 rpmpkg_string_temp += "License: "+setuppy_license+"\n";
 rpmpkg_string_temp += "Group: Development/Libraries\n";
