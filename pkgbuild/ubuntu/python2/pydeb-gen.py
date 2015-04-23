@@ -12,13 +12,13 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pydeb-gen.py - Last Update: 4/21/2015 Ver. 0.1.5 RC 2 - Author: cooldude2k $
+    $FileInfo: pydeb-gen.py - Last Update: 4/23/2015 Ver. 0.1.5 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, time, datetime, argparse;
 
-__version_info__ = (0, 1, 5, "rc2");
+__version_info__ = (0, 1, 5, "rc3");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+"+"+str(__version_info__[3]);
 if(__version_info__[3]==None):
