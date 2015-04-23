@@ -12,13 +12,13 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pydeb-gen.py - Last Update: 4/21/2015 Ver. 0.1.5 RC 1 - Author: cooldude2k $
+    $FileInfo: pydeb-gen.py - Last Update: 4/22/2015 Ver. 0.1.5 RC 2 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, time, datetime, argparse;
 
-__version_info__ = (0, 1, 5, "rc1");
+__version_info__ = (0, 1, 5, "rc2");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+"+"+str(__version_info__[3]);
 if(__version_info__[3]==None):
@@ -95,7 +95,7 @@ if(getargs.getdirname==True):
  print(pkgsource+"_"+pkgveralt+".orig");
  sys.exit();
 if(getargs.gettarname==True):
- print(pkgsource+"_"+pkgveralt+".orig.tar");
+ print(pkgsource+"_"+pkgveralt+".orig.tar.gz");
  sys.exit();
 
 print("generating debian package build directory");

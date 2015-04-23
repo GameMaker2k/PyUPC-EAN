@@ -3,24 +3,29 @@
 scriptdir="$(realpath $(dirname $(readlink -f $0)))"
 pyscriptfile="${scriptdir}/pydeb-gen.py"
 pyshellfile="${scriptdir}/pydeb-gen.sh"
-
-if [ $# -eq 0 ]; then
- pydebdir="$(${pyscriptfile} -g)"
- pydebparentdir="$(${pyscriptfile} -p)"
- pydebtarname="$(${pyscriptfile} -t)"
- pydebdirname="$(${pyscriptfile} -d)"
-fi
-if [ $# -gt 0 ]; then
- pydebdir="$(${pyscriptfile} -s "${1}" -g)"
- pydebparentdir="$(${pyscriptfile} -s "${1}" -p)"
- pydebtarname="$(${pyscriptfile} -s "${1}" -t)"
- pydebdirname="$(${pyscriptfile} -s "${1}" -d)"
-fi
+pythonexec="$(which python2)"
+codename="trusty"
 oldwd="$(pwd)"
 
+if [ $# -eq 0 ]; then
+ pydebdir="$(${pythonexec} "${pyscriptfile}" -c "${codename}" -g)"
+ pydebparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -p)"
+ pydebtarname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -t)"
+ pydebdirname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -d)"
+fi
+if [ $# -gt 0 ]; then
+ if [ $# -gt 1 ]; then
+  codename="${2}"
+ fi
+ pydebdir="$(${pythonexec} "${pyscriptfile}" -s "${1}" -c "${codename}" -g)"
+ pydebparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -p)"
+ pydebtarname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -t)"
+ pydebdirname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -d)"
+fi
+
 cd "${pydebparentdir}"
-tar -cvf "${pydebparentdir}/${pydebtarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" "$(basename ${pydebdir})"
-gzip --best --verbose "${pydebparentdir}/${pydebtarname}"
+tar -cavvf "${pydebparentdir}/${pydebtarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" "$(basename ${pydebdir})"
+file -z -k "${pydebparentdir}/${pydebtarname}"
 cd "${pydebdir}"
-python3 "${scriptdir}/pydeb-gen.py" -s "${pydebdir}"
+${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}"
 cd "${oldwd}"
