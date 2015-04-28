@@ -3,7 +3,7 @@
 scriptdir="$(realpath $(dirname $(readlink -f $0)))"
 pyscriptfile="${scriptdir}/pydeb-gen.py"
 pyshellfile="${scriptdir}/pydeb-gen.sh"
-pythonexec="$(which python2)"
+pythonexec="$(which python3)"
 codename="trusty"
 oldwd="$(pwd)"
 
