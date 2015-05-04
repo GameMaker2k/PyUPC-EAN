@@ -89,8 +89,10 @@ if(sys.version[0]=="3"):
 pkgstandardsversion = "3.9.5";
 if(sys.version[0]=="2"):
  pkgpackage = "python2-pyupcean";
+ pkgoldname = "python2-upcean";
 if(sys.version[0]=="3"):
  pkgpackage = "python-pyupcean";
+ pkgoldname = "python-upcean";
 pkgarchitecture = "'any' 'i686' 'x86_64'";
 if(sys.version[0]=="2"):
  pkgdepends = "'python2-setuptools'";
@@ -112,7 +114,7 @@ if(getargs.gettarname==True):
  print(pkgsource+"_"+pkgveralt+".orig.tar.gz");
  sys.exit();
 
-print("generating PKGBUILD build directory");
+print("generating arch linux package build directory");
 
 pacpkg_pkgbuild_dir = os.path.realpath(getargs.source+os.path.sep+pkgsource);
 print("creating directory "+pacpkg_pkgbuild_dir);
@@ -152,7 +154,7 @@ if(sys.version[0]=="2"):
  pacpkg_string_temp += "optdepends=()\n";
  pacpkg_string_temp += "makedepends=("+pkgdepends+")\n";
  pacpkg_string_temp += "conflicts=()\n";
- pacpkg_string_temp += "replaces=()\n";
+ pacpkg_string_temp += "replaces=('"+pkgoldname+"')\n";
  pacpkg_string_temp += "backup=()\n";
  pacpkg_string_temp += "install=''\n";
  pacpkg_string_temp += "source=('."+os.path.sep+pkgsource+"_"+pkgveralt+".orig.tar.gz')\n";
@@ -163,12 +165,12 @@ if(sys.version[0]=="2"):
  pacpkg_string_temp += "sha384sums=('"+filetargzsha384+"')\n";
  pacpkg_string_temp += "sha512sums=('"+filetargzsha512+"')\n\n";
  pacpkg_string_temp += "build() {\n";
- pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_"+pkgveralt+".orig\"\n";
- pacpkg_string_temp += "  /usr/bin/python2 ./setup.py build\n";
+ pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_${pkgver}.orig\"\n";
+ pacpkg_string_temp += "  python2 ./setup.py build\n";
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "package() {\n";
- pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_"+pkgveralt+".orig\"\n";
- pacpkg_string_temp += "  /usr/bin/python2 ./setup.py install --root \"${pkgdir}\"\n";
+ pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_${pkgver}.orig\"\n";
+ pacpkg_string_temp += "  python2 ./setup.py install --root \"${pkgdir}\"\n";
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "# vim:set ts=2 sw=2 et:\n";
 if(sys.version[0]=="3"):
@@ -186,7 +188,7 @@ if(sys.version[0]=="3"):
  pacpkg_string_temp += "optdepends=()\n";
  pacpkg_string_temp += "makedepends=("+pkgdepends+")\n";
  pacpkg_string_temp += "conflicts=()\n";
- pacpkg_string_temp += "replaces=()\n";
+ pacpkg_string_temp += "replaces=('"+pkgoldname+"')\n";
  pacpkg_string_temp += "backup=()\n";
  pacpkg_string_temp += "install=''\n";
  pacpkg_string_temp += "source=('."+os.path.sep+pkgsource+"_"+pkgveralt+".orig.tar.gz')\n";
@@ -197,12 +199,12 @@ if(sys.version[0]=="3"):
  pacpkg_string_temp += "sha384sums=('"+filetargzsha384+"')\n";
  pacpkg_string_temp += "sha512sums=('"+filetargzsha512+"')\n\n";
  pacpkg_string_temp += "build() {\n";
- pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_"+pkgveralt+".orig\"\n";
- pacpkg_string_temp += "  /usr/bin/python3 ./setup.py build\n";
+ pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_${pkgver}.orig\"\n";
+ pacpkg_string_temp += "  python3 ./setup.py build\n";
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "package() {\n";
- pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_"+pkgveralt+".orig\"\n";
- pacpkg_string_temp += "  /usr/bin/python3 ./setup.py install --root \"${pkgdir}\"\n";
+ pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_${pkgver}.orig\"\n";
+ pacpkg_string_temp += "  python3 ./setup.py install --root \"${pkgdir}\"\n";
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "# vim:set ts=2 sw=2 et:\n";
 pacpkg_file_temp = open(pacpkg_pkgbuild_file, "w");

@@ -87,8 +87,10 @@ if(sys.version[0]=="3"):
 pkgstandardsversion = "3.9.5";
 if(sys.version[0]=="2"):
  pkgpackage = "python-pyupcean";
+ pkgoldname = "python-upcean";
 if(sys.version[0]=="3"):
  pkgpackage = "python3-pyupcean";
+ pkgoldname = "python3-upcean";
 pkgarchitecture = "all";
 if(sys.version[0]=="2"):
  pkgdepends = "${misc:Depends}, ${python:Depends}";
@@ -150,6 +152,7 @@ debpkg_string_temp += "Standards-Version: "+pkgstandardsversion+"\n\n";
 debpkg_string_temp += "Package: "+pkgpackage+"\n";
 debpkg_string_temp += "Architecture: "+pkgarchitecture+"\n";
 debpkg_string_temp += "Depends: "+pkgdepends+"\n";
+debpkg_string_temp += "Replaces: "+pkgoldname+"\n";
 debpkg_string_temp += "Description: "+pkgdescription+"\n";
 debpkg_file_temp = open(debpkg_control_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
