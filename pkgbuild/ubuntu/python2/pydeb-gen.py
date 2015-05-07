@@ -92,6 +92,11 @@ if(sys.version[0]=="2"):
  pkgbuilddepends = "python-setuptools, python-all, python-pil, debhelper";
 if(sys.version[0]=="3"):
  pkgbuilddepends = "python3-setuptools, python3-all, python3-pil, debhelper";
+if(getargs.codename=="lucid" or getargs.codename=="precise"): 
+ if(sys.version[0]=="2"):
+  pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper";
+ if(sys.version[0]=="3"):
+  pkgbuilddepends = "python3-setuptools, python3-all, python3-imaging, debhelper";
 pkgstandardsversion = "3.9.5";
 if(sys.version[0]=="2"):
  pkgpackage = "python-pyupcean";

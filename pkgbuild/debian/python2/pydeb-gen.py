@@ -88,7 +88,7 @@ if(sys.version[0]=="2"):
  pkgbuilddepends = "python-setuptools, python-all, python-pil, debhelper";
 if(sys.version[0]=="3"):
  pkgbuilddepends = "python3-setuptools, python3-all, python3-pil, debhelper";
-if(getargs.codename=="wheezy"): 
+if(getargs.codename=="squeeze" or getargs.codename=="wheezy"): 
  if(sys.version[0]=="2"):
   pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper";
  if(sys.version[0]=="3"):
