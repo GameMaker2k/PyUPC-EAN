@@ -89,14 +89,14 @@ pkghomepage = setuppy_url;
 pkgsection = "python";
 pkgpriority = "optional";
 if(sys.version[0]=="2"):
- pkgbuilddepends = "python-setuptools, python-all, python-pil, debhelper";
+ pkgbuilddepends = "python-setuptools, python-all, python-pil, debhelper, dh-python";
 if(sys.version[0]=="3"):
- pkgbuilddepends = "python3-setuptools, python3-all, python3-pil, debhelper";
+ pkgbuilddepends = "python3-setuptools, python3-all, python3-pil, debhelper, dh-python";
 if(getargs.codename=="lucid" or getargs.codename=="precise"): 
  if(sys.version[0]=="2"):
-  pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper";
+  pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper, dh-python";
  if(sys.version[0]=="3"):
-  pkgbuilddepends = "python3-setuptools, python3-all, python3-imaging, debhelper";
+  pkgbuilddepends = "python3-setuptools, python3-all, python3-imaging, debhelper, dh-python";
 pkgstandardsversion = "3.9.5";
 if(sys.version[0]=="2"):
  pkgpackage = "python-pyupcean";

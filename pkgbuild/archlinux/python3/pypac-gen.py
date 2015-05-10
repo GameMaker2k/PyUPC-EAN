@@ -150,12 +150,14 @@ if(sys.version[0]=="2"):
  pacpkg_string_temp += "url='"+setuppy_url+"'\n";
  pacpkg_string_temp += "arch=("+pkgarchitecture+")\n";
  pacpkg_string_temp += "license=('"+setuppy_license+"')\n";
+ pacpkg_string_temp += "groups=()\n";
  pacpkg_string_temp += "depends=("+pkgbuilddepends+")\n";
  pacpkg_string_temp += "optdepends=()\n";
  pacpkg_string_temp += "makedepends=("+pkgdepends+")\n";
  pacpkg_string_temp += "conflicts=()\n";
  pacpkg_string_temp += "replaces=('"+pkgoldname+"')\n";
  pacpkg_string_temp += "backup=()\n";
+ pacpkg_string_temp += "options=(!emptydirs)\n";
  pacpkg_string_temp += "install=''\n";
  pacpkg_string_temp += "source=('."+os.path.sep+pkgsource+"_"+pkgveralt+".orig.tar.gz')\n";
  pacpkg_string_temp += "md5sums=('"+filetargzmd5+"')\n";
@@ -170,7 +172,7 @@ if(sys.version[0]=="2"):
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "package() {\n";
  pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_${pkgver}.orig\"\n";
- pacpkg_string_temp += "  python2 ./setup.py install --root \"${pkgdir}\"\n";
+ pacpkg_string_temp += "  python2 ./setup.py install --root=\"${pkgdir} --optimize=1\"\n";
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "# vim:set ts=2 sw=2 et:\n";
 if(sys.version[0]=="3"):
@@ -184,12 +186,14 @@ if(sys.version[0]=="3"):
  pacpkg_string_temp += "url='"+setuppy_url+"'\n";
  pacpkg_string_temp += "arch=("+pkgarchitecture+")\n";
  pacpkg_string_temp += "license=('"+setuppy_license+"')\n";
+ pacpkg_string_temp += "groups=()\n";
  pacpkg_string_temp += "depends=("+pkgbuilddepends+")\n";
  pacpkg_string_temp += "optdepends=()\n";
  pacpkg_string_temp += "makedepends=("+pkgdepends+")\n";
  pacpkg_string_temp += "conflicts=()\n";
  pacpkg_string_temp += "replaces=('"+pkgoldname+"')\n";
  pacpkg_string_temp += "backup=()\n";
+ pacpkg_string_temp += "options=(!emptydirs)\n";
  pacpkg_string_temp += "install=''\n";
  pacpkg_string_temp += "source=('."+os.path.sep+pkgsource+"_"+pkgveralt+".orig.tar.gz')\n";
  pacpkg_string_temp += "md5sums=('"+filetargzmd5+"')\n";
@@ -204,7 +208,7 @@ if(sys.version[0]=="3"):
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "package() {\n";
  pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_${pkgver}.orig\"\n";
- pacpkg_string_temp += "  python3 ./setup.py install --root \"${pkgdir}\"\n";
+ pacpkg_string_temp += "  python3 ./setup.py install --root=\"${pkgdir} --optimize=1\"\n";
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "# vim:set ts=2 sw=2 et:\n";
 pacpkg_file_temp = open(pacpkg_pkgbuild_file, "w");
