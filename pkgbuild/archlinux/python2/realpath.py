@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 '''
     This program is free software; you can redistribute it and/or modify
@@ -27,6 +27,11 @@ if(__version_info__[3]==None):
 proname = "realpath";
 prover = __version__;
 profullname = proname+" "+prover;
+
+def which_exec(execfile):
+ for path in os.environ["PATH"].split(":"):
+  if os.path.exists(path + "/" + execfile):
+   return path + "/" + execfile;
 
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
 parser.add_argument("-v", "--version", action = "version", version = profullname);
