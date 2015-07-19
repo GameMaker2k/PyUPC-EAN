@@ -172,7 +172,7 @@ if(sys.version[0]=="2"):
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "package() {\n";
  pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_${pkgver}.orig\"\n";
- pacpkg_string_temp += "  python2 ./setup.py install --root=\"${pkgdir} --optimize=1\"\n";
+ pacpkg_string_temp += "  python2 ./setup.py install --root=\"${pkgdir}\" --optimize=1\n";
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "# vim:set ts=2 sw=2 et:\n";
 if(sys.version[0]=="3"):
