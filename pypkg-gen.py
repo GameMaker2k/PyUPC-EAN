@@ -52,6 +52,8 @@ if(getargs.distro=="debian" or getargs.distro=="ubuntu"):
  pypkgpath = os.path.realpath(getargs.source+os.path.sep+"pkgbuild"+os.path.sep+getargs.distro+os.path.sep+getpyver+os.path.sep+"pydeb-gen.sh");
  pypkgenlistp = subprocess.Popen([bashlocatout, pypkgpath, getargs.source, getargs.codename], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
  pypkgenout, pypkgenerr = pypkgenlistp.communicate();
+ if(sys.version[0]=="3"):
+  pypkgenout = pypkgenout.decode("utf-8");
  print(pypkgenout);
  pypkgenlistp.wait();
 
@@ -59,6 +61,8 @@ if(getargs.distro=="archlinux"):
  pypkgpath = os.path.realpath(getargs.source+os.path.sep+"pkgbuild"+os.path.sep+getargs.distro+os.path.sep+getpyver+os.path.sep+"pypac-gen.sh");
  pypkgenlistp = subprocess.Popen([bashlocatout, pypkgpath, getargs.source, getargs.codename], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
  pypkgenout, pypkgenerr = pypkgenlistp.communicate();
+ if(sys.version[0]=="3"):
+  pypkgenout = pypkgenout.decode("utf-8");
  print(pypkgenout);
  pypkgenlistp.wait();
 
@@ -66,5 +70,7 @@ if(getargs.distro=="redhat"):
  pypkgpath = os.path.realpath(getargs.source+os.path.sep+"pkgbuild"+os.path.sep+getargs.distro+os.path.sep+getpyver+os.path.sep+"pyrpm-gen.sh");
  pypkgenlistp = subprocess.Popen([bashlocatout, pypkgpath, getargs.source, getargs.codename], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
  pypkgenout, pypkgenerr = pypkgenlistp.communicate();
+ if(sys.version[0]=="3"):
+  pypkgenout = pypkgenout.decode("utf-8");
  print(pypkgenout);
  pypkgenlistp.wait();
