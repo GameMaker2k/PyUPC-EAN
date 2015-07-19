@@ -12,7 +12,7 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: realpath.py - Last Update: 4/23/2015 Ver. 0.0.5 RC 3 - Author: cooldude2k $
+    $FileInfo: which.py - Last Update: 4/23/2015 Ver. 0.0.5 RC 3 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -24,12 +24,17 @@ if(__version_info__[3]!=None):
 if(__version_info__[3]==None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2]);
 
-proname = "realpath";
+proname = "which";
 prover = __version__;
 profullname = proname+" "+prover;
 
+def which_exec(execfile):
+ for path in os.environ["PATH"].split(":"):
+  if os.path.exists(path + "/" + execfile):
+   return path + "/" + execfile;
+
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
 parser.add_argument("-v", "--version", action = "version", version = profullname);
-parser.add_argument("filepath", help = "enter a file name/path");
+parser.add_argument("filename", help = "enter a file name/path");
 getargs = parser.parse_args();
-print(os.path.realpath(getargs.filepath));
+print(which_exec(getargs.filename));

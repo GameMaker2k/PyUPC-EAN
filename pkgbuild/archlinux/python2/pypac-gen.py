@@ -208,7 +208,7 @@ if(sys.version[0]=="3"):
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "package() {\n";
  pacpkg_string_temp += "  cd \"${srcdir}/"+pkgsource+"_${pkgver}.orig\"\n";
- pacpkg_string_temp += "  python3 ./setup.py install --root=\"${pkgdir} --optimize=1\"\n";
+ pacpkg_string_temp += "  python3 ./setup.py install --root=\"${pkgdir}\" --optimize=1\n";
  pacpkg_string_temp += "}\n\n";
  pacpkg_string_temp += "# vim:set ts=2 sw=2 et:\n";
 pacpkg_file_temp = open(pacpkg_pkgbuild_file, "w");
