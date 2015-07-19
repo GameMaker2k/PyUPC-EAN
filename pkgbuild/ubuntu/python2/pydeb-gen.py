@@ -37,6 +37,11 @@ distnametoveralt = {'Warty Warthog': "4.10", 'Hoary Hedgehog': "5.04", 'Breezy B
 distvertonamealt = {'4.10': "Warty Warthog", '5.04': "Hoary Hedgehog", '5.10': "Breezy Badger", '6.06': "Dapper Drake", '6.10': "Edgy Eft", 
 '7.04': "Feisty Fawn", '7.10': "Gutsy Gibbon", '8.04': "Hardy Heron", '8.10': "Intrepid Ibex", '9.04': "Jaunty Jackalope", '9.10': "Karmic Koala", '10.04': "Lucid Lynx", '10.10': "Maverick Meerkat", '11.04': "Natty Narwhal", '11.10': "Oneiric Ocelot", '12.04': "Precise Pangolin", '12.10': "Quantal Quetzal", '13.04': "Raring Ringtail", '13.10': "Saucy Salamander", '14.04': "Trusty Tahr", '14.10': "Utopic Unicorn", '15.04': "Vivid Vervet", '15.10': "Wily Werewolf"}
 
+lmdistvertoname = {'1.0': "ada", '2.0': "barbara", '2.1': "bea", '2.2': "bianca", '3.0': "cassandra", '3.1': "celena", '4.0': "daryna", '5': "elyssa", '6': "felicia", '7': "gloria", '8': "helena", '9': "isadora", '10': "julia", '11': "katya", '12': "lisa", '13': "maya", '14': "nadia", '15': "olivia", '16': "petra", '17': "qiana", '17.1': "rebecca", '17.2': "rafaela"}
+lmdistvertonamealt = {'1.0': "Ada", '2.0': "Barbara", '2.1': "Bea", '2.2': "Bianca", '3.0': "Cassandra", '3.1': "Celena", '4.0': "Daryna", '5': "Elyssa", '6': "Felicia", '7': "Gloria", '8': "Helena", '9': "Isadora", '10': "Julia", '11': "Katya", '12': "Lisa", '13': "Maya", '14': "Nadia", '15': "Olivia", '16': "Petra", '17': "Qiana", '17.1': "Rebecca", '17.2': "Rafaela"}
+distlmnametouname = {"ada": "dapper", "barbara": "edgy", "bea": "edgy", "bianca": "edgy", "cassandra": "feisty", "celena": "feisty", "daryna": "gutsy", "elyssa": "hardy", "felicia": "intrepid", "gloria": "jaunty", "helena": "karmic", "isadora": "lucid", "julia": "maverick", "katya": "natty", "lisa": "oneiric", "maya": "precise", "nadia": "quantal", "olivia": "raring", "petra": "saucy", "qiana": "trusty", "rebecca": "trusty", "rafaela": "trusty"}
+distlmnametounamealt = {"Ada": "Dapper", "Barbara": "Edgy", "Bea": "Edgy", "Bianca": "Edgy", "Cassandra": "Feisty", "Celena": "Feisty", "Daryna": "Gutsy", "Elyssa": "Hardy", "Felicia": "Intrepid", "Gloria": "Jaunty", "Helena": "Karmic", "Isadora": "Lucid", "Julia": "Maverick", "Katya": "Natty", "Lisa": "Oneiric", "Maya": "Precise", "Nadia": "Quantal", "Olivia": "Raring", "Petra": "Saucy", "Qiana": "Trusty", "Rebecca": "Trusty", "Rafaela": "Trusty"}
+
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
 parser.add_argument("-v", "--version", action = "version", version = profullname);
 parser.add_argument("-s", "--source", default = os.path.realpath(os.getcwd()), help = "source dir");
@@ -52,6 +57,10 @@ if(not os.path.exists(getargs.source) or not os.path.isdir(getargs.source)):
  raise Exception("Could not find directory.");
 if(not os.path.exists(pkgsetuppy) or not os.path.isfile(pkgsetuppy)):
  raise Exception("Could not find setup.py in directory.");
+
+getargs.codename = distlmnametouname.get(getargs.codename, getargs.codename);
+getargs.codename = distlmnametounamealt.get(getargs.codename, getargs.codename);
+getargs.codename = getargs.codename.lower();
 
 debpkg_file_setuppy = open(pkgsetuppy, "r");
 debpkg_string_setuppy = debpkg_file_setuppy.read();
