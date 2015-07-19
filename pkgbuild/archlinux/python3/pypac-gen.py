@@ -157,7 +157,7 @@ if(sys.version[0]=="2"):
  pacpkg_string_temp += "conflicts=()\n";
  pacpkg_string_temp += "replaces=('"+pkgoldname+"')\n";
  pacpkg_string_temp += "backup=()\n";
- pacpkg_string_temp += "options=(!emptydirs)\n";
+ pacpkg_string_temp += "options=(!strip !emptydirs)\n";
  pacpkg_string_temp += "install=''\n";
  pacpkg_string_temp += "source=('."+os.path.sep+pkgsource+"_"+pkgveralt+".orig.tar.gz')\n";
  pacpkg_string_temp += "md5sums=('"+filetargzmd5+"')\n";
@@ -193,7 +193,7 @@ if(sys.version[0]=="3"):
  pacpkg_string_temp += "conflicts=()\n";
  pacpkg_string_temp += "replaces=('"+pkgoldname+"')\n";
  pacpkg_string_temp += "backup=()\n";
- pacpkg_string_temp += "options=(!emptydirs)\n";
+ pacpkg_string_temp += "options=(!strip !emptydirs)\n";
  pacpkg_string_temp += "install=''\n";
  pacpkg_string_temp += "source=('."+os.path.sep+pkgsource+"_"+pkgveralt+".orig.tar.gz')\n";
  pacpkg_string_temp += "md5sums=('"+filetargzmd5+"')\n";
