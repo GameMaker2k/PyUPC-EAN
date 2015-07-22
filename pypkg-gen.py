@@ -31,6 +31,7 @@ parser.add_argument("-v", "--version", action = "version", version = profullname
 parser.add_argument("-s", "--source", default = os.path.realpath(os.getcwd()), help = "source dir");
 parser.add_argument("-d", "--distro", default = "debian", help = "enter linux distribution name");
 parser.add_argument("-c", "--codename", default = "jessie", help = "enter release code name");
+parser.add_argument("-p", "--pyver", default = sys.version[0], help = "enter version of python to use");
 getargs = parser.parse_args();
 
 def which_exec(execfile):
@@ -43,10 +44,15 @@ getargs.source = os.path.realpath(getargs.source);
 getargs.codename = getargs.codename.lower();
 getargs.distro = getargs.distro.lower();
 
-if(sys.version[0]=="2"):
+if(getargs.pyver=="2"):
  getpyver = "python2";
-if(sys.version[0]=="3"):
+if(getargs.pyver=="3"):
  getpyver = "python3";
+if(getargs.pyver!="2" and getargs.pyver!="3"):
+ if(sys.version[0]=="2"):
+  getpyver = "python2";
+ if(sys.version[0]=="3"):
+  getpyver = "python3";
 
 if(getargs.distro=="debian" or getargs.distro=="ubuntu"):
  pypkgpath = os.path.realpath(getargs.source+os.path.sep+"pkgbuild"+os.path.sep+getargs.distro+os.path.sep+getpyver+os.path.sep+"pydeb-gen.sh");
