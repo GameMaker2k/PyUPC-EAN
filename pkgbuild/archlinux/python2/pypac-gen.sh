@@ -1,9 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-scriptdir="$(realpath $(dirname $(readlink -f $0)))"
+pythonexec="$(command -v python2)"
+if hash realpath 2>/dev/null; then
+ pyrealpath="$(command -v realpath)"
+ scriptdir="$(${pyrealpath} $(dirname $(readlink -f $0)))"
+else
+ scriptdir="$(dirname $(readlink -f $0))"
+ pyrealpath="${pythonexec} ${scriptdir}/realpath.py"
+ scriptdir="$(${pyrealpath} ${scriptdir})"
+ pyrealpath="${pythonexec} ${scriptdir}/realpath.py"
+fi
 pyscriptfile="${scriptdir}/pypac-gen.py"
 pyshellfile="${scriptdir}/pypac-gen.sh"
-pythonexec="$(which python2)"
 oldwd="$(pwd)"
 
 if [ $# -eq 0 ]; then
@@ -28,5 +36,5 @@ file -z -k "${pypacparentdir}/${pypactarname}"
 cd "${pypacdir}"
 ${pythonexec} "${pyscriptfile}" -s "${pypacdir}"
 cd "${pypacparentdir}"
-mv -v "${pypacparentdir}/${pypactarname}" "$(realpath "${pypacdir}/py2upc-ean")/${pypactarname}"
+mv -v "${pypacparentdir}/${pypactarname}" "$(${pyrealpath} "${pypacdir}/py2upc-ean")/${pypactarname}"
 cd "${oldwd}"

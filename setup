@@ -1,19 +1,19 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 if [ ! -n "${RMFILE}" ]; then
-RMFILE="$(which rm) -rf"
+RMFILE="$(command -v rm) -rf"
 fi
 
 if [ ! -n "${PYTHON}" ]; then
-PYTHON="$(which python)"
+PYTHON="$(command -v python)"
 fi
 
 if [ ! -n "${MKDIR}" ]; then
-MKDIR="$(which mkdir) -v"
+MKDIR="$(command -v mkdir) -v"
 fi
 
 if [ ! -n "${INSTALL}" ]; then
-INSTALL="$(which install) -v -c"
+INSTALL="$(command -v install) -v -c"
 fi
 
 if [ ! -n "${PREFIX}" ]; then

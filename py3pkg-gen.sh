@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-pythonexec="$(which python3)"
+pythonexec="$(command -v python3)"
 ${pythonexec} "./pypkg-gen.py" "$@"
