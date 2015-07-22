@@ -84,7 +84,7 @@ if(sys.version[0]=="3"):
  pkgsource = "py3upc-ean";
 pkgupstreamname = "PyUPC-EAN";
 pkgveralt = setuppy_verinfo[0]+"."+setuppy_verinfo[1]+"."+setuppy_verinfo[2];
-pkgver = pkgveralt+"~rc"+setuppy_verinfo[3];
+pkgver = pkgveralt+"rc"+setuppy_verinfo[3]+"~"+getargs.codename+setuppy_verinfo[3];
 pkgdistname = getargs.codename;
 pkgurgency = "urgency=low";
 pkgauthorname = setuppy_author;

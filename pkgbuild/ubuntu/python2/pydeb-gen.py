@@ -84,7 +84,7 @@ if(sys.version[0]=="3"):
  pkgsource = "py3upc-ean";
 pkgupstreamname = "PyUPC-EAN";
 pkgveralt = setuppy_verinfo[0]+"."+setuppy_verinfo[1]+"."+setuppy_verinfo[2];
-pkgver = pkgveralt+"~rc"+setuppy_verinfo[3];
+pkgver = pkgveralt+"rc"+setuppy_verinfo[3]+"~"+getargs.codename+setuppy_verinfo[3];
 pkgdistname = getargs.codename;
 pkgurgency = "urgency=low";
 pkgauthorname = setuppy_author;
@@ -98,7 +98,7 @@ pkghomepage = setuppy_url;
 pkgsection = "python";
 pkgpriority = "optional";
 if(sys.version[0]=="2"):
- pkgbuilddepends = "python-setuptools, python-all, python-pil, debhelpe, dh-python, devscripts";
+ pkgbuilddepends = "python-setuptools, python-all, python-pil, debhelper, dh-python, devscripts";
 if(sys.version[0]=="3"):
  pkgbuilddepends = "python3-setuptools, python3-all, python3-pil, debhelper, dh-python, devscripts";
 if(getargs.codename=="lucid" or getargs.codename=="precise"): 
