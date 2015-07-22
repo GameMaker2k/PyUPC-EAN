@@ -54,6 +54,17 @@ if(getargs.pyver!="2" and getargs.pyver!="3"):
  if(sys.version[0]=="3"):
   getpyver = "python3";
 
+get_pkgbuild_dir = os.path.realpath(getargs.source+os.path.sep+"pkgbuild");
+get_pkgbuild_dist_pre_list = [d for d in os.listdir(get_pkgbuild_dir) if os.path.isdir(os.path.join(get_pkgbuild_dir, d))];
+get_pkgbuild_dist_list = [];
+for dists in get_pkgbuild_dist_pre_list:
+ tmp_pkgbuild_python = os.path.realpath(get_pkgbuild_dir+os.path.sep+dists+os.path.sep+getpyver);
+ if(os.path.exists(tmp_pkgbuild_python) and os.path.isdir(tmp_pkgbuild_python)):
+  get_pkgbuild_dist_list.append(dists);
+if(not getargs.distro in get_pkgbuild_dist_list):
+ print("Could not build for "+getargs.distro+" distro.");
+ sys.exit();
+
 if(getargs.distro=="debian" or getargs.distro=="ubuntu"):
  pypkgpath = os.path.realpath(getargs.source+os.path.sep+"pkgbuild"+os.path.sep+getargs.distro+os.path.sep+getpyver+os.path.sep+"pydeb-gen.sh");
  pypkgenlistp = subprocess.Popen([bashlocatout, pypkgpath, getargs.source, getargs.codename], stdout=subprocess.PIPE, stderr=subprocess.PIPE);

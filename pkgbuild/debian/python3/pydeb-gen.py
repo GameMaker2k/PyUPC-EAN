@@ -31,7 +31,9 @@ buildsystem = "pybuild";
 
 distupnametover = {'9.0': "Stretch", '8.0': "Jessie", '7.0': "Wheezy", '6.0': "Squeeze", '5.0': "Lenny", '4.0': "Etch", '3.1': "Sarge", '3.0': "Woody", '2.2': "Potato", '2.1': "Slink", '2.0': "Hamm", '1.3': "Bo", '1.2': "Rex", '1.1': "Buzz"};
 distnametover = {'9.0': "stretch", '8.0': "jessie", '7.0': "wheezy", '6.0': "squeeze", '5.0': "lenny", '4.0': "etch", '3.1': "sarge", '3.0': "woody", '2.2': "potato", '2.1': "slink", '2.0': "hamm", '1.3': "bo", '1.2': "rex", '1.1': "buzz"};
+distnamelist = distnametover.values();
 distvertoname = {'stretch': '9.0', 'jessie': "8.0", 'wheezy': "7.0", 'squeeze': "6.0", 'lenny': "5.0", 'etch': "4.0", 'sarge': "3.1", 'woody': "3.0", 'potato': "2.2", 'slink': "2.1", 'hamm': "2.0", 'bo': "1.3", 'rex': "1.2", 'buzz': "1.1"};
+distnamelistalt = distvertoname.keys();
 
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
 parser.add_argument("-v", "--version", action = "version", version = profullname);
@@ -48,6 +50,11 @@ if(not os.path.exists(getargs.source) or not os.path.isdir(getargs.source)):
  raise Exception("Could not find directory.");
 if(not os.path.exists(pkgsetuppy) or not os.path.isfile(pkgsetuppy)):
  raise Exception("Could not find setup.py in directory.");
+
+getargs.codename = getargs.codename.lower();
+if(not getargs.codename in distnamelist):
+ print("Could not build for debian "+getargs.distro+" codename.");
+ sys.exit();
 
 debpkg_file_setuppy = open(pkgsetuppy, "r");
 debpkg_string_setuppy = debpkg_file_setuppy.read();
