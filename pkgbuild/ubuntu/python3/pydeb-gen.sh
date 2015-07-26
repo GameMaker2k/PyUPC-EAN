@@ -12,7 +12,7 @@ else
 fi
 pyscriptfile="${scriptdir}/pydeb-gen.py"
 pyshellfile="${scriptdir}/pydeb-gen.sh"
-codename="trusty"
+codename="vivid"
 oldwd="$(pwd)"
 
 if [ $# -eq 0 ]; then

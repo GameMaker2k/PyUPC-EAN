@@ -44,6 +44,11 @@ lmdistvertonamealt = {'1.0': "Ada", '2.0': "Barbara", '2.1': "Bea", '2.2': "Bian
 distlmnametouname = {"ada": "dapper", "barbara": "edgy", "bea": "edgy", "bianca": "edgy", "cassandra": "feisty", "celena": "feisty", "daryna": "gutsy", "elyssa": "hardy", "felicia": "intrepid", "gloria": "jaunty", "helena": "karmic", "isadora": "lucid", "julia": "maverick", "katya": "natty", "lisa": "oneiric", "maya": "precise", "nadia": "quantal", "olivia": "raring", "petra": "saucy", "qiana": "trusty", "rebecca": "trusty", "rafaela": "trusty"}
 distlmnametounamealt = {"Ada": "Dapper", "Barbara": "Edgy", "Bea": "Edgy", "Bianca": "Edgy", "Cassandra": "Feisty", "Celena": "Feisty", "Daryna": "Gutsy", "Elyssa": "Hardy", "Felicia": "Intrepid", "Gloria": "Jaunty", "Helena": "Karmic", "Isadora": "Lucid", "Julia": "Maverick", "Katya": "Natty", "Lisa": "Oneiric", "Maya": "Precise", "Nadia": "Quantal", "Olivia": "Raring", "Petra": "Saucy", "Qiana": "Trusty", "Rebecca": "Trusty", "Rafaela": "Trusty"}
 
+ubuntu_oldstable = "utopic";
+ubuntu_stable = "vivid";
+ubuntu_testing = "wily";
+linuxmint_ubuntu_stable = "trusty";
+
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
 parser.add_argument("-v", "--version", action = "version", version = profullname);
 parser.add_argument("-s", "--source", default = os.path.realpath(os.getcwd()), help = "source dir");

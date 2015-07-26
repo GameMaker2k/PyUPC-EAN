@@ -65,7 +65,7 @@ if(not getargs.distro in get_pkgbuild_dist_list):
  print("Could not build for "+getargs.distro+" distro.");
  sys.exit();
 
-if(getargs.distro=="debian" or getargs.distro=="ubuntu"):
+if(getargs.distro=="debian" or getargs.distro=="ubuntu" or getargs.distro=="linuxmint"):
  pypkgpath = os.path.realpath(getargs.source+os.path.sep+"pkgbuild"+os.path.sep+getargs.distro+os.path.sep+getpyver+os.path.sep+"pydeb-gen.sh");
  pypkgenlistp = subprocess.Popen([bashlocatout, pypkgpath, getargs.source, getargs.codename], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
  pypkgenout, pypkgenerr = pypkgenlistp.communicate();
