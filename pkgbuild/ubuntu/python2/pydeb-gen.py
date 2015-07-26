@@ -56,7 +56,7 @@ parser.add_argument("-g", "--getsource", action = "store_true", help = "get sour
 parser.add_argument("-p", "--getparent", action = "store_true", help = "get parent dir");
 parser.add_argument("-t", "--gettarname", action = "store_true", help = "get tar name");
 parser.add_argument("-d", "--getdirname", action = "store_true", help = "get dir name");
-parser.add_argument("-c", "--codename", default = "trusty", help = "enter release code name");
+parser.add_argument("-c", "--codename", default = ubuntu_stable, help = "enter release code name");
 getargs = parser.parse_args();
 getargs.source = os.path.realpath(getargs.source);
 pkgsetuppy = os.path.realpath(getargs.source+os.path.sep+"setup.py");
