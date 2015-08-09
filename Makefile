@@ -1,8 +1,10 @@
+#!/usr/bin/make -f
+
 PREFIX?="/usr/local"
 DESTDIR?="/"
 CMAKE?="/usr/bin/cmake"
 MAKE?="/usr/bin/make"
-PYTHONTWO?="/usr/bin/python"
+PYTHONTWO?="/usr/bin/python2"
 PYTHONTHREE?="/usr/bin/python3"
 .PHONY: all install installnoclean clean pythontwoinst pythonthreeinst pythontwoinstnoclean pythonthreeinstnoclean pythontwo pythonthree pythontwonoclean pythonthreenoclean 
 
