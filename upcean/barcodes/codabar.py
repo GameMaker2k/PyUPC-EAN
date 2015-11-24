@@ -95,11 +95,11 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
   upcean.barcodes.prepil.drawColorLine(upc_img, 8, 4, 8, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 9, 4, 9, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 10, 4, 10, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 11, 4, 11, LineSize, barcolor[0]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 12, 4, 12, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 11, 4, 11, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 12, 4, 12, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 13, 4, 13, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 14, 4, 14, LineSize, barcolor[0]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 15, 4, 15, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 14, 4, 14, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 15, 4, 15, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 16, 4, 16, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 17, 4, 17, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 18, 4, 18, LineSize, barcolor[0]);
@@ -116,11 +116,11 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
   upcean.barcodes.prepil.drawColorLine(upc_img, 8, 4, 8, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 9, 4, 9, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 10, 4, 10, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 11, 4, 11, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 12, 4, 12, LineSize, barcolor[0]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 11, 4, 11, LineSize, barcolor[0]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 12, 4, 12, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 13, 4, 13, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 14, 4, 14, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 15, 4, 15, LineSize, barcolor[0]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 14, 4, 14, LineSize, barcolor[0]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 15, 4, 15, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 16, 4, 16, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 17, 4, 17, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 18, 4, 18, LineSize, barcolor[0]);
@@ -219,11 +219,11 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  if(pre_upc_matches[2]=="B" or pre_upc_matches[2]=="N"):
   upcean.barcodes.prepil.drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, barcolor[0]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, barcolor[0]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, barcolor[2]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, barcolor[0]);
@@ -242,11 +242,11 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  if(pre_upc_matches[2]=="C" or pre_upc_matches[2]=="*"):
   upcean.barcodes.prepil.drawColorLine(upc_img, 21 + upc_size_add, 4, 21 + upc_size_add, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 22 + upc_size_add, 4, 22 + upc_size_add, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, barcolor[0]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, barcolor[0]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, barcolor[2]);
-  upcean.barcodes.prepil.drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, barcolor[0]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, barcolor[0]);
+  upcean.barcodes.prepil.drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, barcolor[2]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 29 + upc_size_add, 4, 29 + upc_size_add, LineSize, barcolor[0]);
   upcean.barcodes.prepil.drawColorLine(upc_img, 30 + upc_size_add, 4, 30 + upc_size_add, LineSize, barcolor[0]);
