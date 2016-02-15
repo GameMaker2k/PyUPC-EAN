@@ -9,10 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2016 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2016 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pydeb-gen.py - Last Update: 4/27/2015 Ver. 0.1.7 RC 1 - Author: cooldude2k $
+    $FileInfo: pydeb-gen.py - Last Update: 2/15/2016 Ver. 0.1.7 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -197,11 +197,11 @@ debpkg_string_temp = "Format: http://www.debian.org/doc/packaging-manuals/copyri
 debpkg_string_temp += "Upstream-Name: "+pkgupstreamname+"\n";
 debpkg_string_temp += "Source: "+pkghomepage+"\n\n";
 debpkg_string_temp += "Files: *\n";
-debpkg_string_temp += "Copyright: Copyright 2011-2015 "+pkgauthor+"\n";
+debpkg_string_temp += "Copyright: Copyright 2011-2016 "+pkgauthor+"\n";
 debpkg_string_temp += "License: BSD\n\n";
 debpkg_string_temp += "License: BSD\n";
 debpkg_string_temp += "		    Revised BSD License\n\n";
-debpkg_string_temp += "Copyright (C) 2011-2015 Game Maker 2k. \n";
+debpkg_string_temp += "Copyright (C) 2011-2016 Game Maker 2k. \n";
 debpkg_string_temp += "All rights reserved.\n\n";
 debpkg_string_temp += "Redistribution and use in source and binary forms, with or without\n";
 debpkg_string_temp += "modification, are permitted provided that the following conditions are met:\n\n";

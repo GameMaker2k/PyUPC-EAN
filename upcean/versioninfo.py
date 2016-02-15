@@ -7,18 +7,18 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2016 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2016 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: versioninfo.py - Last Update: 4/13/2015 Ver. 2.7.11 RC 3 - Author: cooldude2k $
+    $FileInfo: versioninfo.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import datetime;
 
 getcuryear = datetime.date.today().year;
-if(getcuryear <= 2014):
- getcuryear = 2015;
+if(getcuryear <= 2015):
+ getcuryear = 2016;
 getcuryear = str(getcuryear);
 __author__ = "Kazuki Przyborowski";
 __copyright__ = "(C) Game Maker 2k @ 2011-"+getcuryear;
@@ -28,7 +28,7 @@ __license__ = "Revised BSD License";
 __license_string__ = """-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 		    Revised BSD License
 
-Copyright (C) 2011-2015 Game Maker 2k. 
+Copyright (C) 2011-2016 Game Maker 2k. 
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@ __email__ = "kazuki.przyborowski@gmail.com";
 __status__ = "Production";
 __project__ = "PyUPC-EAN";
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN";
-__version_info__ = (2, 7, 11, "RC 3");
+__version_info__ = (2, 7, 12, "RC 1");
 __build_time__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};
 __build_time_utc__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};
 __build_python_info__ = {"python_branch": None, "python_build": None, "python_compiler": None, "python_implementation": None, "python_revision": None, "python_version": None, "python_version_tuple": None, "release": None, "system": None, "uname": None, "machine": None, "node": None, "platform": None, "processor": None, "version": None, "java_ver": None, "win32_ver": None, "mac_ver": None, "linux_distribution": None, "libc_ver": None};
@@ -88,7 +88,7 @@ def version_info():
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": __version_info__[3]};
  if(__version_info__[3] is None):
   return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None};
-__version_date_info__ = (2015, 4, 13, "RC 2");
+__version_date_info__ = (2016, 2, 15, "RC 1");
 def version_date():
  if(__version_date_info__[3] is not None):
   return {"year":__version_date_info__[0], "month": __version_date_info__[1], "day": __version_date_info__[2], "release": __version_date_info__[3]};

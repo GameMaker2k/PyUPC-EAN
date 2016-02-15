@@ -12,7 +12,7 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: httpd.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
+    $FileInfo: httpd.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1  - Author: cooldude2k $
 '''
 
 import tempfile, uuid, re, os, sys, cherrypy, upcean, argparse, time, datetime;
@@ -22,7 +22,7 @@ if(sys.version[0]=="2"):
   from cStringIO import StringIO;
  except ImportError:
   from StringIO import StringIO;
-if(sys.version[0]=="3"):
+if(sys.version[0]>="3"):
  from io import StringIO, BytesIO;
 parser = argparse.ArgumentParser(description="A web server that draws barcodes with PyUPC-EAN powered by CherryPy web server.");
 parser.add_argument("--port", "--port-number", default=8080, help="port number to use for server.");
@@ -82,7 +82,7 @@ class GenerateIndexPage(object):
  def generate(self, bctype, bcsize, bcrotate, imgtype):
   if(sys.version[0]=="2"):
    imgdata = StringIO();
-  if(sys.version[0]=="3"):
+  if(sys.version[0]>="3"):
    imgdata = BytesIO();
   try:
    bctype;
@@ -136,7 +136,7 @@ class GenerateBarcodes(object):
  def index(self, **params):
   if(sys.version[0]=="2"):
    imgdata = StringIO();
-  if(sys.version[0]=="3"):
+  if(sys.version[0]>="3"):
    imgdata = BytesIO();
   try:
    params['bctype'];
@@ -191,7 +191,7 @@ class GenerateBarcodes(object):
  def generate(self, bctype, bcsize, bcrotate, imgtype):
   if(sys.version[0]=="2"):
    imgdata = StringIO();
-  if(sys.version[0]=="3"):
+  if(sys.version[0]>="3"):
    imgdata = BytesIO();
   try:
    bctype;

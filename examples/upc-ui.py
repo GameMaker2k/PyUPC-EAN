@@ -12,7 +12,7 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -20,7 +20,7 @@ import re, os, sys, tempfile, upcean;
 if(sys.version[0]=="2"):
  import Tkinter, tkMessageBox, tkFileDialog, tkColorChooser, tkSimpleDialog;
  from Tkinter import *;
-if(sys.version[0]=="3"):
+if(sys.version[0]>="3"):
  import tkinter as Tkinter;
  from tkinter import messagebox as tkMessageBox;
  from tkinter import filedialog as tkFileDialog;

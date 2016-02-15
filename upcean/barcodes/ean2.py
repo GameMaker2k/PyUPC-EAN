@@ -7,10 +7,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2016 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2016 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -152,7 +152,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
     new_upc_img.save(sys.stdout, outfileext);
    except:
     return False;
- if(sys.version[0]=="3"):
+ if(sys.version[0]>="3"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     new_upc_img.save(sys.stdout.buffer, outfileext);
@@ -190,7 +190,7 @@ def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    upc_preimg.save(sys.stdout, outfileext);
- if(sys.version[0]=="3"):
+ if(sys.version[0]>="3"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    upc_preimg.save(sys.stdout.buffer, outfileext);
  if(outfile!="-" and outfile!="" and outfile!=" "):

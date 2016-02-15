@@ -7,10 +7,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2016 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2016 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getsfname.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
+    $FileInfo: getsfname.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -20,7 +20,7 @@ def get_save_filename(outfile):
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
    oldoutfile = outfile[:];
- if(sys.version[0]=="3"):
+ if(sys.version[0]>="3"):
   if(isinstance(outfile, str)):
    oldoutfile = outfile[:];
  if(isinstance(outfile, tuple)):
@@ -54,7 +54,7 @@ def get_save_filename(outfile):
    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM"):
     outfileext = "PNG";
    return (outfile, outfileext.upper());   
- if(sys.version[0]=="3"):
+ if(sys.version[0]>="3"):
   if(isinstance(oldoutfile, str)):
    if(outfile!="-" and outfile!="" and outfile!=" "):
     if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
