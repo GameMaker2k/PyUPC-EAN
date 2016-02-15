@@ -61,7 +61,7 @@ verinfofile.write(verinfodata);
 verinfofile.close();
 setup(
  name = 'PyUPC-EAN',
- version = '2.7.11',
+ version = '2.7.12',
  author = 'Kazuki Przyborowski',
  author_email = 'kazuki.przyborowski@gmail.com',
  maintainer = 'Kazuki Przyborowski',
