@@ -89,6 +89,8 @@ def get_gs1_prefix(upc):
   return "Belarus";
  if(re.findall("^(482)", upc)):
   return "Ukraine";
+ if(re.findall("^(483)", upc)):
+  return "Turkmenistan";
  if(re.findall("^(484)", upc)):
   return "Moldova";
  if(re.findall("^(485)", upc)):
@@ -114,11 +116,11 @@ def get_gs1_prefix(upc):
  if(re.findall("^(530)", upc)):
   return "Albania";
  if(re.findall("^(531)", upc)):
-  return "F.Y.R.O. Macedonia";
+  return "FYR Macedonia";
  if(re.findall("^(535)", upc)):
   return "Malta";
  if(re.findall("^(539)", upc)):
-  return "Ireland";
+  return "Republic of Ireland";
  if(re.findall("^(54[0-9])", upc)):
   return "Belgium and Luxembourg";
  if(re.findall("^(560)", upc)):
@@ -155,10 +157,14 @@ def get_gs1_prefix(upc):
   return "C\u00f4te d'Ivoire";
  if(re.findall("^(619)", upc)):
   return "Tunisia";
+ if(re.findall("^(620)", upc)):
+  return "Tanzania";
  if(re.findall("^(621)", upc)):
   return "Syria";
  if(re.findall("^(622)", upc)):
   return "Egypt";
+ if(re.findall("^(623)", upc)):
+  return "Brunei";
  if(re.findall("^(624)", upc)):
   return "Libya";
  if(re.findall("^(625)", upc)):
@@ -273,7 +279,9 @@ def get_gs1_prefix(upc):
   return "Malaysia";
  if(re.findall("^(958)", upc)):
   return "Macau";
- if(re.findall("^(96[0-9])", upc)):
+ if(re.findall("^(960)", upc)):
+  return "GS1 UK: GTIN-8 allocations";
+ if(re.findall("^(96[1-9])", upc)):
   return "GS1 Global Office: GTIN-8 allocations";
  if(re.findall("^(977)", upc)):
   return "Serial publications (ISSN)";
