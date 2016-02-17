@@ -1,4 +1,4 @@
-PyUPC-EAN ======
+# PyUPC-EAN #
 
 *Python Barcode Library*
 
