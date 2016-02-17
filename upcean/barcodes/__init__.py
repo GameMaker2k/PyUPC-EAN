@@ -39,3 +39,4 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from upcean.barcodes.barcode import *;
 from upcean.barcodes.shortcuts import *;
 from upcean.barcodes.files import *;
+from upcean.barcodes.downloader import *;
