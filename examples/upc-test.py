@@ -3,9 +3,10 @@
      Code From: http://code.activestate.com/lists/python-list/376068/
      Code From: https://mail.python.org/pipermail/python-list/2004-January/239664.html
      Code From: http://compgroups.net/comp.lang.python/upc-ean-barcode-script/1631450
-         $FileInfo: upc-test.py - Last Update: 1/15/2015 Ver. 2.7.10 RC 1  - Author: cooldude2k $
+         $FileInfo: upc-test.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1  - Author: alisonken11 $
 '''
 
+from __future__ import absolute_import, division, print_function, unicode_literals;
 import upcean
 
 # Below codes taken from http://www.barcodeisland.com examples
@@ -43,13 +44,13 @@ a = { 0: '012000007897',
       13: '012911000079',
       14: '012911000086' }
 
-print 'checking upca2e ...'
+print('checking upca2e ...')
 for i in a.keys():
       t1=a[i]
       t2=upcean.convert.convert_barcode("upca", "upce", t1)
       ip=str(i).zfill(2)
-      print 'key ', ip, ':', t1+" ", upcean.validate.validate_checksum("upca", t1)
-      print 'upce', ip, ':', t2+"     ", upcean.validate.validate_checksum("upce", t2)
+      print('key ', ip, ':', t1+" ", upcean.validate.validate_checksum("upca", t1))
+      print('upce', ip, ':', t2+"     ", upcean.validate.validate_checksum("upce", t2))
 
 print
 print 'Checking upce2a ...'
@@ -57,5 +58,5 @@ for i in e.keys():
       t1=e[i]
       t2=upcean.convert.convert_barcode("upce", "upca", t1)
       ip=str(i).zfill(2)
-      print 'key ', ip, ':', t1+"     ", upcean.validate.validate_checksum("upce", t1)
-      print 'upca', ip, ':', t2+" ", upcean.validate.validate_checksum("upca", t2)
+      print('key ', ip, ':', t1+"     ", upcean.validate.validate_checksum("upce", t1))
+      print('upca', ip, ':', t2+" ", upcean.validate.validate_checksum("upca", t2))
