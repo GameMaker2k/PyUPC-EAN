@@ -12,7 +12,7 @@
     Copyright 2011-2014 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2014 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: setup.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1 - Author: cooldude2k $
+    $FileInfo: setup.py - Last Update: 3/1/2016 Ver. 2.7.13 RC 1 - Author: cooldude2k $
 '''
 
 import re, os, sys, time, datetime, platform, pkg_resources;

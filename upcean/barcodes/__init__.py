@@ -10,7 +10,7 @@
     Copyright 2011-2016 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2016 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: __init__.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1 - Author: cooldude2k $
+    $FileInfo: __init__.py - Last Update: 3/1/2016 Ver. 2.7.13 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -39,4 +39,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from upcean.barcodes.barcode import *;
 from upcean.barcodes.shortcuts import *;
 from upcean.barcodes.files import *;
+'''
 from upcean.barcodes.downloader import *;
+'''
