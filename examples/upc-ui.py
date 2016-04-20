@@ -12,7 +12,7 @@
     Copyright 2011-2015 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2015 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 2/15/2016 Ver. 2.7.12 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 4/20/2016 Ver. 2.7.13 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
