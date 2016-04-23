@@ -14,7 +14,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, time, datetime, argparse, subprocess;
+import re, os, sys, time, platform, datetime, argparse, subprocess;
 
 __version_info__ = (0, 1, 7, "rc1");
 if(__version_info__[3]!=None):
@@ -26,11 +26,20 @@ proname = "pypkg-gen";
 prover = __version__;
 profullname = proname+" "+prover;
 
+getlinuxdist = platform.linux_distribution();
+setdistroname = "debian";
+setdistrocname = "jessie";
+if(getlinuxdist[0].lower()=="debian" or getlinuxdist[0].lower()=="ubuntu" or getlinuxdist[0].lower()=="linuxmint"):
+ setdistroname = getlinuxdist[0].lower();
+ setdistrocname = getlinuxdist[2].lower();
+if(getlinuxdist[0].lower()=="archlinux"):
+ setdistroname = getlinuxdist[0].lower();
+ setdistrocname = None;
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
 parser.add_argument("-v", "--version", action = "version", version = profullname);
 parser.add_argument("-s", "--source", default = os.path.realpath(os.getcwd()), help = "source dir");
-parser.add_argument("-d", "--distro", default = "debian", help = "enter linux distribution name");
-parser.add_argument("-c", "--codename", default = "jessie", help = "enter release code name");
+parser.add_argument("-d", "--distro", default = setdistroname, help = "enter linux distribution name");
+parser.add_argument("-c", "--codename", default = setdistrocname, help = "enter release code name");
 parser.add_argument("-p", "--pyver", default = sys.version[0], help = "enter version of python to use");
 getargs = parser.parse_args();
 
