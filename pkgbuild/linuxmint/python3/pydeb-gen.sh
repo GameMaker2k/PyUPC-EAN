@@ -10,11 +10,11 @@ else
  pyrealpath="${pythonexec} ${scriptdir}/realpath.py"
  scriptdir="$(${pyrealpath} ${scriptdir})"
  pyrealpath="${pythonexec} ${scriptdir}/realpath.py"
- uscriptdir="$(${pyrealpath} $(dirname $(readlink -f $0/))/../../ubuntu/python3)"
+ uscriptdir="$(${pyrealpath} $(dirname $(readlink -f $0))/../../ubuntu/python2/)"
 fi
 pyscriptfile="${uscriptdir}/pydeb-gen.py"
 pyshellfile="${uscriptdir}/pydeb-gen.sh"
-codename="trusty"
+codename="xenial"
 
 if [ $# -eq 0 ]; then
  ${bashexec} "${pyshellfile}"

@@ -14,7 +14,7 @@ else
 fi
 pyscriptfile="${uscriptdir}/pydeb-gen.py"
 pyshellfile="${uscriptdir}/pydeb-gen.sh"
-codename="trusty"
+codename="xenial"
 
 if [ $# -eq 0 ]; then
  ${bashexec} "${pyshellfile}"
