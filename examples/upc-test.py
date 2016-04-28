@@ -53,7 +53,7 @@ for i in a.keys():
       print('upce', ip, ':', t2+"     ", upcean.validate.validate_checksum("upce", t2))
 
 print
-print 'Checking upce2a ...'
+print('Checking upce2a ...')
 for i in e.keys():
       t1=e[i]
       t2=upcean.convert.convert_barcode("upce", "upca", t1)
