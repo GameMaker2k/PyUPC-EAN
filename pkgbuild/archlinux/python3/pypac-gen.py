@@ -18,7 +18,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, time, datetime, argparse, hashlib, subprocess, json;
 
-__version_info__ = (0, 1, 7, "rc1");
+__version_info__ = (0, 2, 0, "rc1");
 if(__version_info__[3]!=None):
  __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+"+"+str(__version_info__[3]);
 if(__version_info__[3]==None):

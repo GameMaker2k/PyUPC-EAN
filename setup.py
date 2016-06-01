@@ -62,10 +62,10 @@ pymodule['license'] = 'Revised BSD License';
 pymodule['keywords'] = 'barcode barcodegenerator barcodes codabar msi code11 code-11 code39 code-39 code93 code-93 ean ean13 ean-13 ean2 ean-2 ean5 ean-5 ean8 ean-8 itf itf14 itf-14 stf upc upca upc-a upce upc-e';
 pymodule['url'] = 'https://github.com/GameMaker2k/PyUPC-EAN';
 pymodule['downloadurl'] = 'https://github.com/GameMaker2k/PyUPC-EAN/archive/master.tar.gz';
-pymodule['packages'] = find_packages(),
-pymodule['packagedata'] = {'upcean': ['*.otf', '*.ttf', '*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc'], 'upcean/fonts': ['*.otf', '*.ttf'], 'upcean/xml': ['*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc']},
-pymodule['includepackagedata'] = True,
-pymodule['installrequires'] = [install_requires],
+pymodule['packages'] = find_packages();
+pymodule['packagedata'] = {'upcean': ['*.otf', '*.ttf', '*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc'], 'upcean/fonts': ['*.otf', '*.ttf'], 'upcean/xml': ['*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc']};
+pymodule['includepackagedata'] = True;
+pymodule['installrequires'] = [install_requires];
 pymodule['longdescription'] = 'PyUPC-EAN is a barcode library/module for Python. It supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.';
 pymodule['platforms'] = 'OS Independent';
 pymodule['zipsafe'] = False;
@@ -94,7 +94,7 @@ pymodule['classifiers'] = [
   'Topic :: Utilities',
   'Topic :: Software Development',
   'Topic :: Software Development :: Libraries',
-  'Topic :: Software Development :: Libraries :: Python Modules',
+  'Topic :: Software Development :: Libraries :: Python Modules'
  ];
 if(sys.argv[1]=="versioninfo" or sys.argv[1]=="getversioninfo"):
  import json;
