@@ -64,6 +64,8 @@ if(not getargs.codename in distnamelist):
 
 pypkgenlistp = subprocess.Popen([pyexecpath, pkgsetuppy, "getversioninfo"], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
 pypkgenout, pypkgenerr = pypkgenlistp.communicate();
+if(sys.version[0]=="3"):
+ pypkgenout = pypkgenout.decode('utf-8');
 pymodule = json.loads(pypkgenout);
 setuppy_verinfo = pymodule['versionlist'];
 setuppy_author = pymodule['author'];
