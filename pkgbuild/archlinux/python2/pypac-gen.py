@@ -12,11 +12,11 @@
     Copyright 2011-2016 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2016 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pypac-gen.py - Last Update: 2/15/2016 Ver. 0.1.7 RC 1 - Author: cooldude2k $
+    $FileInfo: pypac-gen.py - Last Update: 6/1/2016 Ver. 0.2.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, time, datetime, argparse, hashlib;
+import re, os, sys, time, datetime, argparse, hashlib, subprocess, json;
 
 __version_info__ = (0, 1, 7, "rc1");
 if(__version_info__[3]!=None):
@@ -38,26 +38,27 @@ parser.add_argument("-d", "--getdirname", action = "store_true", help = "get dir
 getargs = parser.parse_args();
 getargs.source = os.path.realpath(getargs.source);
 pkgsetuppy = os.path.realpath(getargs.source+os.path.sep+"setup.py");
+pyexecpath = os.path.realpath(sys.executable);
 if(not os.path.exists(getargs.source) or not os.path.isdir(getargs.source)):
  raise Exception("Could not find directory.");
 if(not os.path.exists(pkgsetuppy) or not os.path.isfile(pkgsetuppy)):
  raise Exception("Could not find setup.py in directory.");
 
-pacpkg_file_setuppy = open(pkgsetuppy, "r");
-pacpkg_string_setuppy = pacpkg_file_setuppy.read();
-setuppy_verinfo = re.findall("Ver\. ([0-9]+)\.([0-9]+)\.([0-9]+) RC ([0-9]+)", str(pacpkg_string_setuppy))[0];
-setuppy_author = re.findall(" author \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_authoremail = re.findall(" author_email \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_maintainer = re.findall(" maintainer \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_maintaineremail = re.findall(" maintainer_email \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_description = re.findall(" description \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_license = re.findall(" license \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_keywords = re.findall(" keywords \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_url = re.findall(" url \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_downloadurl = re.findall(" download_url \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_longdescription = re.findall(" long_description \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-setuppy_platforms = re.findall(" platforms \= \'(.*)\'\,", str(pacpkg_string_setuppy))[0];
-pacpkg_file_setuppy.close();
+pypkgenlistp = subprocess.Popen([pyexecpath, pkgsetuppy, "getversioninfo"], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
+pypkgenout, pypkgenerr = pypkgenlistp.communicate();
+pymodule = json.loads(pypkgenout);
+setuppy_verinfo = pymodule['versionlist'];
+setuppy_author = pymodule['author'];
+setuppy_authoremail = pymodule['authoremail'];
+setuppy_maintainer = pymodule['maintainer'];
+setuppy_maintaineremail = pymodule['maintaineremail'];
+setuppy_description = pymodule['description'];
+setuppy_license = pymodule['license'];
+setuppy_keywords = pymodule['keywords'];
+setuppy_url = pymodule['url'];
+setuppy_downloadurl = pymodule['downloadurl'];
+setuppy_longdescription = pymodule['longdescription'];
+setuppy_platforms = pymodule['platforms'];
 
 if(sys.version[0]=="2"):
  pkgsource = "py2upc-ean";
