@@ -40,8 +40,14 @@ verinfofilename = os.path.realpath("."+os.path.sep+"upcean"+os.path.sep+"version
 verinfofile = open(verinfofilename, "r");
 verinfodata = verinfofile.read();
 verinfofile.close();
+setuppy_verinfo_esc = re.escape("__version_info__ = (")+"(.*)"+re.escape(");");
+setuppy_verinfo = re.findall(setuppy_verinfo_esc, verinfodata)[0];
+setuppy_verinfo_exp = [vergetspt.strip().replace("\"", "") for vergetspt in setuppy_verinfo.split(',')];
+pyupcean_version = str(setuppy_verinfo_exp[0])+"."+str(setuppy_verinfo_exp[1])+"."+str(setuppy_verinfo_exp[2]);
+'''
 setuppy_verinfo = re.findall("Ver\. ([0-9]+)\.([0-9]+)\.([0-9]+) RC ([0-9]+)", verinfodata)[0];
 pyupcean_version = str(setuppy_verinfo[0])+"."+str(setuppy_verinfo[1])+"."+str(setuppy_verinfo[2]);
+'''
 mycurtime = datetime.datetime.now();
 mycurtimetuple = mycurtime.timetuple();
 mycurtimestamp = int(time.mktime(mycurtimetuple));
