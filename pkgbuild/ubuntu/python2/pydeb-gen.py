@@ -33,6 +33,7 @@ distupnametover = {'Warty': "4.10", 'Hoary': "5.04", 'Breezy': "5.10", 'Dapper':
 distnametover = {'warty': "4.10", 'hoary': "5.04", 'breezy': "5.10", 'dapper': "6.06", 'edgy': "6.10", 'feisty': "7.04", 'gutsy': "7.10", 'hardy': "8.04", 'intrepid': "8.10", 'jaunty': "9.04", 'karmic': "9.10", 'lucid': "10.04", 'maverick': "10.10", 'natty': "11.04", 'oneiric': "11.10", 'precise': "12.04", 'quantal': "12.10", 'raring': "13.04", 'saucy': "13.10", 'trusty': "14.04", 'utopic': "14.10", 'vivid': "15.04", 'wily': "15.10", 'xenial': "16.04", 'yakkety': "16.10"};
 distnamelist = distnametover.keys();
 distvertoname = {'4.10': "warty", '5.04': "hoary", '5.10': "breezy", '6.06': "dapper", '6.10': "edgy", '7.04': "feisty", '7.10': "gutsy", '8.04': "hardy", '8.10': "intrepid", '9.04': "jaunty", '9.10': "karmic", '10.04': "lucid", '10.10': "maverick", '11.04': "natty", '11.10': "oneiric", '12.04': "precise", '12.10': "quantal", '13.04': "raring", '13.10': "saucy", '14.04': "trusty", '14.10': "utopic", '15.04': "vivid", '15.10': "wily", '16.04': "xenial", '16.10': "yakkety"};
+distvertoupname = {'4.10': "Warty", '5.04': "Hoary", '5.10': "Breezy", '6.06': "Dapper", '6.10': "Edgy", '7.04': "Feisty", '7.10': "Gutsy", '8.04': "Hardy", '8.10': "Intrepid", '9.04': "Jaunty", '9.10': "Karmic", '10.04': "Lucid", '10.10': "Maverick", '11.04': "Natty", '11.10': "Oneiric", '12.04': "Precise", '12.10': "Quantal", '13.04': "Raring", '13.10': "Saucy", '14.04': "Trusty", '14.10': "Utopic", '15.04': "Vivid", '15.10': "Wily", '16.04': "Xenial", '16.10': "Yakkety"};
 distnamelistalt = distnametover.values();
 distnametoveralt = {'Warty Warthog': "4.10", 'Hoary Hedgehog': "5.04", 'Breezy Badger': "5.10", 'Dapper Drake': "6.06", 'Edgy Eft': "6.10", 
 'Feisty Fawn': "7.04", 'Gutsy Gibbon': "7.10", 'Hardy Heron': "8.04", 'Intrepid Ibex': "8.10", 'Jaunty Jackalope': "9.04", 'Karmic Koala': "9.10", 'Lucid Lynx': "10.04", 'Maverick Meerkat': "10.10", 'Natty Narwhal': "11.04", 'Oneiric Ocelot': "11.10", 'Precise Pangolin': "12.04", 'Quantal Quetzal': "12.10", 'Raring Ringtail': "13.04", 'Saucy Salamander': "13.10", 'Trusty Tahr': "14.04", 'Utopic Unicorn': "14.10", 'Vivid Vervet': "15.04", 'Wily Werewolf': "15.10", 'Xenial Xerus': "16.04", 'Yakkety Yak': "16.10"};
@@ -97,7 +98,7 @@ if(sys.version[0]=="3"):
  pkgsource = "py3upc-ean";
 pkgupstreamname = "PyUPC-EAN";
 pkgveralt = str(setuppy_verinfo[0])+"."+str(setuppy_verinfo[1])+"."+str(setuppy_verinfo[2]);
-pkgver = str(pkgveralt)+"rc"+str(setuppy_verinfo[3])+"~"+str(getargs.codename)+str(setuppy_verinfo[3]);
+pkgver = str(pkgveralt)+"rc"+str(setuppy_verinfo[4])+"~"+getargs.codename+str(distnametover.get(getargs.codename, "1").replace(".", ""));
 pkgdistname = getargs.codename;
 pkgurgency = "urgency=low";
 pkgauthorname = setuppy_author;
