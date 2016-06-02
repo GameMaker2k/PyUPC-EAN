@@ -31,8 +31,11 @@ if [ $# -gt 0 ]; then
  pydebdirname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -d)"
 fi
 
+cd "${pydebdir}"
+${pythonexec} "./setup.py" "sdist"
+srcfiles="$(${pythonexec} "${pydebdir}/setup.py" getsourceinfo)"
 cd "${pydebparentdir}"
-tar -cavvf "${pydebparentdir}/${pydebtarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" "$(basename ${pydebdir})"
+tar -cavvf "${pydebparentdir}/${pydebtarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" ${srcfiles}
 file -z -k "${pydebparentdir}/${pydebtarname}"
 cd "${pydebdir}"
 ${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}"

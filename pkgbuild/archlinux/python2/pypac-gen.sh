@@ -30,8 +30,11 @@ if [ $# -gt 0 ]; then
  pypacdirname="$(${pythonexec} "${pyscriptfile}" -s "${pypacdir}" -d)"
 fi
 
-cd "${pypacparentdir}"
-tar -cavvf "${pypacparentdir}/${pypactarname}" --transform="s/$(basename ${pypacdir})/${pypacdirname}/" "$(basename ${pypacdir})"
+cd "${pydebdir}"
+${pythonexec} "./setup.py" "sdist"
+srcfiles="$(${pythonexec} "${pydebdir}/setup.py" getsourceinfo)"
+cd "${pydebparentdir}"
+tar -cavvf "${pypacparentdir}/${pypactarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" ${srcfiles}
 file -z -k "${pypacparentdir}/${pypactarname}"
 cd "${pypacdir}"
 ${pythonexec} "${pyscriptfile}" -s "${pypacdir}"

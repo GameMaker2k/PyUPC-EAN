@@ -101,6 +101,18 @@ if(sys.argv[1]=="versioninfo" or sys.argv[1]=="getversioninfo"):
  pymodule_data = json.dumps(pymodule);
  print(pymodule_data);
  sys.exit();
+if(len(sys.argv)>1 and (sys.argv[1]=="sourceinfo" or sys.argv[1]=="getsourceinfo")):
+ srcinfofilename = os.path.realpath("."+os.path.sep+pymodule['name'].replace("-", "_")+".egg-info"+os.path.sep+"SOURCES.txt");
+ srcinfofile = open(srcinfofilename, "r");
+ srcinfodata = srcinfofile.read();
+ srcinfofile.close();
+ srcinfolist = srcinfodata.split('\n');
+ srcfilelist = "";
+ srcpdir = os.path.basename(os.path.dirname(os.path.realpath(__file__)));
+ for ifile in srcinfolist:
+  srcfilelist = "./"+srcpdir+"/"+ifile+" "+srcfilelist;
+ print(srcfilelist);
+ sys.exit();
 
 mycurtime = datetime.datetime.now();
 mycurtimetuple = mycurtime.timetuple();
