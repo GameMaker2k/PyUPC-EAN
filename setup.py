@@ -112,6 +112,8 @@ if(len(sys.argv)>1 and (sys.argv[1]=="sourceinfo" or sys.argv[1]=="getsourceinfo
  for ifile in srcinfolist:
   srcfilelist = "./"+srcpdir+"/"+ifile+" "+srcfilelist;
  print(srcfilelist);
+ os.system("rm -rfv \""+os.path.realpath("."+os.path.sep+"dist\""));
+ os.system("rm -rfv \""+os.path.realpath("."+os.path.sep+pymodule['name'].replace("-", "_")+".egg-info\""));
  sys.exit();
 
 mycurtime = datetime.datetime.now();
