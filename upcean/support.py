@@ -48,7 +48,12 @@ def check_for_pil():
    imp.find_module('Image');
    pilsupport = True;
   except ImportError:
-   pilsupport = False;
+   try:
+    from PIL import Image, ImageDraw, ImageFont;
+    pilsupport = True;
+   except ImportError:
+    pilsupport = False;
+   return pilsupport;
  return pilsupport;
 
 def check_for_pillow():
