@@ -31,10 +31,10 @@ buildsystem = "pybuild";
 
 distvertoupname = {'10.0': "Buster", '9.0': "Stretch", '8.0': "Jessie", '7.0': "Wheezy", '6.0': "Squeeze", '5.0': "Lenny", '4.0': "Etch", '3.1': "Sarge", '3.0': "Woody", '2.2': "Potato", '2.1': "Slink", '2.0': "Hamm", '1.3': "Bo", '1.2': "Rex", '1.1': "Buzz"};
 distvertoname = {'10.0': "buster", '9.0': "stretch", '8.0': "jessie", '7.0': "wheezy", '6.0': "squeeze", '5.0': "lenny", '4.0': "etch", '3.1': "sarge", '3.0': "woody", '2.2': "potato", '2.1': "slink", '2.0': "hamm", '1.3': "bo", '1.2': "rex", '1.1': "buzz"};
-distnamelistalt = distnametover.values();
+distnamelist = distvertoname.values();
 distnametover = {'buster': "10.0", 'stretch': "9.0", 'jessie': "8.0", 'wheezy': "7.0", 'squeeze': "6.0", 'lenny': "5.0", 'etch': "4.0", 'sarge': "3.1", 'woody': "3.0", 'potato': "2.2", 'slink': "2.1", 'hamm': "2.0", 'bo': "1.3", 'rex': "1.2", 'buzz': "1.1"};
 distupnametover = {'Buster': "10.0", 'Stretch': "9.0", 'Jessie': "8.0", 'Wheezy': "7.0", 'Squeeze': "6.0", 'Lenny': "5.0", 'Etch': "4.0", 'Sarge': "3.1", 'Woody': "3.0", 'Potato': "2.2", 'Slink': "2.1", 'Hamm': "2.0", 'Bo': "1.3", 'Rex': "1.2", 'Buzz': "1.1"};
-distnamelist = distvertoname.keys();
+distnamelistalt = distnametover.keys();
 
 debian_oldstable = "wheezy";
 debian_stable = "jessie";
