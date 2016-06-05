@@ -121,7 +121,7 @@ if(getargs.codename=="lucid" or getargs.codename=="precise"):
   pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper, dh-python, devscripts";
  if(sys.version[0]=="3"):
   pkgbuilddepends = "python3-setuptools, python3-all, python3-imaging, debhelper, dh-python, devscripts";
-pkgstandardsversion = "3.9.5";
+pkgstandardsversion = "3.9.8";
 if(sys.version[0]=="2"):
  pkgpackage = "python-pyupcean";
  pkgoldname = "python-upcean";

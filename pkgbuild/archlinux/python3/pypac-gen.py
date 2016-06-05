@@ -90,7 +90,7 @@ if(sys.version[0]=="2"):
  pkgbuilddepends = "'python2' 'python2-pillow'";
 if(sys.version[0]=="3"):
  pkgbuilddepends = "'python' 'python-pillow'";
-pkgstandardsversion = "3.9.5";
+pkgstandardsversion = "3.9.8";
 if(sys.version[0]=="2"):
  pkgpackage = "python2-pyupcean";
  pkgoldname = "python2-upcean";
