@@ -16,27 +16,30 @@ codename="jessie"
 oldwd="$(pwd)"
 
 if [ $# -eq 0 ]; then
- pydebdir="$(${pythonexec} "${pyscriptfile}" -c "${codename}" -g)"
- pydebparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -p)"
- pydebtarname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -t)"
- pydebdirname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -d)"
+ pypkgdir="$(${pythonexec} "${pyscriptfile}" -g)"
+ pypkgparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -p)"
+ pypkgtarname="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -t)"
+ pypkgdirname="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -d)"
+ pypkgsource="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -e)"
 fi
 if [ $# -gt 0 ]; then
  if [ $# -gt 1 ]; then
   codename="${2}"
  fi
- pydebdir="$(${pythonexec} "${pyscriptfile}" -s "${1}" -c "${codename}" -g)"
- pydebparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -p)"
- pydebtarname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -t)"
- pydebdirname="$(${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}" -d)"
+ pypkgdir="$(${pythonexec} "${pyscriptfile}" -s "${1}" -g)"
+ pypkgparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -p)"
+ pypkgtarname="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -t)"
+ pypkgdirname="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -d)"
+ pypkgsource="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -e)"
 fi
 
-cd "${pydebdir}"
+cd "${pypkgdir}"
 ${pythonexec} "./setup.py" "sdist"
-srcfiles="$(${pythonexec} "${pydebdir}/setup.py" getsourceinfo)"
-cd "${pydebparentdir}"
-tar -cavvf "${pydebparentdir}/${pydebtarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" ${srcfiles}
-file -z -k "${pydebparentdir}/${pydebtarname}"
-cd "${pydebdir}"
-${pythonexec} "${pyscriptfile}" -s "${pydebdir}" -c "${codename}"
+srcfiles="$(${pythonexec} "${pypkgdir}/setup.py" getsourceinfo)"
+cd "${pypkgparentdir}"
+tar -cavvf "${pypkgparentdir}/${pypkgtarname}" --transform="s/$(basename ${pypkgdir})/${pypkgdirname}/" ${srcfiles}
+file -z -k "${pypkgparentdir}/${pypkgtarname}"
+cd "${pypkgdir}"
+${pythonexec} "${pypkgdir}/setup.py" cleansourceinfo
+${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -c "${codename}"
 cd "${oldwd}"

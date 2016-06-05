@@ -60,7 +60,6 @@ class barcode:
   self.bgcolor = (255, 255, 255);
   self.return_check = False;
   self.return_type = "dict";
-  self.barcode_type = "upca";
  ''' // support.py funtions '''
  def supported_barcodes(self, return_type=None):
   if(return_type is None):

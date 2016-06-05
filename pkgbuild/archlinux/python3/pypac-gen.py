@@ -35,6 +35,7 @@ parser.add_argument("-g", "--getsource", action = "store_true", help = "get sour
 parser.add_argument("-p", "--getparent", action = "store_true", help = "get parent dir");
 parser.add_argument("-t", "--gettarname", action = "store_true", help = "get tar name");
 parser.add_argument("-d", "--getdirname", action = "store_true", help = "get dir name");
+parser.add_argument("-e", "--getpkgsource", action = "store_true", help = "get pkg source");
 getargs = parser.parse_args();
 getargs.source = os.path.realpath(getargs.source);
 pkgsetuppy = os.path.realpath(getargs.source+os.path.sep+"setup.py");
@@ -115,6 +116,9 @@ if(getargs.getdirname==True):
  sys.exit();
 if(getargs.gettarname==True):
  print(pkgsource+"_"+pkgveralt+".orig.tar.gz");
+ sys.exit();
+if(getargs.getpkgsource==True):
+ print(pkgsource);
  sys.exit();
 
 print("generating arch linux package build directory");

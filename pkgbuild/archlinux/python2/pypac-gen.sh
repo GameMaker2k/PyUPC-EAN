@@ -15,29 +15,32 @@ pyshellfile="${scriptdir}/pypac-gen.sh"
 oldwd="$(pwd)"
 
 if [ $# -eq 0 ]; then
- pypacdir="$(${pythonexec} "${pyscriptfile}" -g)"
- pypacparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pypacdir}" -p)"
- pypactarname="$(${pythonexec} "${pyscriptfile}" -s "${pypacdir}" -t)"
- pypacdirname="$(${pythonexec} "${pyscriptfile}" -s "${pypacdir}" -d)"
+ pypkgdir="$(${pythonexec} "${pyscriptfile}" -g)"
+ pypkgparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -p)"
+ pypkgtarname="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -t)"
+ pypkgdirname="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -d)"
+ pypkgsource="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -e)"
 fi
 if [ $# -gt 0 ]; then
  if [ $# -gt 1 ]; then
   codename="${2}"
  fi
- pypacdir="$(${pythonexec} "${pyscriptfile}" -s "${1}" -g)"
- pypacparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pypacdir}" -p)"
- pypactarname="$(${pythonexec} "${pyscriptfile}" -s "${pypacdir}" -t)"
- pypacdirname="$(${pythonexec} "${pyscriptfile}" -s "${pypacdir}" -d)"
+ pypkgdir="$(${pythonexec} "${pyscriptfile}" -s "${1}" -g)"
+ pypkgparentdir="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -p)"
+ pypkgtarname="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -t)"
+ pypkgdirname="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -d)"
+ pypkgsource="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -e)"
 fi
 
 cd "${pydebdir}"
 ${pythonexec} "./setup.py" "sdist"
 srcfiles="$(${pythonexec} "${pydebdir}/setup.py" getsourceinfo)"
 cd "${pydebparentdir}"
-tar -cavvf "${pypacparentdir}/${pypactarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" ${srcfiles}
-file -z -k "${pypacparentdir}/${pypactarname}"
-cd "${pypacdir}"
-${pythonexec} "${pyscriptfile}" -s "${pypacdir}"
-cd "${pypacparentdir}"
-mv -v "${pypacparentdir}/${pypactarname}" "$(${pyrealpath} "${pypacdir}/py2upc-ean")/${pypactarname}"
+tar -cavvf "${pypkgparentdir}/${pypkgtarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" ${srcfiles}
+file -z -k "${pypkgparentdir}/${pypkgtarname}"
+cd "${pypkgdir}"
+${pythonexec} "${pydebdir}/setup.py" cleansourceinfo
+${pythonexec} "${pyscriptfile}" -s "${pypkgdir}"
+cd "${pypkgparentdir}"
+mv -v "${pypkgparentdir}/${pypkgtarname}" "$(${pyrealpath} "${pypkgdir}/${pypkgsource}")/${pypkgtarname}"
 cd "${oldwd}"
