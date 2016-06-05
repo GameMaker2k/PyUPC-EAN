@@ -46,7 +46,7 @@ if(getlinuxdist[0].lower()=="debian" or getlinuxdist[0].lower()=="ubuntu" or get
   if(sys.version[0]=="3"):
    pylsbout = pylsbout.decode("utf-8");
   pylsb_esc = re.escape("Codename:")+'([a-zA-Z\t+\s+]+)';
-  pylsbname = re.findall(pylsb_esc, pylsbout)[0];
+  pylsbname = re.findall(pylsb_esc, pylsbout)[0].lower();
   setdistrocname = pylsbname.strip();
 if(getlinuxdist[0].lower()=="archlinux"):
  setdistroname = getlinuxdist[0].lower();
