@@ -28,12 +28,26 @@ proname = "pypkg-gen";
 prover = __version__;
 profullname = proname+" "+prover;
 
+def which_exec(execfile):
+ for path in os.environ["PATH"].split(":"):
+  if os.path.exists(path + "/" + execfile):
+   return path + "/" + execfile;
+
 getlinuxdist = platform.linux_distribution();
 setdistroname = "debian";
 setdistrocname = "jessie";
 if(getlinuxdist[0].lower()=="debian" or getlinuxdist[0].lower()=="ubuntu" or getlinuxdist[0].lower()=="linuxmint"):
  setdistroname = getlinuxdist[0].lower();
  setdistrocname = getlinuxdist[2].lower();
+ if(setdistrocname==""):
+  lsblocatout = which_exec("lsb_release");
+  pylsblistp = subprocess.Popen([lsblocatout, "-c"], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
+  pylsbout, pylsberr = pylsblistp.communicate();
+  if(sys.version[0]=="3"):
+   pylsbout = pylsbout.decode("utf-8");
+  pylsb_esc = re.escape("Codename:")+'([a-zA-Z\t+\s+]+)';
+  pylsbname = re.findall(pylsb_esc, pylsbout)[0];
+  setdistrocname = pylsbname.strip();
 if(getlinuxdist[0].lower()=="archlinux"):
  setdistroname = getlinuxdist[0].lower();
  setdistrocname = None;
@@ -45,10 +59,6 @@ parser.add_argument("-c", "--codename", default = setdistrocname, help = "enter 
 parser.add_argument("-p", "--pyver", default = sys.version[0], help = "enter version of python to use");
 getargs = parser.parse_args();
 
-def which_exec(execfile):
- for path in os.environ["PATH"].split(":"):
-  if os.path.exists(path + "/" + execfile):
-   return path + "/" + execfile;
 bashlocatout = which_exec("bash");
 
 getargs.source = os.path.realpath(getargs.source);
