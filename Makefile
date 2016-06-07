@@ -2,47 +2,37 @@
 
 PREFIX?="/usr/local"
 DESTDIR?="/"
-CMAKE?="/usr/bin/cmake"
 MAKE?="/usr/bin/make"
-PYTHONTWO?="/usr/bin/python2"
-PYTHONTHREE?="/usr/bin/python3"
-.PHONY: all install installnoclean clean pythontwoinst pythonthreeinst pythontwoinstnoclean pythonthreeinstnoclean pythontwo pythonthree pythontwonoclean pythonthreenoclean 
+PYTHON?="/usr/bin/python2"
+SDIST?="zip,gztar,bztar"
+BDIST?="zip,gztar,bztar"
+SETUPPY?="setup.py"
+DESTURL?="https://pypi.python.org/pypi"
 
-all: clean pythontwonoclean pythonthreenoclean 
+.PHONY: all build clean install sdist register bdist upload check
 
-install: pythontwoinst pythonthreeinst 
+all: clean build
 
-installnoclean: pythontwoinstnoclean pythonthreeinstnoclean 
+build:
+	${PYTHON} ${SETUPPY} build
 
 clean:
-	if [ -d "./py2build/" ]; then cd "./py2build" && make clean; fi
-	if [ -d "./py3build/" ]; then cd "./py3build" && make clean; fi
-	rm -rfv "./build/" "./dist/" "./deb_dist/" "./PyUPC_EAN.egg-info/" "./py2build/" "./py3build"
+	${PYTHON} ${SETUPPY} clean
 
-pythontwoinst: pythontwo 
-	if [ -d "./py2build/" ]; then cd "./py2build" && ${MAKE} DESTDIR=${DESTDIR} install; fi
-	${MAKE} clean 
+install:
+	${PYTHON} ${SETUPPY} install --prefix=${PREFIX} --root=${DESTDIR}
 
-pythonthreeinst: pythonthree 
-	if [ -d "./py3build/" ]; then cd "./py3build" && ${MAKE} DESTDIR=${DESTDIR} install; fi
-	${MAKE} clean 
+sdist:
+	${PYTHON} ${SETUPPY} sdist --formats=${SDIST}
 
-pythontwoinstnoclean: pythontwonoclean 
-	if [ -d "./py2build/" ]; then cd "./py2build" && ${MAKE} DESTDIR=${DESTDIR} install; fi
+register:
+	${PYTHON} ${SETUPPY} register
 
-pythonthreeinstnoclean: pythonthreenoclean 
-	if [ -d "./py3build/" ]; then cd "./py3build" && ${MAKE} DESTDIR=${DESTDIR} install; fi
+bdist:
+	${PYTHON} ${SETUPPY} bdist --format=${SDIST}
 
-pythontwo:
-	${MAKE} clean 
-	mkdir -p -v "./py2build" && cd "./py2build" && ${CMAKE} -DPYTHON_EXECUTABLE:FILEPATH=${PYTHONTWO} -DCMAKE_INSTALL_PREFIX:PATH=${PREFIX} .. && ${MAKE}
+upload:
+	${PYTHON} ${SETUPPY} -r ${DESTURL}
 
-pythonthree:
-	${MAKE} clean 
-	mkdir -p -v "./py3build" && cd "./py3build" && ${CMAKE} -DPYTHON_EXECUTABLE:FILEPATH=${PYTHONTHREE} -DCMAKE_INSTALL_PREFIX:PATH=${PREFIX} .. && ${MAKE}
-
-pythontwonoclean:
-	mkdir -p -v "./py2build" && cd "./py2build" && ${CMAKE} -DPYTHON_EXECUTABLE:FILEPATH=${PYTHONTWO} -DCMAKE_INSTALL_PREFIX:PATH=${PREFIX} .. && ${MAKE}
-
-pythonthreenoclean:
-	mkdir -p -v "./py3build" && cd "./py3build" && ${CMAKE} -DPYTHON_EXECUTABLE:FILEPATH=${PYTHONTHREE} -DCMAKE_INSTALL_PREFIX:PATH=${PREFIX} .. && ${MAKE}
+check:
+	${PYTHON} ${SETUPPY} -m
