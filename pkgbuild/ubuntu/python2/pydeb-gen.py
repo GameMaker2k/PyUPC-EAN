@@ -34,7 +34,7 @@ distnametover = {'warty': "4.10", 'hoary': "5.04", 'breezy': "5.10", 'dapper': "
 distnamelist = distnametover.keys();
 distvertoname = {'4.10': "warty", '5.04': "hoary", '5.10': "breezy", '6.06': "dapper", '6.10': "edgy", '7.04': "feisty", '7.10': "gutsy", '8.04': "hardy", '8.10': "intrepid", '9.04': "jaunty", '9.10': "karmic", '10.04': "lucid", '10.10': "maverick", '11.04': "natty", '11.10': "oneiric", '12.04': "precise", '12.10': "quantal", '13.04': "raring", '13.10': "saucy", '14.04': "trusty", '14.10': "utopic", '15.04': "vivid", '15.10': "wily", '16.04': "xenial", '16.10': "yakkety"};
 distvertoupname = {'4.10': "Warty", '5.04': "Hoary", '5.10': "Breezy", '6.06': "Dapper", '6.10': "Edgy", '7.04': "Feisty", '7.10': "Gutsy", '8.04': "Hardy", '8.10': "Intrepid", '9.04': "Jaunty", '9.10': "Karmic", '10.04': "Lucid", '10.10': "Maverick", '11.04': "Natty", '11.10': "Oneiric", '12.04': "Precise", '12.10': "Quantal", '13.04': "Raring", '13.10': "Saucy", '14.04': "Trusty", '14.10': "Utopic", '15.04': "Vivid", '15.10': "Wily", '16.04': "Xenial", '16.10': "Yakkety"};
-distnamelistalt = distnametover.values();
+distnamelistalt = distvertoname.values();
 distnametoveralt = {'Warty Warthog': "4.10", 'Hoary Hedgehog': "5.04", 'Breezy Badger': "5.10", 'Dapper Drake': "6.06", 'Edgy Eft': "6.10", 
 'Feisty Fawn': "7.04", 'Gutsy Gibbon': "7.10", 'Hardy Heron': "8.04", 'Intrepid Ibex': "8.10", 'Jaunty Jackalope': "9.04", 'Karmic Koala': "9.10", 'Lucid Lynx': "10.04", 'Maverick Meerkat': "10.10", 'Natty Narwhal': "11.04", 'Oneiric Ocelot': "11.10", 'Precise Pangolin': "12.04", 'Quantal Quetzal': "12.10", 'Raring Ringtail': "13.04", 'Saucy Salamander': "13.10", 'Trusty Tahr': "14.04", 'Utopic Unicorn': "14.10", 'Vivid Vervet': "15.04", 'Wily Werewolf': "15.10", 'Xenial Xerus': "16.04", 'Yakkety Yak': "16.10"};
 distvertonamealt = {'4.10': "Warty Warthog", '5.04': "Hoary Hedgehog", '5.10': "Breezy Badger", '6.06': "Dapper Drake", '6.10': "Edgy Eft", 
@@ -42,13 +42,18 @@ distvertonamealt = {'4.10': "Warty Warthog", '5.04': "Hoary Hedgehog", '5.10': "
 
 lmdistvertoname = {'1.0': "ada", '2.0': "barbara", '2.1': "bea", '2.2': "bianca", '3.0': "cassandra", '3.1': "celena", '4.0': "daryna", '5': "elyssa", '6': "felicia", '7': "gloria", '8': "helena", '9': "isadora", '10': "julia", '11': "katya", '12': "lisa", '13': "maya", '14': "nadia", '15': "olivia", '16': "petra", '17': "qiana", '17.1': "rebecca", '17.2': "rafaela", '17.3': "rosa", '18': "sarah"};
 lmdistvertonamealt = {'1.0': "Ada", '2.0': "Barbara", '2.1': "Bea", '2.2': "Bianca", '3.0': "Cassandra", '3.1': "Celena", '4.0': "Daryna", '5': "Elyssa", '6': "Felicia", '7': "Gloria", '8': "Helena", '9': "Isadora", '10': "Julia", '11': "Katya", '12': "Lisa", '13': "Maya", '14': "Nadia", '15': "Olivia", '16': "Petra", '17': "Qiana", '17.1': "Rebecca", '17.2': "Rafaela", '17.3': "Rosa", '18': "Sarah"};
+lmdistnamelistalt = lmdistvertoname.values();
+lmdistnametover = {'ada': "1.0", 'barbara': "2.0", 'bea': "2.1", 'bianca': "2.2", 'cassandra': "3.0", 'celena': "3.1", 'daryna': "4.0", 'elyssa': "5", 'felicia': "6", 'gloria': "7", 'helena': "8", 'isadora': "9", 'julia': "10", 'katya': "11", 'lisa': "12", 'maya': "13", 'nadia': "14", 'olivia': "15", 'petra': "16", 'qiana': "17", 'rebecca': "17.1", 'rafaela': "17.2", 'rosa': "17.3", 'sarah': "18"};
+lmdistnametoveralt = {'Ada': "1.0", 'Barbara': "2.0", 'Bea': "2.1", 'Bianca': "2.2", 'Cassandra': "3.0", 'Celena': "3.1", 'Daryna': "4.0", 'Elyssa': "5", 'Felicia': "6", 'Gloria': "7", 'Helena': "8", 'Isadora': "9", 'Julia': "10", 'Katya': "11", 'Lisa': "12", 'Maya': "13", 'Nadia': "14", 'Olivia': "15", 'Petra': "16", 'Qiana': "17", 'Rebecca': "17.1", 'Rafaela': "17.2", 'Rosa': "17.3", 'Sarah': "18"};
+lmdistnamelist = lmdistnametover.keys();
 distlmnametouname = {"ada": "dapper", "barbara": "edgy", "bea": "edgy", "bianca": "edgy", "cassandra": "feisty", "celena": "feisty", "daryna": "gutsy", "elyssa": "hardy", "felicia": "intrepid", "gloria": "jaunty", "helena": "karmic", "isadora": "lucid", "julia": "maverick", "katya": "natty", "lisa": "oneiric", "maya": "precise", "nadia": "quantal", "olivia": "raring", "petra": "saucy", "qiana": "trusty", "rebecca": "trusty", "rafaela": "trusty", "rosa": "trusty", "sarah": "xenial"};
 distlmnametounamealt = {"Ada": "Dapper", "Barbara": "Edgy", "Bea": "Edgy", "Bianca": "Edgy", "Cassandra": "Feisty", "Celena": "Feisty", "Daryna": "Gutsy", "Elyssa": "Hardy", "Felicia": "Intrepid", "Gloria": "Jaunty", "Helena": "Karmic", "Isadora": "Lucid", "Julia": "Maverick", "Katya": "Natty", "Lisa": "Oneiric", "Maya": "Precise", "Nadia": "Quantal", "Olivia": "Raring", "Petra": "Saucy", "Qiana": "Trusty", "Rebecca": "Trusty", "Rafaela": "Trusty", "Rosa": "Trusty", "Sarah": "Xenial"};
 
 ubuntu_oldstable = "wily";
 ubuntu_stable = "xenial";
+ubuntu_lts_satble = "xenial";
 ubuntu_testing = "yakkety";
-linuxmint_ubuntu_stable = "xenial";
+linuxmint_ubuntu_stable = ubuntu_lts_satble;
 
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
 parser.add_argument("-v", "--version", action = "version", version = profullname);
@@ -71,7 +76,7 @@ getargs.codename = distlmnametouname.get(getargs.codename, getargs.codename);
 getargs.codename = distlmnametounamealt.get(getargs.codename, getargs.codename);
 getargs.codename = getargs.codename.lower();
 if(not getargs.codename in distnamelist):
- print("Could not build for ubuntu "+getargs.distro+" codename.");
+ print("Could not build for ubuntu "+getargs.codename+" codename.");
  sys.exit();
 
 pypkgenlistp = subprocess.Popen([pyexecpath, pkgsetuppy, "getversioninfo"], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
@@ -252,14 +257,14 @@ if(sys.version[0]=="2" and (buildsystem=="python" or buildsystem=="python_distut
  debpkg_string_temp = "#!/usr/bin/make -f\n\n";
  debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n";
  debpkg_string_temp += "# "+pkgtzstr+"\n\n";
- debpkg_string_temp += "#export DH_VERBOSE=1\n\n";
+ debpkg_string_temp += "export DH_VERBOSE=1\n\n";
  debpkg_string_temp += "%:\n";
  debpkg_string_temp += "	dh $@ --with python2 --buildsystem=python_distutils\n";
 if(sys.version[0]=="3" and (buildsystem=="python" or buildsystem=="python_distutils")):
  debpkg_string_temp = "#!/usr/bin/make -f\n\n";
  debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n";
  debpkg_string_temp += "# "+pkgtzstr+"\n\n";
- debpkg_string_temp += "#export DH_VERBOSE=1\n\n";
+ debpkg_string_temp += "export DH_VERBOSE=1\n\n";
  debpkg_string_temp += "%:\n";
  debpkg_string_temp += "	dh $@ --with python3\n";
  debpkg_string_temp += "override_dh_auto_build:\n";
@@ -276,7 +281,7 @@ if(sys.version[0]=="2" and (buildsystem=="pybuild" or buildsystem=="python_build
  debpkg_string_temp = "#!/usr/bin/make -f\n\n";
  debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n";
  debpkg_string_temp += "# "+pkgtzstr+"\n\n";
- debpkg_string_temp += "#export DH_VERBOSE=1\n";
+ debpkg_string_temp += "export DH_VERBOSE=1\n";
  debpkg_string_temp += "export PYBUILD_NAME=pyupcean\n\n";
  debpkg_string_temp += "%:\n";
  debpkg_string_temp += "	dh $@ --with python2 --buildsystem=pybuild\n";
@@ -284,7 +289,7 @@ if(sys.version[0]=="3" and (buildsystem=="pybuild" or buildsystem=="python_build
  debpkg_string_temp = "#!/usr/bin/make -f\n\n";
  debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n";
  debpkg_string_temp += "# "+pkgtzstr+"\n\n";
- debpkg_string_temp += "#export DH_VERBOSE=1\n";
+ debpkg_string_temp += "export DH_VERBOSE=1\n";
  debpkg_string_temp += "export PYBUILD_NAME=pyupcean\n\n";
  debpkg_string_temp += "%:\n";
  debpkg_string_temp += "	dh $@ --with python3 --buildsystem=pybuild\n";
@@ -292,7 +297,7 @@ if((sys.version[0]=="2" or sys.version[0]=="3") and buildsystem=="cmake"):
  debpkg_string_temp = "#!/usr/bin/make -f\n\n";
  debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n";
  debpkg_string_temp += "# "+pkgtzstr+"\n\n";
- debpkg_string_temp += "#export DH_VERBOSE=1\n\n";
+ debpkg_string_temp += "export DH_VERBOSE=1\n\n";
  debpkg_string_temp += "%:\n";
  debpkg_string_temp += "	dh $@ --buildsystem=cmake --parallel\n";
 debpkg_file_temp = open(debpkg_rules_file, "w");
