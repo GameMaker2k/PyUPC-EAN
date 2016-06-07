@@ -29,6 +29,11 @@ prover = __version__;
 profullname = proname+" "+prover;
 buildsystem = "pybuild";
 
+def which_exec(execfile):
+ for path in os.environ["PATH"].split(":"):
+  if os.path.exists(path + "/" + execfile):
+   return path + "/" + execfile;
+
 distvertoupname = {'10.0': "Buster", '9.0': "Stretch", '8.0': "Jessie", '7.0': "Wheezy", '6.0': "Squeeze", '5.0': "Lenny", '4.0': "Etch", '3.1': "Sarge", '3.0': "Woody", '2.2': "Potato", '2.1': "Slink", '2.0': "Hamm", '1.3': "Bo", '1.2': "Rex", '1.1': "Buzz", '0.0': "Sid"};
 distvertoname = {'10.0': "buster", '9.0': "stretch", '8.0': "jessie", '7.0': "wheezy", '6.0': "squeeze", '5.0': "lenny", '4.0': "etch", '3.1': "sarge", '3.0': "woody", '2.2': "potato", '2.1': "slink", '2.0': "hamm", '1.3': "bo", '1.2': "rex", '1.1': "buzz", '0.0': "sid"};
 distnamelist = distvertoname.values();
@@ -88,6 +93,13 @@ standverdata = standverfile.read();
 standverfile.close();
 getstandver = re.findall("([0-9]\.[0-9]\.[0-9])\s+([0-9]+)", standverdata);
 getcurstandver = getstandver[0][0];
+dpkglocatout = which_exec("dpkg");
+pydpkglistp = subprocess.Popen([dpkglocatout, "-s", "debhelper"], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
+pydpkgout, pydpkgerr = pydpkglistp.communicate();
+if(sys.version[0]=="3"):
+ pydpkgout = pydpkgout.decode("utf-8");
+pydpkg_esc = re.escape("Version:")+'\s+([0-9])'+re.escape(".");
+pydpkg_val = re.findall(pydpkg_esc, pydpkgout)[0];
 
 if(sys.version[0]=="2"):
  pkgsource = "py2upc-ean";
@@ -95,7 +107,7 @@ if(sys.version[0]=="3"):
  pkgsource = "py3upc-ean";
 pkgupstreamname = "PyUPC-EAN";
 pkgveralt = str(setuppy_verinfo[0])+"."+str(setuppy_verinfo[1])+"."+str(setuppy_verinfo[2]);
-pkgver = str(pkgveralt)+"rc"+str(setuppy_verinfo[4])+"~"+getargs.codename+str(distnametover.get(getargs.codename, "1").replace(".", ""));
+pkgver = str(pkgveralt)+"~rc"+str(setuppy_verinfo[4])+"~"+getargs.codename+str(distnametover.get(getargs.codename, "1").replace(".", ""));
 pkgdistname = getargs.codename;
 pkgurgency = "urgency=low";
 pkgauthorname = setuppy_author;
@@ -168,7 +180,7 @@ os.chmod(debpkg_changelog_file, int("0644", 8));
 
 debpkg_compat_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"compat");
 print("generating file "+debpkg_compat_file);
-debpkg_string_temp = "9\n";
+debpkg_string_temp = str(pydpkg_val)+"\n";
 debpkg_file_temp = open(debpkg_compat_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();

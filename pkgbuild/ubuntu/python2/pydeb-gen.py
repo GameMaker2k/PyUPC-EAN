@@ -29,6 +29,11 @@ prover = __version__;
 profullname = proname+" "+prover;
 buildsystem = "pybuild";
 
+def which_exec(execfile):
+ for path in os.environ["PATH"].split(":"):
+  if os.path.exists(path + "/" + execfile):
+   return path + "/" + execfile;
+
 distupnametover = {'Warty': "4.10", 'Hoary': "5.04", 'Breezy': "5.10", 'Dapper': "6.06", 'Edgy': "6.10", 'Feisty': "7.04", 'Gutsy': "7.10", 'Hardy': "8.04", 'Intrepid': "8.10", 'Jaunty': "9.04", 'Karmic': "9.10", 'Lucid': "10.04", 'Maverick': "10.10", 'Natty': "11.04", 'Oneiric': "11.10", 'Precise': "12.04", 'Quantal': "12.10", 'Raring': "13.04", 'Saucy': "13.10", 'Trusty': "14.04", 'Utopic': "14.10", 'Vivid': "15.04", 'Wily': "15.10", 'Xenial': "16.04", 'Yakkety': "16.10"};
 distnametover = {'warty': "4.10", 'hoary': "5.04", 'breezy': "5.10", 'dapper': "6.06", 'edgy': "6.10", 'feisty': "7.04", 'gutsy': "7.10", 'hardy': "8.04", 'intrepid': "8.10", 'jaunty': "9.04", 'karmic': "9.10", 'lucid': "10.04", 'maverick': "10.10", 'natty': "11.04", 'oneiric': "11.10", 'precise': "12.04", 'quantal': "12.10", 'raring': "13.04", 'saucy': "13.10", 'trusty': "14.04", 'utopic': "14.10", 'vivid': "15.04", 'wily': "15.10", 'xenial': "16.04", 'yakkety': "16.10"};
 distnamelist = distnametover.keys();
@@ -96,13 +101,19 @@ setuppy_url = pymodule['url'];
 setuppy_downloadurl = pymodule['downloadurl'];
 setuppy_longdescription = pymodule['longdescription'];
 setuppy_platforms = pymodule['platforms'];
-
 standverfilename = os.path.realpath(os.path.sep+"usr"+os.path.sep+"share"+os.path.sep+"lintian"+os.path.sep+"data"+os.path.sep+"standards-version"+os.path.sep+"release-dates");
 standverfile = open(standverfilename, "r");
 standverdata = standverfile.read();
 standverfile.close();
 getstandver = re.findall("([0-9]\.[0-9]\.[0-9])\s+([0-9]+)", standverdata);
 getcurstandver = getstandver[0][0];
+dpkglocatout = which_exec("dpkg");
+pydpkglistp = subprocess.Popen([dpkglocatout, "-s", "debhelper"], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
+pydpkgout, pydpkgerr = pydpkglistp.communicate();
+if(sys.version[0]=="3"):
+ pydpkgout = pydpkgout.decode("utf-8");
+pydpkg_esc = re.escape("Version:")+'\s+([0-9])'+re.escape(".");
+pydpkg_val = re.findall(pydpkg_esc, pydpkgout)[0];
 
 if(sys.version[0]=="2"):
  pkgsource = "py2upc-ean";
@@ -110,7 +121,7 @@ if(sys.version[0]=="3"):
  pkgsource = "py3upc-ean";
 pkgupstreamname = "PyUPC-EAN";
 pkgveralt = str(setuppy_verinfo[0])+"."+str(setuppy_verinfo[1])+"."+str(setuppy_verinfo[2]);
-pkgver = str(pkgveralt)+"rc"+str(setuppy_verinfo[4])+"~"+getargs.codename+str(distnametover.get(getargs.codename, "1").replace(".", ""));
+pkgver = str(pkgveralt)+"~rc"+str(setuppy_verinfo[4])+"~"+getargs.codename+str(distnametover.get(getargs.codename, "1").replace(".", ""));
 pkgdistname = getargs.codename;
 pkgurgency = "urgency=low";
 pkgauthorname = setuppy_author;
@@ -183,7 +194,7 @@ os.chmod(debpkg_changelog_file, int("0644", 8));
 
 debpkg_compat_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"compat");
 print("generating file "+debpkg_compat_file);
-debpkg_string_temp = "9\n";
+debpkg_string_temp = str(pydpkg_val)+"\n";
 debpkg_file_temp = open(debpkg_compat_file, "w");
 debpkg_file_temp.write(debpkg_string_temp);
 debpkg_file_temp.close();

@@ -28,6 +28,11 @@ proname = "pypac-gen";
 prover = __version__;
 profullname = proname+" "+prover;
 
+def which_exec(execfile):
+ for path in os.environ["PATH"].split(":"):
+  if os.path.exists(path + "/" + execfile):
+   return path + "/" + execfile;
+
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
 parser.add_argument("-v", "--version", action = "version", version = profullname);
 parser.add_argument("-s", "--source", default = os.path.realpath(os.getcwd()), help = "source dir");
