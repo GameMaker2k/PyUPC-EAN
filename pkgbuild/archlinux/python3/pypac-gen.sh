@@ -32,14 +32,14 @@ if [ $# -gt 0 ]; then
  pypkgsource="$(${pythonexec} "${pyscriptfile}" -s "${pypkgdir}" -e)"
 fi
 
-cd "${pydebdir}"
+cd "${pypkgdir}"
 ${pythonexec} "./setup.py" "sdist"
-srcfiles="$(${pythonexec} "${pydebdir}/setup.py" getsourceinfo)"
+srcfiles="$(${pythonexec} "${pypkgdir}/setup.py" getsourceinfo)"
 cd "${pydebparentdir}"
-tar -cavvf "${pypkgparentdir}/${pypkgtarname}" --transform="s/$(basename ${pydebdir})/${pydebdirname}/" ${srcfiles}
+tar -cavvf "${pypkgparentdir}/${pypkgtarname}" --transform="s/$(basename ${pypkgdir})/${pydebdirname}/" ${srcfiles}
 file -z -k "${pypkgparentdir}/${pypkgtarname}"
 cd "${pypkgdir}"
-${pythonexec} "${pydebdir}/setup.py" cleansourceinfo
+${pythonexec} "${pypkgdir}/setup.py" cleansourceinfo
 ${pythonexec} "${pyscriptfile}" -s "${pypkgdir}"
 cd "${pypkgparentdir}"
 mv -v "${pypkgparentdir}/${pypkgtarname}" "$(${pyrealpath} "${pypkgdir}/${pypkgsource}")/${pypkgtarname}"
