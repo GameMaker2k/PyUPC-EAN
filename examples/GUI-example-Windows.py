@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
      More advanced PyUPC-EAN module usage example as a Barcode-generator
      Code From: https://github.com/bzimor/Barcode-generator
