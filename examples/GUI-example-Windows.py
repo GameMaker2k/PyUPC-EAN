@@ -68,7 +68,7 @@ class MainWin(tk.Frame):
         self.frameType = ttk.Frame(self.frameTopLeft, padding=(5, 5))
         self.frameType.grid(row=0, column=0, sticky="nswe", padx=(0,0), pady=(2,2))
         ttk.Label(self.frameType, text='Barcode type:  ').grid(row=0, column=0, sticky='w', pady=(0,0))
-        options = ['EAN-13', 'EAN-8', 'EAN-5']
+        options = ['UPC-A', 'UPC-E', 'EAN-13', 'EAN-8', 'EAN-5']
         self.bcode_type = ttk.OptionMenu(self.frameType, self.bctype, options[0], *options, style = 'raised.TMenubutton')
         self.bcode_type.config(width=10)
         self.bcode_type.grid(row=0, column=1, sticky='we')
