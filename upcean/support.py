@@ -96,13 +96,13 @@ def get_pil_version(infotype=None):
    pil_ver = None;
   except NameError:
    pil_ver = None;
-  if(pillow_ver is None):
+  if(pillow_ver is None and pil_ver is not None):
    pil_info = {'pil_ver': pil_ver, 'pil_is_pillow': pil_is_pillow};
    return pil_info.get(infotype, pil_info);
   if(pillow_ver is not None and pil_ver is not None):
    pil_info = {'pil_ver': pil_ver, 'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
    return pil_info.get(infotype, pil_info);
-  if(pillow_ver is not None and pil_ver is not None):
+  if(pillow_ver is not None and pil_ver is None):
    pil_info = {'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
    return pil_info.get(infotype, pil_info);
 
