@@ -88,14 +88,22 @@ def get_pil_version(infotype=None):
   except NameError:
    pillow_ver = None;
    pil_is_pillow = False;
-  pil_ver = Image.VERSION;
-  pil_ver = pil_ver.split(".");
-  pil_ver = [int(x) for x in pil_ver];
+  try:
+   pil_ver = Image.VERSION;
+   pil_ver = pil_ver.split(".");
+   pil_ver = [int(x) for x in pil_ver];
+  except AttributeError:
+   pil_ver = None;
+  except NameError:
+   pil_ver = None;
   if(pillow_ver is None):
    pil_info = {'pil_ver': pil_ver, 'pil_is_pillow': pil_is_pillow};
    return pil_info.get(infotype, pil_info);
-  if(pillow_ver is not None):
+  if(pillow_ver is not None and pil_ver is not None):
    pil_info = {'pil_ver': pil_ver, 'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
+   return pil_info.get(infotype, pil_info);
+  if(pillow_ver is not None and pil_ver is not None):
+   pil_info = {'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
    return pil_info.get(infotype, pil_info);
 
 def get_pillow_version(infotype=None):
@@ -120,6 +128,7 @@ def get_pillow_version(infotype=None):
   if(pillow_ver is not None):
    pillow_info = {'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
    return pillow_info.get(infotype, pillow_info);
+
 python_info = {'python_branch': platform.python_branch(), 'python_build': platform.python_build(), 'python_compiler': platform.python_compiler(), 'python_implementation': platform.python_implementation(), 'python_revision': platform.python_revision(), 'python_version': platform.python_version(), 'python_version_tuple': platform.python_version_tuple(), 'release': platform.release(), 'system': platform.system(), 'uname': platform.uname(), 'architecture': platform.architecture(), 'machine': platform.machine(), 'node': platform.node(), 'platform': platform.platform(), 'processor': platform.processor(), 'version': platform.version(), 'java_ver': platform.java_ver(), 'win32_ver': platform.win32_ver(), 'mac_ver': platform.mac_ver(), 'linux_distribution': platform.linux_distribution(), 'libc_ver': platform.libc_ver()};
 def get_python_info(infotype=None):
  global python_info;
