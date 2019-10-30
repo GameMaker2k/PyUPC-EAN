@@ -13,7 +13,7 @@
     Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc.py - Last Update: 10/04/2012 Ver. 2.0.0 - Author: cooldude2k $
+    $FileInfo: upc.py - Last Update: 6/3/2016 Ver. 2.7.15 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import print_function
