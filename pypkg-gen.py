@@ -35,7 +35,7 @@ def which_exec(execfile):
 
 linuxdist = None;
 try:
- linuxdist = platform.linux_distribution;
+ linuxdist = platform.linux_distribution();
 except AttributeError:
  linuxdist = None;
 getlinuxdist = linuxdist;

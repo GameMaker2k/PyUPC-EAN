@@ -131,7 +131,7 @@ def get_pillow_version(infotype=None):
 
 linuxdist = None;
 try:
- linuxdist = platform.linux_distribution;
+ linuxdist = platform.linux_distribution();
 except AttributeError:
  linuxdist = None;
 

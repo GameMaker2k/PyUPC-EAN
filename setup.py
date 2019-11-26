@@ -132,7 +132,7 @@ if(pygenbuildinfo):
  verinfodata = re.sub("__build_time_utc__ \= \{.*\}\;", '__build_time_utc__ = {"timestamp": '+str(utccurtimestamp)+', "year": '+str(utccurtimetuple[0])+', "month": '+str(utccurtimetuple[1])+', "day": '+str(utccurtimetuple[2])+', "hour": '+str(utccurtimetuple[3])+', "minute": '+str(utccurtimetuple[4])+', "second": '+str(utccurtimetuple[5])+'};', verinfodata);
  linuxdist = None;
  try:
-  linuxdist = platform.linux_distribution;
+  linuxdist = platform.linux_distribution();
  except AttributeError:
   linuxdist = None;
  if(sys.version[0]=="2"):
