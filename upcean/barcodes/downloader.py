@@ -14,7 +14,7 @@
 '''
 
 from __future__ import division, absolute_import, print_function;
-import re, os, sys, hashlib, shutil, platform, tempfile, urllib, gzip, time, argparse, cgi, subprocess, imp;
+import re, os, sys, hashlib, shutil, platform, tempfile, urllib, gzip, time, argparse, cgi, subprocess, imp, upcean.versioninfo;
 import logging as log;
 haverequests = False;
 try:
@@ -50,7 +50,7 @@ if(sys.version[0]>="3"):
  import urllib.parse as urlparse;
  import http.cookiejar as cookielib;
 
-tmpfileprefix = "py"+str(sys.version_info[0])+"wwwget"+str(__version_info__[0])+"-";
+tmpfileprefix = "py"+str(sys.version_info[0])+"wwwget"+str(upcean.versioninfo.__version_info__[0])+"-";
 tmpfilesuffix = "-";
 pytempdir = tempfile.gettempdir();
 
@@ -64,11 +64,11 @@ geturls_ua_opera_windows7 = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKi
 geturls_ua_vivaldi_windows7 = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.183 Safari/537.36 Vivaldi/1.96.1147.52";
 geturls_ua_internet_explorer_windows7 = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; Trident/7.0; rv:11.0) like Gecko";
 geturls_ua_microsoft_edge_windows7 = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134";
-geturls_ua_pywwwget_python = "Mozilla/5.0 (compatible; {proname}/{prover}; +{prourl})".format(proname=__project__, prover=__version__, prourl=__project_url__);
+geturls_ua_pywwwget_python = "Mozilla/5.0 (compatible; {proname}/{prover}; +{prourl})".format(proname=upcean.versioninfo.__project__, prover=upcean.versioninfo.__version__, prourl=upcean.versioninfo.__project_url__);
 if(platform.python_implementation()!=""):
- geturls_ua_pywwwget_python_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {pyimp}/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(osver=platform.system()+" "+platform.release(), archtype=platform.machine(), prourl=__project_url__, pyimp=platform.python_implementation(), pyver=platform.python_version(), proname=__project__, prover=__version__);
+ geturls_ua_pywwwget_python_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {pyimp}/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(osver=platform.system()+" "+platform.release(), archtype=platform.machine(), prourl=prover=upcean.versioninfo.__project_url__, pyimp=platform.python_implementation(), pyver=platform.python_version(), proname=prover=upcean.versioninfo.__project__, prover=prover=upcean.versioninfo.__version__);
 if(platform.python_implementation()==""):
- geturls_ua_pywwwget_python_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {pyimp}/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(osver=platform.system()+" "+platform.release(), archtype=platform.machine(), prourl=__project_url__, pyimp="Python", pyver=platform.python_version(), proname=__project__, prover=__version__);
+ geturls_ua_pywwwget_python_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {pyimp}/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(osver=platform.system()+" "+platform.release(), archtype=platform.machine(), prourl=prover=upcean.versioninfo.__project_url__, pyimp="Python", pyver=platform.python_version(), proname=prover=upcean.versioninfo.__project__, prover=prover=upcean.versioninfo.__version__);
 geturls_ua_googlebot_google = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
 geturls_ua_googlebot_google_old = "Googlebot/2.1 (+http://www.google.com/bot.html)";
 geturls_ua = geturls_ua_firefox_windows7;
