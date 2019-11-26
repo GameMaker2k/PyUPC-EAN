@@ -33,7 +33,12 @@ def which_exec(execfile):
   if os.path.exists(path + "/" + execfile):
    return path + "/" + execfile;
 
-getlinuxdist = platform.linux_distribution();
+linuxdist = None;
+try:
+ linuxdist = platform.linux_distribution;
+except AttributeError:
+ linuxdist = None;
+getlinuxdist = linuxdist;
 setdistroname = "debian";
 setdistrocname = "jessie";
 if(getlinuxdist[0].lower()=="debian" or getlinuxdist[0].lower()=="ubuntu" or getlinuxdist[0].lower()=="linuxmint"):
