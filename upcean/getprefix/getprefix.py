@@ -12,7 +12,7 @@
     Copyright 2011-2019 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2019 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 11/26/2019 Ver. 2.7.16 RC 1 - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 11/26/2019 Ver. 2.7.17 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
