@@ -3,7 +3,7 @@
 '''
       More advanced PyUPC-EAN module usage example as a Barcode-generator
       Code From: https://github.com/bzimor/Barcode-generator
-      $FileInfo: GUI-example-Windows.py - Last Update: 12/15/2017 Ver. 1.0.0  - Author: bzimor $
+      $FileInfo: GUI-example-Windows.py - Last Update: 11/26/2019 Ver. 1.0.0  - Author: bzimor $
  '''
 
 import re, os, sys, upcean, csv;

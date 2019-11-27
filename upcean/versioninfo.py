@@ -7,10 +7,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2016 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2016 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2019 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2019 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: versioninfo.py - Last Update: 6/3/2016 Ver. 2.7.15 RC 1 - Author: cooldude2k $
+    $FileInfo: versioninfo.py - Last Update: 11/26/2019 Ver. 2.7.16 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -28,7 +28,7 @@ __license__ = "Revised BSD License";
 __license_string__ = """-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 		    Revised BSD License
 
-Copyright (C) 2011-2016 Game Maker 2k. 
+Copyright (C) 2011-2019 Game Maker 2k. 
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
