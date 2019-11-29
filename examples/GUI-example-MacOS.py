@@ -11,7 +11,10 @@ import os
 import sys
 import upcean
 import csv
-from configparser import ConfigParser
+if(sys.version[0]=="2"):
+ from ConfigParser import ConfigParser
+if(sys.version[0]>="3"):
+ from configparser import ConfigParser
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as mbox

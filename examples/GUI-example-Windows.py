@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
-     More advanced PyUPC-EAN module usage example as a Barcode-generator
-     Code From: https://github.com/bzimor/Barcode-generator
-     $FileInfo: GUI-example-Windows.py - Last Update: 11/26/2019 Ver. 1.0.0  - Author: bzimor $
+      More advanced PyUPC-EAN module usage example as a Barcode-generator
+      Code From: https://github.com/bzimor/Barcode-generator
+      $FileInfo: GUI-example-Windows.py - Last Update: 11/26/2019 Ver. 1.0.0  - Author: bzimor $
 '''
 
 import re, os, sys, upcean, csv;
-from configparser import ConfigParser
+if(sys.version[0]=="2"):
+ from ConfigParser import ConfigParser
+if(sys.version[0]>="3"):
+ from configparser import ConfigParser
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as mbox
