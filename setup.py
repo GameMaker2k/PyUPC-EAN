@@ -70,7 +70,8 @@ pymodule['installrequires'] = [install_requires];
 pymodule['longdescription'] = 'PyUPC-EAN is a barcode library/module for Python. It supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.';
 pymodule['platforms'] = 'OS Independent';
 pymodule['zipsafe'] = False;
-pymodule['pymodules'] = ['upcean'];
+# pymodule['pymodules'] = [y for x in os.walk("upcean") for y in glob.glob(os.path.join(x[0], '*.py'))];
+pymodule['pymodules'] = [];
 pymodule['classifiers'] = [
   'Development Status :: 5 - Production/Stable',
   'Intended Audience :: Customer Service',
