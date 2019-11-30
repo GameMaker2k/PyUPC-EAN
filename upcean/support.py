@@ -86,6 +86,21 @@ def check_if_pil_is_pillow():
  pil_is_pillow = check_pil_is_pillow();
  return pil_is_pillow;
 
+def check_for_pil_only():
+ pilsupport = False;
+ if(check_for_pil()):
+  pilsupport = True;
+ pil_is_not_pillow = False;
+ if((pilsupport is True and check_for_pillow() is True) or pilsupport is False):
+  pil_is_not_pillow = False;
+ if(pilsupport is True and check_for_pillow() is False):
+  pil_is_not_pillow = True;
+ return pil_is_pillow;
+
+def check_only_for_pil():
+ pil_is_not_pillow = check_pil_is_pillow();
+ return pil_is_not_pillow;
+
 def get_pil_version(infotype=None):
  pilsupport = check_for_pil();
  if(not pilsupport):
