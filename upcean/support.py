@@ -101,6 +101,14 @@ def check_only_for_pil():
  pil_is_not_pillow = check_pil_is_pillow();
  return pil_is_not_pillow;
 
+def check_pil_is_not_pillow():
+ pil_is_not_pillow = check_pil_is_pillow();
+ return pil_is_not_pillow;
+
+def check_if_pil_is_not_pillow():
+ pil_is_not_pillow = check_pil_is_pillow();
+ return pil_is_not_pillow;
+
 def get_pil_version(infotype=None):
  pilsupport = check_for_pil();
  if(not pilsupport):
