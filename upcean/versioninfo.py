@@ -78,6 +78,7 @@ def get_build_python_info(infotype=None):
  if(infotype is not None):
   return python_info.get(infotype, python_info);
 __revision__ = __version_info__[3];
+__revision_id__ = "$Id$";
 if(__version_info__[3] is not None):
  __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3]);
 if(__version_info__[3] is None):
