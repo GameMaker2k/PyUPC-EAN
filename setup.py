@@ -35,6 +35,7 @@ if pillow_installed():
  extras_requires.append('Pillow');
 else:
  extras_requires.append('PIL');
+extras_requires_dict = {'drawing_barcodes':  extras_requires}
 
 pygenbuildinfo = True;
 verinfofilename = os.path.realpath("."+os.path.sep+"upcean"+os.path.sep+"versioninfo.py");
@@ -67,8 +68,8 @@ pymodule['downloadurl'] = 'https://github.com/GameMaker2k/PyUPC-EAN/archive/mast
 pymodule['packages'] = find_packages();
 pymodule['packagedata'] = {'upcean': ['*.otf', '*.ttf', '*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc'], 'upcean/fonts': ['*.otf', '*.ttf'], 'upcean/xml': ['*.dtd', '*.xsl', '*.xsd', '*.rng', '*.rnc']};
 pymodule['includepackagedata'] = True;
-pymodule['installrequires'] = [install_requires];
-pymodule['extrasrequires'] = [extras_requires];
+pymodule['installrequires'] = install_requires;
+pymodule['extrasrequires'] = extras_requires;
 pymodule['longdescription'] = 'PyUPC-EAN is a barcode library/module for Python. It supports the barcode formats upc-e, upc-a, ean-13, ean-8, ean-2, ean-5, itf14, codabar, code11, code39, code93, and msi.';
 pymodule['platforms'] = 'OS Independent';
 pymodule['zipsafe'] = False;
