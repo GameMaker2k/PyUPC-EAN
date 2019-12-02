@@ -33,11 +33,11 @@ def which_exec(execfile):
   if os.path.exists(path + "/" + execfile):
    return path + "/" + execfile;
 
-linuxdist = None;
+linuxdist = [None];
 try:
  linuxdist = platform.linux_distribution();
 except AttributeError:
- linuxdist = None;
+ linuxdist = [None];
 getlinuxdist = linuxdist;
 setdistroname = "debian";
 setdistrocname = "jessie";
