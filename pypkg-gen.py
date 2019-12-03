@@ -41,7 +41,7 @@ except AttributeError:
 getlinuxdist = linuxdist;
 setdistroname = "debian";
 setdistrocname = "jessie";
-if(getlinuxdist[0].lower()=="debian" or getlinuxdist[0].lower()=="ubuntu" or getlinuxdist[0].lower()=="linuxmint"):
+if(getlinuxdist[0] is not None and (getlinuxdist[0].lower()=="debian" or getlinuxdist[0].lower()=="ubuntu" or getlinuxdist[0].lower()=="linuxmint")):
  setdistroname = getlinuxdist[0].lower();
  setdistrocname = getlinuxdist[2].lower();
  if(setdistrocname==""):
@@ -53,7 +53,7 @@ if(getlinuxdist[0].lower()=="debian" or getlinuxdist[0].lower()=="ubuntu" or get
   pylsb_esc = re.escape("Codename:")+'([a-zA-Z\t+\s+]+)';
   pylsbname = re.findall(pylsb_esc, pylsbout)[0].lower();
   setdistrocname = pylsbname.strip();
-if(getlinuxdist[0].lower()=="archlinux"):
+if(getlinuxdist[0] is not None and getlinuxdist[0].lower()=="archlinux"):
  setdistroname = getlinuxdist[0].lower();
  setdistrocname = None;
 parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
