@@ -98,7 +98,7 @@ pydpkglistp = subprocess.Popen([dpkglocatout, "-s", "debhelper"], stdout=subproc
 pydpkgout, pydpkgerr = pydpkglistp.communicate();
 if(sys.version[0]=="3"):
  pydpkgout = pydpkgout.decode("utf-8");
-pydpkg_esc = re.escape("Version:")+'\s+([0-9])'+re.escape(".");
+pydpkg_esc = re.escape("Version:")+'\s+([0-9]+)'+re.escape(".");
 pydpkg_val = re.findall(pydpkg_esc, pydpkgout)[0];
 
 if(sys.version[0]=="2"):
