@@ -2,7 +2,7 @@
 '''
      Code From: https://github.com/fizyk20/python-barcode
      Code From: https://github.com/fizyk20/python-barcode/blob/master/example.py
-         $FileInfo: upc-example.py - Last Update: 11/26/2019 Ver. 2.7.17 RC 1  - Author: fizyk20 $
+         $FileInfo: upc-example.py - Last Update: 12/3/2019 Ver. 2.7.18 RC 1  - Author: fizyk20 $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
