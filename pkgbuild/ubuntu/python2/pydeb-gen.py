@@ -103,6 +103,8 @@ setuppy_downloadurl = pymodule['downloadurl'];
 setuppy_longdescription = pymodule['longdescription'];
 setuppy_platforms = pymodule['platforms'];
 standverfilename = os.path.realpath(os.path.sep+"usr"+os.path.sep+"share"+os.path.sep+"lintian"+os.path.sep+"data"+os.path.sep+"standards-version"+os.path.sep+"release-dates");
+if(not os.path.exists(standverfilename) or not os.path.isfile(standverfilename)):
+ sys.exit("You need to install lintian package for this to work");
 standverfile = open(standverfilename, "r");
 standverdata = standverfile.read();
 standverfile.close();
