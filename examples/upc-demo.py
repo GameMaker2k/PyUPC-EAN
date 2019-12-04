@@ -63,7 +63,12 @@ pygamestr=str(pygamever[0])+"."+str(pygamever[1])+"."+str(pygamever[2]);
 del(pygamever);
 print("PyGame Version: "+pygamestr);
 del(pygamestr);
-print("PIL Version: "+Image.VERSION);
+try:
+ print("PIL Version: "+Image.VERSION);
+except AttributeError:
+ pass;
+except NameError:
+ pass;
 try:
  print("Pillow Version: "+Image.PILLOW_VERSION);
 except AttributeError:
