@@ -808,8 +808,9 @@ if(havemechanize==True):
    fulldatasize = 0;
    log.info("Moving file "+tmpfilename+" to "+filepath);
    exec_time_start = time.time();
-   log.info("It took "+hms_string(exec_time_start - exec_time_end)+" to move file.");
    shutil.move(tmpfilename, filepath);
+   exec_time_end = time.time();
+   log.info("It took "+hms_string(exec_time_start - exec_time_end)+" to move file.");
    if(os.path.exists(tmpfilename)==True):
     os.remove(tmpfilename);
    returnval = {'Type': "File", 'Filename': filepath, 'Filesize': downloadsize, 'FilesizeAlt': {'IEC': get_readable_size(downloadsize, 2, "IEC"), 'SI': get_readable_size(downloadsize, 2, "SI")}, 'DownloadTime': pretmpfilename['DownloadTime'], 'DownloadTimeReadable': pretmpfilename['DownloadTimeReadable'], 'MoveFileTime': float(exec_time_start - exec_time_end), 'MoveFileTimeReadable': hms_string(exec_time_start - exec_time_end), 'Headers': pretmpfilename['Headers'], 'URL': pretmpfilename['URL'], 'Code': pretmpfilename['Code']};
