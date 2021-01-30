@@ -70,6 +70,7 @@ __version_info__ = (2, 7, 19, "RC 1", 1);
 __build_time__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};
 __build_time_utc__ = {"timestamp": None, "year": None, "month": None, "day": None, "hour": None, "minute": None, "second": None};
 __build_python_info__ = {"python_branch": None, "python_build": None, "python_compiler": None, "python_implementation": None, "python_revision": None, "python_version": None, "python_version_tuple": None, "release": None, "system": None, "uname": None, "machine": None, "node": None, "platform": None, "processor": None, "version": None, "java_ver": None, "win32_ver": None, "mac_ver": None, "linux_distribution": None, "libc_ver": None};
+__build_python_is_set__ = False;
 def get_build_python_info(infotype=None):
  global __build_python_info__;
  python_info = __build_python_info__;
