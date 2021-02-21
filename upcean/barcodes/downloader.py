@@ -198,7 +198,7 @@ def get_readable_size_from_file(infile, precision=1, unit="IEC", usehashes=False
  usehashtypes = usehashtypes.lower();
  getfilesize = os.path.getsize(infile);
  return_val = get_readable_size(getfilesize, precision, unit);
- if(usehashes==True):
+ if(usehashes):
   hashtypelist = usehashtypes.split(",");
   openfile = open(infile, "rb");
   filecontents = openfile.read();
@@ -220,7 +220,7 @@ def get_readable_size_from_string(instring, precision=1, unit="IEC", usehashes=F
  usehashtypes = usehashtypes.lower();
  getfilesize = len(instring);
  return_val = get_readable_size(getfilesize, precision, unit);
- if(usehashes==True):
+ if(usehashes):
   hashtypelist = usehashtypes.split(",");
   listnumcount = 0;
   listnumend = len(hashtypelist);
@@ -285,11 +285,11 @@ def get_httplib_support(checkvalue=None):
  global haverequests, havemechanize;
  returnval = [];
  returnval.append("urllib");
- if(haverequests==True):
+ if(haverequests):
   returnval.append("requests");
- if(havemechanize==True):
+ if(havemechanize):
   returnval.append("mechanize");
- if(not checkvalue==None):
+ if(not checkvalue is None):
   if(checkvalue=="urllib1" or checkvalue=="urllib2"):
    checkvalue = "urllib";
   if(checkvalue in returnval):
@@ -314,9 +314,9 @@ def download_from_url(httpurl, httpheaders, httpcookie, httplibuse="urllib", sle
   sleep = geturls_download_sleep;
  if(httplibuse=="urllib1" or httplibuse=="urllib2"):
   httplibuse = "urllib";
- if(haverequests==False and httplibuse=="requests"):
+ if(not haverequests and httplibuse=="requests"):
   httplibuse = "urllib";
- if(havemechanize==False and httplibuse=="mechanize"):
+ if(not havemechanize and httplibuse=="mechanize"):
   httplibuse = "urllib";
  if(httplibuse=="urllib"):
   returnval = download_from_url_with_urllib(httpurl, httpheaders, httpcookie, sleep);
@@ -334,9 +334,9 @@ def download_from_url_file(httpurl, httpheaders, httpcookie, httplibuse="urllib"
   sleep = geturls_download_sleep;
  if(httplibuse=="urllib1" or httplibuse=="urllib2"):
   httplibuse = "urllib";
- if(haverequests==False and httplibuse=="requests"):
+ if(not haverequests and httplibuse=="requests"):
   httplibuse = "urllib";
- if(havemechanize==False and httplibuse=="mechanize"):
+ if(not havemechanize and httplibuse=="mechanize"):
   httplibuse = "urllib";
  if(httplibuse=="urllib"):
   returnval = download_from_url_file_with_urllib(httpurl, httpheaders, httpcookie, buffersize, sleep);
@@ -354,9 +354,9 @@ def download_from_url_to_file(httpurl, httpheaders, httpcookie, httplibuse="urll
   sleep = geturls_download_sleep;
  if(httplibuse=="urllib1" or httplibuse=="urllib2"):
   httplibuse = "urllib";
- if(haverequests==False and httplibuse=="requests"):
+ if(not haverequests and httplibuse=="requests"):
   httplibuse = "urllib";
- if(havemechanize==False and httplibuse=="mechanize"):
+ if(not havemechanize and httplibuse=="mechanize"):
   httplibuse = "urllib";
  if(httplibuse=="urllib"):
   returnval = download_from_url_to_file_with_urllib(httpurl, httpheaders, httpcookie, outfile, outpath, buffersize, sleep);
@@ -464,7 +464,7 @@ def download_from_url_to_file_with_urllib(httpurl, httpheaders, httpcookie, outf
   shutil.move(tmpfilename, filepath);
   exec_time_end = time.time();
   log.info("It took "+hms_string(exec_time_start - exec_time_end)+" to move file.");
-  if(os.path.exists(tmpfilename)==True):
+  if(os.path.exists(tmpfilename)):
    os.remove(tmpfilename);
   returnval = {'Type': "File", 'Filename': filepath, 'Filesize': downloadsize, 'FilesizeAlt': {'IEC': get_readable_size(downloadsize, 2, "IEC"), 'SI': get_readable_size(downloadsize, 2, "SI")}, 'DownloadTime': pretmpfilename['DownloadTime'], 'DownloadTimeReadable': pretmpfilename['DownloadTimeReadable'], 'MoveFileTime': float(exec_time_start - exec_time_end), 'MoveFileTimeReadable': hms_string(exec_time_start - exec_time_end), 'Headers': pretmpfilename['Headers'], 'URL': pretmpfilename['URL'], 'Code': pretmpfilename['Code']};
  if(outfile=="-" and sys.version[0]=="2"):
@@ -527,7 +527,7 @@ def download_from_url_to_file_with_urllib(httpurl, httpheaders, httpcookie, outf
   returnval = {'Type': "Content", 'Content': fdata, 'Contentsize': downloadsize, 'ContentsizeAlt': {'IEC': get_readable_size(downloadsize, 2, "IEC"), 'SI': get_readable_size(downloadsize, 2, "SI")}, 'DownloadTime': pretmpfilename['DownloadTime'], 'DownloadTimeReadable': pretmpfilename['DownloadTimeReadable'], 'MoveFileTime': float(exec_time_start - exec_time_end), 'MoveFileTimeReadable': hms_string(exec_time_start - exec_time_end), 'Headers': pretmpfilename['Headers'], 'URL': pretmpfilename['URL'], 'Code': pretmpfilename['Code']};
  return returnval;
 
-if(haverequests==True):
+if(haverequests):
  def download_from_url_with_requests(httpurl, httpheaders, httpcookie, sleep=-1):
   global geturls_download_sleep;
   if(sleep<0):
@@ -550,12 +550,12 @@ if(haverequests==True):
   geturls_text.close();
   return returnval;
 
-if(haverequests==False):
+if(not haverequests):
  def download_from_url_with_requests(httpurl, httpheaders, httpcookie, sleep=-1):
   returnval = download_from_url_with_urllib(httpurl, httpheaders, httpcookie, sleep)
   return returnval;
 
-if(haverequests==True):
+if(haverequests):
  def download_from_url_file_with_requests(httpurl, httpheaders, httpcookie, buffersize=524288, sleep=-1):
   global geturls_download_sleep, tmpfileprefix, tmpfilesuffix;
   exec_time_start = time.time();
@@ -602,12 +602,12 @@ if(haverequests==True):
   returnval.update({'Filesize': os.path.getsize(tmpfilename), 'DownloadTime': float(exec_time_start - exec_time_end), 'DownloadTimeReadable': hms_string(exec_time_start - exec_time_end)});
   return returnval;
 
-if(haverequests==False):
+if(not haverequests):
  def download_from_url_file_with_requests(httpurl, httpheaders, httpcookie, buffersize=524288, sleep=-1):
   returnval = download_from_url_file_with_urllib(httpurl, httpheaders, httpcookie, buffersize, sleep)
   return returnval;
 
-if(haverequests==True):
+if(haverequests):
  def download_from_url_to_file_with_requests(httpurl, httpheaders, httpcookie, outfile="-", outpath=os.getcwd(), buffersize=[524288, 524288], sleep=-1):
   global geturls_download_sleep;
   if(sleep<0):
@@ -630,7 +630,7 @@ if(haverequests==True):
    shutil.move(tmpfilename, filepath);
    exec_time_end = time.time();
    log.info("It took "+hms_string(exec_time_start - exec_time_end)+" to move file.");
-   if(os.path.exists(tmpfilename)==True):
+   if(os.path.exists(tmpfilename)):
     os.remove(tmpfilename);
    returnval = {'Type': "File", 'Filename': filepath, 'Filesize': downloadsize, 'FilesizeAlt': {'IEC': get_readable_size(downloadsize, 2, "IEC"), 'SI': get_readable_size(downloadsize, 2, "SI")}, 'DownloadTime': pretmpfilename['DownloadTime'], 'DownloadTimeReadable': pretmpfilename['DownloadTimeReadable'], 'MoveFileTime': float(exec_time_start - exec_time_end), 'MoveFileTimeReadable': hms_string(exec_time_start - exec_time_end), 'Headers': pretmpfilename['Headers'], 'URL': pretmpfilename['URL'], 'Code': pretmpfilename['Code']};
   if(outfile=="-" and sys.version[0]=="2"):
@@ -693,12 +693,12 @@ if(haverequests==True):
    returnval = {'Type': "Content", 'Content': fdata, 'Contentsize': downloadsize, 'ContentsizeAlt': {'IEC': get_readable_size(downloadsize, 2, "IEC"), 'SI': get_readable_size(downloadsize, 2, "SI")}, 'DownloadTime': pretmpfilename['DownloadTime'], 'DownloadTimeReadable': pretmpfilename['DownloadTimeReadable'], 'MoveFileTime': float(exec_time_start - exec_time_end), 'MoveFileTimeReadable': hms_string(exec_time_start - exec_time_end), 'Headers': pretmpfilename['Headers'], 'URL': pretmpfilename['URL'], 'Code': pretmpfilename['Code']};
   return returnval;
 
-if(haverequests==False):
+if(not haverequests):
  def download_from_url_to_file_with_requests(httpurl, httpheaders, httpcookie, outfile="-", outpath=os.getcwd(), buffersize=[524288, 524288], sleep=-1):
   returnval = download_from_url_to_file_with_urllib(httpurl, httpheaders, httpcookie, buffersize, outfile, outpath, sleep)
   return returnval;
 
-if(havemechanize==True):
+if(havemechanize):
  def download_from_url_with_mechanize(httpurl, httpheaders, httpcookie, sleep=-1):
   global geturls_download_sleep;
   if(sleep<0):
@@ -725,12 +725,12 @@ if(havemechanize==True):
   geturls_text.close();
   return returnval;
 
-if(havemechanize==False):
+if(not havemechanize):
  def download_from_url_with_mechanize(httpurl, httpheaders, httpcookie, sleep=-1):
   returnval = download_from_url_with_urllib(httpurl, httpheaders, httpcookie, sleep)
   return returnval;
 
-if(havemechanize==True):
+if(havemechanize):
  def download_from_url_file_with_mechanize(httpurl, httpheaders, httpcookie, buffersize=524288, sleep=-1):
   global geturls_download_sleep, tmpfileprefix, tmpfilesuffix;
   exec_time_start = time.time();
@@ -783,12 +783,12 @@ if(havemechanize==True):
   returnval.update({'Filesize': os.path.getsize(tmpfilename), 'DownloadTime': float(exec_time_start - exec_time_end), 'DownloadTimeReadable': hms_string(exec_time_start - exec_time_end)});
   return returnval;
 
-if(havemechanize==False):
+if(not havemechanize):
  def download_from_url_file_with_mechanize(httpurl, httpheaders, httpcookie, buffersize=524288, sleep=-1):
   returnval = download_from_url_file_with_urllib(httpurl, httpheaders, httpcookie, buffersize, sleep)
   return returnval;
 
-if(havemechanize==True):
+if(havemechanize):
  def download_from_url_to_file_with_mechanize(httpurl, httpheaders, httpcookie, outfile="-", outpath=os.getcwd(), buffersize=[524288, 524288], sleep=-1):
   global geturls_download_sleep;
   if(sleep<0):
@@ -811,7 +811,7 @@ if(havemechanize==True):
    shutil.move(tmpfilename, filepath);
    exec_time_end = time.time();
    log.info("It took "+hms_string(exec_time_start - exec_time_end)+" to move file.");
-   if(os.path.exists(tmpfilename)==True):
+   if(os.path.exists(tmpfilename)):
     os.remove(tmpfilename);
    returnval = {'Type': "File", 'Filename': filepath, 'Filesize': downloadsize, 'FilesizeAlt': {'IEC': get_readable_size(downloadsize, 2, "IEC"), 'SI': get_readable_size(downloadsize, 2, "SI")}, 'DownloadTime': pretmpfilename['DownloadTime'], 'DownloadTimeReadable': pretmpfilename['DownloadTimeReadable'], 'MoveFileTime': float(exec_time_start - exec_time_end), 'MoveFileTimeReadable': hms_string(exec_time_start - exec_time_end), 'Headers': pretmpfilename['Headers'], 'URL': pretmpfilename['URL'], 'Code': pretmpfilename['Code']};
   if(outfile=="-" and sys.version[0]=="2"):
@@ -874,7 +874,7 @@ if(havemechanize==True):
    returnval = {'Type': "Content", 'Content': fdata, 'Contentsize': downloadsize, 'ContentsizeAlt': {'IEC': get_readable_size(downloadsize, 2, "IEC"), 'SI': get_readable_size(downloadsize, 2, "SI")}, 'DownloadTime': pretmpfilename['DownloadTime'], 'DownloadTimeReadable': pretmpfilename['DownloadTimeReadable'], 'MoveFileTime': float(exec_time_start - exec_time_end), 'MoveFileTimeReadable': hms_string(exec_time_start - exec_time_end), 'Headers': pretmpfilename['Headers'], 'URL': pretmpfilename['URL'], 'Code': pretmpfilename['Code']};
   return returnval;
 
-if(havemechanize==False):
+if(not havemechanize):
  def download_from_url_to_file_with_mechanize(httpurl, httpheaders, httpcookie, outfile="-", outpath=os.getcwd(), buffersize=[524288, 524288], sleep=-1):
   returnval = download_from_url_to_file_with_urllib(httpurl, httpheaders, httpcookie, buffersize, outfile, outpath, sleep)
   return returnval;
