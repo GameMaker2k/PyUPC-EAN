@@ -376,7 +376,37 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
   return False;
  upc_matches = re.findall("^4(\d{5})(\d{5})(\d{1})", upc);
  upc_matches = upc_matches[0];
- product = {'numbersystem': str(4), 'code': upc_matches[0], 'price': upc_matches[1], 'checkdigit': upc_matches[2]};
+ gw_item_type = None;
+ if(re.findall("^(4111)", upc)):
+  gw_item_type = "Softlines";
+ elif(re.findall("^(4666)", upc)):
+  gw_item_type = "Hardlines";
+ elif(re.findall("^(4555)", upc)):
+  gw_item_type = "Shoes/Purses";
+ elif(re.findall("^(4190)", upc)):
+  gw_item_type = "Target";
+ elif(re.findall("^(4230)", upc)):
+  gw_item_type = "Jacobs";
+ elif(re.findall("^(4333330)", upc)):
+  gw_item_type = "Furniture";
+ elif(re.findall("^(4120120)", upc)):
+  gw_item_type = "Books";
+ else:
+  gw_item_type = None;
+ gw_item_color = None;
+ if(re.findall("^(4)(\d{3})(22)", upc)):
+  gw_item_color = "Pink";
+ elif(re.findall("^(4)(\d{3})(33)", upc)):
+  gw_item_color = "Yellow";
+ elif(re.findall("^(4)(\d{3})(44)", upc)):
+  gw_item_color = "Green";
+ elif(re.findall("^(4)(\d{3})(55)", upc)):
+  gw_item_color = "Blue";
+ elif(re.findall("^(4)(\d{3})(77)", upc)):
+  gw_item_color = "Orange";
+ else:
+  gw_item_color = None;
+ product = {'numbersystem': str(4), 'code': upc_matches[0], 'price': upc_matches[1], 'type': gw_item_type, 'tagcolor': gw_item_color, 'checkdigit': upc_matches[2]};
  if(infotype is None):
   return product;
  if(infotype is not None):
@@ -399,6 +429,18 @@ def get_goodwill_upca_barcode_price(upc):
  if(not product):
   return False;
  return product.get("price", False);
+def get_goodwill_upca_barcode_type(upc):
+ upc = str(upc);
+ product = get_goodwill_upca_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("type", False);
+def get_goodwill_upca_barcode_tagcolor(upc):
+ upc = str(upc);
+ product = get_goodwill_upca_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("tagcolor", False);
 def get_goodwill_upca_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_goodwill_upca_barcode_info(upc);
