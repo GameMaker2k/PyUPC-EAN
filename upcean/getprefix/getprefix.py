@@ -406,7 +406,11 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
   gw_item_color = "Orange";
  else:
   gw_item_color = None;
- product = {'numbersystem': str(4), 'code': upc_matches[0], 'price': upc_matches[1], 'type': gw_item_type, 'tagcolor': gw_item_color, 'checkdigit': upc_matches[2]};
+ price_matches = re.findall("^(\d{3})(\d{2})", upc_matches[1]);
+ price_alt = str(price_matches[0].lstrip('0'))+price_matches[0]);
+ formated_price = price_matches[0]+"."+price_matches[0]);
+ formated_price_alt = str(price_matches[0].lstrip('0'))+"."+price_matches[0]);
+ product = {'numbersystem': str(4), 'code': upc_matches[0], 'price': upc_matches[1], 'pricend': price_alt, 'pricewd': formated_price, 'pricewdnz': formated_price_alt, 'type': gw_item_type, 'tagcolor': gw_item_color, 'checkdigit': upc_matches[2]};
  if(infotype is None):
   return product;
  if(infotype is not None):
