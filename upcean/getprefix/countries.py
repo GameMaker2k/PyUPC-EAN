@@ -61,6 +61,8 @@ def get_gs1_prefix(upc):
   return "Bosnia and Herzegovina";
  if(re.findall("^(389)", upc)):
   return "Montenegro";
+ if(re.findall("^(390)", upc)):
+  return "Kosovo";
  if(re.findall("^(4[0-3][0-9]|440)", upc)):
   return "Germany";
  if(re.findall("^(4[0-5][0-9])", upc)):
@@ -116,11 +118,11 @@ def get_gs1_prefix(upc):
  if(re.findall("^(530)", upc)):
   return "Albania";
  if(re.findall("^(531)", upc)):
-  return "FYR Macedonia";
+  return "North Macedonia";
  if(re.findall("^(535)", upc)):
   return "Malta";
  if(re.findall("^(539)", upc)):
-  return "Republic of Ireland";
+  return "Ireland";
  if(re.findall("^(54[0-9])", upc)):
   return "Belgium and Luxembourg";
  if(re.findall("^(560)", upc)):
@@ -177,6 +179,10 @@ def get_gs1_prefix(upc):
   return "Saudi Arabia";
  if(re.findall("^(629)", upc)):
   return "United Arab Emirates";
+ if(re.findall("^(630)", upc)):
+  return "Qatar";
+ if(re.findall("^(631)", upc)):
+  return "Namibia";
  if(re.findall("^(64[0-9])", upc)):
   return "Finland";
  if(re.findall("^(69[0-5])", upc)):
@@ -236,7 +242,7 @@ def get_gs1_prefix(upc):
  if(re.findall("^(858)", upc)):
   return "Slovakia";
  if(re.findall("^(859)", upc)):
-  return "Czech Republic";
+  return "Czechia";
  if(re.findall("^(860)", upc)):
   return "Serbia";
  if(re.findall("^(865)", upc)):
@@ -244,11 +250,13 @@ def get_gs1_prefix(upc):
  if(re.findall("^(867)", upc)):
   return "North Korea";
  if(re.findall("^(86[8-9])", upc)):
-  return "Turkey";
+  return "T\u00dcrkiye";
  if(re.findall("^(87[0-9])", upc)):
   return "Netherlands";
  if(re.findall("^(880)", upc)):
   return "South Korea";
+ if(re.findall("^(883)", upc)):
+  return "Myanmar";
  if(re.findall("^(884)", upc)):
   return "Cambodia";
  if(re.findall("^(885)", upc)):
