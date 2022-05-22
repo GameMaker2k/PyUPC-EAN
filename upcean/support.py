@@ -50,7 +50,7 @@ def check_for_pil():
   except ImportError:
    try:
     from PIL import Image, ImageDraw, ImageFont;
-import PIL;
+    import PIL;
     pilsupport = True;
    except ImportError:
     pilsupport = False;
