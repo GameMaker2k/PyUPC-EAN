@@ -18,6 +18,7 @@
 from __future__ import division, absolute_import, print_function;
 import os, sys, platform, re, upcean, pygame, random;
 from PIL import Image, ImageDraw, ImageFont;
+import PIL;
 
 def rot_center(image, rect, angle):
  """rotate an image while keeping its center"""
@@ -72,9 +73,19 @@ except NameError:
 try:
  print("Pillow Version: "+Image.PILLOW_VERSION);
 except AttributeError:
- pass;
+ try:
+  print("Pillow Version: "+PIL.__version__);
+ except AttributeError:
+  pass;
+ except NameError:
+  pass;
 except NameError:
- pass;
+ try:
+  print("Pillow Version: "+PIL.__version__);
+ except AttributeError:
+  pass;
+ except NameError:
+  pass;
 print("PyUPC-EAN Version: "+upcean.__version__);
 while(count < maxnum):
  barcodeobj[count] = upcean.oopfuncs.barcode();
