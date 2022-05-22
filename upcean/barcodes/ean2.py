@@ -16,6 +16,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, sys, types, upcean.barcodes.prepil, upcean.getsfname;
 from PIL import Image, ImageDraw, ImageFont;
+import PIL;
 
 def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
@@ -35,15 +36,29 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   pil_ver = [int(x) for x in pil_ver];
   pil_is_pillow = True;
  except AttributeError:
-  pil_ver = Image.VERSION;
+  try:
+   pil_ver = Image.VERSION;
+   pil_is_pillow = False;
+  except AttributeError:
+   pil_ver = PIL.__version__;
+   pil_is_pillow = True;
+  except NameError:
+   pil_ver = PIL.__version__;
+   pil_is_pillow = True;
   pil_ver = pil_ver.split(".");
   pil_ver = [int(x) for x in pil_ver];
-  pil_is_pillow = False;
  except NameError:
-  pil_ver = Image.VERSION;
+  try:
+   pil_ver = Image.VERSION;
+   pil_is_pillow = False;
+  except AttributeError:
+   pil_ver = PIL.__version__;
+   pil_is_pillow = True;
+  except NameError:
+   pil_ver = PIL.__version__;
+   pil_is_pillow = True;
   pil_ver = pil_ver.split(".");
   pil_ver = [int(x) for x in pil_ver];
-  pil_is_pillow = False;
  pil_addon_fix = 0;
  pil_prevercheck = [str(x) for x in pil_ver];
  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);

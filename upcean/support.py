@@ -50,6 +50,7 @@ def check_for_pil():
   except ImportError:
    try:
     from PIL import Image, ImageDraw, ImageFont;
+import PIL;
     pilsupport = True;
    except ImportError:
     pilsupport = False;
@@ -62,13 +63,26 @@ def check_for_pillow():
   return pilsupport;
  if(pilsupport):
   from PIL import Image;
+  import PIL;
   try:
    pil_ver = Image.PILLOW_VERSION;
    pil_is_pillow = True;
   except AttributeError:
-   pil_is_pillow = False;
+   try:
+    pil_ver = PIL.__version__;
+    pil_is_pillow = True;
+   except AttributeError:
+    pil_is_pillow = False;
+   except NameError:
+    pil_is_pillow = False;
   except NameError:
-   pil_is_pillow = False;
+   try:
+    pil_ver = PIL.__version__;
+    pil_is_pillow = True;
+   except AttributeError:
+    pil_is_pillow = False;
+   except NameError:
+    pil_is_pillow = False;
  return pil_is_pillow;
 
 def check_pil_is_pillow():
@@ -156,11 +170,25 @@ def get_pillow_version(infotype=None):
    pillow_ver = [int(x) for x in pillow_ver];
    pil_is_pillow = True;
   except AttributeError:
-   pillow_ver = None;
-   pil_is_pillow = False;
+   try:
+    pillow_ver = PIL.__version__;
+    pil_is_pillow = True;
+   except AttributeError:
+    pillow_ver = None;
+    pil_is_pillow = False;
+   except NameError:
+    pillow_ver = None;
+    pil_is_pillow = False;
   except NameError:
-   pillow_ver = None;
-   pil_is_pillow = False;
+   try:
+    pillow_ver = PIL.__version__;
+    pil_is_pillow = True;
+   except AttributeError:
+    pillow_ver = None;
+    pil_is_pillow = False;
+   except NameError:
+    pillow_ver = None;
+    pil_is_pillow = False;
   if(pillow_ver is None):
    return False;
   if(pillow_ver is not None):
