@@ -163,6 +163,35 @@ def fix_ean13_checksum(upc):
   upc = fix_matches[0];
  return upc+str(get_ean13_checksum(upc));
 
+def validate_itf6_checksum(upc, return_check=False):
+ upc = str(upc);
+ if(len(upc)>6):
+  fix_matches = re.findall("^(\d{6})", upc); 
+  upc = fix_matches[0];
+ if(len(upc)>6 or len(upc)<5):
+  return False;
+ upc_matches = list(upc);
+ upc_matches = [int(x) for x in upc_matches];
+ CheckSum = 10 - ( ( 3 * upc_matches[0] + upc_matches[1] + 3 * upc_matches[2] + upc_matches[3] + 3 * upc_matches[4] ) % 10 );
+ if(not return_check and len(upc)==6):
+  if(CheckSum!=upc_matches[5]):
+   return False;
+  if(CheckSum==upc_matches[5]):
+   return True;
+ if(return_check):
+  return str(CheckSum);
+ if(len(upc)==5):
+  return str(CheckSum);
+def get_itf6_checksum(upc):
+ upc = str(upc);
+ return validate_itf6_checksum(upc,True);
+def fix_itf6_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>5):
+  fix_matches = re.findall("^(\d{5})", upc); 
+  upc = fix_matches[0];
+ return upc+str(get_itf6_checksum(upc));
+
 def validate_itf14_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>14):
