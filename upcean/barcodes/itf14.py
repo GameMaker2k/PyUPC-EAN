@@ -226,5 +226,9 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
    return False;
  return True;
 
+create_itf6_barcode = create_itf14_barcode;
+
 def draw_itf14_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_itf14_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+draw_itf6_barcode = draw_itf14_barcode;
