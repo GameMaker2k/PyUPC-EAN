@@ -16,7 +16,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, sys, types, upcean.barcodes.prepil, upcean.getsfname;
 from PIL import Image, ImageDraw, ImageFont;
-import PIL;
 
 def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
@@ -39,10 +38,10 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
    pil_ver = Image.VERSION;
    pil_is_pillow = False;
   except AttributeError:
-   pil_ver = PIL.__version__;
+   pil_ver = Image.__version__;
    pil_is_pillow = True;
   except NameError:
-   pil_ver = PIL.__version__;
+   pil_ver = Image.__version__;
    pil_is_pillow = True;
   pil_ver = pil_ver.split(".");
   pil_ver = [int(x) for x in pil_ver];
@@ -51,10 +50,10 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
    pil_ver = Image.VERSION;
    pil_is_pillow = False;
   except AttributeError:
-   pil_ver = PIL.__version__;
+   pil_ver = Image.__version__;
    pil_is_pillow = True;
   except NameError:
-   pil_ver = PIL.__version__;
+   pil_ver = Image.__version__;
    pil_is_pillow = True;
   pil_ver = pil_ver.split(".");
   pil_ver = [int(x) for x in pil_ver];
