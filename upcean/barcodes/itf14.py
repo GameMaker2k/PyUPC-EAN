@@ -225,9 +225,31 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
    return False;
  return True;
 
-create_itf6_barcode = create_itf14_barcode;
+def create_itf14_from_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ if(len(upc)==12):
+  upc = "00"+str(upc);
+ if(len(upc)==13):
+  upc = "0"+str(upc);
+ if(len(upc) % 2):
+  return False;
+ if(len(upc) < 6):
+  return False;
+ return create_itf14_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+
+def create_itf14_from_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf14_from_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+
+def create_itf6_barcode(upc,outfile="./itf6.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf14_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 
 def draw_itf14_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_itf14_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
-draw_itf6_barcode = draw_itf14_barcode;
+def draw_itf14_from_upca_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf14_from_upca_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+def draw_itf14_from_ean13_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf14_from_ean13_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+def draw_itf6_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_itf6_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);

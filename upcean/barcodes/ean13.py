@@ -321,15 +321,15 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
    return False;
  return True;
 
-def draw_ean13_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean13_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
-
 def create_ean13_from_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>13 or len(upc)<12): 
   return False;
  if(len(upc)<13): 
   upc = "0"+str(upc);
  return create_ean13_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+
+def draw_ean13_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ean13_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def draw_ean13_from_upca_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_ean13_from_upca_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
