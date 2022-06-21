@@ -69,6 +69,7 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
  upc_preimg = Image.new("RGB", (44 + upc_size_add, barheight[0] + 15));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (44 + upc_size_add, barheight[0] + 15)], fill=barcolor[2]);
+ upc_array = { 'upc': upc, 'code': [ ] };
  upcean.barcodes.prepil.drawColorLine(upc_img, 4, 4, 4, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 5, 4, 5, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 6, 4, 6, barheight[0], barcolor[2]);

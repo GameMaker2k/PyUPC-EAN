@@ -86,6 +86,8 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
  upc_preimg = Image.new("RGB", (113 + addonsize, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (113 + addonsize, barheight[1] + 9)], fill=barcolor[2]);
+ upc_array = { 'upc': upc, 'code': [ ] };
+ upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 0, 10, 0, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 1, 10, 1, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 2, 10, 2, barheight[0], barcolor[2]);
@@ -95,6 +97,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
  upcean.barcodes.prepil.drawColorLine(upc_img, 6, 10, 6, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 7, 10, 7, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 8, 10, 8, barheight[0], barcolor[2]);
+ upc_array['code'].append( [1, 0, 1] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 9, 10, 9, barheight[1], barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 10, 10, 10, barheight[1], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 11, 10, 11, barheight[1], barcolor[0]);
@@ -128,6 +131,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    left_barcolor = [0, 1, 1, 0, 1, 1, 1];
   if(int(LeftDigit[NumZero])==9):
    left_barcolor = [0, 0, 0, 1, 0, 1, 1];
+  upc_array['code'].append( left_barcolor );
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
@@ -137,6 +141,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
+ upc_array['code'].append( [0, 1, 0, 1, 0] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 54, 10, 54, barheight[1], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 55, 10, 55, barheight[1], barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 56, 10, 56, barheight[1], barcolor[2]);
@@ -172,6 +177,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    right_barcolor = [1, 0, 0, 1, 0, 0, 0];
   if(int(RightDigit[NumZero])==9):
    right_barcolor = [1, 1, 1, 0, 1, 0, 0];
+  upc_array['code'].append( right_barcolor );
   InnerUPCNum = 0;
   while (InnerUPCNum < len(right_barcolor)):
    if(right_barcolor[InnerUPCNum]==1):
@@ -181,9 +187,11 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
+ upc_array['code'].append( [1, 0, 1] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 101, 10, 101, barheight[1], barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 102, 10, 102, barheight[1], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 103, 10, 103, barheight[1], barcolor[0]);
+ upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 104, 10, 104, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 105, 10, 105, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 106, 10, 106, barheight[0], barcolor[2]);
@@ -249,5 +257,17 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    return False;
  return True;
 
+def create_gtin12_barcode(upc,outfile="./gtin12.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+
+def create_ucc12_barcode(upc,outfile="./ucc12.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+
 def draw_upca_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_upca_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+def draw_gtin12_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_gtin12_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+def draw_ucc12_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_ucc12_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);

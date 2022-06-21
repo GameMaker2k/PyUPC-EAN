@@ -85,6 +85,7 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
  upc_preimg = Image.new("RGB", (34 + upc_size_add, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (34 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
+ upc_array = { 'upc': upc, 'code': [ ] };
  LineSize = barheight[0];
  if(hidetext):
   LineSize = barheight[1];

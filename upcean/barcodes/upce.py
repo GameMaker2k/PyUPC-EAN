@@ -91,6 +91,8 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  upc_preimg = Image.new("RGB", (69 + addonsize, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (69 + addonsize, barheight[1] + 9)], fill=barcolor[2]);
+ upc_array = { 'upc': upc, 'code': [ ] };
+ upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 0, 10, 0, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 1, 10, 1, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 2, 10, 2, barheight[0], barcolor[2]);
@@ -100,6 +102,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  upcean.barcodes.prepil.drawColorLine(upc_img, 6, 10, 6, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 7, 10, 7, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 8, 10, 8, barheight[0], barcolor[2]);
+ upc_array['code'].append( [1, 0, 1] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 9, 10, 9, barheight[1], barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 10, 10, 10, barheight[1], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 11, 10, 11, barheight[1], barcolor[0]);
@@ -283,6 +286,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
     left_barcolor = left_barcolor_even;
    if(NumZero==4): 
     left_barcolor = left_barcolor_even;
+  upc_array['code'].append( left_barcolor );
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
@@ -292,12 +296,14 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
    LineStart += 1;
    InnerUPCNum += 1;
   NumZero += 1;
+ upc_array['code'].append( [0, 1, 0, 1, 0, 1] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 54, 10, 54, barheight[1], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 55, 10, 55, barheight[1], barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 56, 10, 56, barheight[1], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 57, 10, 57, barheight[1], barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 58, 10, 58, barheight[1], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 59, 10, 59, barheight[1], barcolor[0]);
+ upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 60, 10, 60, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 61, 10, 61, barheight[0], barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 62, 10, 62, barheight[0], barcolor[2]);

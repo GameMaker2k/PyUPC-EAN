@@ -73,6 +73,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  upc_preimg = Image.new("RGB", (40 + upc_size_add, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (40 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
+ upc_array = { 'upc': upc, 'code': [ ] };
  LineSize = barheight[0];
  if(hidetext):
   LineSize = barheight[1];

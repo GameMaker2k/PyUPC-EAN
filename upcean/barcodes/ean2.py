@@ -68,9 +68,11 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  upc_preimg = Image.new("RGB", (29, barheight[1] + 9));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (29, barheight[1] + 9)], fill=barcolor[2]);
+ upc_array = { 'upc': upc, 'code': [ ] };
  LineSize = barheight[0];
  if(hidetext):
   LineSize = barheight[1];
+ upc_array['code'].append( [0, 1, 0, 1, 1] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 0, 10, 0, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 1, 10, 1, LineSize, barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 2, 10, 2, LineSize, barcolor[2]);
@@ -131,6 +133,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
    left_barcolor = left_barcolor_g;
   if(CheckSum==3 and NumZero==1): 
    left_barcolor = left_barcolor_g;
+  upc_array['code'].append( left_barcolor );
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
