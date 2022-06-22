@@ -36,9 +36,11 @@ def snapCoords( ctx, x, y ):
 
 def drawColorLine( ctx, x1, y1, x2, y2, color ):
  ctx.line((x1, y1, x2, y2), fill=color);
+ return True;
 
 def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  ctx.rectangle([(x1, y1), (x2, y2)], fill=color);
+ return True;
 
 def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb" ):
  if(ftype=="ocra"):
@@ -48,6 +50,8 @@ def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb" ):
  text = str(text);
  ctx.text((x, y), text, font=font, fill=color);
  del(font);
+ return True;
 
 def drawColorRectangleAlt( ctx, x1, y1, x2, y2, color ):
  ctx.rectangle([(x1, y1), (x2, y2)], outline=color);
+ return True;

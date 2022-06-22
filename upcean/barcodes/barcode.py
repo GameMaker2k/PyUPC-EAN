@@ -72,6 +72,19 @@ def validate_create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(F
 def validate_draw_ean13_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return validate_create_ean13_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
+def validate_create_ean13_from_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(True, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ if(len(upc)>13 or len(upc)<12): 
+  return False;
+ if(len(upc)<13):
+  if(not upcean.validate.validate_upca_checksum(upc)):
+   return False;
+  upc = "0"+str(upc);
+ if(not upcean.validate.validate_ean13_checksum(upc)):
+  return False;
+ return create_ean13_from_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+def validate_draw_ean13_barcode(upc,resize=1,hideinfo=(True, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return validate_create_ean13_from_upca_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
 def validate_create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>8 or len(upc)<8):
   return False;
@@ -131,6 +144,19 @@ def fix_create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False,
  return create_ean13_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def fix_draw_ean13_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return fix_create_ean13_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+def fix_create_ean13_from_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(True, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ if(len(upc)>13 or len(upc)<11): 
+  return False;
+ if(len(upc)<13):
+  upc = upcean.validate.fix_upca_checksum(upc);
+  upc = "0"+str(upc);
+ if(len(upc)>13 or len(upc)<12):
+  return False;
+ upc = upcean.validate.fix_ean13_checksum(upc);
+ return create_ean13_from_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+def fix_draw_ean13_from_upca_barcode(upc,resize=1,hideinfo=(True, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return fix_create_ean13_from_upca_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def fix_create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>8 or len(upc)<7):
