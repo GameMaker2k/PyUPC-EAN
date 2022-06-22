@@ -104,6 +104,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  LineSize = barheight[0];
  if(hidetext):
   LineSize = barheight[1];
+ upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 0, 4, 0, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 1, 4, 1, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 2, 4, 2, LineSize, barcolor[2]);
@@ -113,6 +114,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  upcean.barcodes.prepil.drawColorLine(upc_img, 6, 4, 6, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 7, 4, 7, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 8, 4, 8, LineSize, barcolor[2]);
+ upc_array['code'].append( [1, 0, 1, 1, 0, 0, 1] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 9, 4, 9, LineSize, barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 10, 4, 10, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 11, 4, 11, LineSize, barcolor[0]);
@@ -147,6 +149,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
    left_barcolor = [1, 1, 0, 1, 0, 1];
   if(upc_matches[NumZero]=="-"):
    left_barcolor = [1, 0, 1, 1, 0, 1];
+  upc_array['code'].append( left_barcolor );
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
@@ -157,7 +160,8 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
    InnerUPCNum += 1;
   upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barcolor[2]);
   LineStart += 1;
-  NumZero += 1; 
+  NumZero += 1;
+ upc_array['code'].append( [1, 0, 1, 1, 0, 0, 1] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 18 + upc_size_add, 4, 18 + upc_size_add, LineSize, barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 19 + upc_size_add, 4, 19 + upc_size_add, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 20 + upc_size_add, 4, 20 + upc_size_add, LineSize, barcolor[0]);
@@ -166,6 +170,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  upcean.barcodes.prepil.drawColorLine(upc_img, 23 + upc_size_add, 4, 23 + upc_size_add, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 24 + upc_size_add, 4, 24 + upc_size_add, LineSize, barcolor[0]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 25 + upc_size_add, 4, 25 + upc_size_add, LineSize, barcolor[2]);
+ upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] );
  upcean.barcodes.prepil.drawColorLine(upc_img, 26 + upc_size_add, 4, 26 + upc_size_add, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 27 + upc_size_add, 4, 27 + upc_size_add, LineSize, barcolor[2]);
  upcean.barcodes.prepil.drawColorLine(upc_img, 28 + upc_size_add, 4, 28 + upc_size_add, LineSize, barcolor[2]);
