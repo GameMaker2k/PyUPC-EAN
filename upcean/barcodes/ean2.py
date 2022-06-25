@@ -14,8 +14,18 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, sys, types, upcean.barcodes.prepil, upcean.getsfname;
-from PIL import Image, ImageDraw, ImageFont;
+import re, os, sys, types, upcean.getsfname, upcean.support;
+pilsupport = upcean.support.check_for_pil();
+if(pilsupport):
+ cairosupport = False;
+else:
+ cairosupport = upcean.support.check_for_cairo();
+if(pilsupport):
+ from upcean.barcodes.prepil import *;
+ from PIL import Image, ImageDraw, ImageFont;
+if(cairosupport):
+ from upcean.precairo import *;
+ import cairo;
 
 def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
@@ -65,19 +75,27 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   pil_addon_fix = int(resize) * 2;
  CheckSum = int(upc_matches[0]) % 4;
  LeftDigit = list(upc_matches[0]);
- upc_preimg = Image.new("RGB", (29, barheight[1] + 9));
- upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (29, barheight[1] + 9)], fill=barcolor[2]);
+ if(pilsupport):
+  upc_preimg = Image.new("RGB", (29, barheight[1] + 9));
+  upc_img = ImageDraw.Draw(upc_preimg);
+  upc_img.rectangle([(0, 0), (29, barheight[1] + 9)], fill=barcolor[2]);
+ if(cairosupport):
+  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 83, barheight[1] + 8);
+  upc_img = cairo.Context (upc_preimg);
+  upc_img.set_antialias(cairo.ANTIALIAS_NONE);
+  upc_img.rectangle(0, 0, 83, barheight[1] + 8);
+  upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
+  upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
  LineSize = barheight[0];
  if(hidetext):
   LineSize = barheight[1];
  upc_array['code'].append( [0, 1, 0, 1, 1] );
- upcean.barcodes.prepil.drawColorLine(upc_img, 0, 10, 0, LineSize, barcolor[2]);
- upcean.barcodes.prepil.drawColorLine(upc_img, 1, 10, 1, LineSize, barcolor[0]);
- upcean.barcodes.prepil.drawColorLine(upc_img, 2, 10, 2, LineSize, barcolor[2]);
- upcean.barcodes.prepil.drawColorLine(upc_img, 3, 10, 3, LineSize, barcolor[0]);
- upcean.barcodes.prepil.drawColorLine(upc_img, 4, 10, 4, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 0, 10, 0, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 1, 10, 1, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 2, 10, 2, LineSize, barcolor[2]);
+ drawColorLine(upc_img, 3, 10, 3, LineSize, barcolor[0]);
+ drawColorLine(upc_img, 4, 10, 4, LineSize, barcolor[0]);
  NumZero = 0; 
  LineStart = 5;
  while (NumZero < len(LeftDigit)):
@@ -137,15 +155,15 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
    if(left_barcolor[InnerUPCNum]==0):
-    upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
    LineStart += 1;
    InnerUPCNum += 1;
   if(NumZero == 0):
-   upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[2]);
    LineStart += 1;
-   upcean.barcodes.prepil.drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barcolor[0]);
    LineStart += 1;
   NumZero += 1;
  new_upc_img = upc_preimg.resize((29 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
@@ -153,8 +171,8 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(not hidetext):
-  upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 5 + (6 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1]);
-  upcean.barcodes.prepil.drawColorText(upc_img, 10 * int(resize), 13 + (13 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 5 + (6 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), 13 + (13 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1]);
  del(upc_img);
  oldoutfile = upcean.getsfname.get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
@@ -203,15 +221,33 @@ def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False
   outfile = oldoutfile[0];
   outfileext = oldoutfile[1];
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
-  return upc_preimg;
+  return new_upc_img;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
-   upc_preimg.save(sys.stdout, outfileext);
+   try:
+    if(pilsupport):
+     new_upc_img.save(sys.stdout, outfileext);
+    if(cairosupport):
+     new_upc_preimg.write_to_png(sys.stdout);
+   except:
+    return False;
  if(sys.version[0]>="3"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
-   upc_preimg.save(sys.stdout.buffer, outfileext);
+   try:
+    if(pilsupport):
+     new_upc_img.save(sys.stdout.buffer, outfileext);
+    if(cairosupport):
+     new_upc_preimg.write_to_png(sys.stdout.buffer);
+   except:
+    return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
-  upc_preimg.save(outfile, outfileext);
+  try:
+   if(pilsupport):
+    new_upc_img.save(outfile, outfileext);
+   if(cairosupport):
+    new_upc_preimg.write_to_png(outfile);
+  except:
+   return False;
  return True;
 
 def draw_ean2_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):

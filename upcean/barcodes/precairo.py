@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 '''
     This program is free software; you can redistribute it and/or modify
     it under the terms of the Revised BSD License.
@@ -9,11 +7,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2012 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2012 Game Maker 2k - http://intdb.sourceforge.net/
-    Copyright 2011-2012 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2013 Cool Dude 2k - http://idb.berlios.de/
+    Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: precairo.py - Last Update: 12/3/2019 Ver. 2.7.19 RC 1  - Author: cooldude2k $
+    $FileInfo: precairo.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
 '''
 
 import cairo;
@@ -32,13 +30,11 @@ def drawLine( ctx, x1, y1, x2, y2 ):
  ctx.line_to( point2[0], point2[1] );
  ctx.set_line_width( 1.0 );
  ctx.stroke();
- return True;
 
 def drawColorLine( ctx, x1, y1, x2, y2, color ):
  ctx.set_source_rgb(color[0], color[1], color[2]);
  drawLine(ctx, x1, y1, x2, y2);
  ctx.close_path();
- return True;
 
 def drawRectangle( ctx, x1, y1, x2, y2 ):
  point1 = snapCoords( ctx, x1, y1 );
@@ -47,13 +43,11 @@ def drawRectangle( ctx, x1, y1, x2, y2 ):
  ctx.rectangle( point1[0], point1[1], point2[0], point2[1] )
  ctx.set_line_width( 1.0 );
  ctx.stroke();
- return True;
 
 def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  ctx.set_source_rgb(color[0], color[1], color[2]);
  drawRectangle(ctx, x1, y1, x2, y2);
  ctx.close_path();
- return True;
 
 def drawText( ctx, size, x, y, text ):
  text = str(text);
@@ -70,10 +64,8 @@ def drawText( ctx, size, x, y, text ):
  ctx.move_to( point1[0], point1[1] );
  ctx.show_text( text );
  ctx.stroke();
- return True;
 
 def drawColorText( ctx, size, x, y, text, color ):
  text = str(text);
  ctx.set_source_rgb(color[0], color[1], color[2]);
  drawText(ctx, size, x, y, text);
- return True;
