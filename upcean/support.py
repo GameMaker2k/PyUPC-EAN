@@ -37,6 +37,16 @@ def get_barcode_name(barcode_type="upca"):
  bctype_name={"ean2": "EAN-2", "ean5": "EAN-5", "upca": "UPC-A", "upce": "UPC-E", "ean13": "EAN-13", "ean8": "EAN-8", "stf": "STF", "itf": "ITF", "itf6": "ITF-6", "itf14": "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "codabar": "Codabar", "msi": "MSI"};
  return bctype_name.get(barcode_type, False);
 
+def check_for_cairo():
+ # PIL Support Check
+ cairosupport = True;
+ try:
+  imp.find_module('cairo');
+  cairosupport = True;
+ except ImportError:
+  cairosupport = False
+ return cairosupport;
+
 def check_for_pil():
  # PIL Support Check
  pilsupport = True;
