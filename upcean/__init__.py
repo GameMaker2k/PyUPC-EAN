@@ -39,5 +39,6 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 
 import upcean.validate, upcean.convert, upcean.support, upcean.getprefix, upcean.oopfuncs;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport):
+cairosupport = upcean.support.check_for_cairo();
+if(pilsupport || cairosupport):
  import upcean.fonts, upcean.xml, upcean.barcodes, upcean.getsfname;
