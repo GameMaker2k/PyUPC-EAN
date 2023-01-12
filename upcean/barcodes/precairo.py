@@ -16,6 +16,18 @@
 
 import cairo;
 
+try:
+ import pkg_resources;
+ pkgres = True;
+except ImportError:
+ pkgres = False;
+
+fontpathocra = upcean.fonts.fontpathocra;
+fontpathocraalt = upcean.fonts.fontpathocraalt;
+fontpathocrb = upcean.fonts.fontpathocrb;
+fontpathocrbalt = upcean.fonts.fontpathocrbalt;
+fontpath = upcean.fonts.fontpath;
+
 '''
 http://stevehanov.ca/blog/index.php?id=28
 '''
