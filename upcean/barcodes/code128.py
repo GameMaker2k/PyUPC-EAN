@@ -28,13 +28,15 @@ if(cairosupport):
  import cairo;
 
 def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- upc = str(upc);
+ upc = str(upc).lower();
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
- if(len(upc) < 1): 
+ if(len(upc) % 2):
   return False;
- if(not re.findall("([0-9]+)", upc)):
+ if(len(upc) < 2): 
+  return False;
+ if(not re.findall("([0-9a-f]+)", upc)):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
