@@ -34,7 +34,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  hidetext = hideinfo[2];
  if(len(upc) % 2):
   return False;
- if(len(upc) < 2): 
+ if(len(upc) < 4): 
   return False;
  if(not re.findall("([0-9a-f]+)", upc)):
   return False;
