@@ -40,6 +40,8 @@ from upcean.barcodes.code11 import *;
 from upcean.barcodes.code39 import *;
 ''' // Code for making Code 93 by Kazuki Przyborowski '''
 from upcean.barcodes.code93 import *;
+''' // Code for making Code 128 by Kazuki Przyborowski '''
+from upcean.barcodes.code128 import *;
 ''' // Code for making Codabar by Kazuki Przyborowski '''
 from upcean.barcodes.codabar import *;
 ''' // Code for making Modified Plessey by Kazuki Przyborowski '''
