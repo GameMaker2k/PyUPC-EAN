@@ -76,7 +76,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   pil_addon_fix = int(resize) * 2;
  upc = upc.lower();
  upc_matches = re.findall("[0-9a-f]{2}", upc);
- upc_print = list([int(x) for x in upc_matches]);
+ upc_print = list([int(x, 16) for x in upc_matches]);
  upc_size_add = len(upc_matches) * 20;
  if(pilsupport):
   upc_preimg = Image.new("RGB", (34 + upc_size_add, barheight[1] + 9));
