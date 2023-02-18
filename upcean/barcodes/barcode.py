@@ -7,10 +7,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2020 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2020 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: barcode.py - Last Update: 2/18/2023 Ver. 2.7.21 RC 1 - Author: cooldude2k $
+    $FileInfo: barcode.py - Last Update: 12/3/2019 Ver. 2.7.19 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -22,6 +22,8 @@ from upcean.barcodes.ean2 import *;
 from upcean.barcodes.ean5 import *;
 ''' // Code for making UPC-A by Kazuki Przyborowski '''
 from upcean.barcodes.upca import *;
+''' // Code for making Goodwill Barcodes by Kazuki Przyborowski '''
+from upcean.barcodes.goodwill import *;
 ''' // Code for making UPC-E by Kazuki Przyborowski '''
 from upcean.barcodes.upce import *;
 ''' // Code for making EAN-13 by Kazuki Przyborowski '''
