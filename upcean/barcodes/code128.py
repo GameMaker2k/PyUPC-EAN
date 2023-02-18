@@ -77,16 +77,16 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  upc = upc.lower();
  upc_matches = re.findall("[0-9a-f]{2}", upc);
  upc_to_dec = list([int(x, 16) for x in upc_matches]);
- upc_size_add = len(upc_matches) * 20;
+ upc_size_add = (len(upc_matches) * 11) + (len(re.findall("6c", upc)) * 2);
  if(pilsupport):
-  upc_preimg = Image.new("RGB", (34 + upc_size_add, barheight[1] + 9));
+  upc_preimg = Image.new("RGB", (29 + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (34 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), (29 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
  if(cairosupport):
-  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 34 + upc_size_add, barheight[1] + 8);
+  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 29 + upc_size_add, barheight[1] + 8);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 34 + upc_size_add, barheight[1] + 8);
+  upc_img.rectangle(0, 0, 29 + upc_size_add, barheight[1] + 8);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -119,6 +119,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  decnumalttohex = { 32: '00', 194: '00', 207: '00', 212: '00', 252: '00', 33: '01', 34: '02', 35: '03', 36: '04', 37: '05', 38: '06', 39: '07', 40: '08', 41: '09', 42: '0a', 43: '0b', 44: '0c', 45: '0d', 46: '0e', 47: '0f', 48: '10', 49: '11', 50: '12', 51: '13', 52: '14', 53: '15', 54: '16', 55: '17', 56: '18', 57: '19', 58: '1a', 59: '1b', 60: '1c', 61: '1d', 62: '1e', 63: '1f', 64: '20', 65: '21', 66: '22', 67: '23', 68: '24', 69: '25', 70: '26', 71: '27', 72: '28', 73: '29', 74: '2a', 75: '2b', 76: '2c', 77: '2d', 78: '2e', 79: '2f', 80: '30', 81: '31', 82: '32', 83: '33', 84: '34', 85: '35', 86: '36', 87: '37', 88: '38', 89: '39', 90: '3a', 91: '3b', 92: '3c', 93: '3d', 94: '3e', 95: '3f', 96: '40', 97: '41', 98: '42', 99: '43', 100: '44', 101: '45', 102: '46', 103: '47', 104: '48', 105: '49', 106: '4a', 107: '4b', 108: '4c', 109: '4d', 110: '4e', 111: '4f', 112: '50', 113: '51', 114: '52', 115: '53', 116: '54', 117: '55', 118: '56', 119: '57', 120: '58', 121: '59', 122: '5a', 123: '5b', 124: '5c', 125: '5d', 126: '5e', 195: '5f', 200: '5f', 240: '5f', 196: '60', 201: '60', 241: '60', 197: '61', 202: '61', 242: '61', 198: '62', 203: '62', 243: '62', 199: '63', 204: '63', 244: '63', 200: '64', 205: '64', 245: '64', 201: '65', 206: '65', 246: '65', 202: '66', 207: '66', 247: '66', 203: '67', 208: '67', 248: '67', 204: '68', 209: '68', 249: '68', 205: '69', 210: '69', 250: '69' };
  codecharset = [hextocharsetone, hextocharsettwo, hextocharsetthree];
  upc_print = [];
+ shift_cur_set = False;
  while (NumZero < len(upc_matches)):
   left_barcolor = [1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="00"):
@@ -324,6 +325,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
     cur_set = 1;
    if(cur_set==1):
     cur_set = 0;
+   shift_cur_set = cur_set;
    cur_set = old_cur_set;
   if(upc_matches[NumZero]=="63"):
    left_barcolor =  [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0];
