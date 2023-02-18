@@ -729,6 +729,41 @@ def get_code93_checksum(upc):
  return str(CheckSum);
 
 '''
+// Code 93
+// Source: http://www.barcodeisland.com/code128.phtml
+// Source: http://en.wikipedia.org/wiki/Code_128
+'''
+def get_code128_checksum(upc):
+ if(len(upc) % 2):
+  return False;
+ if(len(upc) < 6): 
+  return False;
+ if(not re.findall("([0-9a-f]+)", upc)):
+  return False;
+ upc = upc.lower();
+ upc_matches = re.findall("[0-9a-f]{2}", upc);
+ upc_to_dec = list([int(x, 16) for x in upc_matches]);
+ icount = 1;
+ icountadd = 1;
+ checksum = 0;
+ if(upc_to_dec[0]>102 and upc_to_dec[0]<106):
+  checksum = checksum + upc_to_dec[0];
+  icount = 1;
+ else:
+  checksum = 0;
+  icount = 0;
+ upc_less_count = len(upc_to_dec) - 1;
+ while(icount < len(upc_to_dec)):
+  if(icount==upc_less_count and (upc_to_dec[icount]>105 and upc_to_dec[icount]<108)):
+   checksum = checksum;
+  else:
+   checksum = checksum + (upc_to_dec[icount] * icountadd);
+  icount = icount + 1;
+  icountadd = icountadd + 1;
+ checksum = str(format(checksum % 103, 'x'));
+ return checksum;
+
+'''
 // MSI (Modified Plessey)
 // Source: http://www.barcodeisland.com/msi.phtml
 // Source: http://en.wikipedia.org/wiki/MSI_Barcode
