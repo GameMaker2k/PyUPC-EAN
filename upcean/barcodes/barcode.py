@@ -14,7 +14,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.support;
+import upcean.support, upcean.getprefix.getprefix;
 
 ''' // Code for making EAN-2 supplement by Kazuki Przyborowski '''
 from upcean.barcodes.ean2 import *;
@@ -57,6 +57,17 @@ def validate_create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(Fal
  return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def validate_draw_upca_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return validate_create_upca_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+def validate_create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ if(len(upc)>12 or len(upc)<12):
+  return False;
+ if(not upcean.validate.validate_upca_checksum(upc)):
+  return False;
+ if(not upcean.getprefix.getprefix.get_goodwill_upca_barcode_info(upc)):
+  return False;
+ return create_goodwill_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+def validate_draw_goodwill_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return validate_create_goodwill_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def validate_create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>8 or len(upc)<8):
@@ -132,6 +143,16 @@ def fix_create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, F
  return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
 def fix_draw_upca_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return fix_create_upca_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+
+def fix_create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ if(len(upc)>12 or len(upc)<11):
+  return False;
+ upc = upcean.validate.fix_upca_checksum(upc);
+ if(not upcean.getprefix.getprefix.get_goodwill_upca_barcode_info(upc)):
+  return False;
+ return create_goodwill_barcode(upc,outfile,resize,hideinfo,barheight,textxy,barcolor);
+def fix_draw_goodwill_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return fix_create_goodwill_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
 
 def fix_create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(len(upc)>8 or len(upc)<7):
