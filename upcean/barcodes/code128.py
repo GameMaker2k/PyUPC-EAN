@@ -120,7 +120,11 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  codecharset = [hextocharsetone, hextocharsettwo, hextocharsetthree];
  upc_print = [];
  shift_cur_set = False;
+ start_shift = 0;
  while (NumZero < len(upc_matches)):
+  old_cur_set = cur_set;
+  if(start_shift==1):
+   cur_set = shift_cur_set;
   left_barcolor = [1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="00"):
    left_barcolor =  [1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0];
@@ -326,6 +330,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    if(cur_set==1):
     cur_set = 0;
    shift_cur_set = cur_set;
+   start_shift = 1;
    cur_set = old_cur_set;
   if(upc_matches[NumZero]=="63"):
    left_barcolor =  [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0];
@@ -364,6 +369,9 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    upc_print.append(codecharset[cur_set][upc_matches[NumZero]]);
   else:
    upc_print.append(" ");
+  if(start_shift==1):
+   cur_set = old_cur_set;
+   start_shift = 0;
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
