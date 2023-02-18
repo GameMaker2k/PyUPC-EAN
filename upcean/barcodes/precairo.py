@@ -7,11 +7,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2013 Cool Dude 2k - http://idb.berlios.de/
-    Copyright 2011-2013 Game Maker 2k - http://intdb.sourceforge.net/
-    Copyright 2011-2013 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2023 Cool Dude 2k - http://idb.berlios.de/
+    Copyright 2011-2023 Game Maker 2k - http://intdb.sourceforge.net/
+    Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: precairo.py - Last Update: 11/27/2013 Ver. 2.5.4 RC 1  - Author: cooldude2k $
+    $FileInfo: precairo.py - Last Update: 2/18/2023/18/2023 Ver. 2.7.20 RC 1  - Author: cooldude2k $
 '''
 
 import cairo;
