@@ -235,6 +235,22 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
    left_barcolor = [1, 1, 1, 0, 1, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="(+)"):
    left_barcolor = [1, 0, 0, 1, 1, 0, 0, 1, 0];
+  ''' Unused barcodes
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 1, 1, 1, 0, 1, 0, 1, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 0, 1, 0, 1, 1, 1, 0, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 0, 1, 0, 0, 1, 1, 1, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 0, 1, 1, 1, 0, 1, 0, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 0, 1, 1, 1, 0, 0, 1, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 1, 0, 1, 1, 1, 0, 1, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 1, 0, 1, 1, 0, 1, 1, 0];
+  '''
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
