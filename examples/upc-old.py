@@ -12,7 +12,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc.py - Last Update: 2/18/2023/18/2023 Ver. 2.7.20 RC 1 - Author: cooldude2k $
+    $FileInfo: upc.py - Last Update: 2/18/2023 Ver. 2.7.20 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import print_function
