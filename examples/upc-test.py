@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 '''
      Code From: http://code.activestate.com/lists/python-list/376068/
      Code From: https://mail.python.org/pipermail/python-list/2004-January/239664.html

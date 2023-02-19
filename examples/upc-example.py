@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 '''
      Code From: https://github.com/fizyk20/python-barcode
      Code From: https://github.com/fizyk20/python-barcode/blob/master/example.py
