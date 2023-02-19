@@ -53,7 +53,7 @@ if(sys.version[0]>="3"):
  import urllib.parse as urlparse;
  import http.cookiejar as cookielib;
 
-tmpfileprefix = "py"+str(sys.version_info[0])+"wwwget"+str(__version_info__[0])+"-";
+tmpfileprefix = "py"+str(sys.version_info[0])+"upcean"+str(__version_info__[0])+"-";
 tmpfilesuffix = "-";
 pytempdir = tempfile.gettempdir();
 
