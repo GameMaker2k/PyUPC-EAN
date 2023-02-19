@@ -5,7 +5,7 @@
      Code From: http://code.activestate.com/lists/python-list/376068/
      Code From: https://mail.python.org/pipermail/python-list/2004-January/239664.html
      Code From: http://compgroups.net/comp.lang.python/upc-ean-barcode-script/1631450
-         $FileInfo: upc-test.py - Last Update: 2/19/2023 Ver. 2.7.22 RC 1  - Author: alisonken11 $
+         $FileInfo: upc-test.py - Last Update: 2/19/2023 Ver. 2.7.23 RC 1  - Author: alisonken11 $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;

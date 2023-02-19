@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: codabar.py - Last Update: 2/19/2023 Ver. 2.7.22 RC 1 - Author: cooldude2k $
+    $FileInfo: codabar.py - Last Update: 2/19/2023 Ver. 2.7.23 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
