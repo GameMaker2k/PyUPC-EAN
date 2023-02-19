@@ -19,23 +19,23 @@ import imp, platform;
 from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, __build_python_is_set__, get_build_python_info, __revision__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date;
 
 ''' // Barcode Support List '''
-bctype_dict={'EAN2': "ean2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCE': "upce", 'EAN13': "ean13",'EAN8': "ean8",'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14", 'CODE11': "code11", 'CODE39': "code39", 'CODE93': "code93", 'CODE128': "code128", 'CODABAR': "codabar", 'MSI': "msi", "GOODWILL": "goodwill"};
-bctype_dict_alt={'ean2': "EAN2", 'ean5': "EAN5", 'upca': "UPCA", 'upce': "UPCE", 'ean13': "EAN13",'ean8': "EAN8",'stf': "STF", 'itf': "ITF", 'itf6': "ITF6", 'itf14': "ITF14", 'code11': "CODE11", 'code39': "CODE39", 'code93': "CODE93", 'code128': "CODE128", 'codabar': "CODABAR", 'msi': "MSI", "goodwill": "GOODWILL"};
-bctype_list=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "codabar", "msi"];
-bctype_tuple=("ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "codabar", "msi");
-bctype_name={'ean2': "EAN-2", 'ean5': "EAN-5", 'upca': "UPC-A", 'upce': "UPC-E", 'ean13': "EAN-13", 'ean8': "EAN-8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF-6", 'itf14': "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "code128": "Code 128", 'codabar': "Codabar", 'msi': "MSI", "goodwill": "GOODWILL"};
+bctype_dict={'EAN2': "ean2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCE': "upce", 'EAN13': "ean13",'EAN8': "ean8",'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14", 'CODE11': "code11", 'CODE39': "code39", 'CODE93': "code93", 'CODE128': "code128", 'CODE128Alt': "code128alt", 'CODABAR': "codabar", 'MSI': "msi", "GOODWILL": "goodwill"};
+bctype_dict_alt={'ean2': "EAN2", 'ean5': "EAN5", 'upca': "UPCA", 'upce': "UPCE", 'ean13': "EAN13",'ean8': "EAN8",'stf': "STF", 'itf': "ITF", 'itf6': "ITF6", 'itf14': "ITF14", 'code11': "CODE11", 'code39': "CODE39", 'code93': "CODE93", 'code128': "CODE128", 'code128alt': "CODE128Alt", 'codabar': "CODABAR", 'msi': "MSI", "goodwill": "GOODWILL"};
+bctype_list=["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "codabar", "msi"];
+bctype_tuple=("ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "codabar", "msi");
+bctype_name={'ean2': "EAN-2", 'ean5': "EAN-5", 'upca': "UPC-A", 'upce': "UPC-E", 'ean13': "EAN-13", 'ean8': "EAN-8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF-6", 'itf14': "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "code128": "Code 128", "code128alt": "Code 128 Alt", 'codabar': "Codabar", 'msi': "MSI", "goodwill": "GOODWILL"};
 def supported_barcodes(return_type="dict"):
  if(return_type=="dict"):
-  return {'EAN2': "ean2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCE': "upce", 'EAN13': "ean13",'EAN8': "ean8",'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14", 'CODE11': "code11", 'CODE39': "code39", 'CODE93': "code93", 'CODE128': "code128", 'CODABAR': "codabar", 'MSI': "msi", "GOODWILL": "goodwill"};
+  return {'EAN2': "ean2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCE': "upce", 'EAN13': "ean13",'EAN8': "ean8",'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14", 'CODE11': "code11", 'CODE39': "code39", 'CODE93': "code93", 'CODE128': "code128", 'CODE128Alt': "code128alt", 'CODABAR': "codabar", 'MSI': "msi", "GOODWILL": "goodwill"};
  if(return_type=="list"):
-  return ["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "codabar", "msi", "goodwill"];
+  return ["ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "codabar", "msi", "goodwill"];
  if(return_type=="tuple"):
-  return ("ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "codabar", "msi", "goodwill");
+  return ("ean2", "ean2", "ean5", "ean5", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "codabar", "msi", "goodwill");
  return False;
 def barcode_support(return_type="dict"):
  return supported_barcodes(return_type);
 def get_barcode_name(barcode_type="upca"):
- bctype_name={'ean2': "EAN-2", 'ean5': "EAN-5", 'upca': "UPC-A", 'upce': "UPC-E", 'ean13': "EAN-13", 'ean8': "EAN-8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF-6", 'itf14': "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "code128": "Code 128", 'codabar': "Codabar", 'msi': "MSI", "goodwill": "GOODWILL"};
+ bctype_name={'ean2': "EAN-2", 'ean5': "EAN-5", 'upca': "UPC-A", 'upce': "UPC-E", 'ean13': "EAN-13", 'ean8': "EAN-8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF-6", 'itf14': "ITF-14", "code11": "Code 11", "code39": "Code 39", "code93": "Code 93", "code128": "Code 128", "code128alt": "Code 128alt", 'codabar': "Codabar", 'msi': "MSI", "goodwill": "GOODWILL"};
  return bctype_name.get(barcode_type, False);
 
 def check_for_cairo():

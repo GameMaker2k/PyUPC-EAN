@@ -28,6 +28,7 @@ class barcode:
  EAN5="ean5";
  UPCS5="ean5";
  UPCA="upca";
+ GOODWILL="goodwill";
  UPCE="upce";
  EAN13="ean13"
  EAN8="ean8"
@@ -37,6 +38,7 @@ class barcode:
  CODE11="code11";
  CODE39="code39";
  CODE93="code93";
+ CODE128="code128"
  CODABAR="codabar";
  MSI="msi";
  bctype_dict=upcean.support.bctype_dict;
