@@ -12,7 +12,7 @@
     Copyright 2011-2023 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: precairo.py - Last Update: 2/18/2023 Ver. 2.7.21 RC 1  - Author: cooldude2k $
+    $FileInfo: precairo.py - Last Update: 2/18/2023 Ver. 2.7.22 RC 1  - Author: cooldude2k $
 '''
 
 import cairo;

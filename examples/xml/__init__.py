@@ -15,8 +15,22 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.getprefix.getprefix;
+import os;
 
-from upcean.getprefix.countries import *;
-from upcean.getprefix.getprefix import *;
-from upcean.getprefix.shortcuts import *;
+try:
+ import pkg_resources;
+ pkgres = True;
+except ImportError:
+ pkgres = False;
+
+if(pkgres):
+ barcodejson = pkg_resources.resource_filename(__name__, "barcodes.json");
+ barcodexsl = pkg_resources.resource_filename(__name__, "barcodes.xsl");
+ barcodexml = pkg_resources.resource_filename(__name__, "barcodes.xml");
+ bcxmlpath = os.path.dirname(barcodejson);
+
+if(not pkgres):
+ barcodejson = os.path.dirname(__file__)+os.sep+"barcodes.json";
+ barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl";
+ barcodexml = os.path.dirname(__file__)+os.sep+"barcodes.xml";
+ bcxmlpath = os.path.dirname(barcodejson);
