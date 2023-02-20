@@ -645,7 +645,7 @@ def make_ean13_vw_to_ean13_barcode(numbersystem, code, price):
   if(re.findall("^(\d{5})", price)):
    price_matches = re.findall("^(\d{5})", price);
    price = price_matches[0];
- vwupc = "2"+numbersystem+code+pricecs+price.zfill(4);
+ vwupc = "2"+numbersystem+code+price.zfill(5);
  vwupc = vwupc+str(upcean.validate.validate_ean13_checksum(vwupc, True));
  return vwupc;
 def make_ean13_vw_to_itf14_barcode(numbersystem, code, price):
