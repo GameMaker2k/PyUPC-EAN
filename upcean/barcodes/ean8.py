@@ -301,6 +301,8 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(not hidetext):
+  if(hidesn is not None and not hidesn):
+   drawColorText(upc_img, 10 * int(resize), 1 + (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), "<", barcolor[1]);
   drawColorText(upc_img, 10 * int(resize), 11 + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[0], barcolor[1]);
   drawColorText(upc_img, 10 * int(resize), 17 + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[1], barcolor[1]);
   drawColorText(upc_img, 10 * int(resize), 24 + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[0], barcolor[1]);
@@ -309,6 +311,8 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   drawColorText(upc_img, 10 * int(resize), 49 + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[1], barcolor[1]);
   drawColorText(upc_img, 10 * int(resize), 56 + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[0], barcolor[1]);
   drawColorText(upc_img, 10 * int(resize), 62 + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[1], barcolor[1]);
+  if(hidecd is not None and not hidecd):
+   drawColorText(upc_img, 10 * int(resize), 75 + (75 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), ">", barcolor[1]);
  del(upc_img);
  if(pilsupport):
   if(supplement is not None and len(supplement)==2): 
