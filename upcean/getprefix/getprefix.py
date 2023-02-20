@@ -453,7 +453,7 @@ def get_goodwill_upca_barcode_checkdigit(upc):
  return product.get("checkdigit", False);
 
 '''
-// Get variable weight info
+// Get variable weight info from UPC-A
 // Source: http://wiki.answers.com/Q/How_does_a_price_embedded_bar_code_work
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 '''
@@ -473,36 +473,105 @@ def get_upca_vw_barcode_info(upc, infotype=None):
   return product;
  if(infotype is not None):
   return product.get(infotype, product);
+def get_vw_barcode_info(upc, infotype=None):
+ return get_upca_vw_barcode_info(upc, infotype);
 def get_upca_vw_barcode_numbersystem(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
  return product.get("numbersystem", False);
+def get_vw_barcode_numbersystem(upc):
+ return get_upca_vw_barcode_numbersystem(upc);
 def get_upca_vw_barcode_code(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
  return product.get("code", False);
+def get_vw_barcode_code(upc):
+ return get_upca_vw_barcode_code(upc);
 def get_upca_vw_barcode_price(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
  return product.get("price", False);
+def get_vw_barcode_price(upc):
+ return get_upca_vw_barcode_price(upc);
 def get_upca_vw_barcode_pricecs(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
  return product.get("pricecs", False);
+def get_vw_barcode_pricecs(upc):
+ return get_upca_vw_barcode_pricecs(upc);
 def get_upca_vw_barcode_checkdigit(upc):
  upc = str(upc);
  product = get_upca_vw_barcode_info(upc);
  if(not product):
   return False;
  return product.get("checkdigit", False);
+def get_upca_vw_barcode_checksum(upc):
+ return get_upca_vw_barcode_checkdigit(upc);
+def get_vw_barcode_checkdigit(upc):
+ return get_upca_vw_barcode_checkdigit(upc);
+def get_vw_barcode_checksum(upc):
+ return get_upca_vw_barcode_checkdigit(upc);
+
+'''
+// Get variable weight info from EAN-13
+// Source: https://softmatic.com/barcode-ean-13.html#ean-country
+'''
+def get_ean13_vw_barcode_info(upc, infotype=None):
+ upc = str(upc);
+ if(re.findall("^0(\d{13})", upc)):
+  upc_matches = re.findall("^0(\d{13})", upc);
+  upc = upc_matches[0];
+ if(not re.findall("^(\d{13})", upc)):
+  return False;
+ if(not re.findall("^2(\d{12})", upc)):
+  return False;
+ upc_matches = re.findall("^2(\d{1})(\d{5})(\d{5})(\d{1})", upc);
+ upc_matches = upc_matches[0];
+ product = {'numbersystem': str(2), 'subnumbersystem': upc_matches[0], 'code': upc_matches[1], 'price': upc_matches[2], 'checkdigit': upc_matches[3]};
+ if(infotype is None):
+  return product;
+ if(infotype is not None):
+  return product.get(infotype, product);
+def get_ean13_vw_barcode_numbersystem(upc):
+ upc = str(upc);
+ product = get_ean13_vw_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("numbersystem", False);
+def get_ean13_vw_barcode_subnumbersystem(upc):
+ upc = str(upc);
+ product = get_ean13_vw_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("subnumbersystem", False);
+def get_ean13_vw_barcode_code(upc):
+ upc = str(upc);
+ product = get_ean13_vw_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("code", False);
+def get_ean13_vw_barcode_price(upc):
+ upc = str(upc);
+ product = get_ean13_vw_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("price", False);
+def get_ean13_vw_barcode_checkdigit(upc):
+ upc = str(upc);
+ product = get_ean13_vw_barcode_info(upc);
+ if(not product):
+  return False;
+ return product.get("checkdigit", False);
+def get_ean13_vw_barcode_checksum(upc):
+ return get_ean13_vw_barcode_checkdigit(upc);
 
 '''
 // Get coupon info
