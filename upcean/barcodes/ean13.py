@@ -312,7 +312,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
   drawColorText(upc_img, 10 * int(resize), 87 + (85 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[4], barcolor[1]);
   drawColorText(upc_img, 10 * int(resize), 93 + (90 * (int(resize) - 1)) + (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[5], barcolor[1]);
   if(hidecd is not None and not hidecd):
-   drawColorText(upc_img, 10 * int(resize), 105 + (104 * (int(resize) - 1)) + (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), ">", barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), 107 + (103 * (int(resize) - 1)) + (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), ">", barcolor[1]);
  del(upc_img);
  if(pilsupport):
   if(supplement is not None and len(supplement)==2): 
