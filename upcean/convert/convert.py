@@ -588,12 +588,12 @@ def print_convert_barcode_from_ismn13_to_ismn10(upc):
  return ismn10;
 
 '''
-// Get variable weight price checksum
+// Get variable weight price checksum for UPC-A
 // Source: http://wiki.answers.com/Q/How_does_a_price_embedded_bar_code_work
 // Source: http://en.wikipedia.org/wiki/Universal_Product_Code#Prefixes
 // Source: http://barcodes.gs1us.org/GS1%20US%20BarCodes%20and%20eCom%20-%20The%20Global%20Language%20of%20Business.htm
 '''
-def make_vw_to_upca_barcode(code, price):
+def make_upca_vw_to_upca_barcode(code, price):
  code = str(code);
  price = str(price);
  if(len(code)>5):
@@ -608,22 +608,28 @@ def make_vw_to_upca_barcode(code, price):
  vwupc = "2"+code+pricecs+price.zfill(4);
  vwupc = vwupc+str(upcean.validate.validate_upca_checksum(vwupc, True));
  return vwupc;
-def make_vw_to_ean13_barcode(code, price):
+def make_vw_to_upca_barcode(code, price):
+ return make_upca_vw_to_upca_barcode(code, price);
+def make_upca_vw_to_ean13_barcode(code, price):
  code = str(code);
  price = str(price);
- vwean13 = convert_barcode_from_upca_to_ean13(make_vw_to_upca_barcode(code, price));
+ vwean13 = convert_barcode_from_upca_to_ean13(make_upca_vw_to_upca_barcode(code, price));
  return vwean13;
-def make_vw_to_itf14_barcode(code, price):
+def make_vw_to_ean13_barcode(code, price):
+ return make_upca_vw_to_ean13_barcode(code, price);
+def make_upca_vw_to_itf14_barcode(code, price):
  code = str(code);
  price = str(price);
- vwitf14 = convert_barcode_from_upca_to_itf14(make_vw_to_upca_barcode(code, price));
+ vwitf14 = convert_barcode_from_upca_to_itf14(make_upca_vw_to_upca_barcode(code, price));
  return vwitf14;
+def make_vw_to_itf14_barcode(code, price):
+ return make_upca_vw_to_itf14_barcode(code, price);
 
 '''
 // Get variable weight price checksum for EAN-13
 // Source: https://softmatic.com/barcode-ean-13.html#ean-country
 '''
-def make_vw_alt_to_ean_barcode(numbersystem, code, price):
+def make_ean13_vw_to_ean13_barcode(numbersystem, code, price):
  code = str(code);
  price = str(price);
  numbersystem = str(numbersystem);
@@ -642,10 +648,10 @@ def make_vw_alt_to_ean_barcode(numbersystem, code, price):
  vwupc = "2"+numbersystem+code+pricecs+price.zfill(4);
  vwupc = vwupc+str(upcean.validate.validate_ean13_checksum(vwupc, True));
  return vwupc;
-def make_vw_alt_to_itf14_barcode(numbersystem, code, price):
+def make_ean13_vw_to_itf14_barcode(numbersystem, code, price):
  code = str(code);
  price = str(price);
- vwitf14 = convert_barcode_from_upca_to_itf14(make_vw_alt_to_upca_barcode(numbersystem, code, price));
+ vwitf14 = convert_barcode_from_upca_to_itf14(make_ean13_vw_to_upca_barcode(numbersystem, code, price));
  return vwitf14;
 
 def make_goodwill_to_upca_barcode(code, price):
