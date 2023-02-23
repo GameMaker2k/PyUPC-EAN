@@ -35,8 +35,11 @@ def snapCoords( ctx, x, y ):
  (xd, yd) = ctx.user_to_device(x, y);
  return ( round(x) + 0.5, round(y) + 0.5 );
 
-def drawColorLine( ctx, x1, y1, x2, y2, color ):
- ctx.line((x1, y1, x2, y2), fill=color);
+def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
+ iwidth = 0;
+ while(iwidth<width):
+  ctx.line((x1, y1, x2, y2), fill=color);
+  iwidth = iwidth + 1;
  return True;
 
 def drawColorRectangle( ctx, x1, y1, x2, y2, color ):

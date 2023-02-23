@@ -30,7 +30,7 @@ if(cairosupport):
  from upcean.precairo import *;
  import cairo;
 
-def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -127,11 +127,11 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(pilsupport):
-  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,textxy,barcolor);
+  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor);
   new_upc_img.paste(upc_barcode_img,(0, 15 * resize));
   del(upc_barcode_img);
  if(cairosupport):
-  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,textxy,barcolor);
+  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor);
   new_upc_img.set_source_surface(upc_barcode_img, 0, 15 * resize);
   new_upc_img.paint();
   del(upc_barcode_img);
@@ -140,23 +140,23 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  del(upc_img);
  if(pilsupport):
   if(supplement is not None and len(supplement)==2): 
-   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
+   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
     del(upc_sup_img);
   if(supplement is not None and len(supplement)==5): 
-   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,textxy,barcolor);
+   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
     del(upc_sup_img);
  if(cairosupport):
   if(supplement!=None and len(supplement)==2):
-   upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barcolor);
+   upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor);
    upc_img.set_source_surface(upc_sup_img, 113, 0);
    upc_img.paint();
    del(upc_sup_img);
   if(supplement!=None and len(supplement)==5):
-   upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barcolor);
+   upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor);
    upc_img.set_source_surface(upc_sup_img, 113, 0);
    upc_img.paint();
    del(upc_sup_img);
@@ -195,5 +195,5 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    return False;
  return True;
 
-def draw_goodwill_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_goodwill_barcode(upc,None,resize,hideinfo,barheight,textxy,barcolor);
+def draw_goodwill_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_goodwill_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);

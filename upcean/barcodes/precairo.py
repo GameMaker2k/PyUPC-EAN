@@ -44,9 +44,12 @@ def drawLine( ctx, x1, y1, x2, y2 ):
  ctx.set_line_width( 1.0 );
  ctx.stroke();
 
-def drawColorLine( ctx, x1, y1, x2, y2, color ):
+def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
  ctx.set_source_rgb(color[0], color[1], color[2]);
- drawLine(ctx, x1, y1, x2, y2);
+ iwidth = 0;
+ while(iwidth<width):
+  drawLine(ctx, x1, y1, x2, y2);
+  iwidth = iwidth + 1;
  ctx.close_path();
 
 def drawRectangle( ctx, x1, y1, x2, y2 ):
