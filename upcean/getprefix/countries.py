@@ -25,6 +25,15 @@ def get_gs1_prefix(upc):
  upc = str(upc);
  if(re.findall("^(\d{12})", upc)):
   upc = "0"+upc;
+ if(re.findall("^(\d{1})$", upc)):
+  upc = upc+"00000000000";
+  upc = upc+str(upcean.validate.get_ean13_checksum(upc));
+ if(re.findall("^(\d{2})$", upc)):
+  upc = upc+"0000000000";
+  upc = upc+str(upcean.validate.get_ean13_checksum(upc));
+ if(re.findall("^(\d{3})$", upc)):
+  upc = upc+"000000000";
+  upc = upc+str(upcean.validate.get_ean13_checksum(upc));
  if(re.findall("^0(\d{3}\d{10})", upc)):
   fix_ean = re.findall("^0(\d{3}\d{10})", upc);
   upc = fix_ean[0];
@@ -157,7 +166,7 @@ def get_gs1_prefix(upc):
  if(re.findall("^(616)", upc)):
   return "Kenya";
  if(re.findall("^(618)", upc)):
-  return "C\u00f4te d'Ivoire";
+  return "Côte d'Ivoire";
  if(re.findall("^(619)", upc)):
   return "Tunisia";
  if(re.findall("^(620)", upc)):
@@ -251,7 +260,7 @@ def get_gs1_prefix(upc):
  if(re.findall("^(867)", upc)):
   return "North Korea";
  if(re.findall("^(86[8-9])", upc)):
-  return "T\u00dcrkiye";
+  return "Türkiye";
  if(re.findall("^(87[0-9])", upc)):
   return "Netherlands";
  if(re.findall("^(880)", upc)):
