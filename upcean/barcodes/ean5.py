@@ -100,9 +100,9 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  start_bc_num_end = len(start_barcolor);
  while(start_bc_num < start_bc_num_end):
   if(start_barcolor[start_bc_num]==1):
-   drawColorLine(upc_img, start_bc_num, 4, start_bc_num, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, start_bc_num, 10, start_bc_num, LineSize, barwidth, barcolor[0]);
   if(start_barcolor[start_bc_num]==0):
-   drawColorLine(upc_img, start_bc_num, 4, start_bc_num, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, start_bc_num, 10, start_bc_num, LineSize, barwidth, barcolor[2]);
   start_bc_num = 1 + start_bc_num;
  NumZero = 0; 
  LineStart = 5;
