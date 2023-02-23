@@ -96,6 +96,8 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
     xmlbarcode.update({"hideinfo": tuple(hidebcinfoval)});
    if('height' in child.attrib):
     xmlbarcode.update({"barheight": tuple(map(int, child.attrib['height'].split()))});
+   if('width' in child.attrib):
+    xmlbarcode.update({"barwidth": tuple(map(int, child.attrib['width'].split()))});
    if('textxy' in child.attrib):
     xmlbarcode.update({"textxy": tuple(map(int, child.attrib['textxy'].split()))});
    if('color' in child.attrib):
@@ -229,6 +231,8 @@ def create_barcode_from_json_file(jsonfile, draw=False):
    jsonbarcode.update({"hideinfo": tuple(hidebcinfoval)});
   if('height' in bctree[bctreect]):
    jsonbarcode.update({"barheight": tuple(map(int, bctree[bctreect]['height'].split()))});
+  if('width' in bctree[bctreect]):
+   jsonbarcode.update({"barwidth": tuple(map(int, bctree[bctreect]['width'].split()))});
   if('textxy' in bctree[bctreect]):
    jsonbarcode.update({"textxy": tuple(map(int, bctree[bctreect]['textxy'].split()))});
   if('color' in bctree[bctreect]):
@@ -379,6 +383,12 @@ def create_barcode_from_qs_file(qsfile, draw=False):
   except IndexError:
    pass;
   try:
+   qsbarcode.update({"barwidth": int(bctree['width'][bctreect])});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
    qsbarcode.update({"textxy": int(bctree['textxy'][bctreect])});
   except KeyError:
    pass;
@@ -481,6 +491,12 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
   except IndexError:
    pass;
   try:
+   qsbarcode.update({"barwidth": bctree['barwidth'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
    qsbarcode.update({"textxy": bctree['textxy'][bctreect]});
   except KeyError:
    pass;
@@ -552,6 +568,12 @@ def convert_from_qs_to_json_file(qsfile, jsonfile=None):
    pass;
   try:
    qsbarcode.update({"barheight": bctree['barheight'][bctreect]});
+  except KeyError:
+   pass;
+  except IndexError:
+   pass;
+  try:
+   qsbarcode.update({"barwidth": bctree['barwidth'][bctreect]});
   except KeyError:
    pass;
   except IndexError:
