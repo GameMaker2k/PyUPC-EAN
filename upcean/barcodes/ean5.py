@@ -33,6 +33,8 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ if(barwidth < 1): 
+  barwidth = 1;
  if(len(upc)>5 or len(upc)<5): 
   return False;
  upc_matches = re.findall("(\d{5})", upc);

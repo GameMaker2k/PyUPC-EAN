@@ -33,6 +33,8 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ if(barwidth < 1): 
+  barwidth = 1;
  if(len(upc) < 1): 
   return False;
  if(not re.findall("([0-9]+)", upc)):

@@ -33,6 +33,8 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ if(barwidth < 1): 
+  barwidth = 1;
  if(len(upc) % 2):
   return False;
  if(len(upc) < 8): 

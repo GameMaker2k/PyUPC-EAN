@@ -34,7 +34,10 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
- upc_pieces = None; supplement = None;
+ if(barwidth < 1): 
+  barwidth = 1;
+ upc_pieces = None;
+ supplement = None;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
   upc_pieces = upc_pieces[0];

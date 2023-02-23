@@ -33,6 +33,8 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ if(barwidth < 1): 
+  barwidth = 1;
  if(len(upc)>2 or len(upc)<2): 
   return False;
  upc_matches = re.findall("(\d{2})", upc);

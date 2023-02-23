@@ -35,7 +35,10 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
- upc_pieces = None; supplement = None;
+ if(barwidth < 1): 
+  barwidth = 1;
+ upc_pieces = None;
+ supplement = None;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
   upc_pieces = upc_pieces[0];

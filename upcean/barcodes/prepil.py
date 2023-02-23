@@ -36,6 +36,8 @@ def snapCoords( ctx, x, y ):
  return ( round(x) + 0.5, round(y) + 0.5 );
 
 def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
+ if(width < 1): 
+  width = 1;
  iwidth = 0;
  while(iwidth<width):
   ctx.line((x1 + iwidth, y1, x2 + iwidth, y2), fill=color);

@@ -36,6 +36,8 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  hidetext = hideinfo[2];
  upc_pieces = None; 
  supplement = None;
+ if(barwidth < 1): 
+  barwidth = 1;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
   upc_pieces = upc_pieces[0];

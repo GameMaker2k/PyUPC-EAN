@@ -35,6 +35,8 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  hidetext = hideinfo[2];
  if(len(upc) < 1): 
   return False;
+ if(barwidth < 1): 
+  barwidth = 1;
  if(not re.findall("([0-9\-]+)", upc)):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):

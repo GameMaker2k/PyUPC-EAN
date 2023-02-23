@@ -36,6 +36,8 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  hidetext = hideinfo[2];
  if(len(upc) < 1): 
   return False;
+ if(barwidth < 1): 
+  barwidth = 1;
  if(not re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
