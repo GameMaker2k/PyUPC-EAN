@@ -413,7 +413,7 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
   gw_item_type = "Mystery 1/2 Dozen Deal";
  elif(price_matches[0]=="999" and gw_item_type=="Mystery Dozen Deal"):
   gw_item_type = "Mystery Dozen Deal";
- else
+ else:
   gw_item_type = gw_item_type;
  price_alt = str(price_matches[0].lstrip('0'))+price_matches[1];
  formated_price = price_matches[0]+"."+price_matches[1];
