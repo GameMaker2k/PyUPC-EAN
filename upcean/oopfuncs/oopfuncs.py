@@ -58,6 +58,7 @@ class barcode:
   self.hidetext = False;
   self.textxy = (1, 1, 1);
   self.barheight = (48, 54);
+  self.barwidth = 1;
   self.barcolor = (0, 0, 0);
   self.textcolor = (0, 0, 0);
   self.bgcolor = (255, 255, 255);
@@ -99,31 +100,31 @@ class barcode:
     filename = self.filename;
    if(size is None):
     size = self.size;
-   return upcean.barcodes.create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   def validate_create_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
    if(size is None):
     size = self.size;
-   return upcean.barcodes.validate_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.validate_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   def fix_create_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
    if(size is None):
     size = self.size;
-   return upcean.barcodes.fix_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.fix_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   def draw_barcode(self, size=None):
    if(size is None):
     size = self.size;
-   return upcean.barcodes.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   def validate_draw_barcode(self, size=None):
    if(size is None):
     size = self.size;
-   return upcean.barcodes.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
   def fix_draw_barcode(self, size=None):
    if(size is None):
     size = self.size;
-   return upcean.barcodes.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
  ''' // validate/__init__.py funtions '''
  def validate_checksum(self):
   return upcean.validate.validate_checksum(self.type, self.code, self.return_check);
