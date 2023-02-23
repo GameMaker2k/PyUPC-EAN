@@ -38,7 +38,7 @@ def snapCoords( ctx, x, y ):
 def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
  iwidth = 0;
  while(iwidth<width):
-  ctx.line((x1, y1, x2, y2), fill=color);
+  ctx.line((x1 + iwidth, y1, x2 + iwidth, y2), fill=color);
   iwidth = iwidth + 1;
  return True;
 

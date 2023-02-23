@@ -48,7 +48,7 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
  ctx.set_source_rgb(color[0], color[1], color[2]);
  iwidth = 0;
  while(iwidth<width):
-  drawLine(ctx, x1, y1, x2, y2);
+  drawLine(ctx, x1 + iwidth, y1, x2 + iwidth, y2);
   iwidth = iwidth + 1;
  ctx.close_path();
 
