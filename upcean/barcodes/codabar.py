@@ -106,7 +106,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  if(pre_upc_matches[0]=="D" or pre_upc_matches[0]=="E"):
   start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0];
  start_bc_num = 0;
- start_bc_num_end = 20;
+ start_bc_num_end = len(start_barcolor);
  while(start_bc_num < start_bc_num_end):
   if(start_barcolor[start_bc_num]==1):
    drawColorLine(upc_img, start_bc_num, 4, start_bc_num, LineSize, barwidth, barcolor[0]);
@@ -170,7 +170,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  if(pre_upc_matches[2]=="D" or pre_upc_matches[2]=="E"):
   end_barcolor = [1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  end_bc_num = 0;
- end_bc_num_end = 20;
+ end_bc_num_end = len(end_barcolor);
  end_bc_line_start = 21;
  while(end_bc_num < end_bc_num_end):
   if(end_barcolor[end_bc_num]==1):

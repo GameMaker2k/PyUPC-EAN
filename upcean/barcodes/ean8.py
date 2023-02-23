@@ -115,19 +115,16 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
  upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
- drawColorLine(upc_img, 0, 10, 0, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 1, 10, 1, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 2, 10, 2, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 3, 10, 3, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 4, 10, 4, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 5, 10, 5, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 6, 10, 6, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 7, 10, 7, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 8, 10, 8, barheight[0], barwidth, barcolor[2]);
  upc_array['code'].append( [1, 0, 1] );
- drawColorLine(upc_img, 9, 10, 9, barheight[1], barwidth, barcolor[0]);
- drawColorLine(upc_img, 10, 10, 10, barheight[1], barwidth, barcolor[2]);
- drawColorLine(upc_img, 11, 10, 11, barheight[1], barwidth, barcolor[0]);
+ start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1];
+ start_bc_num = 0;
+ start_bc_num_end = len(start_barcolor);
+ while(start_bc_num < start_bc_num_end):
+  if(start_barcolor[start_bc_num]==1):
+   drawColorLine(upc_img, start_bc_num, 4, start_bc_num, LineSize, barwidth, barcolor[0]);
+  if(start_barcolor[start_bc_num]==0):
+   drawColorLine(upc_img, start_bc_num, 4, start_bc_num, LineSize, barwidth, barcolor[2]);
+  start_bc_num = 1 + start_bc_num;
  NumZero = 0; 
  LineStart = 12;
  while (NumZero < len(LeftDigit)):
@@ -241,11 +238,17 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
    InnerUPCNum += 1;
   NumZero += 1;
  upc_array['code'].append( [0, 1, 0, 1, 0] );
- drawColorLine(upc_img, 38, 10, 38, barheight[1], barwidth, barcolor[2]);
- drawColorLine(upc_img, 39, 10, 39, barheight[1], barwidth, barcolor[0]);
- drawColorLine(upc_img, 40, 10, 40, barheight[1], barwidth, barcolor[2]);
- drawColorLine(upc_img, 41, 10, 41, barheight[1], barwidth, barcolor[0]);
- drawColorLine(upc_img, 42, 10, 42, barheight[1], barwidth, barcolor[2]);
+ mid_barcolor = [0, 1, 0, 1, 0];
+ mid_bc_num = 0;
+ mid_bc_num_end = len(mid_barcolor);
+ mid_bc_line_start = 38;
+ while(mid_bc_num < mid_bc_num_end):
+  if(mid_barcolor[mid_bc_num]==1):
+   drawColorLine(upc_img, mid_bc_line_start + upc_size_add, 4, mid_bc_line_start + upc_size_add, LineSize, barwidth, barcolor[0]);
+  if(mid_barcolor[mid_bc_num]==0):
+   drawColorLine(upc_img, mid_bc_line_start + upc_size_add, 4, mid_bc_line_start + upc_size_add, LineSize, barwidth, barcolor[2]);
+  mid_bc_num = 1 + mid_bc_num;
+  mid_bc_line_start = 1 + mid_bc_line_start;
  NumZero = 0; LineStart = 43;
  while (NumZero < len(RightDigit)):
   LineSize = barheight[0];
@@ -283,19 +286,18 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
    InnerUPCNum += 1;
   NumZero += 1;
  upc_array['code'].append( [1, 0, 1] );
- drawColorLine(upc_img, 71, 10, 71, barheight[1], barwidth, barcolor[0]);
- drawColorLine(upc_img, 72, 10, 72, barheight[1], barwidth, barcolor[2]);
- drawColorLine(upc_img, 73, 10, 73, barheight[1], barwidth, barcolor[0]);
  upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
- drawColorLine(upc_img, 74, 10, 74, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 75, 10, 75, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 76, 10, 76, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 77, 10, 77, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 78, 10, 78, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 79, 10, 79, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 80, 10, 80, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 81, 10, 81, barheight[0], barwidth, barcolor[2]);
- drawColorLine(upc_img, 82, 10, 82, barheight[0], barwidth, barcolor[2]);
+ end_barcolor = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ end_bc_num = 0;
+ end_bc_num_end = len(end_barcolor);
+ end_bc_line_start = 71;
+ while(end_bc_num < end_bc_num_end):
+  if(end_barcolor[end_bc_num]==1):
+   drawColorLine(upc_img, end_bc_line_start + upc_size_add, 4, end_bc_line_start + upc_size_add, LineSize, barwidth, barcolor[0]);
+  if(end_barcolor[end_bc_num]==0):
+   drawColorLine(upc_img, end_bc_line_start + upc_size_add, 4, end_bc_line_start + upc_size_add, LineSize, barwidth, barcolor[2]);
+  end_bc_num = 1 + end_bc_num;
+  end_bc_line_start = 1 + end_bc_line_start;
  new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
