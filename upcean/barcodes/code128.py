@@ -475,3 +475,28 @@ def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
 
 def draw_code128alt_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  return create_code128alt_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+
+def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ upc = str(upc);
+ hidesn = hideinfo[0];
+ hidecd = hideinfo[1];
+ hidetext = hideinfo[2];
+ if(len(upc) < 12): 
+  return False;
+ if(not re.findall("[0-9]{3}", upc)): 
+  return False;
+ upc_matches = re.findall("[0-9]{3}", upc);
+ il = len(upc_matches);
+ i = 0;
+ upcout = " ";
+ while(i < il):
+  dectohex = format(int(upc_matches[i]), 'x');
+  if(dectohex==1):
+   dectohex = "0"+dectohex;
+  upcout = upcout+dectohex;
+ upc = upcout;
+ return create_code128_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+
+def draw_code128dec_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+ return create_code128dec_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+
