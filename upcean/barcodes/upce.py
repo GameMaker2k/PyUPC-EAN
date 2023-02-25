@@ -120,6 +120,12 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[1];
  while(start_bc_num < start_bc_num_end):
+  if(start_bc_num<9):
+   LineSize = barheight[0];
+  else:
+   LineSize = barheight[1];
+  if(hidetext):
+   LineSize = barheight[1];
   if(start_barcolor[start_bc_num]==1):
    drawColorLine(upc_img, start_bc_num, 10, start_bc_num, LineSize, barwidth, barcolor[0]);
   if(start_barcolor[start_bc_num]==0):
@@ -323,6 +329,12 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  end_bc_line_start = 21;
  LineSize = barheight[1];
  while(end_bc_num < end_bc_num_end):
+  if(end_bc_num<7):
+   LineSize = barheight[1];
+  else:
+   LineSize = barheight[0];
+  if(hidetext):
+   LineSize = barheight[1];
   if(end_barcolor[end_bc_num]==1):
    drawColorLine(upc_img, end_bc_line_start, 10, end_bc_line_start, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):

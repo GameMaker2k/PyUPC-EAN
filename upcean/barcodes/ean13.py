@@ -116,6 +116,12 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[1];
  while(start_bc_num < start_bc_num_end):
+  if(start_bc_num<10):
+   LineSize = barheight[0];
+  else:
+   LineSize = barheight[1];
+  if(hidetext):
+   LineSize = barheight[1];
   if(start_barcolor[start_bc_num]==1):
    drawColorLine(upc_img, start_bc_num, 10, start_bc_num, LineSize, barwidth, barcolor[0]);
   if(start_barcolor[start_bc_num]==0):
@@ -240,6 +246,12 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  mid_bc_line_start = 56;
  LineSize = barheight[1];
  while(mid_bc_num < mid_bc_num_end):
+  if(end_bc_num<4):
+   LineSize = barheight[1];
+  else:
+   LineSize = barheight[0];
+  if(hidetext):
+   LineSize = barheight[1];
   if(mid_barcolor[mid_bc_num]==1):
    drawColorLine(upc_img, mid_bc_line_start, 10, mid_bc_line_start, LineSize, barwidth, barcolor[0]);
   if(mid_barcolor[mid_bc_num]==0):
