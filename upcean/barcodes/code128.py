@@ -491,7 +491,10 @@ def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
  upcout = " ";
  while(i < il):
   dectohex = format(int(upc_matches[i]), 'x');
-  upcout = upcout+str(dectohex);
+  dectohexzero = str(dectohex).zfill(2);
+  if(len(dectohexzero)>2):
+   return False;
+  upcout = upcout+str(dectohexzero);
   i = i + 1;
  upc = upcout;
  return create_code128_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor);
