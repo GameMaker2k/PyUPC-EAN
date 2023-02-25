@@ -488,7 +488,7 @@ def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
  upc_matches = re.findall("[0-9]{3}", upc);
  il = len(upc_matches);
  i = 0;
- upcout = " ";
+ upcout = "";
  while(i < il):
   dectohex = format(int(upc_matches[i]), 'x');
   dectohexzero = str(dectohex).zfill(2);
