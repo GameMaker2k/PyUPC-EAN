@@ -742,6 +742,8 @@ def get_code128_checksum(upc):
  if(not re.findall("([0-9a-f]+)", upc)):
   return False;
  upc = upc.lower();
+ if(not re.findall("[0-9a-f]{2}", upc)): 
+  return False;
  upc_matches = re.findall("[0-9a-f]{2}", upc);
  upc_to_dec = list([int(x, 16) for x in upc_matches]);
  icount = 1;
@@ -763,6 +765,44 @@ def get_code128_checksum(upc):
   icountadd = icountadd + 1;
  checksum = str(format(checksum % 103, 'x')).zfill(2);
  return checksum;
+
+def convert_hex_code128_to_ascii_code128(upc):
+ upc = str(upc);
+ if(len(upc) < 8): 
+  return False;
+ hextoascii = { '00': " ", '01': "!", '02': "\"", '03': "#", '04': "$", '05': "%", '06': "&", '07': "'", '08': "(", '09': ")", '0a': "*", '0b': "+", '0c': ",", '0d': "-", '0e': ".", '0f': "/", '10': "0", '11': "1", '12': "2", '13': "3", '14': "4", '15': "5", '16': "6", '17': "7", '18': "8", '19': "9", '1a': ":", '1b': ";", '1c': "<", '1d': "=", '1e': ">", '1f': "?", '20': "@", '21': "A", '22': "B", '23': "C", '24': "D", '25': "E", '26': "F", '27': "G", '28': "H", '29': "I", '2a': "J", '2b': "K", '2c': "L", '2d': "M", '2e': "N", '2f': "O", '30': "P", '31': "Q", '32': "R", '33': "S", '34': "T", '35': "U", '36': "V", '37': "W", '38': "X", '39': "Y", '3a': "Z", '3b': "[", '3c': "\\", '3d': "]", '3e': "^", '3f': "_", '40': "`", '41': "a", '42': "b", '43': "c", '44': "d", '45': "e", '46': "f", '47': "g", '48': "h", '49': "i", '4a': "j", '4b': "k", '4c': "l", '4d': "m", '4e': "n", '4f': "o", '50': "p", '51': "q", '52': "r", '53': "s", '54': "t", '55': "u", '56': "v", '57': "w", '58': "x", '59': "y", '5a': "z", '5b': "{", '5c': "|", '5d': "}", '5e': "~", '5f': "Ã", '60': "Ä", '61': "Å", '62': "Æ", '63': "Ç", '64': "È", '65': "É", '66': "Ê", '67': "Ë", '68': "Ì", '69': "Í", '6a': "Î", '6b': "Ï", '6c': "Î" };
+ asciitohex = { ' ': "00", '!': "01", '"': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e", 'O': "2f", 'P': "30", 'Q': "31", 'R': "32", 'S': "33", 'T': "34", 'U': "35", 'V': "36", 'W': "37", 'X': "38", 'Y': "39", 'Z': "3a", '[': "3b", '\\': "3c", ']': "3d", '^': "3e", '_': "3f", '`': "40", 'a': "41", 'b': "42", 'c': "43", 'd': "44", 'e': "45", 'f': "46", 'g': "47", 'h': "48", 'i': "49", 'j': "4a", 'k': "4b", 'l': "4c", 'm': "4d", 'n': "4e", 'o': "4f", 'p': "50", 'q': "51", 'r': "52", 's': "53", 't': "54", 'u': "55", 'v': "56", 'w': "57", 'x': "58", 'y': "59", 'z': "5a", '{': "5b", '|': "5c", '}': "5d", '~': "5e", 'Ã': "5f", 'Ä': "60", 'Å': "61", 'Æ': "62", 'Ç': "63", 'È': "64", 'É': "65", 'Ê': "66", 'Ë': "67", 'Ì': "68", 'Í': "69", 'Î': "6a", 'Ï': "6b", 'Î': "6c" };
+ barcodeout = "";
+ for upcpart in upc:
+  barcodeout = barcodeout + hextoascii.get(upcpart, '');
+ return barcodeout;
+
+def get_code128alt_checksum(upc):
+ upc = str(upc);
+ if(len(upc) < 4): 
+  return False;
+ upc = convert_ascii_code128_to_hex_code128(upc);
+ return get_code128_checksum(upc);
+
+def get_code128dec_checksum(upc):
+ upc = str(upc);
+ if(len(upc) < 12): 
+  return False;
+ if(not re.findall("[0-9]{3}", upc)): 
+  return False;
+ upc_matches = re.findall("[0-9]{3}", upc);
+ il = len(upc_matches);
+ i = 0;
+ upcout = "";
+ while(i < il):
+  dectohex = format(int(upc_matches[i]), 'x');
+  dectohexzero = str(dectohex).zfill(2);
+  if(len(dectohexzero)>2):
+   return False;
+  upcout = upcout+str(dectohexzero);
+  i = i + 1;
+ upc = upcout;
+ return get_code128_checksum(upc);
 
 '''
 // MSI (Modified Plessey)
