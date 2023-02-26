@@ -948,18 +948,18 @@ def fix_isbn10_checksum(upc):
  return upc+str(get_isbn10_checksum(upc));
 def validate_isbn13_checksum(upc, return_check=False):
  upc = str(upc);
- if(not re.findall("^978(\d{9})", upc)):
+ if(not re.findall("^(97[8-9])(\d{9})", upc)):
   return False;
- if(re.findall("^978(\d{9})", upc)):
+ if(re.findall("^(97[8-9])(\d{9})", upc)):
   return validate_ean13_checksum(upc,return_check);
 def get_isbn13_checksum(upc):
  upc = str(upc);
  return validate_isbn13_checksum(upc,True);
 def fix_isbn13_checksum(upc):
  upc = str(upc);
- if(not re.findall("^978(\d{9})", upc)):
+ if(not re.findall("^(97[8-9])(\d{9})", upc)):
   return False;
- if(re.findall("^978(\d{9})", upc)):
+ if(re.findall("^(97[8-9])(\d{9})", upc)):
   return fix_ean13_checksum(upc);
 
 '''
