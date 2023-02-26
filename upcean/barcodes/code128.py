@@ -78,6 +78,8 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
  upc = upc.lower();
+ if(not re.findall("[0-9a-f]{2}", upc)): 
+  return False;
  upc_matches = re.findall("[0-9a-f]{2}", upc);
  upc_to_dec = list([int(x, 16) for x in upc_matches]);
  upc_size_add = (len(upc_matches) * 11) + (len(re.findall("6c", upc)) * 2);
