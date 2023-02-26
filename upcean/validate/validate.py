@@ -761,7 +761,7 @@ def get_code128_checksum(upc):
    checksum = checksum + (upc_to_dec[icount] * icountadd);
   icount = icount + 1;
   icountadd = icountadd + 1;
- checksum = str(format(checksum % 103, 'x'));
+ checksum = str(format(checksum % 103, 'x')).zfill(2);
  return checksum;
 
 '''
