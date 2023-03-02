@@ -41,7 +41,7 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
  iwidth = 0;
  while(iwidth<width):
   ctx.line((x1 + iwidth, y1, x2 + iwidth, y2), fill=color);
-  iwidth = iwidth + 1;
+  iwidth += 1;
  return True;
 
 def drawColorRectangle( ctx, x1, y1, x2, y2, color ):

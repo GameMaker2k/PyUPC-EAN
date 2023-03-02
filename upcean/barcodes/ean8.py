@@ -119,23 +119,22 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
  upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
  upc_array['code'].append( [1, 0, 1] );
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1];
- start_bc_num = 0;
+ LineStart = 0;
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[1];
- while(start_bc_num < start_bc_num_end):
-  if(start_bc_num<10):
+ while(LineStart < start_bc_num_end):
+  if(LineStart<10):
    LineSize = barheight[0];
   else:
    LineSize = barheight[1];
   if(hidetext):
    LineSize = barheight[1];
-  if(start_barcolor[start_bc_num]==1):
-   drawColorLine(upc_img, start_bc_num, 10, start_bc_num, LineSize, barwidth, barcolor[0]);
-  if(start_barcolor[start_bc_num]==0):
-   drawColorLine(upc_img, start_bc_num, 10, start_bc_num, LineSize, barwidth, barcolor[2]);
-  start_bc_num = 1 + start_bc_num;
+  if(start_barcolor[LineStart]==1):
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
+  if(start_barcolor[LineStart]==0):
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
+  LineStart += barwidth;
  NumZero = 0; 
- LineStart = 12;
  while (NumZero < len(LeftDigit)):
   LineSize = barheight[0];
   if(hidetext):
@@ -243,23 +242,22 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
-   LineStart += 1;
+   LineStart += barwidth;
    InnerUPCNum += 1;
   NumZero += 1;
  upc_array['code'].append( [0, 1, 0, 1, 0] );
  mid_barcolor = [0, 1, 0, 1, 0];
  mid_bc_num = 0;
  mid_bc_num_end = len(mid_barcolor);
- mid_bc_line_start = 38;
  LineSize = barheight[1];
  while(mid_bc_num < mid_bc_num_end):
   if(mid_barcolor[mid_bc_num]==1):
-   drawColorLine(upc_img, mid_bc_line_start, 10, mid_bc_line_start, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
   if(mid_barcolor[mid_bc_num]==0):
-   drawColorLine(upc_img, mid_bc_line_start, 10, mid_bc_line_start, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
   mid_bc_num = 1 + mid_bc_num;
-  mid_bc_line_start = 1 + mid_bc_line_start;
- NumZero = 0; LineStart = 43;
+  LineStart += barwidth;
+ NumZero = 0;
  while (NumZero < len(RightDigit)):
   LineSize = barheight[0];
   if(hidetext):
@@ -292,7 +290,7 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
    if(right_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
-   LineStart += 1;
+   LineStart += barwidth;
    InnerUPCNum += 1;
   NumZero += 1;
  upc_array['code'].append( [1, 0, 1] );
@@ -300,7 +298,6 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
  end_barcolor = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  end_bc_num = 0;
  end_bc_num_end = len(end_barcolor);
- end_bc_line_start = 71;
  LineSize = barheight[1];
  while(end_bc_num < end_bc_num_end):
   if(end_bc_num<4):
@@ -310,11 +307,11 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   if(hidetext):
    LineSize = barheight[1];
   if(end_barcolor[end_bc_num]==1):
-   drawColorLine(upc_img, end_bc_line_start, 10, end_bc_line_start, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):
-   drawColorLine(upc_img, end_bc_line_start, 10, end_bc_line_start, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
   end_bc_num = 1 + end_bc_num;
-  end_bc_line_start = 1 + end_bc_line_start;
+  LineStart += barwidth;
  new_upc_img = upc_preimg.resize(((83 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);

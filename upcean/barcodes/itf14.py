@@ -92,17 +92,16 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0];
- start_bc_num = 0;
+ LineStart = 0;
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[0];
- while(start_bc_num < start_bc_num_end):
-  if(start_barcolor[start_bc_num]==1):
-   drawColorLine(upc_img, start_bc_num, 4, start_bc_num, LineSize, barwidth, barcolor[0]);
-  if(start_barcolor[start_bc_num]==0):
-   drawColorLine(upc_img, start_bc_num, 4, start_bc_num, LineSize, barwidth, barcolor[2]);
-  start_bc_num = 1 + start_bc_num;
+ while(LineStart < start_bc_num_end):
+  if(start_barcolor[LineStart]==1):
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
+  if(start_barcolor[LineStart]==0):
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
+  LineStart += barwidth;
  NumZero = 0; 
- LineStart = 21; 
  LineSize = barheight[0];
  while (NumZero < len(upc_matches)):
   ArrayDigit = list(upc_matches[NumZero]);
@@ -152,37 +151,37 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]); 
-    LineStart += 1; 
+    LineStart += barwidth; 
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]); 
-    LineStart += 1; 
+    LineStart += barwidth; 
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]); 
-    LineStart += 1;
+    LineStart += barwidth;
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]); 
-    LineStart += 1;
+    LineStart += barwidth;
    if(right_barcolor[InnerUPCNum]==1):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]); 
-    LineStart += 1; 
+    LineStart += barwidth; 
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]); 
-    LineStart += 1; 
+    LineStart += barwidth; 
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]); 
-    LineStart += 1;
+    LineStart += barwidth;
    if(right_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
-    LineStart += 1;
+    LineStart += barwidth;
    InnerUPCNum += 1;
   NumZero += 1;
  end_barcolor = [1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  end_bc_num = 0;
  end_bc_num_end = len(end_barcolor);
- end_bc_line_start = 21;
+ LineStart = 21;
  while(end_bc_num < end_bc_num_end):
   if(end_barcolor[end_bc_num]==1):
-   drawColorLine(upc_img, end_bc_line_start + upc_size_add, 4, end_bc_line_start + upc_size_add, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):
-   drawColorLine(upc_img, end_bc_line_start + upc_size_add, 4, end_bc_line_start + upc_size_add, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[2]);
   end_bc_num = 1 + end_bc_num;
-  end_bc_line_start = 1 + end_bc_line_start;
+  LineStart += barwidth;
  drawColorRectangleAlt(upc_img, 0, 0, 43 + upc_size_add, (barheight[0] + 15) - 11, barcolor[0]);
  drawColorRectangleAlt(upc_img, 1, 1, 42 + upc_size_add, (barheight[0] + 15) - 12, barcolor[0]);
  drawColorRectangleAlt(upc_img, 2, 2, 41 + upc_size_add, (barheight[0] + 15) - 13, barcolor[0]);

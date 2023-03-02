@@ -95,16 +95,15 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   LineSize = barheight[1];
  upc_array['code'].append( [0, 1, 0, 1, 1] );
  start_barcolor = [0, 1, 0, 1, 1];
- start_bc_num = 0;
+ LineStart = 0;
  start_bc_num_end = len(start_barcolor);
- while(start_bc_num < start_bc_num_end):
-  if(start_barcolor[start_bc_num]==1):
-   drawColorLine(upc_img, start_bc_num, 10, start_bc_num, LineSize, barwidth, barcolor[0]);
-  if(start_barcolor[start_bc_num]==0):
-   drawColorLine(upc_img, start_bc_num, 10, start_bc_num, LineSize, barwidth, barcolor[2]);
-  start_bc_num = 1 + start_bc_num;
+ while(LineStart < start_bc_num_end):
+  if(start_barcolor[LineStart]==1):
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
+  if(start_barcolor[LineStart]==0):
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
+  LineStart += barwidth;
  NumZero = 0; 
- LineStart = 5;
  while (NumZero < len(LeftDigit)):
   LineSize = barheight[0];
   if(hidetext):
@@ -165,13 +164,13 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
-   LineStart += 1;
+   LineStart += barwidth;
    InnerUPCNum += 1;
   if(NumZero == 0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
-   LineStart += 1;
+   LineStart += barwidth;
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
-   LineStart += 1;
+   LineStart += barwidth;
   NumZero += 1;
  new_upc_img = upc_preimg.resize((29 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
