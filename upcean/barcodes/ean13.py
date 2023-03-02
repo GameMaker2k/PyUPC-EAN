@@ -116,7 +116,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[1];
- while(LineStart < start_bc_num_end):
+ while(BarNum < start_bc_num_end):
   if(LineStart<10):
    LineSize = barheight[0];
   else:

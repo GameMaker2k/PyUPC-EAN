@@ -96,7 +96,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[0];
- while(LineStart < start_bc_num_end):
+ while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
   if(start_barcolor[BarNum]==0):

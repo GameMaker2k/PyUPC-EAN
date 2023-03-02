@@ -114,7 +114,7 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
  LineStart = 0;
  BarNum = 0;
  start_bc_num_end = len(start_barcolor);
- while(LineStart < start_bc_num_end):
+ while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
   if(start_barcolor[BarNum]==0):

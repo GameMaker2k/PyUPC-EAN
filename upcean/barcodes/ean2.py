@@ -98,7 +98,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  LineStart = 0;
  BarNum = 0;
  start_bc_num_end = len(start_barcolor);
- while(LineStart < start_bc_num_end):
+ while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
   if(start_barcolor[BarNum]==0):
