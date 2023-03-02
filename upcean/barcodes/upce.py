@@ -102,14 +102,14 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  if(supplement is not None and len(supplement)==5): 
   addonsize = 56;
  if(pilsupport):
-  upc_preimg = Image.new("RGB", (69 + addonsize, barheight[1] + 9));
+  upc_preimg = Image.new("RGB", ((69 * barwidth) + addonsize, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (69 + addonsize, barheight[1] + 9)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((69 * barwidth) + addonsize, barheight[1] + 9)], fill=barcolor[2]);
  if(cairosupport):
-  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 69 + addonsize, barheight[1] + 8);
+  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (69 * barwidth) + addonsize, barheight[1] + 8);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 69 + addonsize, barheight[1] + 8);
+  upc_img.rectangle(0, 0, (69 * barwidth) + addonsize, barheight[1] + 8);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -343,7 +343,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
- new_upc_img = upc_preimg.resize(((69 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
+ new_upc_img = upc_preimg.resize((((69 * barwidth) + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
@@ -363,22 +363,22 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
   if(supplement is not None and len(supplement)==2): 
    upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor);
    if(upc_sup_img):
-    new_upc_img.paste(upc_sup_img,(69 * int(resize),0));
+    new_upc_img.paste(upc_sup_img,((69 * barwidth) * int(resize),0));
     del(upc_sup_img);
   if(supplement is not None and len(supplement)==5): 
    upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor);
    if(upc_sup_img):
-    new_upc_img.paste(upc_sup_img,(69 * int(resize),0));
+    new_upc_img.paste(upc_sup_img,((69 * barwidth) * int(resize),0));
     del(upc_sup_img);
  if(cairosupport):
   if(supplement!=None and len(supplement)==2):
    upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor);
-   upc_img.set_source_surface(upc_sup_img, 69, 0);
+   upc_img.set_source_surface(upc_sup_img, (69 * barwidth), 0);
    upc_img.paint();
    del(upc_sup_img);
  if(supplement!=None and len(supplement)==5):
    upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor);
-   upc_img.set_source_surface(upc_sup_img, 69, 0);
+   upc_img.set_source_surface(upc_sup_img, (69 * barwidth), 0);
    upc_img.paint();
    del(upc_sup_img);
  oldoutfile = upcean.getsfname.get_save_filename(outfile);

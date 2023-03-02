@@ -108,14 +108,14 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
  upc_matches.append(Code93Array[UPC_Sum % 47]);
  upc_size_add = (len(upc_matches) * 9);
  if(pilsupport):
-  upc_preimg = Image.new("RGB", (37 + upc_size_add, barheight[1] + 9));
+  upc_preimg = Image.new("RGB", ((37 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (37 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((37 * barwidth) + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
  if(cairosupport):
-  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 37 + upc_size_add, barheight[1] + 8);
+  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (37 * barwidth) + upc_size_add, barheight[1] + 8);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 37 + upc_size_add, barheight[1] + 8);
+  upc_img.rectangle(0, 0, (37 * barwidth) + upc_size_add, barheight[1] + 8);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -267,7 +267,7 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
- new_upc_img = upc_preimg.resize(((37 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+ new_upc_img = upc_preimg.resize((((37 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);

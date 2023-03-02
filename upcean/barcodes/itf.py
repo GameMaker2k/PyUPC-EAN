@@ -80,14 +80,14 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  if(len(upc_matches)<=0):
   return False;
  if(pilsupport):
-  upc_preimg = Image.new("RGB", (39 + upc_size_add, barheight[0] + 15));
+  upc_preimg = Image.new("RGB", ((39 * barwidth) + upc_size_add, barheight[0] + 15));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (39 + upc_size_add, barheight[0] + 15)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((39 * barwidth) + upc_size_add, barheight[0] + 15)], fill=barcolor[2]);
  if(cairosupport):
-  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 39 + upc_size_add, barheight[0] + 14);
+  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (39 * barwidth) + upc_size_add, barheight[0] + 14);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 39 + upc_size_add, barheight[0] + 14);
+  upc_img.rectangle(0, 0, (39 * barwidth) + upc_size_add, barheight[0] + 14);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -192,7 +192,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
- new_upc_img = upc_preimg.resize(((39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
+ new_upc_img = upc_preimg.resize((((39 * barwidth) + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);

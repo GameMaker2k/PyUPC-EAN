@@ -110,13 +110,13 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)));
  upc_size_add = (bcsize6 * 6) + (bcsize7 * 7) + len(upc_matches) - 1;
  if(pilsupport):
-  upc_preimg = Image.new("RGB", (34 + upc_size_add, barheight[1] + 9));
+  upc_preimg = Image.new("RGB", ((34 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (34 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((34 * barwidth) + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
  if(cairosupport):
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 34 + upc_size_add, barheight[1] + 8);
+  upc_img.rectangle(0, 0, (34 * barwidth) + upc_size_add, barheight[1] + 8);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -188,7 +188,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
   BarNum += 1;
  upc_array['code'].append( [1, 0, 1, 1, 0, 0, 1, 0] );
  upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] );
- new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+ new_upc_img = upc_preimg.resize((((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);

@@ -80,9 +80,9 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  CheckSum = (int(LeftDigit[0]) * 3) + (int(LeftDigit[1]) * 9) + (int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3);
  CheckSum = CheckSum % 10;
  if(pilsupport):
-  upc_preimg = Image.new("RGB", (56, barheight[1] + 9));
+  upc_preimg = Image.new("RGB", ((56 * barwidth), barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (56, barheight[1] + 9)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((56 * barwidth), barheight[1] + 9)], fill=barcolor[2]);
  if(cairosupport):
   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 83, barheight[1] + 8);
   upc_img = cairo.Context (upc_preimg);
@@ -262,7 +262,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
    LineStart += barwidth;
    BarNum += 1;
   NumZero += 1;
- new_upc_img = upc_preimg.resize((56 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
+ new_upc_img = upc_preimg.resize(((56 * barwidth) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
@@ -305,9 +305,9 @@ def draw_ean5_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),bar
 def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- upc_preimg = Image.new("RGB", ((56 * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize)));
+ upc_preimg = Image.new("RGB", (((56 * barwidth) * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize)));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), ((56 * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize))], fill=barcolor[2]);
+ upc_img.rectangle([(0, 0), (((56 * barwidth) * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize))], fill=barcolor[2]);
  upc_sup_img = create_ean5_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);
  if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
   return False;

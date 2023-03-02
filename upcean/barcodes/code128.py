@@ -84,14 +84,14 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  upc_to_dec = list([int(x, 16) for x in upc_matches]);
  upc_size_add = (len(upc_matches) * 11) + (len(re.findall("6c", upc)) * 2);
  if(pilsupport):
-  upc_preimg = Image.new("RGB", (29 + upc_size_add, barheight[1] + 9));
+  upc_preimg = Image.new("RGB", ((29 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (29 + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((29 * barwidth) + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
  if(cairosupport):
-  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, 29 + upc_size_add, barheight[1] + 8);
+  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth) + upc_size_add, barheight[1] + 8);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 29 + upc_size_add, barheight[1] + 8);
+  upc_img.rectangle(0, 0, (29 * barwidth) + upc_size_add, barheight[1] + 8);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };

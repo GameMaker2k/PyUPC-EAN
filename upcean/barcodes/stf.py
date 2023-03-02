@@ -75,9 +75,9 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
  upc_size_add = len(upc_matches) * 14;
  if(len(upc_matches)<=0):
   return False;
- upc_preimg = Image.new("RGB", (46 + upc_size_add, barheight[0] + 15));
+ upc_preimg = Image.new("RGB", ((46 * barwidth) + upc_size_add, barheight[0] + 15));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (46 + upc_size_add, barheight[0] + 15)], fill=barcolor[2]);
+ upc_img.rectangle([(0, 0), ((46 * barwidth) + upc_size_add, barheight[0] + 15)], fill=barcolor[2]);
  upc_array = { 'upc': upc, 'code': [ ] };
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0];
  LineStart = 0;
@@ -147,7 +147,7 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
- new_upc_img = upc_preimg.resize(((46 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
+ new_upc_img = upc_preimg.resize((((46 * barwidth) + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
