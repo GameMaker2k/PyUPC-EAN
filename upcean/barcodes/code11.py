@@ -196,7 +196,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
   NumTxtZero = 0; 
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (16 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1]);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);

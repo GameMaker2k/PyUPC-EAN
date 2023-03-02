@@ -182,8 +182,8 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize), 5 + (6 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 13 + (13 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (5 + (6 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (13 + (13 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1]);
  del(upc_img);
  oldoutfile = upcean.getsfname.get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):

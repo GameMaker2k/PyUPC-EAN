@@ -349,15 +349,15 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  upc_img = ImageDraw.Draw(new_upc_img);
  if(not hidetext):
   if(hidesn is not None and not hidesn):
-   drawColorText(upc_img, 10 * int(resize), 1 + (2 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), upc_matches[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 15 + (18 * (int(resize) - 1)) - (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 21 + (23 * (int(resize) - 1)) - (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 27 + (28 * (int(resize) - 1)) - (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[2], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 33 + (33 * (int(resize) - 1)) + (1 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[3], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 39 + (38 * (int(resize) - 1)) + (3 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[4], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), 45 + (43 * (int(resize) - 1)) + (5 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[5], barcolor[1]);  
+   drawColorText(upc_img, 10 * int(resize), (1 + (2 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), upc_matches[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (15 + (18 * (int(resize) - 1)) - (5 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[0], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (21 + (23 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[1], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (27 + (28 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[2], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (33 + (33 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[3], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (39 + (38 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[4], barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (45 + (43 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[5], barcolor[1]);  
   if(hidecd is not None and not hidecd):
-   drawColorText(upc_img, 10 * int(resize), 61 + (61 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), upc_matches[2], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (61 + (61 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), upc_matches[2], barcolor[1]);
  del(upc_img);
  if(pilsupport):
   if(supplement is not None and len(supplement)==2): 

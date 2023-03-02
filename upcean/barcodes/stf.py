@@ -155,7 +155,7 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   NumTxtZero = 0; 
   LineTxtStart = 24;
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (24 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1]);
    LineTxtStart += 14 * int(resize);
    NumTxtZero += 1;
  del(upc_img);

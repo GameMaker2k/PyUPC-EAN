@@ -206,9 +206,9 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
   LineTxtStart = 23;
   while (NumTxtZero < len(upc_matches)):
    ArrayDigit = list(upc_matches[NumTxtZero]);
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), (barheight[0] + (4 * (int(resize))) + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[0], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (24 * (int(resize) - 1))) * barwidth, (barheight[0] + (4 * (int(resize))) + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[0], barcolor[1]);
    LineTxtStart += 9 * int(resize);
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (24 * (int(resize) - 1)), (barheight[0] + (4 * (int(resize))) + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[1], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (24 * (int(resize) - 1))) * barwidth, (barheight[0] + (4 * (int(resize))) + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[1], barcolor[1]);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);

@@ -251,15 +251,15 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  del(upc_preimg);
  upc_img = ImageDraw.Draw(new_upc_img);
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize), 14 * int(resize), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (14 * int(resize)) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1]);
   NumTxtZero = 0; 
   LineTxtStart = 30 * int(resize);
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (int(resize) - 1)) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1]);
    LineTxtStart += 16 * int(resize);
    NumTxtZero += 1;
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize), LineTxtStart + (int(resize) - 1), (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1]);
+  drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (int(resize) - 1)) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1]);
  del(upc_img);
  oldoutfile = upcean.getsfname.get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
