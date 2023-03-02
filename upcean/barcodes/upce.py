@@ -119,7 +119,9 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  LineStart = 0;
  BarNum = 0;
  start_bc_num_end = len(start_barcolor);
- LineSize = barheight[1];
+ LineSize = barheight[0];
+ if(hidetext):
+  LineSize = barheight[1];
  while(BarNum < start_bc_num_end):
   if(LineStart<9):
    LineSize = barheight[0];

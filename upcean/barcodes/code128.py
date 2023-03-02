@@ -82,7 +82,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   return False;
  upc_matches = re.findall("[0-9a-f]{2}", upc);
  upc_to_dec = list([int(x, 16) for x in upc_matches]);
- upc_size_add = (len(upc_matches) * 11) + (len(re.findall("6c", upc)) * 2);
+ upc_size_add = ((len(upc_matches) * 11) + (len(re.findall("6c", upc)) * 2)) * barwidth;
  if(pilsupport):
   upc_preimg = Image.new("RGB", ((29 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);

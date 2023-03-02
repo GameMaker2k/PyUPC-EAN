@@ -106,7 +106,7 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
   UPC_Count += 1; 
   UPC_Weight += 1;
  upc_matches.append(Code93Array[UPC_Sum % 47]);
- upc_size_add = (len(upc_matches) * 9);
+ upc_size_add = (len(upc_matches) * 9) * barwidth;
  if(pilsupport):
   upc_preimg = Image.new("RGB", ((37 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);

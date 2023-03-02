@@ -94,7 +94,7 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
   UPC_Sum = UPC_Sum + int(PreChck2[PreCount]);
   PreCount += 1;
  upc_matches.append(str(10 - (UPC_Sum % 10)));
- upc_size_add = len(upc_matches) * 12;
+ upc_size_add = (len(upc_matches) * 12) * barwidth;
  if(pilsupport):
   upc_preimg = Image.new("RGB", ((34 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);

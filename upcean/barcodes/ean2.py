@@ -107,9 +107,6 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   BarNum += 1;
  NumZero = 0; 
  while (NumZero < len(LeftDigit)):
-  LineSize = barheight[0];
-  if(hidetext):
-   LineSize = barheight[1];
   left_barcolor_l = [0, 0, 0, 0, 0, 0, 0]; 
   left_barcolor_g = [1, 1, 1, 1, 1, 1, 1];
   if(int(LeftDigit[NumZero])==0): 

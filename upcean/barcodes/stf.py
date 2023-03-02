@@ -72,7 +72,7 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
  if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
  upc_matches = list(upc);
- upc_size_add = len(upc_matches) * 14;
+ upc_size_add = (len(upc_matches) * 14) * barwidth;
  if(len(upc_matches)<=0):
   return False;
  upc_preimg = Image.new("RGB", ((46 * barwidth) + upc_size_add, barheight[0] + 15));
@@ -82,6 +82,9 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0];
  LineStart = 0;
  BarNum = 0;
+ LineSize = barheight[0];
+ if(hidetext):
+  LineSize = barheight[1];
  start_bc_num_end = len(start_barcolor);
  while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
@@ -91,7 +94,6 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   LineStart += barwidth;
   BarNum += 1;
  NumZero = 0; 
- LineSize = barheight[0];
  while (NumZero < len(upc_matches)):
   left_barcolor = [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0];
   if(int(upc_matches[NumZero])==0):

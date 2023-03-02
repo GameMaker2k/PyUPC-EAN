@@ -82,7 +82,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  bcsize9 = len(re.findall("([0-9\-\$])", "".join(upc_matches)));
  bcsize10 = len(re.findall("([\:\/\.])", "".join(upc_matches)));
  bcsize12 = len(re.findall("([\+])", "".join(upc_matches)));
- upc_size_add = (bcsize9 * 9) + (bcsize10 * 10) + (bcsize12 * 12) + len(upc_matches) - 1;
+ upc_size_add = ((bcsize9 * 9) + (bcsize10 * 10) + (bcsize12 * 12) + len(upc_matches) - 1) * barwidth;
  if(pilsupport):
   upc_preimg = Image.new("RGB", ((40 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);

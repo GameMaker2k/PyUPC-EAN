@@ -108,7 +108,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  upc_matches.append(Code11Array[UPC_Sum % 11]);
  bcsize6 = len(re.findall("([09\-])", "".join(upc_matches)));
  bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)));
- upc_size_add = (bcsize6 * 6) + (bcsize7 * 7) + len(upc_matches) - 1;
+ upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) + len(upc_matches) - 1) * barwidth;
  if(pilsupport):
   upc_preimg = Image.new("RGB", ((34 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);

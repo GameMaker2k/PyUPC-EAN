@@ -76,7 +76,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
   pil_addon_fix = int(resize) * 2;
  upc_matches = re.findall("([0-9]{2})", upc);
- upc_size_add = len(upc_matches) * 18;
+ upc_size_add = (len(upc_matches) * 18) * barwidth;
  if(len(upc_matches)<=0):
   return False;
  if(pilsupport):
@@ -96,6 +96,8 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[0];
+ if(hidetext):
+  LineSize = barheight[1];
  while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
@@ -104,7 +106,6 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
   LineStart += barwidth;
   BarNum += 1;
  NumZero = 0; 
- LineSize = barheight[0];
  while (NumZero < len(upc_matches)):
   ArrayDigit = list(upc_matches[NumZero]);
   left_barcolor = [0, 0, 1, 1, 0];

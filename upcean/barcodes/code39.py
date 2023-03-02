@@ -77,7 +77,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
   pil_addon_fix = int(resize) * 2;
  upc = upc.upper();
  upc_matches = list(upc);
- upc_size_add = (len(upc_matches) * 15) + (len(upc_matches) + 1);
+ upc_size_add = ((len(upc_matches) * 15) + (len(upc_matches) + 1)) * barwidth;
  if(len(upc_matches)<=0):
   return False;
  if(pilsupport):
