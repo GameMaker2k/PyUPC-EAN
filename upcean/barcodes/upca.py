@@ -120,9 +120,9 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    LineSize = barheight[1];
   if(hidetext):
    LineSize = barheight[1];
-  if(start_barcolor[LineStart]==1):
+  if(start_barcolor[BarNum]==1):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
-  if(start_barcolor[LineStart]==0):
+  if(start_barcolor[BarNum]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
   LineStart += barwidth;
   BarNum += 1;

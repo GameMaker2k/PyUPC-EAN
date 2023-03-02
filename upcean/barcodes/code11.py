@@ -130,9 +130,9 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  while(LineStart < start_bc_num_end):
-  if(start_barcolor[LineStart]==1):
+  if(start_barcolor[BarNum]==1):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
-  if(start_barcolor[LineStart]==0):
+  if(start_barcolor[BarNum]==0):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
   LineStart += barwidth;
   BarNum += 1;
