@@ -127,6 +127,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  upc_array['code'].append( [1, 0, 1, 1, 0, 0, 1, 0] );
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0];
  LineStart = 0;
+ BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  while(LineStart < start_bc_num_end):
   if(start_barcolor[LineStart]==1):
@@ -134,6 +135,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
   if(start_barcolor[LineStart]==0):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
   LineStart += barwidth;
+  BarNum += 1;
  NumZero = 0;  
  while (NumZero < len(upc_matches)):
   left_barcolor = [1, 0, 1, 0, 1, 1];
@@ -167,9 +169,11 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
    LineStart += barwidth;
+   BarNum += 1;
    InnerUPCNum += 1;
   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
   LineStart += barwidth;
+  BarNum += 1;
   NumZero += 1;
  end_barcolor = [1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  end_bc_num = 0;
@@ -179,8 +183,9 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
    drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):
    drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[2]);
-  end_bc_num = 1 + end_bc_num;
+  end_bc_num += 1;
   LineStart += barwidth;
+  BarNum += 1;
  upc_array['code'].append( [1, 0, 1, 1, 0, 0, 1, 0] );
  upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] );
  new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour

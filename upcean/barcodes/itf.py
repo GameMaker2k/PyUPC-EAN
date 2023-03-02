@@ -93,6 +93,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  upc_array = { 'upc': upc, 'code': [ ] };
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0];
  LineStart = 0;
+ BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[0];
  while(LineStart < start_bc_num_end):
@@ -101,6 +102,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
   if(start_barcolor[LineStart]==0):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
   LineStart += barwidth;
+  BarNum += 1;
  NumZero = 0; 
  LineSize = barheight[0];
  while (NumZero < len(upc_matches)):
@@ -151,24 +153,32 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]); 
-    LineStart += barwidth; 
+    LineStart += barwidth;
+    BarNum += 1;
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]); 
     LineStart += barwidth; 
+    BarNum += 1;
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]); 
     LineStart += barwidth;
+    BarNum += 1;
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]); 
     LineStart += barwidth;
+    BarNum += 1;
    if(right_barcolor[InnerUPCNum]==1):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]); 
     LineStart += barwidth; 
+    BarNum += 1;
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]); 
     LineStart += barwidth; 
+    BarNum += 1;
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]); 
     LineStart += barwidth;
+    BarNum += 1;
    if(right_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
     LineStart += barwidth;
+    BarNum += 1;
    InnerUPCNum += 1;
   NumZero += 1;
  end_barcolor = [1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -179,8 +189,9 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
    drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):
    drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[2]);
-  end_bc_num = 1 + end_bc_num;
+  end_bc_num += 1;
   LineStart += barwidth;
+  BarNum += 1;
  new_upc_img = upc_preimg.resize(((39 + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);

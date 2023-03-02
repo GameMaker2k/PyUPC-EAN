@@ -97,6 +97,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  upc_array['code'].append( [0, 1, 0, 1, 1] );
  start_barcolor = [0, 1, 0, 1, 1];
  LineStart = 0;
+ BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  while(LineStart < start_bc_num_end):
   if(start_barcolor[LineStart]==1):
@@ -104,6 +105,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
   if(start_barcolor[LineStart]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
   LineStart += barwidth;
+  BarNum += 1;
  NumZero = 0; 
  while (NumZero < len(LeftDigit)):
   LineSize = barheight[0];
@@ -250,12 +252,15 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
    LineStart += barwidth;
+   BarNum += 1;
    InnerUPCNum += 1;
   if(NumZero < 4):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
    LineStart += barwidth;
+   BarNum += 1;
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
    LineStart += barwidth;
+   BarNum += 1;
   NumZero += 1;
  new_upc_img = upc_preimg.resize((56 * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);

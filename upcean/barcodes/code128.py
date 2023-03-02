@@ -100,6 +100,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   LineSize = barheight[1];
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  LineStart = 0;
+ BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  while(LineStart < start_bc_num_end):
   if(start_barcolor[LineStart]==1):
@@ -107,6 +108,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   if(start_barcolor[LineStart]==0):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
   LineStart += barwidth;
+  BarNum += 1;
  NumZero = 0; 
  cur_set = 0;
  hextocharsetone = { '00': " ", '01': "!", '02': "\"", '03': "#", '04': "$", '05': "%", '06': "&", '07': "'", '08': "(", '09': ")", '0a': "*", '0b': "+", '0c': ",", '0d': "-", '0e': ".", '0f': "/", '10': "0", '11': "1", '12': "2", '13': "3", '14': "4", '15': "5", '16': "6", '17': "7", '18': "8", '19': "9", '1a': ":", '1b': ";", '1c': "<", '1d': "=", '1e': ">", '1f': "?", '20': "@", '21': "A", '22': "B", '23': "C", '24': "D", '25': "E", '26': "F", '27': "G", '28': "H", '29': "I", '2a': "J", '2b': "K", '2c': "L", '2d': "M", '2e': "N", '2f': "O", '30': "P", '31': "Q", '32': "R", '33': "S", '34': "T", '35': "U", '36': "V", '37': "W", '38': "X", '39': "Y", '3a': "Z", '3b': "[", '3c': "\\", '3d': "]", '3e': "^", '3f': "_", '40': " ", '41': " ", '42': " ", '43': " ", '44': " ", '45': " ", '46': " ", '47': " ", '48': " ", '49': " ", '4a': " ", '4b': " ", '4c': " ", '4d': " ", '4e': " ", '4f': " ", '50': " ", '51': " ", '52': " ", '53': " ", '54': " ", '55': " ", '56': " ", '57': " ", '58': " ", '59': " ", '5a': " ", '5b': " ", '5c': " ", '5d': " ", '5e': " ", '5f': " ", '60': " ", '61': " ", '62': " ", '63': " ", '64': " ", '65': " ", '66': " ", '67': " ", '68': " ", '69': " ", '6a': " ", '6b': " ", '6c': " " };
@@ -379,6 +381,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
    LineStart += barwidth;
+   BarNum += 1;
    InnerUPCNum += 1;
   NumZero += 1;
  end_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -389,8 +392,9 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):
    drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[2]);
-  end_bc_num = 1 + end_bc_num;
+  end_bc_num += 1;
   LineStart += barwidth;
+  BarNum += 1;
  new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
  del(upc_img);
  del(upc_preimg);

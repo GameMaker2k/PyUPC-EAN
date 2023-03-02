@@ -110,6 +110,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
  upc_array['code'].append( [1, 0, 1] );
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1];
  LineStart = 0;
+ BarNum = 0;
  start_bc_num_end = len(start_barcolor);
  LineSize = barheight[1];
  while(LineStart < start_bc_num_end):
@@ -124,6 +125,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
   if(start_barcolor[LineStart]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
   LineStart += barwidth;
+  BarNum += 1;
  NumZero = 0; 
  while (NumZero < len(LeftDigit)):
   if(NumZero>0): 
@@ -161,6 +163,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
    LineStart += barwidth;
+   BarNum += 1;
    InnerUPCNum += 1;
   NumZero += 1;
  upc_array['code'].append( [0, 1, 0, 1, 0] );
@@ -173,8 +176,9 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
   if(mid_barcolor[mid_bc_num]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
-  mid_bc_num = 1 + mid_bc_num;
+  mid_bc_num += 1;
   LineStart += barwidth;
+  BarNum += 1;
  NumZero = 0; 
  while (NumZero < len(RightDigit)):
   if(NumZero!=5): 
@@ -212,6 +216,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    if(right_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
    LineStart += barwidth;
+   BarNum += 1;
    InnerUPCNum += 1;
   NumZero += 1;
  upc_array['code'].append( [1, 0, 1] );
@@ -231,8 +236,9 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
-  end_bc_num = 1 + end_bc_num;
+  end_bc_num += 1;
   LineStart += barwidth;
+  BarNum += 1;
  new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
  del(upc_img);
  del(upc_preimg);
