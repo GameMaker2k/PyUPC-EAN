@@ -389,9 +389,9 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  end_bc_num_end = len(end_barcolor);
  while(end_bc_num < end_bc_num_end):
   if(end_barcolor[end_bc_num]==1):
-   drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):
-   drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;

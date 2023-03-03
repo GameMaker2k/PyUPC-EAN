@@ -95,31 +95,6 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  LineSize = barheight[0];
  if(hidetext):
   LineSize = barheight[1];
- drawColorLine(upc_img, 0, 4, 0, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 1, 4, 1, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 2, 4, 2, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 3, 4, 3, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 4, 4, 4, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 5, 4, 5, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 6, 4, 6, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 7, 4, 7, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 8, 4, 8, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 9, 4, 9, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 10, 4, 10, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 11, 4, 11, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 12, 4, 12, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 13, 4, 13, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 14, 4, 14, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 15, 4, 15, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 16, 4, 16, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 17, 4, 17, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 18, 4, 18, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 19, 4, 19, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 20, 4, 20, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 21, 4, 21, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 22, 4, 22, LineSize, barwidth, barcolor[2]);
- drawColorLine(upc_img, 23, 4, 23, LineSize, barwidth, barcolor[0]);
- drawColorLine(upc_img, 24, 4, 24, LineSize, barwidth, barcolor[2]);
  start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0];
  LineStart = 0;
  BarNum = 0;
@@ -240,9 +215,9 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  end_bc_num_end = len(end_barcolor);
  while(end_bc_num < end_bc_num_end):
   if(end_barcolor[end_bc_num]==1):
-   drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
   if(end_barcolor[end_bc_num]==0):
-   drawColorLine(upc_img, LineStart + upc_size_add, 4, LineStart + upc_size_add, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
