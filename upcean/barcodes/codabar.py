@@ -38,40 +38,45 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- try:
-  pil_ver = Image.PILLOW_VERSION;
-  pil_ver = pil_ver.split(".");
-  pil_ver = [int(x) for x in pil_ver];
-  pil_is_pillow = True;
- except AttributeError:
+ if(pilsupport and imageoutlib=="pillow"):
   try:
-   pil_ver = Image.VERSION;
-   pil_is_pillow = False;
+   pil_ver = Image.PILLOW_VERSION;
+   pil_ver = pil_ver.split(".");
+   pil_ver = [int(x) for x in pil_ver];
+   pil_is_pillow = True;
   except AttributeError:
-   pil_ver = Image.__version__;
-   pil_is_pillow = True;
+   try:
+    pil_ver = Image.VERSION;
+    pil_is_pillow = False;
+   except AttributeError:
+    pil_ver = Image.__version__;
+    pil_is_pillow = True;
+   except NameError:
+    pil_ver = Image.__version__;
+    pil_is_pillow = True;
+   pil_ver = pil_ver.split(".");
+   pil_ver = [int(x) for x in pil_ver];
   except NameError:
-   pil_ver = Image.__version__;
-   pil_is_pillow = True;
-  pil_ver = pil_ver.split(".");
-  pil_ver = [int(x) for x in pil_ver];
- except NameError:
-  try:
-   pil_ver = Image.VERSION;
-   pil_is_pillow = False;
-  except AttributeError:
-   pil_ver = Image.__version__;
-   pil_is_pillow = True;
-  except NameError:
-   pil_ver = Image.__version__;
-   pil_is_pillow = True;
-  pil_ver = pil_ver.split(".");
-  pil_ver = [int(x) for x in pil_ver];
- pil_addon_fix = 0;
- pil_prevercheck = [str(x) for x in pil_ver];
- pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
- if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
-  pil_addon_fix = int(resize) * 2;
+   try:
+    pil_ver = Image.VERSION;
+    pil_is_pillow = False;
+   except AttributeError:
+    pil_ver = Image.__version__;
+    pil_is_pillow = True;
+   except NameError:
+    pil_ver = Image.__version__;
+    pil_is_pillow = True;
+   pil_ver = pil_ver.split(".");
+   pil_ver = [int(x) for x in pil_ver];
+  pil_addon_fix = 0;
+  pil_prevercheck = [str(x) for x in pil_ver];
+  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
+  if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
+   pil_addon_fix = int(resize) * 2;
+ elif(pilsupport and imageoutlib=="pillow"):
+  pil_addon_fix = 0;
+ else:
+  pil_addon_fix = 0;
  pre_upc_matches = upc_matches = re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc);
  pre_upc_matches = pre_upc_matches[0];
  upc_matches = list(pre_upc_matches[1]);
@@ -79,11 +84,11 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  bcsize10 = len(re.findall("([\:\/\.])", "".join(upc_matches)));
  bcsize12 = len(re.findall("([\+])", "".join(upc_matches)));
  upc_size_add = ((bcsize9 * 9) + (bcsize10 * 10) + (bcsize12 * 12) + len(upc_matches) - 1) * barwidth;
- if(pilsupport):
+ if(pilsupport and imageoutlib=="pillow"):
   upc_preimg = Image.new("RGB", ((40 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
   upc_img.rectangle([(0, 0), ((40 * barwidth) + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
- if(cairosupport):
+ if(cairosupport and imageoutlib=="cairo"):
   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (40 * barwidth) + upc_size_add, barheight[1] + 8);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
@@ -202,26 +207,26 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
-    if(pilsupport):
+    if(pilsupport and imageoutlib=="pillow"):
      new_upc_img.save(sys.stdout, outfileext);
-    if(cairosupport):
+    if(cairosupport and imageoutlib=="cairo"):
      new_upc_preimg.write_to_png(sys.stdout);
    except:
     return False;
  if(sys.version[0]>="3"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
-    if(pilsupport):
+    if(pilsupport and imageoutlib=="pillow"):
      new_upc_img.save(sys.stdout.buffer, outfileext);
-    if(cairosupport):
+    if(cairosupport and imageoutlib=="cairo"):
      new_upc_preimg.write_to_png(sys.stdout.buffer);
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
   try:
-   if(pilsupport):
+   if(pilsupport and imageoutlib=="pillow"):
     new_upc_img.save(outfile, outfileext);
-   if(cairosupport):
+   if(cairosupport and imageoutlib=="cairo"):
     new_upc_preimg.write_to_png(outfile);
   except:
    return False;

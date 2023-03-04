@@ -37,40 +37,45 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- try:
-  pil_ver = Image.PILLOW_VERSION;
-  pil_ver = pil_ver.split(".");
-  pil_ver = [int(x) for x in pil_ver];
-  pil_is_pillow = True;
- except AttributeError:
+ if(pilsupport and imageoutlib=="pillow"):
   try:
-   pil_ver = Image.VERSION;
-   pil_is_pillow = False;
+   pil_ver = Image.PILLOW_VERSION;
+   pil_ver = pil_ver.split(".");
+   pil_ver = [int(x) for x in pil_ver];
+   pil_is_pillow = True;
   except AttributeError:
-   pil_ver = Image.__version__;
-   pil_is_pillow = True;
+   try:
+    pil_ver = Image.VERSION;
+    pil_is_pillow = False;
+   except AttributeError:
+    pil_ver = Image.__version__;
+    pil_is_pillow = True;
+   except NameError:
+    pil_ver = Image.__version__;
+    pil_is_pillow = True;
+   pil_ver = pil_ver.split(".");
+   pil_ver = [int(x) for x in pil_ver];
   except NameError:
-   pil_ver = Image.__version__;
-   pil_is_pillow = True;
-  pil_ver = pil_ver.split(".");
-  pil_ver = [int(x) for x in pil_ver];
- except NameError:
-  try:
-   pil_ver = Image.VERSION;
-   pil_is_pillow = False;
-  except AttributeError:
-   pil_ver = Image.__version__;
-   pil_is_pillow = True;
-  except NameError:
-   pil_ver = Image.__version__;
-   pil_is_pillow = True;
-  pil_ver = pil_ver.split(".");
-  pil_ver = [int(x) for x in pil_ver];
- pil_addon_fix = 0;
- pil_prevercheck = [str(x) for x in pil_ver];
- pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
- if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
-  pil_addon_fix = int(resize) * 2;
+   try:
+    pil_ver = Image.VERSION;
+    pil_is_pillow = False;
+   except AttributeError:
+    pil_ver = Image.__version__;
+    pil_is_pillow = True;
+   except NameError:
+    pil_ver = Image.__version__;
+    pil_is_pillow = True;
+   pil_ver = pil_ver.split(".");
+   pil_ver = [int(x) for x in pil_ver];
+  pil_addon_fix = 0;
+  pil_prevercheck = [str(x) for x in pil_ver];
+  pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
+  if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
+   pil_addon_fix = int(resize) * 2;
+ elif(pilsupport and imageoutlib=="pillow"):
+  pil_addon_fix = 0;
+ else:
+  pil_addon_fix = 0;
  upc = upc.upper();
  upc_matches = list(upc);
  upc_print = list(upc_matches);
@@ -91,11 +96,11 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
   PreCount += 1;
  upc_matches.append(str(10 - (UPC_Sum % 10)));
  upc_size_add = (len(upc_matches) * 12) * barwidth;
- if(pilsupport):
+ if(pilsupport and imageoutlib=="pillow"):
   upc_preimg = Image.new("RGB", ((34 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
   upc_img.rectangle([(0, 0), ((34 * barwidth) + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
- if(cairosupport):
+ if(cairosupport and imageoutlib=="cairo"):
   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 * barwidth) + upc_size_add, barheight[1] + 8);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
@@ -161,10 +166,21 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
- new_upc_img = upc_preimg.resize((((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
- del(upc_img);
- del(upc_preimg);
- upc_img = ImageDraw.Draw(new_upc_img);
+ if(pilsupport and imageoutlib=="pillow"):
+  new_upc_img = upc_preimg.resize((((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+  del(upc_img);
+  del(upc_preimg);
+  upc_img = ImageDraw.Draw(new_upc_img);
+ if(cairosupport and imageoutlib=="cairo"):
+  upc_imgpat = cairo.SurfacePattern(upc_preimg);
+  scaler = cairo.Matrix();
+  scaler.scale(1/int(resize),1/int(resize));
+  upc_imgpat.set_matrix(scaler);
+  upc_imgpat.set_filter(cairo.FILTER_NEAREST);
+  new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
+  new_upc_img = cairo.Context(new_upc_preimg);
+  new_upc_img.set_source(upc_imgpat);
+  new_upc_img.paint();
  if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 16;
@@ -183,26 +199,26 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
-    if(pilsupport):
+    if(pilsupport and imageoutlib=="pillow"):
      new_upc_img.save(sys.stdout, outfileext);
-    if(cairosupport):
+    if(cairosupport and imageoutlib=="cairo"):
      new_upc_preimg.write_to_png(sys.stdout);
    except:
     return False;
  if(sys.version[0]>="3"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
-    if(pilsupport):
+    if(pilsupport and imageoutlib=="pillow"):
      new_upc_img.save(sys.stdout.buffer, outfileext);
-    if(cairosupport):
+    if(cairosupport and imageoutlib=="cairo"):
      new_upc_preimg.write_to_png(sys.stdout.buffer);
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
   try:
-   if(pilsupport):
+   if(pilsupport and imageoutlib=="pillow"):
     new_upc_img.save(outfile, outfileext);
-   if(cairosupport):
+   if(cairosupport and imageoutlib=="cairo"):
     new_upc_preimg.write_to_png(outfile);
   except:
    return False;

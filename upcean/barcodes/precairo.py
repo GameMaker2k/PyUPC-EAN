@@ -15,7 +15,14 @@
     $FileInfo: precairo.py - Last Update: 2/19/2023 Ver. 2.7.23 RC 1  - Author: cooldude2k $
 '''
 
-import cairo;
+from __future__ import absolute_import, division, print_function, unicode_literals;
+import cairo, upcean.fonts;
+
+try:
+ import pkg_resources;
+ pkgres = True;
+except ImportError:
+ pkgres = False;
 
 try:
  import pkg_resources;
