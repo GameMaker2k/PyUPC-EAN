@@ -16,17 +16,13 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, types, upcean.getsfname, upcean.support;
+imageoutlib = upcean.support.imageoutlib;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport):
- cairosupport = False;
-else:
- cairosupport = upcean.support.check_for_cairo();
-if(pilsupport):
+if(pilsupport and imageoutlib=="pillow"):
  from upcean.barcodes.prepil import *;
- from PIL import Image, ImageDraw, ImageFont;
-if(cairosupport):
- from upcean.precairo import *;
- import cairo;
+cairosupport = upcean.support.check_for_cairo();
+if(cairosupport and imageoutlib=="cairo"):
+ from upcean.barcodes.precairo import *;
 
 def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
  upc = str(upc);
