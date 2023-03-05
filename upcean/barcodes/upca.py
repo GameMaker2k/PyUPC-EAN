@@ -49,11 +49,6 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
   upc = upc_pieces[0]; supplement = upc_pieces[2];
  if(len(upc)>12 or len(upc)<12):
   return False;
- if(isinstance(resize, tuple) or isinstance(resize, list)):
-  if(len(resize)>2):
-   resize = (resize[0], resize[1]);
- else:
-  resize = (resize, resize);
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(pilsupport and imageoutlib=="pillow"):
@@ -344,7 +339,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
  return True;
 
 def create_gtin12_barcode(upc,outfile="./gtin12.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def create_ucc12_barcode(upc,outfile="./ucc12.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  return create_upca_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
