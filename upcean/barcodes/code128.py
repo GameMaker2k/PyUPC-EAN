@@ -462,7 +462,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  return True;
 
 def draw_code128_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_code128_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_code128_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def convert_ascii_code128_to_hex_code128(upc):
  upc = str(upc);
@@ -503,10 +503,10 @@ def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
  if(len(upc) < 4): 
   return False;
  upc = convert_ascii_code128_to_hex_code128(upc);
- return create_code128_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_code128_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def draw_code128alt_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_code128alt_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_code128alt_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
@@ -538,8 +538,8 @@ def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
   upcout = upcout+str(dectohexzero);
   i = i + 1;
  upc = upcout;
- return create_code128_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_code128_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def draw_code128dec_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_code128dec_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_code128dec_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 

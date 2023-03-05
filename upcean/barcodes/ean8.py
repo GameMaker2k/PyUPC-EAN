@@ -413,16 +413,16 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
  return True;
 
 def create_gtin8_barcode(upc,outfile="./gtin8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def create_ucc8_barcode(upc,outfile="./ucc8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def draw_ean8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_ean8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_ean8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def draw_gtin8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_gtin8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_gtin8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def draw_ucc8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_ucc8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_ucc8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);

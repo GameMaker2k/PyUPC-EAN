@@ -316,7 +316,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  return True;
 
 def draw_ean5_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_ean5_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_ean5_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
@@ -324,7 +324,7 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
  upc_preimg = Image.new("RGB", (((56 * barwidth) * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize)));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (((56 * barwidth) * int(resize)) + (8 * int(resize)), (barheight[1] + 9) * int(resize))], fill=barcolor[2]);
- upc_sup_img = create_ean5_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ upc_sup_img = create_ean5_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
  if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
   return False;
  upc_preimg.paste(upc_sup_img,(8 * int(resize),0));
@@ -366,4 +366,4 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
  return True;
 
 def draw_ean5_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_ean5_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_ean5_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);

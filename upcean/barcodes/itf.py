@@ -263,4 +263,4 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  return True;
 
 def draw_itf_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_itf_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+ return create_itf_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
