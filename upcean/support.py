@@ -223,10 +223,3 @@ def get_python_info(infotype=None):
 
 pilsupport = check_for_pil();
 cairosupport = check_for_cairo();
-imageoutlib = "pillow";
-if(imageoutlib=="pil"):
- imageoutlib = "pillow";
-if(imageoutlib=="pillow" and not pilsupport):
- imageoutlib = None;
-if(imageoutlib=="cairo" and not cairosupport):
- imageoutlib = None;
