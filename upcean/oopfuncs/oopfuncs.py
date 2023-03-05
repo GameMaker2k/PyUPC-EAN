@@ -62,6 +62,7 @@ class barcode:
   self.barcolor = (0, 0, 0);
   self.textcolor = (0, 0, 0);
   self.bgcolor = (255, 255, 255);
+  self.imageoutlib = "pillow";
   self.return_check = False;
   self.return_type = "dict";
  ''' // support.py funtions '''
@@ -100,46 +101,82 @@ class barcode:
     filename = self.filename;
    if(size is None):
     size = self.size;
-   return upcean.barcodes.create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
   def validate_create_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
    if(size is None):
     size = self.size;
-   return upcean.barcodes.validate_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.validate_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
   def fix_create_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
    if(size is None):
     size = self.size;
-   return upcean.barcodes.fix_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.fix_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
   def draw_barcode(self, size=None):
    if(size is None):
     size = self.size;
-   return upcean.barcodes.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
   def validate_draw_barcode(self, size=None):
    if(size is None):
     size = self.size;
-   return upcean.barcodes.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
   def fix_draw_barcode(self, size=None):
    if(size is None):
     size = self.size;
-   return upcean.barcodes.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor));
+   return upcean.barcodes.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
  ''' // validate/__init__.py funtions '''
  def validate_checksum(self):
   return upcean.validate.validate_checksum(self.type, self.code, self.return_check);
  def validate_luhn_checksum(self):
   return upcean.validate.validate_luhn_checksum(self.code, self.codelen, self.return_check);
+ def validate_usps_checksum(self):
+  return upcean.validate.validate_usps_checksum(self.code, self.return_check);
+ def validate_ups_checksum(self):
+  return upcean.validate.validate_ups_checksum(self.code, self.return_check);
+ def validate_fedex_checksum(self):
+  return upcean.validate.validate_fedex_checksum(self.code, self.return_check);
+ def validate_imei_checksum(self):
+  return upcean.validate.validate_imei_checksum(self.code, self.return_check);
+ def validate_bcn_checksum(self):
+  return upcean.validate.validate_bcn_checksum(self.code, self.return_check);
  def get_checksum(self):
   return upcean.validate.get_checksum(self.type, self.code);
  def get_luhn_checksum(self):
   return upcean.validate.get_luhn_checksum(self.code, self.codelen);
+ def get_code11_checksum(self):
+  return upcean.validate.get_code11_checksum(self.code);
+ def get_code93_checksum(self):
+  return upcean.validate.get_code93_checksum(self.code);
+ def get_code128_checksum(self):
+  return upcean.validate.get_code128_checksum(self.code);
  def get_digital_root(self):
   return upcean.validate.get_digital_root(self.number);
+ def get_usps_checksum(self):
+  return upcean.validate.get_usps_checksum(self.code);
+ def get_ups_checksum(self):
+  return upcean.validate.get_ups_checksum(self.code);
+ def get_fedex_checksum(self):
+  return upcean.validate.get_fedex_checksum(self.code);
+ def get_imei_checksum(self):
+  return upcean.validate.get_imei_checksum(self.code);
+ def get_bcn_checksum(self):
+  return upcean.validate.get_bcn_checksum(self.code);
  def fix_checksum(self):
   return upcean.validate.fix_checksum(self.type, self.code);
  def fix_luhn_checksum(self):
   return upcean.validate.fix_luhn_checksum(self.code, self.codelen);
+ def fix_usps_checksum(self):
+  return upcean.validate.fix_usps_checksum(self.code);
+ def fix_ups_checksum(self):
+  return upcean.validate.fix_ups_checksum(self.code);
+ def fix_fedex_checksum(self):
+  return upcean.validate.fix_fedex_checksum(self.code);
+ def fix_imei_checksum(self):
+  return upcean.validate.fix_imei_checksum(self.code);
+ def fix_bcn_checksum(self):
+  return upcean.validate.fix_bcn_checksum(self.code);
  ''' // convert/__init__.py funtions '''
  def convert_barcode(self, outtype=None):
   if(outtype is None):
