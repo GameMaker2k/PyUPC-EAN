@@ -50,6 +50,7 @@ def drawLine( ctx, x1, y1, x2, y2 ):
  ctx.line_to( point2[0], point2[1] );
  ctx.set_line_width( 1.0 );
  ctx.stroke();
+ return True;
 
 def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
  ctx.set_source_rgb(color[0], color[1], color[2]);
@@ -60,6 +61,7 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
   drawLine(ctx, x1 + iwidth, y1, x2 + iwidth, y2);
   iwidth += 1;
  ctx.close_path();
+ return True;
 
 def drawRectangle( ctx, x1, y1, x2, y2 ):
  point1 = snapCoords( ctx, x1, y1 );
@@ -68,11 +70,13 @@ def drawRectangle( ctx, x1, y1, x2, y2 ):
  ctx.rectangle( point1[0], point1[1], point2[0], point2[1] )
  ctx.set_line_width( 1.0 );
  ctx.stroke();
+ return True;
 
 def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  ctx.set_source_rgb(color[0], color[1], color[2]);
  drawRectangle(ctx, x1, y1, x2, y2);
  ctx.close_path();
+ return True;
 
 def drawText( ctx, size, x, y, text, ftype = "ocrb"  ):
  text = str(text);
@@ -89,8 +93,10 @@ def drawText( ctx, size, x, y, text, ftype = "ocrb"  ):
  ctx.move_to( point1[0], point1[1] );
  ctx.show_text( text );
  ctx.stroke();
+ return True;
 
 def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb"  ):
  text = str(text);
  ctx.set_source_rgb(color[0], color[1], color[2]);
  drawText(ctx, size, x, y, text, ftype);
+ return True;
