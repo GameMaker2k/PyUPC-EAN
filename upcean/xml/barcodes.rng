@@ -55,6 +55,12 @@
       </optional>
       <optional>
         <attribute>
+          <name ns="">width</name>
+          <text />
+        </attribute>
+      </optional>
+      <optional>
+        <attribute>
           <name ns="">textxy</name>
           <text />
         </attribute>
@@ -62,6 +68,12 @@
       <optional>
         <attribute>
           <name ns="">color</name>
+          <text />
+        </attribute>
+      </optional>
+      <optional>
+        <attribute>
+          <name ns="">imgoutlib</name>
           <text />
         </attribute>
       </optional>

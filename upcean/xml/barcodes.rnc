@@ -12,8 +12,10 @@ barcode =
     attribute size { text }?,
     attribute hideinfo { text }?,
     attribute height { text }?,
+    attribute width { text }?,
     attribute textxy { text }?,
     attribute color { text }?,
+    attribute imgoutlib { text }?,
     empty
   }
 python = element python { text }
