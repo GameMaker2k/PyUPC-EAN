@@ -17,17 +17,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import upcean.fonts, upcean.support, upcean.barcodes.prepil, upcean.barcodes.precairo;
 
-import re, os, sys, types, upcean.getsfname, upcean.support;
-import upcean.barcodes.ean2, upcean.barcodes.ean5;
-imageoutlib = upcean.support.imageoutlib;
-pilsupport = upcean.support.check_for_pil();
-if(pilsupport and imageoutlib=="pillow"):
- from upcean.barcodes.prepil import *;
-cairosupport = upcean.support.check_for_cairo();
-if(cairosupport and imageoutlib=="cairo"):
- from upcean.barcodes.precairo import *;
-
-
 try:
  import pkg_resources;
  pkgres = True;
