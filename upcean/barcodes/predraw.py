@@ -29,6 +29,9 @@ try:
 except ImportError:
  pkgres = False;
 
+pilsupport = upcean.support.check_for_pil();
+cairosupport = upcean.support.check_for_cairo();
+
 fontpathocra = upcean.fonts.fontpathocra;
 fontpathocraalt = upcean.fonts.fontpathocraalt;
 fontpathocrb = upcean.fonts.fontpathocrb;
@@ -37,6 +40,15 @@ fontpath = upcean.fonts.fontpath;
 
 ''' // Source: http://stevehanov.ca/blog/index.php?id=28 '''
 def snapCoords( ctx, x, y, imageoutlib="pillow" ):
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  if(pilsupport and imageoutlib=="pillow"):
   return upcean.barcodes.prepil.snapCoords( ctx, x, y );
  if(not pilsupport and imageoutlib=="pillow"):
@@ -48,6 +60,15 @@ def snapCoords( ctx, x, y, imageoutlib="pillow" ):
  return False;
 
 def drawColorLine( ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow" ):
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  if(pilsupport and imageoutlib=="pillow"):
   return upcean.barcodes.prepil.drawColorLine( ctx, x1, y1, x2, y2, width, color );
  if(not pilsupport and imageoutlib=="pillow"):
@@ -59,6 +80,15 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow" ):
  return False;
 
 def drawColorRectangle( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  if(pilsupport and imageoutlib=="pillow"):
   return upcean.barcodes.prepil.drawColorRectangle( ctx, x1, y1, x2, y2, color );
  if(not pilsupport and imageoutlib=="pillow"):
@@ -70,6 +100,15 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
  return False;
 
 def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb", imageoutlib="pillow" ):
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  if(pilsupport and imageoutlib=="pillow"):
   return upcean.barcodes.prepil.drawColorText( ctx, size, x, y, text, color, ftype );
  if(not pilsupport and imageoutlib=="pillow"):
@@ -81,6 +120,15 @@ def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb", imageoutlib="pi
  return False;
 
 def drawColorRectangleAlt( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  if(pilsupport and imageoutlib=="pillow"):
   return upcean.barcodes.prepil.drawColorRectangleAlt( ctx, x1, y1, x2, y2, color );
  if(not pilsupport and imageoutlib=="pillow"):
