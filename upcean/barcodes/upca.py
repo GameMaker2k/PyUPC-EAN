@@ -125,7 +125,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
  if(hidetext):
   LineSize = barheight[1];
  while(BarNum < start_bc_num_end):
-  if(LineStart<9):
+  if(BarNum<9):
    LineSize = barheight[0];
   else:
    LineSize = barheight[1];
@@ -283,23 +283,23 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
  del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
-   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,((113 * barwidth) * int(resize),0));
     del(upc_sup_img);
   if(supplement is not None and len(supplement)==5): 
-   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
+   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,((113 * barwidth) * int(resize),0));
     del(upc_sup_img);
  if(cairosupport and imageoutlib=="cairo"):
   if(supplement!=None and len(supplement)==2):
-   upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
+   upc_sup_img = upcean.barcodes.ean2.draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor,imageoutlib);
    upc_img.set_source_surface(upc_sup_img, (113 * barwidth), 0);
    upc_img.paint();
    del(upc_sup_img);
   if(supplement!=None and len(supplement)==5):
-   upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
+   upc_sup_img = upcean.barcodes.ean5.draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor,imageoutlib);
    upc_img.set_source_surface(upc_sup_img, (113 * barwidth), 0);
    upc_img.paint();
    del(upc_sup_img);
