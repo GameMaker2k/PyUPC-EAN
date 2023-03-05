@@ -16,19 +16,26 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, types, upcean.getsfname, upcean.support;
-imageoutlib = upcean.support.imageoutlib;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport and imageoutlib=="pillow"):
- from upcean.barcodes.prepil import *;
 cairosupport = upcean.support.check_for_cairo();
-if(cairosupport and imageoutlib=="cairo"):
- from upcean.barcodes.precairo import *;
+from upcean.barcodes.predraw import *;
+import upcean.barcodes.prepil;
+import upcean.barcodes.precairo;
 
-def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  if(len(upc) < 1): 
   return False;
  if(barwidth < 1): 
@@ -129,9 +136,9 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
  start_bc_num_end = len(start_barcolor);
  while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
   if(start_barcolor[BarNum]==0):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
   LineStart += barwidth;
   BarNum += 1;
  NumZero = 0; 
@@ -250,9 +257,9 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
    if(left_barcolor[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
    LineStart += barwidth;
    BarNum += 1;
    InnerUPCNum += 1;
@@ -262,9 +269,9 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
  end_b
  while(end_bc_num < end_bc_num_end):
   if(end_barcolor[end_bc_num]==1):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
   if(end_barcolor[end_bc_num]==0):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
@@ -287,7 +294,7 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
   NumTxtZero = 0; 
   LineTxtStart = 18;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (19 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (19 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
@@ -326,5 +333,5 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
    return False;
  return True;
 
-def draw_code93_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_code93_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+def draw_code93_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_code93_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);

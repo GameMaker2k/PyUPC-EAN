@@ -74,7 +74,7 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  drawRectangle(ctx, x1, y1, x2, y2);
  ctx.close_path();
 
-def drawText( ctx, size, x, y, text ):
+def drawText( ctx, size, x, y, text, ftype = "ocrb"  ):
  text = str(text);
  point1 = snapCoords( ctx, x, y );
  ctx.select_font_face( "Monospace" );
@@ -90,7 +90,7 @@ def drawText( ctx, size, x, y, text ):
  ctx.show_text( text );
  ctx.stroke();
 
-def drawColorText( ctx, size, x, y, text, color ):
+def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb"  ):
  text = str(text);
  ctx.set_source_rgb(color[0], color[1], color[2]);
- drawText(ctx, size, x, y, text);
+ drawText(ctx, size, x, y, text, ftype);

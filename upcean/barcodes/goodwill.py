@@ -18,19 +18,26 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import re, os, sys, types, upcean.getsfname, upcean.support, upcean.getprefix.getprefix;
 import upcean.barcodes.ean2, upcean.barcodes.ean5;
 from upcean.barcodes.upca import *;
-imageoutlib = upcean.support.imageoutlib;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport and imageoutlib=="pillow"):
- from upcean.barcodes.prepil import *;
 cairosupport = upcean.support.check_for_cairo();
-if(cairosupport and imageoutlib=="cairo"):
- from upcean.barcodes.precairo import *;
+from upcean.barcodes.predraw import *;
+import upcean.barcodes.prepil;
+import upcean.barcodes.precairo;
 
-def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  if(barwidth < 1): 
   barwidth = 1;
  upc_pieces = None;
@@ -142,36 +149,36 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
  if(pilsupport and imageoutlib=="pillow"):
-  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
   new_upc_img.paste(upc_barcode_img,(0, 15 * resize));
   del(upc_barcode_img);
  if(cairosupport and imageoutlib=="cairo"):
-  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
   new_upc_img.set_source_surface(upc_barcode_img, 0, 15 * resize);
   new_upc_img.paint();
   del(upc_barcode_img);
- drawColorText(upc_img, 16 * int(resize), 10 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (4 * int(resize)), "Goodwill", barcolor[1]);
- drawColorText(upc_img, 16 * int(resize), 24 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (75 * int(resize)), "$"+goodwillinfo['pricewdnz'], barcolor[1]);
+ drawColorText(upc_img, 16 * int(resize), 10 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (4 * int(resize)), "Goodwill", barcolor[1], "ocrb", imageoutlib);
+ drawColorText(upc_img, 16 * int(resize), 24 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (75 * int(resize)), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
-   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
     del(upc_sup_img);
   if(supplement is not None and len(supplement)==5): 
-   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
     del(upc_sup_img);
  if(cairosupport and imageoutlib=="cairo"):
   if(supplement!=None and len(supplement)==2):
-   upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor);
+   upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
    upc_img.set_source_surface(upc_sup_img, 113, 0);
    upc_img.paint();
    del(upc_sup_img);
   if(supplement!=None and len(supplement)==5):
-   upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor);
+   upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
    upc_img.set_source_surface(upc_sup_img, 113, 0);
    upc_img.paint();
    del(upc_sup_img);
@@ -210,5 +217,5 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    return False;
  return True;
 
-def draw_goodwill_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_goodwill_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+def draw_goodwill_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_goodwill_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);

@@ -49,6 +49,7 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  return True;
 
 def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb" ):
+ font = ImageFont.truetype(fontpathocra, size);
  if(ftype=="ocra"):
   font = ImageFont.truetype(fontpathocra, size);
  if(ftype=="ocrb"):

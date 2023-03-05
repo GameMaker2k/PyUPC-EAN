@@ -16,6 +16,12 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import upcean.fonts, upcean.support, upcean.barcodes.prepil, upcean.barcodes.precairo;
+pilsupport = upcean.support.check_for_pil();
+if(pilsupport):
+ from PIL import Image, ImageDraw, ImageFont;
+cairosupport = upcean.support.check_for_cairo();
+if(cairosupport):
+ import cairo
 
 try:
  import pkg_resources;
@@ -40,8 +46,6 @@ def snapCoords( ctx, x, y, imageoutlib="pillow" ):
  if(not cairosupport and imageoutlib=="cairo"):
   return False;
  return False;
-
-
 
 def drawColorLine( ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow" ):
  if(pilsupport and imageoutlib=="pillow"):

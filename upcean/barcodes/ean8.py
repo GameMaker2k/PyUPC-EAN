@@ -17,19 +17,26 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, types, upcean.getsfname, upcean.support;
 import upcean.barcodes.ean2, upcean.barcodes.ean5;
-imageoutlib = upcean.support.imageoutlib;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport and imageoutlib=="pillow"):
- from upcean.barcodes.prepil import *;
 cairosupport = upcean.support.check_for_cairo();
-if(cairosupport and imageoutlib=="cairo"):
- from upcean.barcodes.precairo import *;
+from upcean.barcodes.predraw import *;
+import upcean.barcodes.prepil;
+import upcean.barcodes.precairo;
 
-def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
+def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  upc_pieces = None; 
  supplement = None;
  if(barwidth < 1): 
@@ -132,9 +139,9 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   if(hidetext):
    LineSize = barheight[1];
   if(start_barcolor[BarNum]==1):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
   if(start_barcolor[BarNum]==0):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
   LineStart += barwidth;
   BarNum += 1;
  NumZero = 0; 
@@ -242,9 +249,9 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
    if(left_barcolor[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
    LineStart += barwidth;
    BarNum += 1;
    InnerUPCNum += 1;
@@ -256,9 +263,9 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
  LineSize = barheight[1];
  while(mid_bc_num < mid_bc_num_end):
   if(mid_barcolor[mid_bc_num]==1):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
   if(mid_barcolor[mid_bc_num]==0):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
   mid_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
@@ -292,9 +299,9 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   InnerUPCNum = 0;
   while (InnerUPCNum < len(right_barcolor)):
    if(right_barcolor[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
    if(right_barcolor[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
    LineStart += barwidth;
    BarNum += 1;
    InnerUPCNum += 1;
@@ -313,9 +320,9 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   if(hidetext):
    LineSize = barheight[1];
   if(end_barcolor[end_bc_num]==1):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
   if(end_barcolor[end_bc_num]==0):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2]);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
   end_bc_num = 1 + end_bc_num;
   LineStart += barwidth;
   BarNum += 1;
@@ -336,37 +343,37 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   new_upc_img.paint();
  if(not hidetext):
   if(hidesn is not None and not hidesn):
-   drawColorText(upc_img, 10 * int(resize), (1 + (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), "<", barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), (11 + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), (17 + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), (24 + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), (30 + (29 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), (43 + (46 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), (49 + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[1], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), (56 + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[0], barcolor[1]);
-  drawColorText(upc_img, 10 * int(resize), (62 + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[1], barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (1 + (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), "<", barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (11 + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[0], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (17 + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[1], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (24 + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[0], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (30 + (29 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[1], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (43 + (46 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[0], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (49 + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[1], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (56 + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[0], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (62 + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[1], barcolor[1], "ocrb", imageoutlib);
   if(hidecd is not None and not hidecd):
-   drawColorText(upc_img, 10 * int(resize), (75 + (75 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), ">", barcolor[1]);
+   drawColorText(upc_img, 10 * int(resize), (75 + (75 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), ">", barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
-   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,((83 * barwidth) * int(resize),0));
     del(upc_sup_img);
   if(supplement is not None and len(supplement)==5): 
-   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,((83 * barwidth) * int(resize),0));
     del(upc_sup_img);
  if(cairosupport and imageoutlib=="cairo"):
   if(supplement!=None and len(supplement)==2):
-   upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor);
+   upc_sup_img = draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
    upc_img.set_source_surface(upc_sup_img, (83 * barwidth), 0);
    upc_img.paint();
    del(upc_sup_img);
   if(supplement!=None and len(supplement)==5):
-   upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor);
+   upc_sup_img = draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
    upc_img.set_source_surface(upc_sup_img, (83 * barwidth), 0);
    upc_img.paint();
    del(upc_sup_img);
@@ -405,17 +412,17 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
    return False;
  return True;
 
-def create_gtin8_barcode(upc,outfile="./gtin8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+def create_gtin8_barcode(upc,outfile="./gtin8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
 
-def create_ucc8_barcode(upc,outfile="./ucc8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+def create_ucc8_barcode(upc,outfile="./ucc8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_ean8_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
 
-def draw_ean8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ean8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+def draw_ean8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_ean8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
 
-def draw_gtin8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_gtin8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+def draw_gtin8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_gtin8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
 
-def draw_ucc8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255))):
- return create_ucc8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor);
+def draw_ucc8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_ucc8_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
