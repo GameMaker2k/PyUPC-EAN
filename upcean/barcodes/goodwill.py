@@ -34,7 +34,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   imageoutlib = "cairo";
  if(not cairosupport and imageoutlib=="cairo"):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;

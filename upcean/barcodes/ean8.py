@@ -33,7 +33,7 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   imageoutlib = "cairo";
  if(not cairosupport and imageoutlib=="cairo"):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;

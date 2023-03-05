@@ -32,7 +32,7 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
   imageoutlib = "cairo";
  if(not cairosupport and imageoutlib=="cairo"):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;

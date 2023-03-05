@@ -33,11 +33,12 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
   imageoutlib = "cairo";
  if(not cairosupport and imageoutlib=="cairo"):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
- upc_pieces = None; supplement = None;
+ upc_pieces = None;
+ supplement = None;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
   upc_pieces = upc_pieces[0];

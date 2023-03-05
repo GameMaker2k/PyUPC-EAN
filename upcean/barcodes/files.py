@@ -126,7 +126,7 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
     colorlist = (colorlist1, colorlist2, colorlist3);
     xmlbarcode.update({"barcolor": colorlist});
    if('imageoutlib' in child.attrib):
-    xmlbarcode.update({"imageoutlib": tuple(map(int, child.attrib['imageoutlib'].split()))});
+    xmlbarcode.update({"imageoutlib": tuple(map(int, child.attrib['imgoutlib'].split()))});
    bcstatinfo = upcean.barcodes.shortcuts.validate_create_barcode(**xmlbarcode);
    if(draw or 'file' not in child.attrib):
     bcdrawlist.append(bcstatinfo);
@@ -267,7 +267,7 @@ def create_barcode_from_json_file(jsonfile, draw=False):
    colorlist = (colorlist1, colorlist2, colorlist3);
    jsonbarcode.update({"barcolor": colorlist});
   if('imageoutlib' in bctree[bctreect]):
-   jsonbarcode.update({"imageoutlib": tuple(map(int, bctree[bctreect]['imageoutlib'].split()))});
+   jsonbarcode.update({"imageoutlib": tuple(map(int, bctree[bctreect]['imgoutlib'].split()))});
   bcstatinfo = upcean.barcodes.shortcuts.validate_create_barcode(**jsonbarcode);
   if(draw or 'file' not in bctree[bctreect]):
    bcdrawlist.append(bcstatinfo);
@@ -432,7 +432,7 @@ def create_barcode_from_qs_file(qsfile, draw=False):
   except IndexError:
    pass;
   try:
-   qsbarcode.update({"imageoutlib": int(bctree['imageoutlib'][bctreect])});
+   qsbarcode.update({"imageoutlib": int(bctree['imgoutlib'][bctreect])});
   except KeyError:
    pass;
   except IndexError:

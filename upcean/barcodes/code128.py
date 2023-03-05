@@ -32,7 +32,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   imageoutlib = "cairo";
  if(not cairosupport and imageoutlib=="cairo"):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
@@ -496,7 +496,7 @@ def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
   imageoutlib = "cairo";
  if(not cairosupport and imageoutlib=="cairo"):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
@@ -518,7 +518,7 @@ def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
   imageoutlib = "cairo";
  if(not cairosupport and imageoutlib=="cairo"):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" or imageoutlib!="cairo"):
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
