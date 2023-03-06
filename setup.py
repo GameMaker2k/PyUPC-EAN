@@ -36,6 +36,7 @@ if pillow_installed():
  extras_requires.append('Pillow');
 else:
  extras_requires.append('PIL');
+extras_requires.append('pycairo');
 extras_requires_dict = {'drawing_barcodes':  extras_requires}
 
 pygenbuildinfo = True;
