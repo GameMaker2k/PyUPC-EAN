@@ -15,13 +15,14 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.fonts, upcean.support, upcean.barcodes.prepil, upcean.barcodes.precairo;
+import upcean.fonts, upcean.support;
 pilsupport = upcean.support.check_for_pil();
 if(pilsupport):
  from PIL import Image, ImageDraw, ImageFont;
+ import upcean.barcodes.prepil;
 cairosupport = upcean.support.check_for_cairo();
 if(cairosupport):
- import cairo
+ import cairo, upcean.barcodes.precairo;
 
 try:
  import pkg_resources;
