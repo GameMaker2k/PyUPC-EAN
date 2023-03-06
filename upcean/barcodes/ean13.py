@@ -20,8 +20,10 @@ import upcean.barcodes.ean2, upcean.barcodes.ean5;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 from upcean.barcodes.predraw import *;
-import upcean.barcodes.prepil;
-import upcean.barcodes.precairo;
+if(pilsupport):
+ import upcean.barcodes.prepil;
+if(cairosupport):
+ import upcean.barcodes.precairo;
 
 def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
