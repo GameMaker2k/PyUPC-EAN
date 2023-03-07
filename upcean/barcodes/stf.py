@@ -194,7 +194,7 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.fileno(), new_upc_img.tobytes());
+      os.write(sys.stdout.fileno(), new_upc_img.tobytes()());
      else:
       new_upc_img.save(sys.stdout, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
@@ -206,7 +206,7 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes());
+      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes()());
      else:
       new_upc_img.save(sys.stdout.buffer, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
@@ -217,8 +217,8 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   try:
    if(pilsupport and imageoutlib=="pillow"):
     if(outfileext=="BYTES"):
-     with open(outsqlfile, 'w+') as f:
-      f.write(new_upc_img.tobytes);
+     with open(outfile, 'wb+') as f:
+      f.write(new_upc_img.tobytes());
     else:
      new_upc_img.save(outfile, outfileext);
    if(cairosupport and imageoutlib=="cairo"):
