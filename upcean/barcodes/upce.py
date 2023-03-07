@@ -415,7 +415,10 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     if(pilsupport and imageoutlib=="pillow"):
-     new_upc_img.save(sys.stdout, outfileext);
+     if(outfileext=="BYTES"):
+      os.write(sys.stdout.fileno(), new_upc_img.tobytes());
+     else:
+      new_upc_img.save(sys.stdout, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
      new_upc_preimg.write_to_png(sys.stdout);
    except:
@@ -424,7 +427,10 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     if(pilsupport and imageoutlib=="pillow"):
-     new_upc_img.save(sys.stdout.buffer, outfileext);
+     if(outfileext=="BYTES"):
+      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes());
+     else:
+      new_upc_img.save(sys.stdout.buffer, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
      new_upc_preimg.write_to_png(sys.stdout.buffer);
    except:
@@ -432,7 +438,11 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  if(outfile!="-" and outfile!="" and outfile!=" "):
   try:
    if(pilsupport and imageoutlib=="pillow"):
-    new_upc_img.save(outfile, outfileext);
+    if(outfileext=="BYTES"):
+     with open(outsqlfile, 'w+') as f:
+      f.write(new_upc_img.tobytes);
+    else:
+     new_upc_img.save(outfile, outfileext);
    if(cairosupport and imageoutlib=="cairo"):
     new_upc_preimg.write_to_png(outfile);
   except:
