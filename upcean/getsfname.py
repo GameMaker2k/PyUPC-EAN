@@ -54,7 +54,9 @@ def get_save_filename(outfile):
     outfileext = "PPM";
    if(outfileext=="TIF"):
     outfileext = "TIFF";
-   if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM"):
+   if(outfileext=="BYTES"):
+    outfileext = "BYTES";
+   if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
     outfileext = "PNG";
    return (outfile, outfileext.upper());   
  if(sys.version[0]>="3"):
@@ -81,7 +83,7 @@ def get_save_filename(outfile):
     outfileext = "PPM";
    if(outfileext=="TIF"):
     outfileext = "TIFF";
-   if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM"):
+   if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
     outfileext = "PNG";
    return (outfile, outfileext.upper());
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
