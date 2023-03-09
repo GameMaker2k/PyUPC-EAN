@@ -72,7 +72,7 @@ def get_save_filename(outfile, imageoutlib="pillow"):
      outfileext = "PNG";
    elif(imageoutlib=="pillow"):
     outfileext = "PNG";
-   else):
+   else:
     outfileext = "PNG";
    return (outfile, outfileext.upper());   
  if(sys.version[0]>="3"):
@@ -106,7 +106,7 @@ def get_save_filename(outfile, imageoutlib="pillow"):
      outfileext = "PNG";
    elif(imageoutlib=="pillow"):
     outfileext = "PNG";
-   else):
+   else:
     outfileext = "PNG";
    return (outfile, outfileext.upper());
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
