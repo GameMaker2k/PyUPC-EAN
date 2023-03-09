@@ -73,7 +73,10 @@ def get_save_filename(outfile, imageoutlib="pillow"):
    elif(imageoutlib=="pillow"):
     outfileext = "PNG";
    else:
-    outfileext = "PNG";
+    if(outfileext=="BYTES"):
+     outfileext = "BYTES";
+    else:
+     outfileext = "PNG";
    return (outfile, outfileext.upper());   
  if(sys.version[0]>="3"):
   if(isinstance(oldoutfile, str)):
@@ -107,7 +110,10 @@ def get_save_filename(outfile, imageoutlib="pillow"):
    elif(imageoutlib=="pillow"):
     outfileext = "PNG";
    else:
-    outfileext = "PNG";
+    if(outfileext=="BYTES"):
+     outfileext = "BYTES";
+    else:
+     outfileext = "PNG";
    return (outfile, outfileext.upper());
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
   del(outfile);

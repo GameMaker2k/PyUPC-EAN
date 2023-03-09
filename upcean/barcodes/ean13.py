@@ -382,17 +382,23 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
    upc_img.paint();
    del(upc_sup_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
-  return new_upc_img;
+  if(pilsupport and imageoutlib=="pillow"):
+   return new_upc_img;
+  if(cairosupport and imageoutlib=="cairo"):
+   return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.fileno(), new_upc_img.tobytes()());
+      os.write(sys.stdout.fileno(), new_upc_img.tobytes());
      else:
       new_upc_img.save(sys.stdout, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
-     new_upc_preimg.write_to_png(sys.stdout);
+     if(outfileext=="BYTES"):
+      os.write(sys.stdout.fileno(), new_upc_preimg.get_data().tobytes());
+     else:
+      new_upc_preimg.write_to_png(sys.stdout);
    except:
     return False;
  if(sys.version[0]>="3"):
@@ -400,11 +406,14 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes()());
+      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes());
      else:
       new_upc_img.save(sys.stdout.buffer, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
-     new_upc_preimg.write_to_png(sys.stdout.buffer);
+     if(outfileext=="BYTES"):
+      os.write(sys.stdout.buffer.fileno(), new_upc_preimg.get_data().tobytes());
+     else:
+      new_upc_preimg.write_to_png(sys.stdout.buffer);
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
@@ -416,7 +425,11 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
     else:
      new_upc_img.save(outfile, outfileext);
    if(cairosupport and imageoutlib=="cairo"):
-    new_upc_preimg.write_to_png(outfile);
+    if(outfileext=="BYTES"):
+     with open(outfile, 'wb+') as f:
+      f.write(new_upc_preimg.get_data().tobytes());
+    else:
+     new_upc_preimg.write_to_png(outfile);
   except:
    return False;
  return True;
