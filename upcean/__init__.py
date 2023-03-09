@@ -45,4 +45,4 @@ if(pilsupport):
 else:
  cairosupport = upcean.support.check_for_cairo();
 if(pilsupport or cairosupport):
- import upcean.fonts, upcean.xml, upcean.barcodes, upcean.getsfname;
+ import upcean.fonts, upcean.xml, upcean.barcodes, upcean.barcodes.getsfname;

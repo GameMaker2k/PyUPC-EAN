@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.getsfname, upcean.support;
+import re, os, sys, types, upcean.barcodes.getsfname, upcean.support;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 from upcean.barcodes.predraw import *;
@@ -300,7 +300,7 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
- oldoutfile = upcean.getsfname.get_save_filename(outfile);
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
   del(outfile);
   outfile = oldoutfile[0];

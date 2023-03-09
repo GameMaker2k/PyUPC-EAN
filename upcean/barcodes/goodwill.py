@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.getsfname, upcean.support, upcean.getprefix.getprefix;
+import re, os, sys, types, upcean.barcodes.getsfname, upcean.support, upcean.getprefix.getprefix;
 import upcean.barcodes.ean2, upcean.barcodes.ean5;
 from upcean.barcodes.upca import *;
 pilsupport = upcean.support.check_for_pil();
@@ -184,7 +184,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    upc_img.set_source_surface(upc_sup_img, 113, 0);
    upc_img.paint();
    del(upc_sup_img);
- oldoutfile = upcean.getsfname.get_save_filename(outfile);
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
   del(outfile);
   outfile = oldoutfile[0];

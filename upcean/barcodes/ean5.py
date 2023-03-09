@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.getsfname, upcean.support;
+import re, os, sys, types, upcean.barcodes.getsfname, upcean.support;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 from upcean.barcodes.predraw import *;
@@ -291,7 +291,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
   drawColorText(upc_img, 10 * int(resize), (32 + (32 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[3], barcolor[1], "ocrb", imageoutlib);
   drawColorText(upc_img, 10 * int(resize), (40 + (40 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[4], barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
- oldoutfile = upcean.getsfname.get_save_filename(outfile);
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
   del(outfile);
   outfile = oldoutfile[0];
@@ -332,7 +332,7 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
  upc_preimg.paste(upc_sup_img,(8 * int(resize),0));
  del(upc_sup_img);
  del(upc_img);
- oldoutfile = upcean.getsfname.get_save_filename(outfile);
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
   del(outfile);
   outfile = oldoutfile[0];
