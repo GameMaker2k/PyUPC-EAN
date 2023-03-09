@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: downloader.py - Last Update: 2/19/2023 Ver. 2.7.23 RC 1 - Author: cooldude2k $
+    $FileInfo: downloader.py - Last Update: 3/8/2023 Ver. 2.7.24 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
