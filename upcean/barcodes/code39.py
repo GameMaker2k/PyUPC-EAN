@@ -82,14 +82,21 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
    pil_ver = pil_ver.split(".");
    pil_ver = [int(x) for x in pil_ver];
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
   pil_prevercheck = [str(x) for x in pil_ver];
   pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
   if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
    pil_addon_fix = int(resize) * 2;
+   cairo_addon_fix = 0;
  elif(pilsupport and imageoutlib=="pillow"):
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
+ elif(pilsupport and imageoutlib=="cairo"):
+  pil_addon_fix = 0;
+  cairo_addon_fix = (8 * (int(resize) ) );
  else:
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
  upc = upc.upper();
  upc_matches = list(upc);
  upc_size_add = ((len(upc_matches) * 15) + (len(upc_matches) + 1)) * barwidth;
@@ -252,15 +259,15 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize), (14 * int(resize)) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (14 * int(resize)) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
   NumTxtZero = 0; 
   LineTxtStart = 30 * int(resize);
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (int(resize) - 1)) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (int(resize) - 1)) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 16 * int(resize);
    NumTxtZero += 1;
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (int(resize) - 1)) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (int(resize) - 1)) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
@@ -272,14 +279,11 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.fileno(), new_upc_img.tobytes());
+      os.write(sys.stdout.fileno(), new_upc_img.tobytes()());
      else:
       new_upc_img.save(sys.stdout, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
-     if(outfileext=="BYTES"):
-      os.write(sys.stdout.fileno(), new_upc_preimg.get_data().tobytes());
-     else:
-      new_upc_preimg.write_to_png(sys.stdout);
+     new_upc_preimg.write_to_png(sys.stdout);
    except:
     return False;
  if(sys.version[0]>="3"):
@@ -287,14 +291,11 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes());
+      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes()());
      else:
       new_upc_img.save(sys.stdout.buffer, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
-     if(outfileext=="BYTES"):
-      os.write(sys.stdout.buffer.fileno(), new_upc_preimg.get_data().tobytes());
-     else:
-      new_upc_preimg.write_to_png(sys.stdout.buffer);
+     new_upc_preimg.write_to_png(sys.stdout.buffer);
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
@@ -306,11 +307,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
     else:
      new_upc_img.save(outfile, outfileext);
    if(cairosupport and imageoutlib=="cairo"):
-    if(outfileext=="BYTES"):
-     with open(outfile, 'wb+') as f:
-      f.write(new_upc_preimg.get_data().tobytes());
-    else:
-     new_upc_preimg.write_to_png(outfile);
+    new_upc_preimg.write_to_png(outfile);
   except:
    return False;
  return True;

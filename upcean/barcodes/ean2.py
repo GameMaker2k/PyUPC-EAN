@@ -83,14 +83,21 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
    pil_ver = pil_ver.split(".");
    pil_ver = [int(x) for x in pil_ver];
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
   pil_prevercheck = [str(x) for x in pil_ver];
   pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
   if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
    pil_addon_fix = int(resize) * 2;
+   cairo_addon_fix = 0;
  elif(pilsupport and imageoutlib=="pillow"):
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
+ elif(pilsupport and imageoutlib=="cairo"):
+  pil_addon_fix = 0;
+  cairo_addon_fix = (8 * (int(resize) ) );
  else:
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
  CheckSum = int(upc_matches[0]) % 4;
  LeftDigit = list(upc_matches[0]);
  if(pilsupport and imageoutlib=="pillow"):
@@ -205,8 +212,8 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize), (5 + (6 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize), (13 + (13 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (5 + (6 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (13 + (13 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):

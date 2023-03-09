@@ -82,14 +82,21 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
    pil_ver = pil_ver.split(".");
    pil_ver = [int(x) for x in pil_ver];
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
   pil_prevercheck = [str(x) for x in pil_ver];
   pil_vercheck = int(pil_prevercheck[0]+pil_prevercheck[1]+pil_prevercheck[2]);
   if(pil_is_pillow and pil_vercheck>=210 and pil_vercheck<220):
    pil_addon_fix = int(resize) * 2;
+   cairo_addon_fix = 0;
  elif(pilsupport and imageoutlib=="pillow"):
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
+ elif(pilsupport and imageoutlib=="cairo"):
+  pil_addon_fix = 0;
+  cairo_addon_fix = (8 * (int(resize) ) );
  else:
   pil_addon_fix = 0;
+  cairo_addon_fix = 0;
  upc_matches = re.findall("([0-9]{2})", upc);
  upc_size_add = (len(upc_matches) * 18) * barwidth;
  if(len(upc_matches)<=0):
@@ -228,9 +235,9 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
   LineTxtStart = 20;
   while (NumTxtZero < len(upc_matches)):
    ArrayDigit = list(upc_matches[NumTxtZero]);
-   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (21 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[0], barcolor[1], "ocrb", imageoutlib);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (21 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[0], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 9 * int(resize);
-   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (21 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[1], barcolor[1], "ocrb", imageoutlib);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (21 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[1], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
