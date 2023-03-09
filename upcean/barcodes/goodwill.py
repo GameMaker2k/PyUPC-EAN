@@ -154,18 +154,19 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(resize), (barheight[1] + 45) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
-  new_upc_preimg.paint();
+  new_upc_img.paint();
  if(pilsupport and imageoutlib=="pillow"):
   upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
   new_upc_img.paste(upc_barcode_img,(0, 15 * resize));
   del(upc_barcode_img);
  if(cairosupport and imageoutlib=="cairo"):
   upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
-  new_upc_preimg.set_source_surface(upc_barcode_img, 0, 15 * resize);
-  new_upc_preimg.paint();
+  new_upc_img.set_source_surface(upc_barcode_img, 0, 15 * resize);
+  new_upc_img.paint();
   del(upc_barcode_img);
  drawColorText(upc_img, 16 * int(resize), 10 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (4 * int(resize)), "Goodwill", barcolor[1], "ocrb", imageoutlib);
  drawColorText(upc_img, 16 * int(resize), 24 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (75 * int(resize)), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib);
+ del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
    upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
@@ -180,13 +181,13 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  if(cairosupport and imageoutlib=="cairo"):
   if(supplement!=None and len(supplement)==2):
    upc_sup_img = draw_ean2_barcode_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
-   new_upc_preimg.set_source_surface(upc_sup_img, 113, 0);
-   new_upc_preimg.paint();
+   new_upc_img.set_source_surface(upc_sup_img, 113, 0);
+   new_upc_img.paint();
    del(upc_sup_img);
   if(supplement!=None and len(supplement)==5):
    upc_sup_img = draw_ean5_barcode_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
-   new_upc_preimg.set_source_surface(upc_sup_img, 113, 0);
-   new_upc_preimg.paint();
+   new_upc_img.set_source_surface(upc_sup_img, 113, 0);
+   new_upc_img.paint();
    del(upc_sup_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):

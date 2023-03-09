@@ -250,7 +250,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
-  new_upc_preimg.paint();
+  new_upc_img.paint();
  if(not hidetext):
   drawColorText(upc_img, 10 * int(resize), (14 * int(resize)) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
   NumTxtZero = 0; 
@@ -261,6 +261,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
    NumTxtZero += 1;
  if(not hidetext):
   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (int(resize) - 1)) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
+ del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;

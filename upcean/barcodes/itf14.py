@@ -226,7 +226,7 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((44 * barwidth) + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
-  new_upc_preimg.paint();
+  new_upc_img.paint();
  if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 23;
@@ -237,6 +237,7 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
    drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (24 * (int(resize) - 1))) * barwidth, (barheight[0] + (4 * (int(resize))) + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[1], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
+ del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;

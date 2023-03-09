@@ -358,6 +358,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
   drawColorText(upc_img, 10 * int(resize), (93 + (90 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[5], barcolor[1], "ocrb", imageoutlib);
   if(hidecd is not None and not hidecd):
    drawColorText(upc_img, 10 * int(resize), (107 + (103 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), ">", barcolor[1], "ocrb", imageoutlib);
+ del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
    upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);

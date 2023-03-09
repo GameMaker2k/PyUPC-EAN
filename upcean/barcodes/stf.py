@@ -178,7 +178,7 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((46 * barwidth) + upc_size_add) * int(resize), (barheight[0] + 15) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
-  new_upc_preimg.paint();
+  new_upc_img.paint();
  if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 24;
@@ -186,6 +186,7 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
    drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (24 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 14 * int(resize);
    NumTxtZero += 1;
+ del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
