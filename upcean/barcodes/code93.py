@@ -304,6 +304,7 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
+  upc_img = new_upc_img;
  if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 18;

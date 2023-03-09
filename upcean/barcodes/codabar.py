@@ -206,10 +206,29 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
   end_bc_num += 1;
   LineStart += barwidth;
   BarNum += 1;
- new_upc_img = upc_preimg.resize((((40 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
- del(upc_img);
- del(upc_preimg);
- upc_img = ImageDraw.Draw(new_upc_img);
+ if(pilsupport and imageoutlib=="pillow"):
+  new_upc_img = upc_preimg.resize((((40 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+  del(upc_img);
+  del(upc_preimg);
+  upc_img = ImageDraw.Draw(new_upc_img);
+ if(cairosupport and imageoutlib=="cairo"):
+  upc_imgpat = cairo.SurfacePattern(upc_preimg);
+  scaler = cairo.Matrix();
+  scaler.scale(1/int(resize),1/int(resize));
+  upc_imgpat.set_matrix(scaler);
+  upc_imgpat.set_filter(cairo.FILTER_NEAREST);
+  new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((40 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
+  new_upc_img = cairo.Context(new_upc_preimg);
+  new_upc_img.set_source(upc_imgpat);
+  new_upc_img.paint();
+  upc_img = new_upc_img;
+ if(not hidetext):
+  NumTxtZero = 0; 
+  LineTxtStart = 16;
+  while (NumTxtZero < len(upc_print)):
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
+   LineTxtStart += 9 * int(resize);
+   NumTxtZero += 1;
  if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 20;

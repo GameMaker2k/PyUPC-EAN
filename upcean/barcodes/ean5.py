@@ -296,6 +296,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
+  upc_img = new_upc_img;
  if(not hidetext):
   drawColorText(upc_img, 10 * int(resize), (7 + (7 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
   drawColorText(upc_img, 10 * int(resize), (16 + (15 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);

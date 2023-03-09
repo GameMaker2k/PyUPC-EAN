@@ -279,6 +279,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
+  upc_img = new_upc_img;
  if(not hidetext):
   if(hidesn is not None and not hidesn):
    drawColorText(upc_img, 10 * int(resize), (1 + (2 * (int(resize) - 1)))  * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), upc_matches[0], barcolor[1], "ocrb", imageoutlib);

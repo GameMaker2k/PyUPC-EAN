@@ -202,6 +202,7 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
+  upc_img = new_upc_img;
  if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 16;
