@@ -120,9 +120,9 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
  CheckDigit = upc_matches[2];
  addonsize = 0;
  if(supplement is not None and len(supplement)==2): 
-  addonsize = 29;
+  addonsize = 29 * barwidth;
  if(supplement is not None and len(supplement)==5): 
-  addonsize = 56;
+  addonsize = 56 * barwidth;
  if(pilsupport and imageoutlib=="pillow"):
   upc_preimg = Image.new("RGB", ((69 * barwidth) + addonsize, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
