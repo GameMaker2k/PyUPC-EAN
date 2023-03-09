@@ -386,7 +386,6 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
   drawColorText(upc_img, 10 * int(resize), (45 + (43 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[5], barcolor[1], "ocrb", imageoutlib);  
   if(hidecd is not None and not hidecd):
    drawColorText(upc_img, 10 * int(resize), (61 + (61 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), upc_matches[2], barcolor[1], "ocrb", imageoutlib);
- del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
    upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
@@ -400,14 +399,14 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
     del(upc_sup_img);
  if(cairosupport and imageoutlib=="cairo"):
   if(supplement!=None and len(supplement)==2):
-   upc_sup_img = upcean.barcodes.ean2.draw_ean2_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor,imageoutlib);
-   upc_img.set_source_surface(upc_sup_img, (69 * barwidth), 0);
-   upc_img.paint();
+   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
+   new_upc_img.set_source_surface(upc_sup_img, (69 * barwidth), 0);
+   new_upc_img.paint();
    del(upc_sup_img);
  if(supplement!=None and len(supplement)==5):
-   upc_sup_img = upcean.barcodes.ean5.draw_ean5_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor,imageoutlib);
-   upc_img.set_source_surface(upc_sup_img, (69 * barwidth), 0);
-   upc_img.paint();
+   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
+   new_upc_img.set_source_surface(upc_sup_img, (69 * barwidth), 0);
+   new_upc_img.paint();
    del(upc_sup_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):

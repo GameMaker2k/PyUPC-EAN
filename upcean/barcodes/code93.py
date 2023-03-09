@@ -296,7 +296,7 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((37 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
-  new_upc_img.paint();
+  new_upc_preimg.paint();
  if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 18;
@@ -304,7 +304,6 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
    drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (19 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
- del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
