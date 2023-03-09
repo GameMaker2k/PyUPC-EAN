@@ -1,1 +1,2 @@
-*.py ident
+*.py	ident
+*	text	ol=lf	encoding=UTF-8
