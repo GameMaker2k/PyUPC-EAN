@@ -15,9 +15,20 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, os, re;
+import sys, os, re, upcean.support;
+pilsupport = upcean.support.check_for_pil();
+cairosupport = upcean.support.check_for_cairo();
 
-def get_save_filename(outfile):
+def get_save_filename(outfile, imageoutlib="pillow"):
+ imageoutlib = imageoutlib.lower();
+ if(not pilsupport and imageoutlib=="pillow"):
+  imageoutlib = "cairo";
+ if(not cairosupport and imageoutlib=="cairo"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+  imageoutlib = "pillow";
+ if(not pilsupport and not cairosupport):
+  return False;
  if(sys.version[0]=="2"):
   if(isinstance(outfile, str) or isinstance(outfile, unicode)):
    oldoutfile = outfile[:];
@@ -42,21 +53,26 @@ def get_save_filename(outfile):
      outfileext = tmpoutfile[0][1].upper();
     if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
      outfileext = "PNG";
-   if(outfileext=="DIB"):
-    outfileext = "BMP";
-   if(outfileext=="PS"):
-    outfileext = "EPS";
-   if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
-    outfileext = "JPEG";
-   if(outfileext=="JP2" or outfileext=="J2K" or outfileext=="JPX" or outfileext=="JPEG2"):
-    outfileext = "JPEG2000";
-   if(outfileext=="PBM" or outfileext=="PGM"):
-    outfileext = "PPM";
-   if(outfileext=="TIF"):
-    outfileext = "TIFF";
-   if(outfileext=="BYTES"):
-    outfileext = "BYTES";
-   if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
+   if(imageoutlib=="pillow"):
+    if(outfileext=="DIB"):
+     outfileext = "BMP";
+    if(outfileext=="PS"):
+     outfileext = "EPS";
+    if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
+     outfileext = "JPEG";
+    if(outfileext=="JP2" or outfileext=="J2K" or outfileext=="JPX" or outfileext=="JPEG2"):
+     outfileext = "JPEG2000";
+    if(outfileext=="PBM" or outfileext=="PGM"):
+     outfileext = "PPM";
+    if(outfileext=="TIF"):
+     outfileext = "TIFF";
+    if(outfileext=="BYTES"):
+     outfileext = "BYTES";
+    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
+     outfileext = "PNG";
+   elif(imageoutlib=="pillow"):
+    outfileext = "PNG";
+   else):
     outfileext = "PNG";
    return (outfile, outfileext.upper());   
  if(sys.version[0]>="3"):
@@ -71,21 +87,26 @@ def get_save_filename(outfile):
      outfileext = tmpoutfile[0][1].upper();
     if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
      outfileext = "PNG";
-   if(outfileext=="DIB"):
-    outfileext = "BMP";
-   if(outfileext=="PS"):
-    outfileext = "EPS";
-   if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
-    outfileext = "JPEG";
-   if(outfileext=="JP2" or outfileext=="J2K" or outfileext=="JPX" or outfileext=="JPEG2"):
-    outfileext = "JPEG2000";
-   if(outfileext=="PBM" or outfileext=="PGM"):
-    outfileext = "PPM";
-   if(outfileext=="TIF"):
-    outfileext = "TIFF";
-   if(outfileext=="BYTES"):
-    outfileext = "BYTES";
-   if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
+   if(imageoutlib=="pillow"):
+    if(outfileext=="DIB"):
+     outfileext = "BMP";
+    if(outfileext=="PS"):
+     outfileext = "EPS";
+    if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
+     outfileext = "JPEG";
+    if(outfileext=="JP2" or outfileext=="J2K" or outfileext=="JPX" or outfileext=="JPEG2"):
+     outfileext = "JPEG2000";
+    if(outfileext=="PBM" or outfileext=="PGM"):
+     outfileext = "PPM";
+    if(outfileext=="TIF"):
+     outfileext = "TIFF";
+    if(outfileext=="BYTES"):
+     outfileext = "BYTES";
+    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
+     outfileext = "PNG";
+   elif(imageoutlib=="pillow"):
+    outfileext = "PNG";
+   else):
     outfileext = "PNG";
    return (outfile, outfileext.upper());
  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
