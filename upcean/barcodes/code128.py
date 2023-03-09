@@ -38,6 +38,11 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
  if(barwidth < 1): 
   barwidth = 1;
  if(len(upc) % 2):
@@ -428,11 +433,6 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    LineTxtStart += 12 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
- oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-  del(outfile);
-  outfile = oldoutfile[0];
-  outfileext = oldoutfile[1];
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):
@@ -512,6 +512,11 @@ def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
  if(len(upc) < 4): 
   return False;
  upc = convert_ascii_code128_to_hex_code128(upc);
@@ -534,6 +539,11 @@ def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
  if(len(upc) < 12): 
   return False;
  if(not re.findall("[0-9]{3}", upc)): 

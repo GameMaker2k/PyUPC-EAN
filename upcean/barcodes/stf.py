@@ -38,6 +38,11 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
  if(barwidth < 1): 
   barwidth = 1;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
@@ -182,11 +187,6 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
    LineTxtStart += 14 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
- oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-  del(outfile);
-  outfile = oldoutfile[0];
-  outfileext = oldoutfile[1];
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):

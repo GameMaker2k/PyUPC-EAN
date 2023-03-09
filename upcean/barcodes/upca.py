@@ -39,6 +39,11 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
  upc_pieces = None;
  supplement = None;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
@@ -305,11 +310,6 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    upc_img.set_source_surface(upc_sup_img, (113 * barwidth), 0);
    upc_img.paint();
    del(upc_sup_img);
- oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-  del(outfile);
-  outfile = oldoutfile[0];
-  outfileext = oldoutfile[1];
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):

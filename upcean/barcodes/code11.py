@@ -38,6 +38,11 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
  if(len(upc) < 1): 
   return False;
  if(barwidth < 1): 
@@ -221,11 +226,6 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
- oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-  del(outfile);
-  outfile = oldoutfile[0];
-  outfileext = oldoutfile[1];
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):

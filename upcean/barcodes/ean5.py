@@ -38,6 +38,11 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
+ oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+ if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
  if(barwidth < 1): 
   barwidth = 1;
  if(len(upc)>5 or len(upc)<5): 
@@ -291,11 +296,6 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
   drawColorText(upc_img, 10 * int(resize), (32 + (32 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[3], barcolor[1], "ocrb", imageoutlib);
   drawColorText(upc_img, 10 * int(resize), (40 + (40 * (int(resize) - 1))) * barwidth, (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[4], barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
- oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-  del(outfile);
-  outfile = oldoutfile[0];
-  outfileext = oldoutfile[1];
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):
@@ -332,11 +332,6 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
  upc_preimg.paste(upc_sup_img,(8 * int(resize),0));
  del(upc_sup_img);
  del(upc_img);
- oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile);
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-  del(outfile);
-  outfile = oldoutfile[0];
-  outfileext = oldoutfile[1];
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   return new_upc_img;
  if(sys.version[0]=="2"):
