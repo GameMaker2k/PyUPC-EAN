@@ -314,8 +314,8 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
    del(upc_sup_img);
   if(supplement!=None and len(supplement)==5):
    upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
-   new_upc_preimg.set_source_surface(upc_sup_img, (113 * barwidth) * int(resize), 0);
-   new_upc_preimg.paint();
+   new_upc_img.set_source_surface(upc_sup_img, (113 * barwidth) * int(resize), 0);
+   new_upc_img.paint();
    del(upc_sup_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
