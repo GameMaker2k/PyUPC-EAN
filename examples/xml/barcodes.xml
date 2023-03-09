@@ -9,10 +9,13 @@
 <!ATTLIST barcode size CDATA #IMPLIED>
 <!ATTLIST barcode hideinfo CDATA #IMPLIED>
 <!ATTLIST barcode height CDATA #IMPLIED>
+<!ATTLIST barcode width CDATA #IMPLIED>
 <!ATTLIST barcode textxy CDATA #IMPLIED>
 <!ATTLIST barcode color CDATA #IMPLIED>
+<!ATTLIST barcode imgoutlib CDATA #IMPLIED>
 <!ELEMENT python (#PCDATA)>
 ]>
+
 
 <barcodes>
  <barcode type="upca" code="123456789012" file="/tmp/upca_1.png" />
