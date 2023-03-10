@@ -409,7 +409,9 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
   gw_item_color = None;
  price_matches = re.findall("^(\d{3})(\d{2})", upc_matches[1]);
  price_matches = price_matches[0];
- if(price_matches[0]=="699" and gw_item_type=="Mystery Dozen Deal"):
+ if(price_matches[0]=="399" and gw_item_type=="Mystery Dozen Deal"):
+  gw_item_type = "Mystery DVD Deal";
+ elif(price_matches[0]=="699" and gw_item_type=="Mystery Dozen Deal"):
   gw_item_type = "Mystery 1/2 Dozen Deal";
  elif(price_matches[0]=="999" and gw_item_type=="Mystery Dozen Deal"):
   gw_item_type = "Mystery Dozen Deal";
