@@ -75,6 +75,8 @@ def get_save_filename(outfile, imageoutlib="pillow"):
    else:
     if(outfileext=="BYTES"):
      outfileext = "BYTES";
+    elif(outfileext=="SVG"):
+     outfileext = "SVG";
     else:
      outfileext = "PNG";
    return (outfile, outfileext.upper());   
@@ -112,6 +114,8 @@ def get_save_filename(outfile, imageoutlib="pillow"):
    else:
     if(outfileext=="BYTES"):
      outfileext = "BYTES";
+    elif(outfileext=="SVG"):
+     outfileext = "SVG";
     else:
      outfileext = "PNG";
    return (outfile, outfileext.upper());

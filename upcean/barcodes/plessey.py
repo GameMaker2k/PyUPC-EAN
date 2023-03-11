@@ -116,10 +116,13 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
   upc_img = ImageDraw.Draw(upc_preimg);
   upc_img.rectangle([(0, 0), ((48 * barwidth) + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
  if(cairosupport and imageoutlib=="cairo"):
-  upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 * barwidth) + upc_size_add, barheight[1] + 8);
+  if(outfileext=="SVG"):
+   upc_preimg = cairo.SVGSurface(None, (48 * barwidth) + upc_size_add, barheight[1] + 9);
+  else:
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 * barwidth) + upc_size_add, barheight[1] + 9);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (48 * barwidth) + upc_size_add, barheight[1] + 8);
+  upc_img.rectangle(0, 0, (48 * barwidth) + upc_size_add, barheight[1] + 9);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -209,7 +212,14 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
   scaler.scale(1/int(resize),1/int(resize));
   upc_imgpat.set_matrix(scaler);
   upc_imgpat.set_filter(cairo.FILTER_NEAREST);
-  new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
+  if(outfileext=="SVG"):
+   if(sys.version[0]=="2"):
+    svgoutfile = StringIO();
+   if(sys.version[0]>="3"):
+    svgoutfile = BytesIO();
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
+  else:
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
@@ -245,6 +255,15 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
       stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="SVG"):
+      new_upc_preimg.flush();
+      new_upc_preimg.finish(); 
+      svgoutfile.seek(0);
+      svgouttext = svgoutfile.read();
+      stdoutfile.write(svgouttext);
+      svgoutfile.close();
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
       new_upc_preimg.write_to_png(stdoutfile);
       stdoutfile.seek(0);
@@ -269,6 +288,15 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
       stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="SVG"):
+      new_upc_preimg.flush();
+      new_upc_preimg.finish(); 
+      svgoutfile.seek(0);
+      svgouttext = svgoutfile.read();
+      stdoutfile.write(svgouttext);
+      svgoutfile.close();
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
       new_upc_preimg.write_to_png(stdoutfile);
       stdoutfile.seek(0);
@@ -287,8 +315,18 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
     if(outfileext=="BYTES"):
      with open(outfile, 'wb+') as f:
       f.write(new_upc_preimg.get_data().tobytes());
+     return True;
+    elif(outfileext=="SVG"):
+     new_upc_preimg.flush();
+     new_upc_preimg.finish(); 
+     svgoutfile.seek(0);
+     svgouttext = svgoutfile.read();
+     with open(outfile, 'wb+') as f:
+      f.write(svgouttext);
+     return True;
     else:
      new_upc_preimg.write_to_png(outfile);
+     return True;
   except:
    return False;
  return True;
