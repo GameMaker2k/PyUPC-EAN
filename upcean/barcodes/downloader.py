@@ -33,18 +33,22 @@ try:
  import mechanize;
 except ImportError:
  havemechanize = False;
-if(sys.version[0]=="2"):
+try:
+ from io import StringIO, BytesIO;
+except ImportError:
  try:
   from cStringIO import StringIO;
+  from cStringIO import StringIO as BytesIO;
  except ImportError:
   from StringIO import StringIO;
+  from StringIO import StringIO as BytesIO;
+if(sys.version[0]=="2"):
  # From http://python-future.org/compatible_idioms.html
  from urlparse import urlparse, urlunparse, urlsplit, urlunsplit, urljoin;
  from urllib import urlencode;
  from urllib2 import urlopen, Request, HTTPError;
  import urllib2, urlparse, cookielib;
 if(sys.version[0]>="3"):
- from io import StringIO, BytesIO;
  # From http://python-future.org/compatible_idioms.html
  from urllib.parse import urlparse, urlunparse, urlsplit, urlunsplit, urljoin, urlencode;
  from urllib.request import urlopen, Request;

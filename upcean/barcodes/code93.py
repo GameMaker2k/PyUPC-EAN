@@ -16,6 +16,15 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, types, upcean.barcodes.getsfname, upcean.support;
+try:
+ from io import StringIO, BytesIO;
+except ImportError:
+ try:
+  from cStringIO import StringIO;
+  from cStringIO import StringIO as BytesIO;
+ except ImportError:
+  from StringIO import StringIO;
+  from StringIO import StringIO as BytesIO;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 from upcean.barcodes.predraw import *;
@@ -320,32 +329,50 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
    return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
+   stdoutfile = StringIO();
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.fileno(), new_upc_img.tobytes());
+      os.write(stdoutfile, new_upc_img.tobytes());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(sys.stdout, outfileext);
+      new_upc_img.save(stdoutfile, outfileext);
+      stdoutfile.seek(0);
+      return stdoutfile;
     if(cairosupport and imageoutlib=="cairo"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.fileno(), new_upc_preimg.get_data().tobytes());
+      os.write(stdoutfile, new_upc_preimg.get_data().tobytes());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_preimg.write_to_png(sys.stdout);
+      new_upc_preimg.write_to_png(stdoutfile);
+      stdoutfile.seek(0);
+      return stdoutfile;
    except:
     return False;
  if(sys.version[0]>="3"):
+  stdoutfile = BytesIO();
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes());
+      os.write(stdoutfile, new_upc_img.tobytes());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(sys.stdout.buffer, outfileext);
+      new_upc_img.save(stdoutfile, outfileext);
+      stdoutfile.seek(0);
+      return stdoutfile;
     if(cairosupport and imageoutlib=="cairo"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.buffer.fileno(), new_upc_preimg.get_data().tobytes());
+      os.write(stdoutfile, new_upc_preimg.get_data().tobytes());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_preimg.write_to_png(sys.stdout.buffer);
+      new_upc_preimg.write_to_png(stdoutfile);
+      stdoutfile.seek(0);
+      return stdoutfile;
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):

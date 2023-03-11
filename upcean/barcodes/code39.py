@@ -16,6 +16,15 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, os, sys, types, upcean.barcodes.getsfname, upcean.support;
+try:
+ from io import StringIO, BytesIO;
+except ImportError:
+ try:
+  from cStringIO import StringIO;
+  from cStringIO import StringIO as BytesIO;
+ except ImportError:
+  from StringIO import StringIO;
+  from StringIO import StringIO as BytesIO;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 from upcean.barcodes.predraw import *;
@@ -282,7 +291,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
      if(outfileext=="BYTES"):
       os.write(sys.stdout.fileno(), new_upc_img.tobytes()());
      else:
-      new_upc_img.save(sys.stdout, outfileext);
+      new_upc_img.save(stdoutfile, outfileext);
     if(cairosupport and imageoutlib=="cairo"):
      new_upc_preimg.write_to_png(sys.stdout);
    except:

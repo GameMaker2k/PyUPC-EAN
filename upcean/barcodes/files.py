@@ -20,14 +20,18 @@ try:
  import xml.etree.cElementTree as cElementTree;
 except ImportError:
  import xml.etree.ElementTree as cElementTree;
-if(sys.version[0]=="2"):
+try:
+ from io import StringIO, BytesIO;
+except ImportError:
  try:
   from cStringIO import StringIO;
+  from cStringIO import StringIO as BytesIO;
  except ImportError:
   from StringIO import StringIO;
+  from StringIO import StringIO as BytesIO;
+if(sys.version[0]=="2"):
  import urllib2, urlparse;
 if(sys.version[0]>="3"):
- from io import StringIO, BytesIO;
  import urllib.request as urllib2;
  import urllib.parse as urlparse;
 from xml.sax.saxutils import XMLGenerator;

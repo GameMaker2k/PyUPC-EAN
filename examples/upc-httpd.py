@@ -18,13 +18,15 @@
 
 import tempfile, uuid, re, os, sys, cherrypy, upcean, argparse, time, datetime;
 from PIL import Image, ImageDraw, ImageFont;
-if(sys.version[0]=="2"):
+try:
+ from io import StringIO, BytesIO;
+except ImportError:
  try:
   from cStringIO import StringIO;
+  from cStringIO import StringIO as BytesIO;
  except ImportError:
   from StringIO import StringIO;
-if(sys.version[0]>="3"):
- from io import StringIO, BytesIO;
+  from StringIO import StringIO as BytesIO;
 parser = argparse.ArgumentParser(description="A web server that draws barcodes with PyUPC-EAN powered by CherryPy web server.");
 parser.add_argument("--port", "--port-number", default=8080, help="port number to use for server.");
 parser.add_argument("--host", "--host-name", default="127.0.0.1", help="host name to use for server.");
