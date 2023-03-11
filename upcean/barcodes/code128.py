@@ -461,7 +461,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(stdoutfile, new_upc_img.tobytes());
+      stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -470,7 +470,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
       return stdoutfile;
     if(cairosupport and imageoutlib=="cairo"):
      if(outfileext=="BYTES"):
-      os.write(stdoutfile, new_upc_preimg.get_data().tobytes());
+      stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -485,7 +485,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(stdoutfile, new_upc_img.tobytes());
+      stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -494,7 +494,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
       return stdoutfile;
     if(cairosupport and imageoutlib=="cairo"):
      if(outfileext=="BYTES"):
-      os.write(stdoutfile, new_upc_preimg.get_data().tobytes());
+      stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
      else:

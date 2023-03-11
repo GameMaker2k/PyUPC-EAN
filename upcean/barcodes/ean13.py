@@ -409,7 +409,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(stdoutfile, new_upc_img.tobytes());
+      stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -418,7 +418,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
       return stdoutfile;
     if(cairosupport and imageoutlib=="cairo"):
      if(outfileext=="BYTES"):
-      os.write(stdoutfile, new_upc_preimg.get_data().tobytes());
+      stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -433,7 +433,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(stdoutfile, new_upc_img.tobytes());
+      stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -442,7 +442,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
       return stdoutfile;
     if(cairosupport and imageoutlib=="cairo"):
      if(outfileext=="BYTES"):
-      os.write(stdoutfile, new_upc_preimg.get_data().tobytes());
+      stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
      else:
