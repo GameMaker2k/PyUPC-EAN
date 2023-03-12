@@ -66,6 +66,8 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(barwidth < 1): 
   barwidth = 1;
  if(len(upc)>2 or len(upc)<2): 

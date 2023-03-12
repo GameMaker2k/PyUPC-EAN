@@ -67,6 +67,8 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  upc_pieces = None; 
  supplement = None;
  if(barwidth < 1): 

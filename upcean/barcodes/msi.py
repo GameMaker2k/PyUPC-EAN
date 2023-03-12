@@ -66,6 +66,8 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(barwidth < 1): 
   barwidth = 1;
  if(len(upc) < 1): 

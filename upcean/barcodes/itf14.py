@@ -66,6 +66,8 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(barwidth < 1): 
   barwidth = 1;
  if(len(upc) % 2):

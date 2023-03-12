@@ -66,6 +66,8 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(barwidth < 1): 
   barwidth = 1;
  if(len(upc) % 2):
@@ -634,6 +636,8 @@ def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(len(upc) < 4): 
   return False;
  upc = convert_ascii_code128_to_hex_code128(upc);
@@ -675,6 +679,8 @@ def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(len(upc) < 12): 
   return False;
  if(not re.findall("[0-9]{3}", upc)): 

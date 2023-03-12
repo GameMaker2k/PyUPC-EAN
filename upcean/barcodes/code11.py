@@ -66,6 +66,8 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(len(upc) < 1): 
   return False;
  if(barwidth < 1): 

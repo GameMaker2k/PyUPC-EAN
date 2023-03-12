@@ -67,6 +67,8 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(barwidth < 1): 
   barwidth = 1;
  upc_pieces = None; 

@@ -67,6 +67,8 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
    outfileext = oldoutfile[1];
    if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
     imageoutlib = "cairosvg";
+   if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
+    imageoutlib = "cairo";
  if(len(upc) < 1): 
   return False;
  if(barwidth < 1): 
