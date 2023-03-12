@@ -23,9 +23,11 @@ def get_save_filename(outfile, imageoutlib="pillow"):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+ if(not cairosupport and imageoutlib=="cairosvg"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo" and imageoutlib!="cairosvg"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;

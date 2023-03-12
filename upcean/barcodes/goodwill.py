@@ -43,17 +43,31 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+ if(not cairosupport and imageoutlib=="cairosvg"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo" and imageoutlib!="cairosvg"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
- oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-  del(outfile);
-  outfile = oldoutfile[0];
-  outfileext = oldoutfile[1];
+ if(outfile is None):
+  if(imageoutlib=="cairosvg"):
+   oldoutfile = None;
+   outfile = None;
+   outfileext = "SVG";
+  else:
+   oldoutfile = None;
+   outfile = None;
+   outfileext = None;
+ else:
+  oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+   del(outfile);
+   outfile = oldoutfile[0];
+   outfileext = oldoutfile[1];
+   if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
+    imageoutlib = "cairosvg";
  if(barwidth < 1): 
   barwidth = 1;
  upc_pieces = None;
@@ -110,7 +124,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  elif(pilsupport and imageoutlib=="pillow"):
   pil_addon_fix = 0;
   cairo_addon_fix = 0;
- elif(pilsupport and imageoutlib=="cairo"):
+ elif(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   pil_addon_fix = 0;
   cairo_addon_fix = (8 * (int(resize) ) );
  else:
@@ -149,7 +163,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   upc_preimg = Image.new("RGB", (113 + addonsize, barheight[1] + 45));
   upc_img = ImageDraw.Draw(upc_preimg);
   upc_img.rectangle([(0, 0), (113 + addonsize, barheight[1] + 45)], fill=barcolor[2]);
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
    upc_preimg = cairo.SVGSurface(None, (113 + addonsize, barheight[1] + 45));
   else:
@@ -164,17 +178,20 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   upc_imgpat = cairo.SurfacePattern(upc_preimg);
   scaler = cairo.Matrix();
   scaler.scale(1/int(resize),1/int(resize));
   upc_imgpat.set_matrix(scaler);
   upc_imgpat.set_filter(cairo.FILTER_NEAREST);
   if(outfileext=="SVG"):
-   if(sys.version[0]=="2"):
-    svgoutfile = StringIO();
-   if(sys.version[0]>="3"):
-    svgoutfile = BytesIO();
+   if(outfile is None):
+    svgoutfile = None;
+   else:
+    if(sys.version[0]=="2"):
+     svgoutfile = StringIO();
+    if(sys.version[0]>="3"):
+     svgoutfile = BytesIO();
    new_upc_preimg = cairo.SVGSurface(svgoutfile, (113 + addonsize) * int(resize), (barheight[1] + 45) * int(resize));
   else:
    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(resize), (barheight[1] + 45) * int(resize));
@@ -185,7 +202,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
   new_upc_img.paste(upc_barcode_img,(0, 15 * resize));
   del(upc_barcode_img);
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
   new_upc_img.set_source_surface(upc_barcode_img, 0, 15 * resize);
   new_upc_img.paint();
@@ -205,7 +222,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
     del(upc_sup_img);
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(supplement!=None and len(supplement)==2):
    upc_sup_img = draw_ean2_barcode_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
    new_upc_img.set_source_surface(upc_sup_img, 113, 0);
@@ -219,7 +236,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
-  if(cairosupport and imageoutlib=="cairo"):
+  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
    return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
@@ -234,12 +251,12 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
       new_upc_img.save(stdoutfile, outfileext);
       stdoutfile.seek(0);
       return stdoutfile;
-    if(cairosupport and imageoutlib=="cairo"):
+    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
      if(outfileext=="BYTES"):
       stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
-     elif(outfileext=="SVG"):
+     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
       new_upc_preimg.finish(); 
       svgoutfile.seek(0);
@@ -267,12 +284,12 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
       new_upc_img.save(stdoutfile, outfileext);
       stdoutfile.seek(0);
       return stdoutfile;
-    if(cairosupport and imageoutlib=="cairo"):
+    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
      if(outfileext=="BYTES"):
       stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
-     elif(outfileext=="SVG"):
+     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
       new_upc_preimg.finish(); 
       svgoutfile.seek(0);
@@ -295,12 +312,12 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
       f.write(new_upc_img.tobytes());
     else:
      new_upc_img.save(outfile, outfileext);
-   if(cairosupport and imageoutlib=="cairo"):
+   if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
     if(outfileext=="BYTES"):
      with open(outfile, 'wb+') as f:
       f.write(new_upc_preimg.get_data().tobytes());
      return True;
-    elif(outfileext=="SVG"):
+    elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
      new_upc_preimg.finish(); 
      svgoutfile.seek(0);

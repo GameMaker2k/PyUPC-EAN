@@ -41,17 +41,31 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+ if(not cairosupport and imageoutlib=="cairosvg"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo" and imageoutlib!="cairosvg"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
- oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-  del(outfile);
-  outfile = oldoutfile[0];
-  outfileext = oldoutfile[1];
+ if(outfile is None):
+  if(imageoutlib=="cairosvg"):
+   oldoutfile = None;
+   outfile = None;
+   outfileext = "SVG";
+  else:
+   oldoutfile = None;
+   outfile = None;
+   outfileext = None;
+ else:
+  oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+  if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+   del(outfile);
+   outfile = oldoutfile[0];
+   outfileext = oldoutfile[1];
+   if(cairosupport and imageoutlib=="cairo" and outfileext=="SVG"):
+    imageoutlib = "cairosvg";
  if(len(upc) < 1): 
   return False;
  if(barwidth < 1): 
@@ -100,7 +114,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  elif(pilsupport and imageoutlib=="pillow"):
   pil_addon_fix = 0;
   cairo_addon_fix = 0;
- elif(pilsupport and imageoutlib=="cairo"):
+ elif(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   pil_addon_fix = 0;
   cairo_addon_fix = (8 * (int(resize) ) );
  else:
@@ -115,7 +129,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
   upc_preimg = Image.new("RGB", ((48 * barwidth) + upc_size_add, barheight[1] + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
   upc_img.rectangle([(0, 0), ((48 * barwidth) + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
    upc_preimg = cairo.SVGSurface(None, (48 * barwidth) + upc_size_add, barheight[1] + 9);
   else:
@@ -260,17 +274,20 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   upc_imgpat = cairo.SurfacePattern(upc_preimg);
   scaler = cairo.Matrix();
   scaler.scale(1/int(resize),1/int(resize));
   upc_imgpat.set_matrix(scaler);
   upc_imgpat.set_filter(cairo.FILTER_NEAREST);
   if(outfileext=="SVG"):
-   if(sys.version[0]=="2"):
-    svgoutfile = StringIO();
-   if(sys.version[0]>="3"):
-    svgoutfile = BytesIO();
+   if(outfile is None):
+    svgoutfile = None;
+   else:
+    if(sys.version[0]=="2"):
+     svgoutfile = StringIO();
+    if(sys.version[0]>="3"):
+     svgoutfile = BytesIO();
    new_upc_preimg = cairo.SVGSurface(svgoutfile, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
   else:
    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
@@ -292,7 +309,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
-  if(cairosupport and imageoutlib=="cairo"):
+  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
    return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
@@ -302,7 +319,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
       os.write(sys.stdout.fileno(), new_upc_img.tobytes()());
      else:
       new_upc_img.save(stdoutfile, outfileext);
-    if(cairosupport and imageoutlib=="cairo"):
+    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
      new_upc_preimg.write_to_png(sys.stdout);
    except:
     return False;
@@ -314,7 +331,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
       os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes()());
      else:
       new_upc_img.save(sys.stdout.buffer, outfileext);
-    if(cairosupport and imageoutlib=="cairo"):
+    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
      new_upc_preimg.write_to_png(sys.stdout.buffer);
    except:
     return False;
@@ -326,7 +343,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
       f.write(new_upc_img.tobytes());
     else:
      new_upc_img.save(outfile, outfileext);
-   if(cairosupport and imageoutlib=="cairo"):
+   if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
     new_upc_preimg.write_to_png(outfile);
   except:
    return False;

@@ -44,9 +44,11 @@ def snapCoords( ctx, x, y, imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+ if(not cairosupport and imageoutlib=="cairosvg"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo" and imageoutlib!="cairosvg"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
@@ -54,9 +56,9 @@ def snapCoords( ctx, x, y, imageoutlib="pillow" ):
   return upcean.barcodes.prepil.snapCoords( ctx, x, y );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return upcean.barcodes.precairo.snapCoords( ctx, x, y );
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
 
@@ -64,9 +66,11 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+ if(not cairosupport and imageoutlib=="cairosvg"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo" and imageoutlib!="cairosvg"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
@@ -74,9 +78,9 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow" ):
   return upcean.barcodes.prepil.drawColorLine( ctx, x1, y1, x2, y2, width, color );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return upcean.barcodes.precairo.drawColorLine( ctx, x1, y1, x2, y2, width, color );
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
 
@@ -84,9 +88,11 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+ if(not cairosupport and imageoutlib=="cairosvg"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo" and imageoutlib!="cairosvg"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
@@ -94,9 +100,9 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
   return upcean.barcodes.prepil.drawColorRectangle( ctx, x1, y1, x2, y2, color );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return upcean.barcodes.precairo.drawColorRectangle( ctx, x1, y1, x2, y2, color );
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
 
@@ -104,9 +110,11 @@ def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb", imageoutlib="pi
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+ if(not cairosupport and imageoutlib=="cairosvg"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo" and imageoutlib!="cairosvg"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
@@ -114,9 +122,9 @@ def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb", imageoutlib="pi
   return upcean.barcodes.prepil.drawColorText( ctx, size, x, y, text, color, ftype );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return upcean.barcodes.precairo.drawColorText( ctx, size, x, y, text, color, ftype );
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
 
@@ -124,9 +132,11 @@ def drawColorRectangleAlt( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   imageoutlib = "pillow";
- if(imageoutlib!="pillow" and imageoutlib!="cairo"):
+ if(not cairosupport and imageoutlib=="cairosvg"):
+  imageoutlib = "pillow";
+ if(imageoutlib!="pillow" and imageoutlib!="cairo" and imageoutlib!="cairosvg"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
@@ -134,8 +144,8 @@ def drawColorRectangleAlt( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
   return upcean.barcodes.prepil.drawColorRectangleAlt( ctx, x1, y1, x2, y2, color );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
- if(cairosupport and imageoutlib=="cairo"):
+ if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return upcean.barcodes.precairo.drawColorRectangleAlt( ctx, x1, y1, x2, y2, color );
- if(not cairosupport and imageoutlib=="cairo"):
+ if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
