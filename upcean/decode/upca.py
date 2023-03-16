@@ -20,6 +20,8 @@ def decode_upca_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, Fal
  upc_img = Image.open(infile);
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
+ left_barcode_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
+ right_barcode_dict = { '1110010': "0", '1100110': "1", '1101100': "2", '1000010': "3", '1011100': "4", '1001110': "5", '1010000': "6", '1000100': "7", '1001000': "8", '1110100': "9" };
  startx = 12;
  nexpix = 12 * (barwidth * int(resize));
  endx = 101;
@@ -47,47 +49,9 @@ def decode_upca_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, Fal
  barcode_list = [];
  while(listcount<countlist):
   if(listcount<7):
-   if(pre_upc_whole[listcount]=="0001101"):
-    barcode_list.append("0");
-   if(pre_upc_whole[listcount]=="0011001"):
-    barcode_list.append("1");
-   if(pre_upc_whole[listcount]=="0010011"):
-    barcode_list.append("2");
-   if(pre_upc_whole[listcount]=="0111101"):
-    barcode_list.append("3");
-   if(pre_upc_whole[listcount]=="0100011"):
-    barcode_list.append("4");
-   if(pre_upc_whole[listcount]=="0110001"):
-    barcode_list.append("5");
-   if(pre_upc_whole[listcount]=="0101111"):
-    barcode_list.append("6");
-   if(pre_upc_whole[listcount]=="0111011"):
-    barcode_list.append("7");
-   if(pre_upc_whole[listcount]=="0110111"):
-    barcode_list.append("8");
-   if(pre_upc_whole[listcount]=="0001011"):
-    barcode_list.append("9");
+   barcode_list.append(left_barcode_dict.get(pre_upc_whole[listcount], "0"));
   if(listcount>6):
-   if(pre_upc_whole[listcount]=="1110010"):
-    barcode_list.append("0");
-   if(pre_upc_whole[listcount]=="1100110"):
-    barcode_list.append("1");
-   if(pre_upc_whole[listcount]=="1101100"):
-    barcode_list.append("2");
-   if(pre_upc_whole[listcount]=="1000010"):
-    barcode_list.append("3");
-   if(pre_upc_whole[listcount]=="1011100"):
-    barcode_list.append("4");
-   if(pre_upc_whole[listcount]=="1001110"):
-    barcode_list.append("5");
-   if(pre_upc_whole[listcount]=="1010000"):
-    barcode_list.append("6");
-   if(pre_upc_whole[listcount]=="1000100"):
-    barcode_list.append("7");
-   if(pre_upc_whole[listcount]=="1001000"):
-    barcode_list.append("8");
-   if(pre_upc_whole[listcount]=="1110100"):
-    barcode_list.append("9");
+   barcode_list.append(right_barcode_dict.get(pre_upc_whole[listcount], "0"));
   listcount += 1;
   upc = "".join(barcode_list);
  return upc;
