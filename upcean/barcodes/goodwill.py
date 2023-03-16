@@ -210,8 +210,15 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   new_upc_img.paint();
   upc_img = new_upc_img;
   del(upc_barcode_img);
- drawColorText(upc_img, 16 * int(resize), 10 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (4 * int(resize)), "Goodwill", barcolor[1], "ocrb", imageoutlib);
- drawColorText(upc_img, 16 * int(resize), 24 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (75 * int(resize)), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib);
+ drawColorText(upc_img, 12 * int(resize), 30 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (4 * int(resize)), "Goodwill", barcolor[1], "ocrb", imageoutlib);
+ if(len(goodwillinfo['pricewdnz'])<4):
+  goodwillinfo['pricewdnz'] = "0"+goodwillinfo['pricewdnz'];
+ addonsize = 0;
+ if(len(goodwillinfo['pricewdnz'])==5):
+  addonsize = -14;
+ if(len(goodwillinfo['pricewdnz'])==6):
+  addonsize = -30;
+ drawColorText(upc_img, 16 * int(resize), 36 + addonsize + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (75 * int(resize)), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
