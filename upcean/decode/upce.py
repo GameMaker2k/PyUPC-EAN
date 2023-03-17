@@ -16,7 +16,7 @@
 
 from PIL import Image;
 
-def decode_upca_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def decode_upce_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc_img = Image.open(infile);
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
