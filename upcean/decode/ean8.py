@@ -16,15 +16,25 @@
 
 from PIL import Image;
 
-def decode_ean8_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def decode_ean8_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+  resize = 1;
  if(isinstance(infile, Image.Image)):
   upc_img = infile;
  else:
   try:
    infile.seek(0);
-   upc_img = Image.open(infile);
+   try:
+    upc_img = Image.open(infile);
+   except UnidentifiedImageError:
+    upc_img = Image.frombytes(infile.read());
   except AttributeError:
-   upc_img = Image.open(infile);
+   try:
+    upc_img = Image.open(infile);
+   except UnidentifiedImageError:
+    prefile = open(infile, "rb");
+    upc_img = Image.frombytes(prefile.read());
+    profile.close();
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
  left_barcode_l_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
