@@ -58,7 +58,6 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
  while(startx < endx):
   listcount = 0;
   curpixel = upc_img.getpixel((nexpix, starty));
-  print(nexpix);
   if(curpixel==barcolor[0]):
    nexpixel = upc_img.getpixel((nexpix + 1, starty));
    if(nexpixel==barcolor[0] and startx<(endx-2)):
