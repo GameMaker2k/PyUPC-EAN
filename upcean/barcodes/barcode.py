@@ -177,7 +177,7 @@ def fix_draw_itf_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(
  return fix_create_itf_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def fix_create_itf6_barcode(upc,outfile="./itf8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- if(len(upc)>14 or len(upc)<13):
+ if(len(upc)>8 or len(upc)<7):
   return False;
  upc = upcean.validate.fix_itf6_checksum(upc);
  return create_itf6_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
