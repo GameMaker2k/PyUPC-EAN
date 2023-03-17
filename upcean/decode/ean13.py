@@ -58,17 +58,17 @@ def decode_ean13_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, Fa
  barcode_list = [];
  fist_number_list = [];
  while(listcount<countlist):
-  if(listcount<7):
+  if(listcount<6):
    if(left_barcode_l_dict.get(pre_upc_whole[listcount], None) is not None):
     fist_number_list.append("L");
     barcode_list.append(left_barcode_l_dict.get(pre_upc_whole[listcount], "0"));
    if(left_barcode_g_dict.get(pre_upc_whole[listcount], None) is not None):
     fist_number_list.append("G");
     barcode_list.append(left_barcode_g_dict.get(pre_upc_whole[listcount], "0"));
-  if(listcount==7):
+  if(listcount==6):
    get_fist_number = "".join(fist_number_list);
    barcode_list.insert(0, fist_number_dict.get(get_fist_number, "0"));
-  if(listcount>6):
+  if(listcount>5):
    barcode_list.append(right_barcode_dict.get(pre_upc_whole[listcount], "0"));
   listcount += 1;
   upc = "".join(barcode_list);
