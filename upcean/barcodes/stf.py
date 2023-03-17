@@ -176,16 +176,6 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
    left_barcolor = [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0];
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
-   if(left_barcolor[InnerUPCNum]==2):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
-    LineStart += barwidth; 
-    BarNum += 1;
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
-    LineStart += barwidth; 
-    BarNum += 1;
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
-    LineStart += barwidth;
-    BarNum += 1;
    if(left_barcolor[InnerUPCNum]==1):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
     LineStart += barwidth;
