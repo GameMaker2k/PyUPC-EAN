@@ -18,7 +18,7 @@ import upcean.decode.barcode, upcean.support;
 def decode_barcode(bctype,infile,resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(bctype not in upcean.support.supported_barcodes("tuple")):
   return False;
- if(hasattr(upcean.decode.barcode, "create_"+bctype+"_barcode") and callable(getattr(upcean.decode.barcode, "decode_"+bctype+"_barcode"))):
+ if(hasattr(upcean.decode.barcode, "decode_"+bctype+"_barcode") and callable(getattr(upcean.decode.barcode, "decode_"+bctype+"_barcode"))):
   return getattr(upcean.decode.barcode, "decode_"+bctype+"_barcode")(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(not hasattr(upcean.decode.barcode, "decode_"+bctype+"_barcode") or not callable(getattr(upcean.decode.barcode, "decode_"+bctype+"_barcode"))):
   return False;
@@ -27,23 +27,23 @@ def decode_barcode(bctype,infile,resize=1,barheight=(48, 54),barwidth=1,barcolor
 def validate_decode_barcode(bctype,infile="./barcode.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(bctype not in upcean.support.supported_barcodes("tuple")):
   return False;
- if(bctype=="upca" or bctype=="goodwill" or bctype=="upce" or bctype=="ean13" or bctype=="ean" or bctype=="itf" or bctype=="itf14"):
+ if(bctype=="upca" or bctype=="upce" or bctype=="ean13" or bctype=="ean8" or bctype=="itf" or bctype=="itf6" or bctype=="itf14"):
   if(hasattr(upcean.decode.barcode, "validate_decode_"+bctype+"_barcode") and callable(getattr(upcean.decode.barcode, "validate_decode_"+bctype+"_barcode"))):
    return getattr(upcean.decode.barcode, "validate_decode_"+bctype+"_barcode")(infile,resize,barheight,barwidth,barcolor,imageoutlib);
   if(not hasattr(upcean.decode.barcode, "validate_decode_"+bctype+"_barcode") or not callable(getattr(upcean.decode.barcode, "validate_decode_"+bctype+"_barcode"))):
    return False;
   return False;
- if(bctype!="upca" and bctype!="upce" and bctype!="ean13" and bctype!="ean8"):
+ if(bctype!="upca" and bctype!="upce" and bctype!="ean13" and bctype!="ean8" and bctype!="itf" and bctype!="itf6" and bctype!="itf14"):
   return decode_barcode(bctype,infile,resize,barheight,barwidth,barcolor,imageoutlib);
 
 def fix_decode_barcode(bctype,infile="./barcode.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(bctype not in upcean.support.supported_barcodes("tuple")):
   return False;
- if(bctype=="upca" or bctype=="upce" or bctype=="ean13" or bctype=="ean8"):
+ if(bctype=="upca" or bctype=="upce" or bctype=="ean13" or bctype=="ean8" or bctype=="itf" or bctype=="itf6" or bctype=="itf14"):
   if(hasattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode") and callable(getattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode"))):
    return getattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode")(infile,resize,barheight,barwidth,barcolor,imageoutlib);
   if(not hasattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode") or not callable(getattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode"))):
    return False;
   return False;
- if(bctype!="upca" and bctype!="goodwill" and bctype!="upce" and bctype!="ean13" and bctype!="ean8"):
+ if(bctype!="upca" and bctype!="upce" and bctype!="ean13" and bctype!="ean8" and bctype!="itf" and bctype!="itf6" and bctype!="itf14"):
   return decode_barcode(bctype,infile,resize,barheight,barwidth,barcolor,imageoutlib);
