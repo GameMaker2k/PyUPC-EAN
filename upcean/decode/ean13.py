@@ -29,14 +29,14 @@ def decode_ean13_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidt
    try:
     upc_img = Image.open(infile);
    except UnidentifiedImageError:
-    upc_img = Image.frombytes(infile.read());
+    upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());
   except AttributeError:
    try:
     upc_img = Image.open(infile);
    except UnidentifiedImageError:
     prefile = open(infile, "rb");
-    upc_img = Image.frombytes(prefile.read());
-    profile.close();
+    upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
+    prefile.close();
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
  fist_number_dict = { 'LLLLLL': "0", 'LLGLGG': "1", 'LLGGLG': "2", 'LLGGGL': "3", 'LGLLGG': "4", 'LGGLLG': "5", 'LGGGLL': "6", 'LGLGLG': "7", 'LGLGGL': "8", 'LGGLGL': "9" };
