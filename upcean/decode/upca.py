@@ -29,13 +29,13 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
    try:
     upc_img = Image.open(infile);
    except UnidentifiedImageError:
-    upc_img = Image.frombytes("RGB", (((113 * barwidth) + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());
+    upc_img = Image.frombytes("RGB", (((113 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());
   except AttributeError:
    try:
     upc_img = Image.open(infile);
    except UnidentifiedImageError:
     prefile = open(infile, "rb");
-    upc_img = Image.frombytes("RGB", (((113 * barwidth) + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
+    upc_img = Image.frombytes("RGB", (((113 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     profile.close();
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
