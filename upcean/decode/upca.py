@@ -55,9 +55,9 @@ def decode_upca_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, Fal
  listcount = 0;
  barcode_list = [];
  while(listcount<countlist):
-  if(listcount<7):
+  if(listcount<6):
    barcode_list.append(left_barcode_dict.get(pre_upc_whole[listcount], "0"));
-  if(listcount>6):
+  if(listcount>5):
    barcode_list.append(right_barcode_dict.get(pre_upc_whole[listcount], "0"));
   listcount += 1;
   upc = "".join(barcode_list);
