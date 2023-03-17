@@ -18,10 +18,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import upcean.support, upcean.getprefix.getprefix;
 
 ''' // Code for decoding UPC-A by Kazuki Przyborowski '''
-from upcean.barcodes.upca import *;
+from upcean.decode.upca import *;
 ''' // Code for decoding UPC-E by Kazuki Przyborowski '''
-from upcean.barcodes.upce import *;
+from upcean.decode.upce import *;
 ''' // Code for decoding EAN-13 by Kazuki Przyborowski '''
-from upcean.barcodes.ean13 import *;
+from upcean.decode.ean13 import *;
 ''' // Code for decoding EAN-8 by Kazuki Przyborowski '''
-from upcean.barcodes.ean8 import *;
+from upcean.decode.ean8 import *;

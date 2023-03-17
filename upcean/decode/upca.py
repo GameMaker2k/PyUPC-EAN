@@ -17,7 +17,14 @@
 from PIL import Image;
 
 def decode_upca_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- upc_img = Image.open(infile);
+ if(isinstance(infile, Image.Image)):
+  upc_img = infile;
+ else:
+  try:
+   infile.seek(0);
+   upc_img = Image.open(infile);
+  except AttributeError:
+   upc_img = Image.open(infile);
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
  left_barcode_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
