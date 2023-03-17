@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.barcodes.getsfname;
+import re, upcean.barcodes.getsfname;
 from PIL import Image, UnidentifiedImageError;
 
 def decode_ean13_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
