@@ -15,13 +15,11 @@ print(barcode.validate_checksum())
 barcode.validate_create_barcode("./1234567890128.png", 1)
 
 debarcode = upcean.oopfuncs.decode('ean13', './1234567890128.png')
-ean = debarcode.validate_decode_barcode()
-print(ean)
+print(debarcode.validate_decode_barcode())
 
 barcode2 = upcean.oopfuncs.barcode('itf14', '30012345678906')
 print(barcode2.validate_checksum())
 barcode2.validate_create_barcode("./30012345678906.png", 1)
 
 debarcode = upcean.oopfuncs.decode('itf14', './30012345678906.png')
-itf = debarcode.validate_decode_barcode()
-print(itf)
+print(debarcode.validate_decode_barcode())
