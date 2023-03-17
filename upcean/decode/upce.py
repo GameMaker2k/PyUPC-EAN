@@ -16,15 +16,25 @@
 
 from PIL import Image;
 
-def decode_upce_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def decode_upce_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+  resize = 1;
  if(isinstance(infile, Image.Image)):
   upc_img = infile;
  else:
   try:
    infile.seek(0);
-   upc_img = Image.open(infile);
+   try:
+    upc_img = Image.open(infile);
+   except UnidentifiedImageError:
+    upc_img = Image.frombytes(infile.read());
   except AttributeError:
-   upc_img = Image.open(infile);
+   try:
+    upc_img = Image.open(infile);
+   except UnidentifiedImageError:
+    prefile = open(infile, "rb");
+    upc_img = Image.frombytes(prefile.read());
+    profile.close();
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
  fist_number_dict = { 'EEEOOO': "0", 'EEOEOO': "0", 'EEOOEO': "0", 'EEOOOE': "0", 'EOEEOO': "0", 'EOOEEO': "0", 'EOOOEE': "0", 'EOEOEO': "0", 'EOEOOE': "0", 'EOOEOE': "0", 'OOOEEE': "1", 'OOEOEE': "1", 'OOEEOE': "1", 'OOEEEO': "1", 'OEOOEE': "1", 'OEEOOE': "1", 'OEEEOO': "1", 'OEOEOE': "1", 'OEOEEO': "1", 'OEEOEO': "9" };
