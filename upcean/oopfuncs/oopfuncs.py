@@ -20,6 +20,8 @@ pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 if(pilsupport or cairosupport):
  import upcean.fonts, upcean.xml, upcean.barcodes;
+if(pilsupport):
+ import upcean.decode;
 
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
 class barcode:
