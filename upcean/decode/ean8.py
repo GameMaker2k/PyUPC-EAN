@@ -48,7 +48,6 @@ def decode_upca_barcode(infile="./upca.png",resize=1,hideinfo=(False, False, Fal
  countlist = len(pre_upc_whole);
  listcount = 0;
  barcode_list = [];
- fist_number_list = [];
  while(listcount<countlist):
   if(listcount<4):
    if(left_barcode_l_dict.get(pre_upc_whole[listcount], None) is not None):
