@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.barcodes.barcode, upcean.barcodes.files, upcean.support;
+import upcean.barcodes.barcode, upcean.xml.files, upcean.support;
 
 ''' // Shortcut Codes by Kazuki Przyborowski '''
 def create_barcode(bctype,upc,outfile="./barcode.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):

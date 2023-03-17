@@ -17,7 +17,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import upcean.validate, upcean.convert, upcean.getprefix, upcean.barcodes.getsfname, upcean.support;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport):
+cairosupport = upcean.support.check_for_cairo();
+if(pilsupport or cairosupport):
  import upcean.fonts, upcean.xml, upcean.barcodes;
 
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
@@ -95,7 +96,7 @@ class barcode:
    barcode_type = self.type;
   return upcean.support.get_pillow_version();
  ''' // barcodes/__init__.py funtions '''
- if(pilsupport):
+ if(pilsupport or cairosupport):
   def create_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
@@ -195,7 +196,7 @@ class barcode:
    product = self.product;
   return upcean.convert.make_barcode(self.type, self.numbersystem, self.manufacturer, self.product);
  ''' // getsfname.py funtions '''
- if(pilsupport):
+ if(pilsupport or cairosupport):
   def get_save_filename(self, filename=None):
    if(filename is None):
     filename = self.filename;

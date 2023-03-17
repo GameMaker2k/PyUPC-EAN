@@ -35,9 +35,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 // Source: http://en.wikipedia.org/wiki/Interleaved_2_of_5
 // Source: http://www.gs1au.org/assets/documents/info/user_manuals/barcode_technical_details/ITF_14_Barcode_Structure.pdf
 // Source: http://www.barcodeisland.com/
+// Source: https://web.archive.org/web/20201004174654/http://www.barcodeisland.com/
 '''
 
 from upcean.barcodes.barcode import *;
 from upcean.barcodes.shortcuts import *;
-from upcean.barcodes.files import *;
-from upcean.barcodes.downloader import *;
+from upcean.xml.files import *;
+from upcean.xml.downloader import *;

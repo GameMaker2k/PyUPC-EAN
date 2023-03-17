@@ -50,18 +50,6 @@ def validate_decode_ean13_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,
   return False;
  return True;
 
-def validate_decode_ean13_from_upca_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- upc = decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
- if(len(upc)>13 or len(upc)<12): 
-  return False;
- if(len(upc)<13):
-  if(not upcean.validate.validate_upca_checksum(upc)):
-   return False;
-  upc = "0"+str(upc);
- if(not upcean.validate.validate_ean13_checksum(upc)):
-  return False;
- return True;
-
 def fix_decode_upca_barcode(infile,outfile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(len(upc)>12 or len(upc)<11):
@@ -82,18 +70,6 @@ def fix_decode_ean13_barcode(infile,outfile="./upca.png",resize=1,barheight=(48,
   return False;
  upc = upcean.validate.fix_ean13_checksum(upc);
  return upc;
-
-def fix_decode_ean13_from_upca_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- upc = decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
- if(len(upc)>13 or len(upc)<11): 
-  return False;
- if(len(upc)<13):
-  upc = upcean.validate.fix_upca_checksum(upc);
-  upc = "0"+str(upc);
- if(len(upc)>13 or len(upc)<12):
-  return False;
- upc = upcean.validate.fix_ean13_checksum(upc);
- return True;
 
 def fix_decode_ean8_barcode(infile,outfile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_ean8_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
