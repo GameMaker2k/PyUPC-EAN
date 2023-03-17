@@ -12,7 +12,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.barcodes.barcode, upcean.support;
+import upcean.decode.barcode, upcean.support;
 
 ''' // Shortcut Codes by Kazuki Przyborowski '''
 def decode_barcode(bctype,infile,resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
