@@ -18,7 +18,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import re, upcean.barcodes.getsfname;
 from PIL import Image, UnidentifiedImageError;
 
-def decode_ean13_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(isinstance(infile, Image.Image)):
@@ -29,14 +29,16 @@ def decode_ean13_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidt
    try:
     upc_img = Image.open(infile);
    except UnidentifiedImageError:
-    upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());
+    return False;
+    '''upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
   except AttributeError:
    try:
     upc_img = Image.open(infile);
    except UnidentifiedImageError:
-    prefile = open(infile, "rb");
+    return False;
+    '''prefile = open(infile, "rb");
     upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
-    prefile.close();
+    prefile.close();'''
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
  fist_number_dict = { 'LLLLLL': "0", 'LLGLGG': "1", 'LLGGLG': "2", 'LLGGGL': "3", 'LGLLGG': "4", 'LGGLLG': "5", 'LGGGLL': "6", 'LGLGLG': "7", 'LGLGGL': "8", 'LGGLGL': "9" };

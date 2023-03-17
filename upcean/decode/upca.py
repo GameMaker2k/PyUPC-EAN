@@ -29,14 +29,16 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
    try:
     upc_img = Image.open(infile);
    except UnidentifiedImageError:
-    upc_img = Image.frombytes("RGB", (((113 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());
+    return False;
+    '''upc_img = Image.frombytes("RGB", (((113 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
   except AttributeError:
    try:
     upc_img = Image.open(infile);
    except UnidentifiedImageError:
-    prefile = open(infile, "rb");
+    return False;
+    '''prefile = open(infile, "rb");
     upc_img = Image.frombytes("RGB", (((113 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
-    prefile.close();
+    prefile.close();'''
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2);
  left_barcode_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };

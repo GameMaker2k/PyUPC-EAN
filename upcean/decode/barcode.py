@@ -25,8 +25,12 @@ from upcean.decode.upce import *;
 from upcean.decode.ean13 import *;
 ''' // Code for decoding EAN-8 by Kazuki Przyborowski '''
 from upcean.decode.ean8 import *;
+''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
+from upcean.decode.itf import *;
+''' // Code for making ITF-14 by Kazuki Przyborowski '''
+from upcean.decode.itf14 import *;
 
-def validate_decode_upca_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def validate_decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(len(upc)>12 or len(upc)<12):
   return False;
@@ -34,7 +38,7 @@ def validate_decode_upca_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,b
   return False;
  return True;
 
-def validate_decode_upce_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def validate_decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_upce_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(len(upc)>8 or len(upc)<8):
   return False;
@@ -42,7 +46,7 @@ def validate_decode_upce_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,b
   return False;
  return True;
 
-def validate_decode_ean13_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def validate_decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(len(upc)>13 or len(upc)<13):
   return False;
@@ -50,30 +54,75 @@ def validate_decode_ean13_barcode(infile,resize=1,barheight=(48, 54),barwidth=1,
   return False;
  return True;
 
-def fix_decode_upca_barcode(infile,outfile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def validate_decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ upc = decode_itf_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ if(len(upc)>14 or len(upc)<14):
+  return False;
+ if(not upcean.validate.validate_itf14_checksum(upc)):
+  return False;
+ return True;
+
+def validate_decode_itf6_barcode(infile="./itf6.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ upc = decode_itf6_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ if(len(upc)>6 or len(upc)<6):
+  return False;
+ if(not upcean.validate.validate_itf6_checksum(upc)):
+  return False;
+ return True;
+
+def validate_decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ upc = decode_itf14_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ if(len(upc)>14 or len(upc)<14):
+  return False;
+ if(not upcean.validate.validate_itf14_checksum(upc)):
+  return False;
+ return True;
+
+def fix_decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(len(upc)>12 or len(upc)<11):
   return False;
  upc = upcean.validate.fix_upca_checksum(upc);
  return upc;
 
-def fix_decode_upce_barcode(infile,outfile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def fix_decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_upce_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(len(upc)>8 or len(upc)<7):
   return False;
  upc = upcean.validate.fix_upce_checksum(upc);
  return upc;
 
-def fix_decode_ean13_barcode(infile,outfile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def fix_decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(len(upc)>13 or len(upc)<12):
   return False;
  upc = upcean.validate.fix_ean13_checksum(upc);
  return upc;
 
-def fix_decode_ean8_barcode(infile,outfile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def fix_decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = decode_ean8_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
  if(len(upc)>8 or len(upc)<7):
   return False;
  upc = upcean.validate.fix_ean8_checksum(upc);
+ return upc;
+
+def fix_decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ upc = decode_itf14_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ if(len(upc)>14 or len(upc)<13):
+  return False;
+ upc = upcean.validate.fix_itf14_checksum(upc);
+ return upc;
+
+def fix_decode_itf6_barcode(infile="./itf6.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ upc = decode_itf6_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ if(len(upc)>6 or len(upc)<5):
+  return False;
+ upc = upcean.validate.fix_itf6_checksum(upc);
+ return upc;
+
+def fix_decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ upc = decode_itf14_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ if(len(upc)>14 or len(upc)<13):
+  return False;
+ upc = upcean.validate.fix_itf14_checksum(upc);
  return upc;
