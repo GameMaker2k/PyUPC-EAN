@@ -204,3 +204,65 @@ class barcode:
  ''' // getprefix/__init__.py funtions '''
  def get_barcode_info(self):
   return upcean.getprefix.get_barcode_info(self.type, self.code);
+
+''' // Object-oriented classes and functions by Kazuki Przyborowski '''
+class decode:
+ ''' // Barcode Types '''
+ ''' // Barcode Types '''
+ EAN2="ean2";
+ UPCS2="ean2";
+ EAN5="ean5";
+ UPCS5="ean5";
+ UPCA="upca";
+ GOODWILL="goodwill";
+ UPCE="upce";
+ EAN13="ean13"
+ EAN8="ean8"
+ STF="stf";
+ ITF="itf";
+ ITF14="itf14";
+ CODE11="code11";
+ CODE39="code39";
+ CODE93="code93";
+ CODE128="code128"
+ CODABAR="codabar";
+ MSI="msi";
+ bctype_dict=upcean.support.bctype_dict;
+ bctype_dict_alt=upcean.support.bctype_dict_alt;
+ bctype_list=upcean.support.bctype_list;
+ bctype_tuple=upcean.support.bctype_tuple;
+ bctype_name=upcean.support.bctype_name;
+ def __init__(self, type=None, filename=None):
+  if(type is not None):
+   self.type = type;
+  if(filename is not None):
+   self.filename = filename;
+  self.code = None;
+  self.size = 1;
+  self.barheight = (48, 54);
+  self.barwidth = 1;
+  self.barcolor = (0, 0, 0);
+  self.textcolor = (0, 0, 0);
+  self.bgcolor = (255, 255, 255);
+  self.imageoutlib = "pillow";
+  self.return_check = False;
+  self.return_type = "dict";
+ if(pilsupport):
+  def decode_barcode(self, filename=None, size=None):
+   if(filename is None):
+    filename = self.filename;
+   if(size is None):
+    size = self.size;
+   return upcean.decode.decode_barcode(self.type, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+  def validate_create_barcode(self, filename=None, size=None):
+   if(filename is None):
+    filename = self.filename;
+   if(size is None):
+    size = self.size;
+   return upcean.decode.validate_decode_barcode(self.type, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+  def fix_create_barcode(self, filename=None, size=None):
+   if(filename is None):
+    filename = self.filename;
+   if(size is None):
+    size = self.size;
+   return upcean.decode.fix_decode_barcode(self.type, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
