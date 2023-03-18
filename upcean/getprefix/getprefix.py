@@ -392,6 +392,8 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
   gw_item_type = "Books";
  elif(re.findall("^(4002000)", upc)):
   gw_item_type = "Mystery Dozen Deal";
+ elif(re.findall("^(4010000)", upc)):
+  gw_item_type = "Bagged Hardlines";
  else:
   gw_item_type = None;
  gw_item_color = None;
