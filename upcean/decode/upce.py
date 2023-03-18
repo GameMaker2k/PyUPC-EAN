@@ -72,9 +72,11 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
   if(left_barcode_o_dict.get(pre_upc_whole[listcount], None) is not None):
    parity_pattern_list.append("O");
    barcode_list.append(left_barcode_o_dict.get(pre_upc_whole[listcount], "0"));
-  if(left_barcode_e_dict.get(pre_upc_whole[listcount], None) is not None):
+  elif(left_barcode_e_dict.get(pre_upc_whole[listcount], None) is not None):
    parity_pattern_list.append("E");
    barcode_list.append(left_barcode_e_dict.get(pre_upc_whole[listcount], "0"));
+  else:
+   return False;
   listcount += 1;
  get_parity_pattern = "".join(parity_pattern_list);
  barcode_list.insert(0, fist_number_dict.get(get_parity_pattern, "0"));
