@@ -90,8 +90,14 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
  barcode_list = [];
  fist_number_list = [];
  while(listcount<countlist):
-  barcode_list.append(left_barcode_dict.get(pre_upc_whole_left_re[listcount], "0"));
-  barcode_list.append(right_barcode_dict.get(pre_upc_whole_right_re[listcount], "0"));
+  left_barcode_value = left_barcode_dict.get(pre_upc_whole_left_re[listcount], False);
+  if(not left_barcode_value):
+   return False;
+  barcode_list.append(left_barcode_value);
+  right_barcode_value = right_barcode_dict.get(pre_upc_whole_right_re[listcount], False);
+  if(not right_barcode_value):
+   return False;
+  barcode_list.append(right_barcode_value);
   listcount += 1;
   upc = "".join(barcode_list);
  return upc;
