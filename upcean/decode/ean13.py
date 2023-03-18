@@ -76,12 +76,17 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
    if(left_barcode_l_dict.get(pre_upc_whole[listcount], None) is not None):
     fist_number_list.append("L");
     barcode_list.append(left_barcode_l_dict.get(pre_upc_whole[listcount], "0"));
-   if(left_barcode_g_dict.get(pre_upc_whole[listcount], None) is not None):
+   elif(left_barcode_g_dict.get(pre_upc_whole[listcount], None) is not None):
     fist_number_list.append("G");
     barcode_list.append(left_barcode_g_dict.get(pre_upc_whole[listcount], "0"));
+   else:
+    return False;
   if(listcount==6):
    get_fist_number = "".join(fist_number_list);
-   barcode_list.insert(0, fist_number_dict.get(get_fist_number, "0"));
+   first_num_value = fist_number_dict.get(get_fist_number, False);
+   if(not first_num_value):
+    return False;
+   barcode_list.insert(0, first_num_value);
   if(listcount>5):
    barcode_list.append(right_barcode_dict.get(pre_upc_whole[listcount], "0"));
   listcount += 1;
