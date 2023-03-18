@@ -73,8 +73,10 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
   if(listcount<4):
    if(left_barcode_l_dict.get(pre_upc_whole[listcount], None) is not None):
     barcode_list.append(left_barcode_l_dict.get(pre_upc_whole[listcount], "0"));
-   if(left_barcode_g_dict.get(pre_upc_whole[listcount], None) is not None):
+   elif(left_barcode_g_dict.get(pre_upc_whole[listcount], None) is not None):
     barcode_list.append(left_barcode_g_dict.get(pre_upc_whole[listcount], "0"));
+   else:
+    return False;
   if(listcount>3):
    barcode_list.append(right_barcode_dict.get(pre_upc_whole[listcount], "0"));
   listcount += 1;
