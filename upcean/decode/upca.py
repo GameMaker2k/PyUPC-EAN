@@ -56,7 +56,6 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
     startx += 5;
     nexpix += 5 * (barwidth * int(resize));
    curpixel = upc_img.getpixel((nexpix, starty));
-   print(curpixel);
    if(curpixel==barcolor[0]):
     pre_upc_list.append("1");
    if(curpixel==barcolor[2]):
