@@ -44,7 +44,17 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
  left_barcode_l_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
  left_barcode_g_dict = { '0100111': "0", '0110011': "1", '0011011': "2", '0100001': "3", '0011101': "4", '0111001': "5", '0000101': "6", '0010001': "7", '0001001': "8", '0010111': "9" };
  right_barcode_dict = { '1110010': "0", '1100110': "1", '1101100': "2", '1000010': "3", '1011100': "4", '1001110': "5", '1010000': "6", '1000100': "7", '1001000': "8", '1110100': "9" };
- startx = 12 + shiftxy[0];
+ if(shiftxy is None):
+  prestartx = 0;
+  while(prestartx<upc_img.size[0]):
+   curpixel = upc_img.getpixel((prestartx, starty));
+   if(curpixel==barcolor[0]):
+    break;
+   prestartx += 1;
+  prestartx += 3;
+  startx = prestartx;
+ else:
+  startx = (12 + shiftxy[0]);
  nexpix = startx * (barwidth * int(resize));
  endx = 71 + shiftxy[0];
  listcount = 0;
