@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, upcean.barcodes.getsfname;
-from PIL import Image, UnidentifiedImageError;
+from PIL import Image, ImageDraw, UnidentifiedImageError;
 
 def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
@@ -40,13 +40,33 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
     upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
  barsize = barwidth * int(resize);
- starty = int(upc_img.size[1] / 2) + shiftxy[1];
+ if(shiftxy is None):
+  starty = int(upc_img.size[1] / 2);
+ else:
+  starty = int(upc_img.size[1] / 2) + shiftxy[1];
+ pixlist = (upc_img.getpixel((0, starty)), upc_img.getpixel((1, starty)), upc_img.getpixel((2, starty)), upc_img.getpixel((3, starty)));
+ if(pixlist[0]==barcolor[0] and pixlist[0]==barcolor[1] and pixlist[0]==barcolor[2] and pixlist[0]==barcolor[3]):
+  drawColorRectangleAlt(upc_img, 0, 0, ((44 * barwidth) + upc_size_add) - 1, ((barheight[0] + 15) - 11), barcolor[2]);
+  drawColorRectangleAlt(upc_img, 1, 1, ((44 * barwidth) + upc_size_add) - 2, ((barheight[0] + 15) - 12), barcolor[2]);
+  drawColorRectangleAlt(upc_img, 2, 2, ((44 * barwidth) + upc_size_add) - 3, ((barheight[0] + 15) - 13), barcolor[2]);
+  drawColorRectangleAlt(upc_img, 3, 3, ((44 * barwidth) + upc_size_add) - 4, ((barheight[0] + 15) - 14), barcolor[2]);
  fist_number_dict = { 'LLLLLL': "0", 'LLGLGG': "1", 'LLGGLG': "2", 'LLGGGL': "3", 'LGLLGG': "4", 'LGGLLG': "5", 'LGGGLL': "6", 'LGLGLG': "7", 'LGLGGL': "8", 'LGGLGL': "9" };
  left_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
  right_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
  barcodepresize = ((39 * barwidth) ) * int(resize);
  barcodesize = ( (upc_img.size[0]) - barcodepresize ) / 18;
- startx = 17 + shiftxy[0];
+ if(shiftxy is None):
+  prestartx = 0;
+  while(prestartx<upc_img.size[0]):
+   curpixel = upc_img.getpixel((prestartx, starty));
+   if(curpixel==barcolor[0]):
+    break;
+   prestartx += 1;
+  prestartx += 4;
+  startx = prestartx;
+  shiftxy = (0, 0);
+ else:
+  startx = (17 + shiftxy[0]);
  nexpix = startx * (barwidth * int(resize));
  endx = int(startx + ( (barcodesize * 18 ) ));
  listcount = 0;
