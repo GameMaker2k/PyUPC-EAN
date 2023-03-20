@@ -50,13 +50,33 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
  right_barcode_dict = { '1110010': "0", '1100110': "1", '1101100': "2", '1000010': "3", '1011100': "4", '1001110': "5", '1010000': "6", '1000100': "7", '1001000': "8", '1110100': "9" };
  if(shiftxy is None):
   prestartx = 0;
+  gotvalue = False;
   while(prestartx<upc_img.size[0]):
-   curpixel = upc_img.getpixel((prestartx, starty));
-   if(curpixel==barcolor[0]):
-    break;
+   inprestartx = prestartx;
+   substartx = prestartx + 3;
+   curpixelist=[];
+   curpixelist.append(upc_img.getpixel((inprestartx, starty)));
+   curpixelist.append(upc_img.getpixel((inprestartx+1, starty)));
+   curpixelist.append(upc_img.getpixel((inprestartx+2, starty)));
+   inprestartx += 3 + 42;
+   if(curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]):
+    curpixelist=[];
+    curpixelist
+    curpixelist.append(upc_img.getpixel((inprestartx, starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+1, starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+2, starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+3, starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+4, starty)));
+    inprestartx += 5 + 42;
+    if(curpixelist[0]==barcolor[2] and curpixelist[1]==barcolor[0] and curpixelist[2]==barcolor[2] and curpixelist[3]==barcolor[0] and curpixelist[4]==barcolor[2]):
+     curpixelist=[];
+     curpixelist.append(upc_img.getpixel((inprestartx, starty)));
+     curpixelist.append(upc_img.getpixel((inprestartx+1, starty)));
+     curpixelist.append(upc_img.getpixel((inprestartx+2, starty)));
+     if(curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]):
+      startx = substartx;
+      break;
    prestartx += 1;
-  prestartx += 3;
-  startx = prestartx;
   shiftxy = (0, 0);
  else:
   startx = (14 + shiftxy[0]);
