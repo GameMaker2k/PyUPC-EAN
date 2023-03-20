@@ -18,7 +18,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import re, upcean.barcodes.getsfname;
 from PIL import Image, UnidentifiedImageError;
 
-def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(isinstance(infile, Image.Image)):
