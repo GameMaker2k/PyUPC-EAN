@@ -57,13 +57,26 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
  barcodesize = ( (upc_img.size[0]) - barcodepresize ) / 18;
  if(shiftxy is None):
   prestartx = 0;
+  gotvalue = False;
   while(prestartx<upc_img.size[0]):
-   curpixel = upc_img.getpixel((prestartx, starty));
-   if(curpixel==barcolor[0]):
-    break;
+   inprestartx = prestartx;
+   substartx = prestartx + 4;
+   curpixelist=[];
+   if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
+    curpixelist.append(upc_img.getpixel((inprestartx, starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(3 * (barwidth * int(resize))), starty)));
+    inprestartx += (4 * (barwidth * int(resize))) + (barcodesize * 18);
+    curpixelist.append(upc_img.getpixel((inprestartx, starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(3 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(4 * (barwidth * int(resize))), starty)));
+    if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0] and curpixelist[3]==barcolor[2]) and (curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[0] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2] and curpixelist[8]==barcolor[0])):
+     startx = substartx;
+     break;
    prestartx += 1;
-  prestartx += 4;
-  startx = prestartx;
   shiftxy = (0, 0);
  else:
   startx = (17 + shiftxy[0]);
