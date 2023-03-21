@@ -11,18 +11,28 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean13.py - Last Update: 3/9/2023 Ver. 2.7.27 RC 1 - Author: cooldude2k $
+    $FileInfo: ean8.py - Last Update: 3/9/2023 Ver. 2.7.27 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, upcean.barcodes.getsfname;
+import re, upcean.barcodes.getsfname, upcean.support;
 from PIL import Image, UnidentifiedImageError;
+
+pilsupport = upcean.support.check_for_pil();
+cairosupport = upcean.support.check_for_cairo();
+from upcean.barcodes.predraw import *;
+if(cairosupport):
+ import cairo;
 
 def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(isinstance(infile, Image.Image)):
   upc_img = infile.convert('RGB');
+ elif(cairosupport and isinstance(infile, cairo.ImageSurface)):
+  #upc_img = Image.frombuffer("RGB", (infile.get_width(), infile.get_height()), infile.get_data().tobytes(), "raw", "BGR", 0, 1).convert('RGB');
+  #upc_img = Image.frombytes("RGB", (infile.get_width(), infile.get_height()), infile.get_data().tobytes()).convert('RGB');
+  return False;
  else:
   try:
    infile.seek(0);
