@@ -48,31 +48,28 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
  right_barcode_dict = { '1110010': "0", '1100110': "1", '1101100': "2", '1000010': "3", '1011100': "4", '1001110': "5", '1010000': "6", '1000100': "7", '1001000': "8", '1110100': "9" };
  if(shiftxy is None):
   prestartx = 0;
+  gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
    substartx = prestartx + 3;
    curpixelist=[];
-   curpixelist.append(upc_img.getpixel((inprestartx, starty)));
-   curpixelist.append(upc_img.getpixel((inprestartx+1, starty)));
-   curpixelist.append(upc_img.getpixel((inprestartx+2, starty)));
-   inprestartx += 3 + 42;
-   if(curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]):
-    curpixelist=[];
-    curpixelist
+   if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):  
     curpixelist.append(upc_img.getpixel((inprestartx, starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+1, starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+2, starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+3, starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+4, starty)));
-    inprestartx += 5 + 42;
-    if(curpixelist[0]==barcolor[2] and curpixelist[1]==barcolor[0] and curpixelist[2]==barcolor[2] and curpixelist[3]==barcolor[0] and curpixelist[4]==barcolor[2]):
-     curpixelist=[];
-     curpixelist.append(upc_img.getpixel((inprestartx, starty)));
-     curpixelist.append(upc_img.getpixel((inprestartx+1, starty)));
-     curpixelist.append(upc_img.getpixel((inprestartx+2, starty)));
-     if(curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]):
-      startx = substartx;
-      break;
+    curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
+    inprestartx += (3 + 42) * (barwidth * int(resize));
+    curpixelist.append(upc_img.getpixel((inprestartx, starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(3 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(4 * (barwidth * int(resize))), starty)));
+    inprestartx += (5 + 42) * (barwidth * int(resize));
+    curpixelist.append(upc_img.getpixel((inprestartx, starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
+    curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
+    if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]) and (curpixelist[3]==barcolor[2] and curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[2] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2]) and (curpixelist[8]==barcolor[0] and curpixelist[9]==barcolor[2] and curpixelist[10]==barcolor[0])):
+     startx = substartx;
+     break;
    prestartx += 1;
   shiftxy = (0, 0);
  else:
