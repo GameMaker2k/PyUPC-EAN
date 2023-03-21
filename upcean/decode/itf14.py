@@ -40,6 +40,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
     upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
  barsize = barwidth * int(resize);
+ startx = 17;
  if(shiftxy is None):
   starty = int(upc_img.size[1] / 2);
  else:

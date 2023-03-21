@@ -55,6 +55,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
  right_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
  barcodepresize = ((39 * barwidth) ) * int(resize);
  barcodesize = ( (upc_img.size[0]) - barcodepresize ) / 18;
+ startx = 17;
  if(shiftxy is None):
   prestartx = 0;
   gotvalue = False;
