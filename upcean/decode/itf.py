@@ -75,11 +75,15 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
    substartx = prestartx + 4;
    curpixelist=[];
    if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
+    if(inprestartx+(3 * (barwidth * int(resize))) > upc_img.size[0]):
+     return False;
     curpixelist.append(upc_img.getpixel((inprestartx, starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(3 * (barwidth * int(resize))), starty)));
     inprestartx += (4 * (barwidth * int(resize))) + (barcodesize * 18);
+    if(inprestartx+(4 * (barwidth * int(resize))) > upc_img.size[0]):
+     return False;
     curpixelist.append(upc_img.getpixel((inprestartx, starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
