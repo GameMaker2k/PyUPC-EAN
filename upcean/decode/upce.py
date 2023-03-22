@@ -50,16 +50,13 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
     upc_img = Image.frombytes("RGB", (((69 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
  barsize = barwidth * int(resize);
- if(shiftxy is None):
-  starty = int(upc_img.size[1] / 2);
- else:
-  starty = int(upc_img.size[1] / 2) + shiftxy[1];
+ starty = int(upc_img.size[1] / 2) + shiftxy[1];
  fist_number_dict = { 'EEEOOO': "0", 'EEOEOO': "0", 'EEOOEO': "0", 'EEOOOE': "0", 'EOEEOO': "0", 'EOOEEO': "0", 'EOOOEE': "0", 'EOEOEO': "0", 'EOEOOE': "0", 'EOOEOE': "0", 'OOOEEE': "1", 'OOEOEE': "1", 'OOEEOE': "1", 'OOEEEO': "1", 'OEOOEE': "1", 'OEEOOE': "1", 'OEEEOO': "1", 'OEOEOE': "1", 'OEOEEO': "1", 'OEEOEO': "9" };
  last_number_dict = { 'EEEOOO': "0", 'EEOEOO': "1", 'EEOOEO': "2", 'EEOOOE': "3", 'EOEEOO': "4", 'EOOEEO': "5", 'EOOOEE': "6", 'EOEOEO': "7", 'EOEOOE': "8", 'EOOEOE': "9", 'OOOEEE': "0", 'OOEOEE': "1", 'OOEEOE': "2", 'OOEEEO': "3", 'OEOOEE': "4", 'OEEOOE': "5", 'OEEEOO': "6", 'OEOEOE': "7", 'OEOEEO': "8", 'OEEOEO': "9" };
  left_barcode_o_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
  left_barcode_e_dict = { '0100111': "0", '0110011': "1", '0011011': "2", '0100001': "3", '0011101': "4", '0111001': "5", '0000101': "6", '0010001': "7", '0001001': "8", '0010111': "9" };
  startx = 12;
- if(shiftxy is None):
+ if(shiftxy[0] is None):
   prestartx = 0;
   startx = 0;
   gotvalue = False;
