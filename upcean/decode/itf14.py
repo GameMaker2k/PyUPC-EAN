@@ -68,6 +68,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
  barcodesize = ( (upc_img.size[0]) - barcodepresize ) / 18;
  if(shiftxy is None):
   prestartx = 0;
+  startx = 0;
   gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;

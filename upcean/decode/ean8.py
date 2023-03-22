@@ -60,13 +60,14 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
  startx = 12;
  if(shiftxy is None):
   prestartx = 0;
+  startx = 0;
   gotvalue = False;
   prestartx = startx;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
    substartx = prestartx + 3;
    curpixelist=[];
-   if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):  
+   if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
     curpixelist.append(upc_img.getpixel((inprestartx, starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
@@ -88,7 +89,7 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
  else:
   startx = (12 + shiftxy[0]);
  nexpix = startx * (barwidth * int(resize));
- endx = 71 + shiftxy[0];
+ endx = (3 + 28 + 5 + 28 + 3);
  listcount = 0;
  pre_upc_whole = [];
  while(startx < endx):

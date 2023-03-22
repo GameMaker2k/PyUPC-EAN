@@ -59,6 +59,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
  startx = 12;
  if(shiftxy is None):
   prestartx = 0;
+  startx = 0;
   gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
@@ -88,7 +89,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
   startx = (12 + shiftxy[0]);
   jumpcode = (54 + shiftxy[0]);
  nexpix = startx * (barwidth * int(resize));
- endx = (101 + shiftxy[0]);
+ endx = (3 + 42 + 5 + 42 + 3);
  listcount = 0;
  pre_upc_whole = [];
  prestartx = startx;
