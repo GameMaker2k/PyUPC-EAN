@@ -61,6 +61,7 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
  if(shiftxy is None):
   prestartx = 0;
   gotvalue = False;
+  prestartx = startx;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
    substartx = prestartx + 3;

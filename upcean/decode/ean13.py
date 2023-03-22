@@ -91,11 +91,12 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
  endx = 101 + shiftxy[0];
  listcount = 0;
  pre_upc_whole = [];
+ prestartx = startx;
  while(startx < endx):
   listcount = 0;
   pre_upc_list = [];
   while(listcount<7):
-   if(startx==56 + shiftxy[0]):
+   if(startx==((prestartx + 42) + shiftxy[0])):
     startx += 5;
     nexpix += 5 * (barwidth * int(resize));
    curpixel = upc_img.getpixel((nexpix, starty));

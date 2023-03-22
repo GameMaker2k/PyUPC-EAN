@@ -99,6 +99,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
  pre_upc_list_left = [];
  pre_upc_list_right = [];
  skiptwo = False;
+ prestartx = startx;
  while(startx < endx):
   listcount = 0;
   curpixel = upc_img.getpixel((nexpix, starty));

@@ -88,6 +88,7 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
  endx = 53 + shiftxy[0];
  listcount = 0;
  pre_upc_whole = [];
+ prestartx = startx;
  while(startx < endx):
   listcount = 0;
   pre_upc_list = [];
