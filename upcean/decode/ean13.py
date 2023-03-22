@@ -59,6 +59,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
  left_barcode_g_dict = { '0100111': "0", '0110011': "1", '0011011': "2", '0100001': "3", '0011101': "4", '0111001': "5", '0000101': "6", '0010001': "7", '0001001': "8", '0010111': "9" };
  right_barcode_dict = { '1110010': "0", '1100110': "1", '1101100': "2", '1000010': "3", '1011100': "4", '1001110': "5", '1010000': "6", '1000100': "7", '1001000': "8", '1110100': "9" };
  startx = 14;
+ jumpcode = 0;
  if(shiftxy is None):
   prestartx = 0;
   gotvalue = False;
@@ -71,6 +72,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
     curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
     inprestartx += (3 + 42) * (barwidth * int(resize));
+    jumpcode = inprestartx;
     curpixelist.append(upc_img.getpixel((inprestartx, starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
@@ -87,6 +89,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
   shiftxy = (0, 0);
  else:
   startx = (14 + shiftxy[0]);
+  jumpcode = (56 + shiftxy[0]);
  nexpix = startx * (barwidth * int(resize));
  endx = 101 + shiftxy[0];
  listcount = 0;
@@ -96,7 +99,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
   listcount = 0;
   pre_upc_list = [];
   while(listcount<7):
-   if(startx==((prestartx + 42) + shiftxy[0])):
+   if(startx==jumpcode):
     startx += 5;
     nexpix += 5 * (barwidth * int(resize));
    curpixel = upc_img.getpixel((nexpix, starty));
