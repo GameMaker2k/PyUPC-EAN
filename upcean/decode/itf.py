@@ -50,10 +50,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
     upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
  barsize = barwidth * int(resize);
- if(shiftxy is None):
-  starty = int(upc_img.size[1] / 2);
- else:
-  starty = int(upc_img.size[1] / 2) + shiftxy[1];
+ starty = int(upc_img.size[1] / 2) + shiftxy[1];
  pixlist = (upc_img.getpixel((0, starty)), upc_img.getpixel((1, starty)), upc_img.getpixel((2, starty)), upc_img.getpixel((3, starty)));
  if(pixlist[0]==barcolor[0] and pixlist[0]==barcolor[1] and pixlist[0]==barcolor[2] and pixlist[0]==barcolor[3]):
   drawColorRectangleAlt(upc_img, 0, 0, ((44 * barwidth) + upc_size_add) - 1, ((barheight[0] + 15) - 11), barcolor[2]);
@@ -66,7 +63,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
  barcodepresize = ((39 * barwidth) ) * int(resize);
  barcodesize = ( (upc_img.size[0]) - barcodepresize ) / 18;
  startx = 17;
- if(shiftxy is None):
+ if(shiftxy[0] is None):
   prestartx = 0;
   startx = 0;
   gotvalue = False;
