@@ -15,7 +15,6 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, get_build_python_info, __revision__, __revision_id__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date;
 
 '''
 // UPC Resources and Info
@@ -36,15 +35,10 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 // Source: http://en.wikipedia.org/wiki/Interleaved_2_of_5
 // Source: http://www.gs1au.org/assets/documents/info/user_manuals/barcode_technical_details/ITF_14_Barcode_Structure.pdf
 // Source: http://www.barcodeisland.com/
+// Source: https://web.archive.org/web/20201004174654/http://www.barcodeisland.com/
 '''
 
-import upcean.validate, upcean.convert, upcean.support, upcean.getprefix, upcean.oopfuncs;
-pilsupport = upcean.support.check_for_pil();
-if(pilsupport):
- cairosupport = False;
-else:
- cairosupport = upcean.support.check_for_cairo();
-if(pilsupport or cairosupport):
- import upcean.fonts, upcean.xml, upcean.barcodes, upcean.encode, upcean.barcodes.getsfname;
-if(pilsupport):
- import upcean.decode;
+from upcean.barcodes.barcode import *;
+from upcean.barcodes.shortcuts import *;
+from upcean.xml.files import *;
+from upcean.xml.downloader import *;
