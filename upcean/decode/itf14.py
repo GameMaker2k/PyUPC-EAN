@@ -51,10 +51,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
     prefile.close();'''
  barsize = barwidth * int(resize);
  startx = 17;
- if(shiftxy is None):
-  starty = int(upc_img.size[1] / 2);
- else:
-  starty = int(upc_img.size[1] / 2) + shiftxy[1];
+ starty = int(upc_img.size[1] / 2) + shiftxy[1];
  pixlist = (upc_img.getpixel((0, starty)), upc_img.getpixel((1, starty)), upc_img.getpixel((2, starty)), upc_img.getpixel((3, starty)));
  if(pixlist[0]==barcolor[0] and pixlist[0]==barcolor[1] and pixlist[0]==barcolor[2] and pixlist[0]==barcolor[3]):
   drawColorRectangleAlt(upc_img, 0, 0, ((44 * barwidth) + upc_size_add) - 1, ((barheight[0] + 15) - 11), barcolor[2]);
@@ -66,7 +63,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
  right_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
  barcodepresize = ((44 * barwidth) ) * int(resize);
  barcodesize = ( (upc_img.size[0]) - barcodepresize ) / 18;
- if(shiftxy is None):
+ if(shiftxy[0] is None):
   prestartx = 0;
   startx = 0;
   gotvalue = False;
