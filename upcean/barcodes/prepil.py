@@ -35,17 +35,18 @@ def snapCoords( ctx, x, y ):
  (xd, yd) = ctx.user_to_device(x, y);
  return ( round(x) + 0.5, round(y) + 0.5 );
 
+def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
+ ctx.rectangle([(x1, y1), (x2, y2)], fill=color);
+ return True;
+
 def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
  if(width < 1): 
   width = 1;
- iwidth = 0;
- while(iwidth<width):
-  ctx.line((x1 + iwidth, y1, x2 + iwidth, y2), fill=color);
-  iwidth += 1;
- return True;
-
-def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
- ctx.rectangle([(x1, y1), (x2, y2)], fill=color);
+ width -= 1;
+ if(width < 1):
+  ctx.line((x1, y1, x2, y2), fill=color);
+ else:
+  ctx.rectangle([(x1, y1), (x2 + width, y2)], fill=color);
  return True;
 
 def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb" ):

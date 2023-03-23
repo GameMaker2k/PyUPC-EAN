@@ -52,17 +52,6 @@ def drawLine( ctx, x1, y1, x2, y2 ):
  ctx.stroke();
  return True;
 
-def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
- ctx.set_source_rgb(color[0], color[1], color[2]);
- if(width < 1): 
-  width = 1;
- iwidth = 0;
- while(iwidth<width):
-  drawLine(ctx, x1 + iwidth, y1, x2 + iwidth, y2);
-  iwidth += 1;
- ctx.close_path();
- return True;
-
 def drawRectangle( ctx, x1, y1, x2, y2 ):
  point1 = snapCoords( ctx, x1, y1 );
  point2 = snapCoords( ctx, x2, y2 );
@@ -75,6 +64,18 @@ def drawRectangle( ctx, x1, y1, x2, y2 ):
 def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  ctx.set_source_rgb(color[0], color[1], color[2]);
  drawRectangle(ctx, x1, y1, x2, y2);
+ ctx.close_path();
+ return True;
+
+def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
+ ctx.set_source_rgb(color[0], color[1], color[2]);
+ if(width < 1): 
+  width = 1;
+ width -= 1;
+ if(width < 1):
+  drawLine(ctx, x1, y1, x2, y2);
+ else:
+  drawRectangle(ctx, x1, y1, x2 + width, y2);
  ctx.close_path();
  return True;
 
