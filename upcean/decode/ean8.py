@@ -91,10 +91,10 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
    prestartx += 1;
   shiftxy = (0, 0);
  else:
-  startx = (12 + shiftxy[0]);
-  jumpcode = (40 + shiftxy[0]);
+  startx = (12 * (barwidth * int(resize))) + shiftxy[0]);
+  jumpcode = (40 * (barwidth * int(resize))) + shiftxy[0]);
  nexpix = startx * (barwidth * int(resize));
- endx = (3 + 28 + 5 + 28 + 3);
+ endx = (3 + 28 + 5 + 28 + 3) * (barwidth * int(resize));
  listcount = 0;
  pre_upc_whole = [];
  while(startx < endx):

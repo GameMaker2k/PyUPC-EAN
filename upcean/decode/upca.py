@@ -84,14 +84,13 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
     curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
     if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]) and (curpixelist[3]==barcolor[2] and curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[2] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2]) and (curpixelist[8]==barcolor[0] and curpixelist[9]==barcolor[2] and curpixelist[10]==barcolor[0])):
-     startx = substartx;
-     print(startx);	 
+     startx = substartx;	 
      break;
    prestartx += 1;
   shiftxy = (0, 0);
  else:
-  startx = (12 + shiftxy[0]);
-  jumpcode = (54 + shiftxy[0]);
+  startx = ((12 * (barwidth * int(resize)))  + shiftxy[0]);
+  jumpcode = ((54 * (barwidth * int(resize))) + shiftxy[0]);
  endx = (3 + 42 + 5 + 42 + 3) * (barwidth * int(resize));
  listcount = 0;
  pre_upc_whole = [];

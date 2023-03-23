@@ -92,10 +92,10 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
    prestartx += 1;
   shiftxy = (0, 0);
  else:
-  startx = (14 + shiftxy[0]);
-  jumpcode = (56 + shiftxy[0]);
+  startx = (14 * (barwidth * int(resize))) + shiftxy[0]);
+  jumpcode = (56 * (barwidth * int(resize))) + shiftxy[0]);
  nexpix = startx * (barwidth * int(resize));
- endx = (3 + 42 + 5 + 42 + 3);
+ endx = (3 + 42 + 5 + 42 + 3) * (barwidth * int(resize));
  listcount = 0;
  pre_upc_whole = [];
  prestartx = startx;

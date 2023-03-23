@@ -132,7 +132,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
     break;
   barcodesize = int((barcodesize - 1) / 2);
  nexpix = startx * (barwidth * int(resize));
- endx = int(startx + ( (barcodesize * 18 ) ));
+ endx = int(startx + ( (barcodesize * 18 ) * (barwidth * int(resize)) ));
  listcount = 0;
  pre_upc_whole_left = [];
  pre_upc_whole_right = [];
