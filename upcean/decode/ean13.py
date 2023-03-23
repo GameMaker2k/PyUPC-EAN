@@ -90,7 +90,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
      startx = substartx;
      break;
    prestartx += 1;
-  shiftxy = (0, 0);
+  shiftxy = (0, shiftxy[1]);
  else:
   startx = ((14 * (barwidth * int(resize))) + shiftxy[0]);
   jumpcode = ((56 * (barwidth * int(resize))) + shiftxy[0]);

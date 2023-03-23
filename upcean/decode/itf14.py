@@ -83,7 +83,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
     precurpixelist = [];
     while(preinprestartx<upc_img.size[0]):
      precurpixelist = [];
-     if((preinprestartx+(8 * (barwidth * int(resize))) > upc_img.size[0])):
+     if((preinprestartx+(9 * (barwidth * int(resize))) > upc_img.size[0])):
       return False;
      precurpixelist.append(upc_img.getpixel((preinprestartx, starty)));
      precurpixelist.append(upc_img.getpixel((preinprestartx+(1 * (barwidth * int(resize))), starty)));
@@ -111,7 +111,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
      startx = substartx;
      break;
    prestartx += 1;
-  shiftxy = (0, 0);
+  shiftxy = (0, shiftxy[1]);
  else:
   startx = ((17 * (barwidth * int(resize)))  + shiftxy[0]);
   preinprestartx = startx;

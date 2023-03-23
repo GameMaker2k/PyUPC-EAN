@@ -89,7 +89,7 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
      startx = substartx;
      break;
    prestartx += 1;
-  shiftxy = (0, 0);
+  shiftxy = (0, shiftxy[1]);
  else:
   startx = ((12 * (barwidth * int(resize))) + shiftxy[0]);
   jumpcode = ((40 * (barwidth * int(resize))) + shiftxy[0]);

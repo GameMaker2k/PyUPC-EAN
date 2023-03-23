@@ -87,7 +87,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
      startx = substartx;	 
      break;
    prestartx += 1;
-  shiftxy = (0, 0);
+  shiftxy = (0, shiftxy[1]);
  else:
   startx = ((12 * (barwidth * int(resize)))  + shiftxy[0]);
   jumpcode = ((54 * (barwidth * int(resize))) + shiftxy[0]);
