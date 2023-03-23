@@ -62,7 +62,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
  right_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
  barcodepresize = ((39 * barwidth) ) * int(resize);
  barcodesize = int( ( (upc_img.size[0]) - barcodepresize ) / 18 );
- startx = 17 * barsize;
+ startx = 17;
  if(shiftxy[0] is None):
   prestartx = 0;
   startx = 0;
@@ -111,7 +111,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
    prestartx += 1;
   shiftxy = (0, 0);
  else:
-  startx = ((17 * barsize) + shiftxy[0]);
+  startx = (17 + shiftxy[0]);
   preinprestartx = startx;
   precurpixelist = [];
   barcodesize = 0;
