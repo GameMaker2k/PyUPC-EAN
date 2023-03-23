@@ -70,7 +70,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
   barcodesize = 0;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
-   substartx = prestartx + 4;
+   substartx = prestartx + (4 * (barwidth * int(resize)));
    curpixelist=[];
    if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
     if(inprestartx+(3 * (barwidth * int(resize))) > upc_img.size[0]):
@@ -83,6 +83,8 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
     precurpixelist = [];
     while(preinprestartx<upc_img.size[0]):
      precurpixelist = [];
+     if((preinprestartx+(8 * (barwidth * int(resize))) > upc_img.size[0])):
+      return False;
      precurpixelist.append(upc_img.getpixel((preinprestartx, starty)));
      precurpixelist.append(upc_img.getpixel((preinprestartx+(1 * (barwidth * int(resize))), starty)));
      precurpixelist.append(upc_img.getpixel((preinprestartx+(2 * (barwidth * int(resize))), starty)));
@@ -96,7 +98,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
      barcodesize += 1;
      if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[0] and precurpixelist[3]==barcolor[2] and precurpixelist[4]==barcolor[0] and precurpixelist[5]==barcolor[2] and precurpixelist[6]==barcolor[2] and precurpixelist[7]==barcolor[2] and precurpixelist[8]==barcolor[2])):
       break;
-    barcodesize = int((barcodesize - 1) / 2);
+    barcodesize = int((barcodesize) / 2);
     inprestartx += (4 * (barwidth * int(resize))) + (barcodesize * 18);
     if(inprestartx+(4 * (barwidth * int(resize))) > upc_img.size[0]):
      return False;
@@ -117,6 +119,8 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
   barcodesize = 0;
   while(preinprestartx<upc_img.size[0]):
    precurpixelist = [];
+   if((preinprestartx+(8 * (barwidth * int(resize))) > upc_img.size[0])):
+    return False;   
    precurpixelist.append(upc_img.getpixel((preinprestartx, starty)));
    precurpixelist.append(upc_img.getpixel((preinprestartx+(1 * (barwidth * int(resize))), starty)));
    precurpixelist.append(upc_img.getpixel((preinprestartx+(2 * (barwidth * int(resize))), starty)));
@@ -131,7 +135,6 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
    if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[0] and precurpixelist[3]==barcolor[2] and precurpixelist[4]==barcolor[0] and precurpixelist[5]==barcolor[2] and precurpixelist[6]==barcolor[2] and precurpixelist[7]==barcolor[2] and precurpixelist[8]==barcolor[2])):
     break;
   barcodesize = int((barcodesize) / 2);
- nexpix = startx * (barwidth * int(resize));
  endx = int(startx + ( (barcodesize * 18 ) * (barwidth * int(resize)) ));
  listcount = 0;
  pre_upc_whole_left = [];
@@ -142,29 +145,27 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
  prestartx = startx;
  while(startx < endx):
   listcount = 0;
-  curpixel = upc_img.getpixel((nexpix, starty));
+  curpixel = upc_img.getpixel((startx, starty));
   if(curpixel==barcolor[0]):
-   nexpixel = upc_img.getpixel((nexpix + 1, starty));
-   if(nexpixel==barcolor[0] and startx<(endx-2)):
+   nexpixel = upc_img.getpixel((startx + (1 * (barwidth * int(resize))), starty));
+   if(nexpixel==barcolor[0] and startx<(endx - (2* (barwidth * int(resize))))):
     pre_upc_list_left.append("1");
     skiptwo = True;
    else:
     pre_upc_list_left.append("0");
     skiptwo = False;
   if(curpixel==barcolor[2]):
-   nexpixel = upc_img.getpixel((nexpix + 1, starty));
-   if(nexpixel==barcolor[2] and startx<(endx-2)):
+   nexpixel = upc_img.getpixel((startx + (1 * (barwidth * int(resize))), starty));
+   if(nexpixel==barcolor[2] and startx<(endx - (2* (barwidth * int(resize))))):
     pre_upc_list_right.append("1");
     skiptwo = True;
    else:
     pre_upc_list_right.append("0");
     skiptwo = False;
   if(skiptwo):
-   startx += 3;
-   nexpix += 3 * (barwidth * int(resize));
+   startx += 3 * (barwidth * int(resize));
   else:
-   startx += 1;
-   nexpix += 1 * (barwidth * int(resize));
+   startx += 1 * (barwidth * int(resize));
  pre_upc_whole_left = "".join(pre_upc_list_left);
  pre_upc_whole_right = "".join(pre_upc_list_right);
  upc_img.close();

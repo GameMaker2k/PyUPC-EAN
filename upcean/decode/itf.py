@@ -83,6 +83,8 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
     precurpixelist = [];
     while(preinprestartx<upc_img.size[0]):
      precurpixelist = [];
+     if((preinprestartx+(8 * (barwidth * int(resize))) > upc_img.size[0])):
+      return False;
      precurpixelist.append(upc_img.getpixel((preinprestartx, starty)));
      precurpixelist.append(upc_img.getpixel((preinprestartx+(1 * (barwidth * int(resize))), starty)));
      precurpixelist.append(upc_img.getpixel((preinprestartx+(2 * (barwidth * int(resize))), starty)));
@@ -96,7 +98,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
      barcodesize += 1;
      if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[0] and precurpixelist[3]==barcolor[2] and precurpixelist[4]==barcolor[0] and precurpixelist[5]==barcolor[2] and precurpixelist[6]==barcolor[2] and precurpixelist[7]==barcolor[2] and precurpixelist[8]==barcolor[2])):
       break;
-    barcodesize = int((barcodesize - 2) / 2);
+    barcodesize = int((barcodesize) / 2);
     inprestartx += (4 * (barwidth * int(resize))) + (barcodesize * 18);
     if(inprestartx+(4 * (barwidth * int(resize))) > upc_img.size[0]):
      return False;
@@ -117,6 +119,8 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
   barcodesize = 0;
   while(preinprestartx<upc_img.size[0]):
    precurpixelist = [];
+   if((preinprestartx+(8 * (barwidth * int(resize))) > upc_img.size[0])):
+    return False;   
    precurpixelist.append(upc_img.getpixel((preinprestartx, starty)));
    precurpixelist.append(upc_img.getpixel((preinprestartx+(1 * (barwidth * int(resize))), starty)));
    precurpixelist.append(upc_img.getpixel((preinprestartx+(2 * (barwidth * int(resize))), starty)));
