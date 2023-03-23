@@ -62,7 +62,7 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
   gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
-   substartx = 12;
+   substartx = prestartx + (3 * (barwidth * int(resize)));
    curpixelist=[];
    if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
     if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):

@@ -60,7 +60,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
   gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
-   substartx = 12;
+   substartx = prestartx + (3 * (barwidth * int(resize)));
    curpixelist=[];
    if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
     if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):
@@ -69,7 +69,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
     curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
     curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
     inprestartx += (3 + 42) * (barwidth * int(resize));
-    jumpcode = 54;
+    jumpcode = inprestartx;
     if(inprestartx+(4 * (barwidth * int(resize))) > upc_img.size[0]):
      return False;
     curpixelist.append(upc_img.getpixel((inprestartx, starty)));
@@ -85,14 +85,14 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
     curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
     if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]) and (curpixelist[3]==barcolor[2] and curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[2] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2]) and (curpixelist[8]==barcolor[0] and curpixelist[9]==barcolor[2] and curpixelist[10]==barcolor[0])):
      startx = substartx;
+     print(startx);	 
      break;
    prestartx += 1;
   shiftxy = (0, 0);
  else:
   startx = (12 + shiftxy[0]);
   jumpcode = (54 + shiftxy[0]);
- nexpix = startx * (barwidth * int(resize));
- endx = (3 + 42 + 5 + 42 + 3);
+ endx = (3 + 42 + 5 + 42 + 3) * (barwidth * int(resize));
  listcount = 0;
  pre_upc_whole = [];
  prestartx = startx;
@@ -101,15 +101,13 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
   pre_upc_list = [];
   while(listcount<7):
    if(startx==jumpcode):
-    startx += 5;
-    nexpix += 5 * (barwidth * int(resize));
-   curpixel = upc_img.getpixel((nexpix, starty));
+    startx += 5 * (barwidth * int(resize));
+   curpixel = upc_img.getpixel((startx, starty));
    if(curpixel==barcolor[0]):
     pre_upc_list.append("1");
    if(curpixel==barcolor[2]):
     pre_upc_list.append("0");
-   startx += 1;
-   nexpix += 1 * (barwidth * int(resize));
+   startx += 1 * (barwidth * int(resize));
    listcount += 1;
   pre_upc_whole.append("".join(pre_upc_list));
  upc_img.close();
