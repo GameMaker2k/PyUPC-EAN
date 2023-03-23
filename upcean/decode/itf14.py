@@ -111,7 +111,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
    prestartx += 1;
   shiftxy = (0, 0);
  else:
-  startx = (17 + shiftxy[0]);
+  startx = ((17 * (barwidth * int(resize)))  + shiftxy[0]);
   preinprestartx = startx;
   precurpixelist = [];
   barcodesize = 0;
@@ -130,7 +130,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
    barcodesize += 1;
    if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[0] and precurpixelist[3]==barcolor[2] and precurpixelist[4]==barcolor[0] and precurpixelist[5]==barcolor[2] and precurpixelist[6]==barcolor[2] and precurpixelist[7]==barcolor[2] and precurpixelist[8]==barcolor[2])):
     break;
-  barcodesize = int((barcodesize - 1) / 2);
+  barcodesize = int((barcodesize) / 2);
  nexpix = startx * (barwidth * int(resize));
  endx = int(startx + ( (barcodesize * 18 ) * (barwidth * int(resize)) ));
  listcount = 0;
