@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: code128.py - Last Update: 3/23/2023 Ver. 2.8.6 RC 1 - Author: cooldude2k $
+    $FileInfo: code128.py - Last Update: 3/23/2023 Ver. 2.8.7 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
