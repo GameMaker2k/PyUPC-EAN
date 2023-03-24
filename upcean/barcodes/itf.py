@@ -281,12 +281,20 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  if(not hidetext):
   NumTxtZero = 0; 
   LineTxtStart = 20;
+  if(not threewidebar):
+   LineTxtStart -= 2;
   while (NumTxtZero < len(upc_matches)):
    ArrayDigit = list(upc_matches[NumTxtZero]);
    drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (21 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[0], barcolor[1], "ocrb", imageoutlib);
-   LineTxtStart += 9 * int(resize);
+   if(threewidebar):
+    LineTxtStart += 9 * int(resize);
+   else:
+    LineTxtStart += 7 * int(resize);
    drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (21 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), ArrayDigit[1], barcolor[1], "ocrb", imageoutlib);
-   LineTxtStart += 9 * int(resize);
+   if(threewidebar):
+    LineTxtStart += 9 * int(resize);
+   else:
+    LineTxtStart += 7 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
