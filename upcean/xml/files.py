@@ -15,7 +15,11 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, re, json, platform, upcean.validate, upcean.support;
+import sys, re, platform, upcean.validate, upcean.support;
+try:
+ import simplejson as json;
+except ImportError:
+ import json;
 try:
  import xml.etree.cElementTree as cElementTree;
 except ImportError:
