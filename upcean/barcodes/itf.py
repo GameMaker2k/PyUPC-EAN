@@ -38,6 +38,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ threewidebar = True;
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
@@ -123,7 +124,10 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
   pil_addon_fix = 0;
   cairo_addon_fix = 0;
  upc_matches = re.findall("([0-9]{2})", upc);
- upc_size_add = (len(upc_matches) * 18) * barwidth;
+ if(threewidebar):
+  upc_size_add = (len(upc_matches) * 18) * barwidth;
+ else:
+  upc_size_add = (len(upc_matches) * 14) * barwidth;
  if(len(upc_matches)<=0):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
@@ -209,9 +213,10 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
     LineStart += barwidth; 
     BarNum += 1;
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
-    LineStart += barwidth;
-    BarNum += 1;
+    if(threewidebar):
+     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
+     LineStart += barwidth;
+     BarNum += 1;
    if(left_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
     LineStart += barwidth;
@@ -223,16 +228,20 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
     LineStart += barwidth; 
     BarNum += 1;
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
-    LineStart += barwidth;
-    BarNum += 1;
+    if(threewidebar):
+     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
+     LineStart += barwidth;
+     BarNum += 1;
    if(right_barcolor[InnerUPCNum]==0):
     drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
     LineStart += barwidth;
     BarNum += 1;
    InnerUPCNum += 1;
   NumZero += 1;
- end_barcolor = [1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ if(threewidebar):
+  end_barcolor = [1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ else:
+  end_barcolor = [1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  end_bc_num = 0;
  end_bc_num_end = len(end_barcolor);
  while(end_bc_num < end_bc_num_end):
