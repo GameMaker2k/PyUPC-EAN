@@ -476,7 +476,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
    drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
-   LineTxtStart += 12 * int(resize);
+   LineTxtStart += 11 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
