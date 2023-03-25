@@ -42,7 +42,7 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
  imageoutlib = imageoutlib.lower();
  barheightadd = barheight[1];
  if(barheight[0] > barheight[1]):
-  barheightadd = barheight[0];
+  barheightadd = barheight[0] + 6;
  else:
   barheightadd = barheight[1];
  if(not pilsupport and imageoutlib=="pillow"):
