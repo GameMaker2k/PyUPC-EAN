@@ -40,6 +40,11 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
  imageoutlib = imageoutlib.lower();
+ barheightadd = barheight[1];
+ if(barheight[0] > barheight[1]):
+  barheightadd = barheight[0];
+ else:
+  barheightadd = barheight[1];
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -145,14 +150,14 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
  if(supplement is not None and len(supplement)==5): 
   addonsize = 56 * barwidth;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((115 * barwidth) + addonsize, barheight[1] + 9));
+  upc_preimg = Image.new("RGB", ((115 * barwidth) + addonsize, barheightadd + 9));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((115 * barwidth) + addonsize, barheight[1] + 9)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((115 * barwidth) + addonsize, barheightadd + 9)], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (115 * barwidth) + addonsize, barheight[1] + 9);
+   upc_preimg = cairo.SVGSurface(None, (115 * barwidth) + addonsize, barheightadd + 9);
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (115 * barwidth) + addonsize, barheight[1] + 9);
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (115 * barwidth) + addonsize, barheightadd + 9);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
   upc_img.rectangle(0, 0, (115 * barwidth) + addonsize, barheight[1] + 9);
@@ -362,7 +367,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
   LineStart += barwidth;
   BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize((((115 * barwidth) + addonsize) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
+  new_upc_img = upc_preimg.resize((((115 * barwidth) + addonsize) * int(resize), (barheightadd + 9) * int(resize)), Image.NEAREST);
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -380,9 +385,9 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((115 * barwidth) + addonsize) * int(resize), (barheight[1] + 9) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((115 * barwidth) + addonsize) * int(resize), (barheightadd + 9) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((115 * barwidth) + addonsize) * int(resize), (barheight[1] + 9) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((115 * barwidth) + addonsize) * int(resize), (barheightadd + 9) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
