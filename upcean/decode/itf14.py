@@ -49,7 +49,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
     '''prefile = open(infile, "rb");
     upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
- threewidebar = True;
+ threewidebar = False;
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2) + shiftxy[1];
  pixlist = (upc_img.getpixel((0, starty)), upc_img.getpixel((1, starty)), upc_img.getpixel((2, starty)), upc_img.getpixel((3, starty)));
@@ -64,8 +64,10 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
  barcodepresize = ((44 * barwidth) ) * int(resize);
  barcodesize = int( ( (upc_img.size[0]) - barcodepresize ) / 18 );
  if(threewidebar):
+  barcodepresize = ((44 * barwidth) ) * int(resize);
   barcodesize = int( ( (upc_img.size[0]) - barcodepresize ) / 18 );
  else:
+  barcodepresize = ((43 * barwidth) ) * int(resize);
   barcodesize = int( ( (upc_img.size[0]) - barcodepresize ) / 14 );
  startx = 17;
  if(shiftxy[0] is None):
