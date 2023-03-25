@@ -207,7 +207,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
   curpixel = upc_img.getpixel((startx, starty));
   if(curpixel==barcolor[0]):
    nexpixel = upc_img.getpixel((startx + (1 * (barwidth * int(resize))), starty));
-   if(nexpixel==barcolor[0] and startx<(endx - (2* (barwidth * int(resize))))):
+   if(nexpixel==barcolor[0] and startx<(endx - (2* (barwidth * int(resize))) + 1)):
     pre_upc_list_left.append("1");
     skiptwo = True;
    else:
@@ -215,7 +215,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
     skiptwo = False;
   if(curpixel==barcolor[2]):
    nexpixel = upc_img.getpixel((startx + (1 * (barwidth * int(resize))), starty));
-   if(nexpixel==barcolor[2] and startx<(endx - (2* (barwidth * int(resize))))):
+   if(nexpixel==barcolor[2] and startx<(endx - (2* (barwidth * int(resize))) + 1)):
     pre_upc_list_right.append("1");
     skiptwo = True;
    else:
