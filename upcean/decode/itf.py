@@ -49,7 +49,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
     '''prefile = open(infile, "rb");
     upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
- threewidebar = False;
+ threewidebar = True;
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2) + shiftxy[1];
  pixlist = (upc_img.getpixel((0, starty)), upc_img.getpixel((1, starty)), upc_img.getpixel((2, starty)), upc_img.getpixel((3, starty)));
