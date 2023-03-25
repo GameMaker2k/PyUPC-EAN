@@ -164,7 +164,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
    upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (69 * barwidth) + addonsize, barheightadd + 9);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (69 * barwidth) + addonsize, barheight[1] + 9);
+  upc_img.rectangle(0, 0, (69 * barwidth) + addonsize, barheightadd + 9);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -421,7 +421,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
      svgoutfile = BytesIO();
    new_upc_preimg = cairo.SVGSurface(svgoutfile, ((69 * barwidth) + addonsize) * int(resize), (barheightadd + 9) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((69 * barwidth) + addonsize) * int(resize), (barheight[1] + 9) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((69 * barwidth) + addonsize) * int(resize), (barheightadd + 9) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();

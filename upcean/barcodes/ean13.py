@@ -160,7 +160,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
    upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (115 * barwidth) + addonsize, barheightadd + 9);
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (115 * barwidth) + addonsize, barheight[1] + 9);
+  upc_img.rectangle(0, 0, (115 * barwidth) + addonsize, barheightadd + 9);
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
