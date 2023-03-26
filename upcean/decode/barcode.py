@@ -31,7 +31,7 @@ from upcean.decode.itf import *;
 from upcean.decode.itf14 import *;
 
 def validate_decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- upc = decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ upc = decode_upca_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,imageoutlib);
  if(len(upc)>12 or len(upc)<12):
   return False;
  if(not upcean.validate.validate_upca_checksum(upc)):
@@ -39,7 +39,7 @@ def validate_decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54)
  return True;
 
 def validate_decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- upc = decode_upce_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ upc = decode_upce_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,imageoutlib);
  if(len(upc)>8 or len(upc)<8):
   return False;
  if(not upcean.validate.validate_upce_checksum(upc)):
@@ -47,7 +47,7 @@ def validate_decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54)
  return True;
 
 def validate_decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- upc = decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ upc = decode_ean13_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,imageoutlib);
  if(len(upc)>13 or len(upc)<13):
   return False;
  if(not upcean.validate.validate_ean13_checksum(upc)):
@@ -55,7 +55,7 @@ def validate_decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 5
  return True;
 
 def validate_decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- upc = decode_itf_barcode(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+ upc = decode_itf_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,imageoutlib);
  if(len(upc)>14 or len(upc)<14):
   return False;
  if(not upcean.validate.validate_itf14_checksum(upc)):
