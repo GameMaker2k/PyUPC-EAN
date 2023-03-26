@@ -57,8 +57,8 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
  left_barcode_e_dict = { '0100111': "0", '0110011': "1", '0011011': "2", '0100001': "3", '0011101': "4", '0111001': "5", '0000101': "6", '0010001': "7", '0001001': "8", '0010111': "9" };
  startx = 12;
  if(shiftxy[0] is None):
-  prestartx = 0;
   startx = 0;
+  prestartx = 0;
   gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;

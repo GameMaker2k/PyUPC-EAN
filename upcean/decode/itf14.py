@@ -58,7 +58,6 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
   drawColorRectangleAlt(upc_img, 1, 1, ((44 * barwidth) + upc_size_add) - 2, ((barheight[0] + 15) - 12), barcolor[2]);
   drawColorRectangleAlt(upc_img, 2, 2, ((44 * barwidth) + upc_size_add) - 3, ((barheight[0] + 15) - 13), barcolor[2]);
   drawColorRectangleAlt(upc_img, 3, 3, ((44 * barwidth) + upc_size_add) - 4, ((barheight[0] + 15) - 14), barcolor[2]);
- fist_number_dict = { 'LLLLLL': "0", 'LLGLGG': "1", 'LLGGLG': "2", 'LLGGGL': "3", 'LGLLGG': "4", 'LGGLLG': "5", 'LGGGLL': "6", 'LGLGLG': "7", 'LGLGGL': "8", 'LGGLGL': "9" };
  left_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
  right_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
  barcodepresize = ((44 * barwidth) ) * int(resize);
