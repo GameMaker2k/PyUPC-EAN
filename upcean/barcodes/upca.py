@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upca.py - Last Update: 3/26/2023 Ver. 2.8.10 RC 1 - Author: cooldude2k $
+    $FileInfo: upca.py - Last Update: 3/26/2023 Ver. 2.8.11 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
