@@ -41,7 +41,7 @@ def fix_decode_barcode(bctype,infile="./barcode.png",resize=1,barheight=(48, 54)
   return False;
  if(bctype=="upca" or bctype=="upce" or bctype=="ean13" or bctype=="ean8" or bctype=="itf" or bctype=="itf6" or bctype=="itf14"):
   if(hasattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode") and callable(getattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode"))):
-   return getattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode")(infile,resize,barheight,barwidth,barcolor,imageoutlib);
+   return getattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode")(infile,resize,barheight,barwidth,shiftxy,barcolor,imageoutlib);
   if(not hasattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode") or not callable(getattr(upcean.decode.barcode, "fix_decode_"+bctype+"_barcode"))):
    return False;
   return False;
