@@ -240,7 +240,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  upc_array['code'].append( [1, 0, 1, 1, 0, 0, 1, 0] );
  upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] );
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize((((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize * barwidth)), Image.NEAREST); # use nearest neighbour
+  new_upc_img = upc_preimg.resize((((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -258,9 +258,9 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize * barwidth));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize * barwidth));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((34 * barwidth) + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
@@ -269,7 +269,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
   NumTxtZero = 0; 
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize * barwidth) - 1)) + pil_addon_fix) + (textxy[1] * int(resize * barwidth)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
+   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);

@@ -225,7 +225,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
    BarNum += 1;
   NumZero += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize(((29 * barwidth) * int(resize), (barheight[1] + 9) * int(resize * barwidth)), Image.NEAREST);
+  new_upc_img = upc_preimg.resize(((29 * barwidth) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -243,16 +243,16 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, (29 * barwidth) * int(resize), (barheight[1] + 9) * int(resize * barwidth));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, (29 * barwidth) * int(resize), (barheight[1] + 9) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth) * int(resize), (barheight[1] + 9) * int(resize * barwidth));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth) * int(resize), (barheight[1] + 9) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
   upc_img = new_upc_img;
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize * barwidth), (5 + (6 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize * barwidth) - 1)) + pil_addon_fix) + (textxy[1] * int(resize * barwidth)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (13 + (13 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize * barwidth) - 1)) + pil_addon_fix) + (textxy[1] * int(resize * barwidth)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (5 + (6 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (13 + (13 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):

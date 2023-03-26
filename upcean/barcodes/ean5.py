@@ -310,7 +310,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
    BarNum += 1;
   NumZero += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize(((56 * barwidth) * int(resize), (barheight[1] + 9) * int(resize * barwidth)), Image.NEAREST);
+  new_upc_img = upc_preimg.resize(((56 * barwidth) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST);
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -328,19 +328,19 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, (56 * barwidth) * int(resize), (barheight[1] + 9) * int(resize * barwidth));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, (56 * barwidth) * int(resize), (barheight[1] + 9) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * barwidth) * int(resize), (barheight[1] + 9) * int(resize * barwidth));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * barwidth) * int(resize), (barheight[1] + 9) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
   upc_img = new_upc_img;
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize * barwidth), (7 + (7 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize * barwidth) - 1)) + pil_addon_fix) + (textxy[1] * int(resize * barwidth)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (16 + (15 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize * barwidth) - 1)) + pil_addon_fix) + (textxy[1] * int(resize * barwidth)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (24 + (24 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize * barwidth) - 1)) + pil_addon_fix) + (textxy[1] * int(resize * barwidth)), LeftDigit[2], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (32 + (32 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize * barwidth) - 1)) + pil_addon_fix) + (textxy[1] * int(resize * barwidth)), LeftDigit[3], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (40 + (40 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize * barwidth) - 1)) + pil_addon_fix) + (textxy[1] * int(resize * barwidth)), LeftDigit[4], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (7 + (7 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (16 + (15 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (24 + (24 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[2], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (32 + (32 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[3], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize), (40 + (40 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[4], barcolor[1], "ocrb", imageoutlib);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
