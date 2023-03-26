@@ -86,11 +86,12 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
   shiftxy = (0, shiftxy[1]);
  else:
   startx = ((12 * (barwidth * int(resize))) + shiftxy[0]);
- endx = (3 + 42 + 6) * (barwidth * int(resize));
+ endx = (42) * (barwidth * int(resize));
  listcount = 0;
+ startxalt = 0;
  pre_upc_whole = [];
  prestartx = startx;
- while(startx < endx):
+ while(startxalt < endx):
   listcount = 0;
   pre_upc_list = [];
   while(listcount<7):
@@ -100,6 +101,7 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
    if(curpixel==barcolor[2]):
     pre_upc_list.append("0");
    startx += 1 * (barwidth * int(resize));
+   startxalt += 1 * (barwidth * int(resize));
    listcount += 1;
   pre_upc_whole.append("".join(pre_upc_list));
  upc_img.close();
