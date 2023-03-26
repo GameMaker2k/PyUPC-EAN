@@ -229,6 +229,39 @@ def fix_itf14_checksum(upc):
   upc = fix_matches[0];
  return upc+str(get_itf14_checksum(upc));
 
+def get_itf_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>14):
+  fix_matches = re.findall("^(\d{14})", upc); 
+  upc = fix_matches[0];
+ if(len(upc)>14 or len(upc)<13):
+  return False;
+ upc_matches = list(upc);
+ upc_matches = [int(x) for x in upc_matches];
+ upc_matches1 = upc_matches[0:][::2];
+ upc_matches2 = upc_matches[1:][::2];
+ EvenSum = 0;
+ EvenNum = 0;
+ EvenNumX = len(upc_matches2);
+ while(EvenNum < EvenNumX):
+  EvenSum += upc_matches2[EvenNum];
+  EvenNum += 1;
+ OddSum = 0;
+ OddNum = 0;
+ OddNumX = len(upc_matches1);
+ while(OddNum < OddNumX):
+  OddSum += (upc_matches1[EvenNum] * 3);
+  OddNum += 1;
+ AllSum = OddSum + EvenSum;
+ CheckSum = AllSum % 10;
+ if(CheckSum>0):
+  CheckSum = 10 - CheckSum;
+ return str(CheckSum);
+
+def get_stf_checksum(upc):
+ CheckSum = get_itf_checksum(upc);
+ return str(CheckSum);
+
 def validate_ean8_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>8):
