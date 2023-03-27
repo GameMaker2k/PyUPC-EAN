@@ -67,7 +67,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
      return False;
     icount = 0;
     imaxc = 3;
-    while(icount < imaxi):
+    while(icount < imaxc):
      curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
      icount += 1;
     inprestartx += (3 + 42) * (barwidth * int(resize));
@@ -76,7 +76,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
      return False;
     icount = 0;
     imaxc = 5;
-    while(icount < imaxi):
+    while(icount < imaxc):
      curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
      icount += 1;
     inprestartx += (5 + 42) * (barwidth * int(resize));
@@ -84,7 +84,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
      return False;
     icount = 0;
     imaxc = 3;
-    while(icount < imaxi):
+    while(icount < imaxc):
      curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
      icount += 1;
     if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]) and (curpixelist[3]==barcolor[2] and curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[2] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2]) and (curpixelist[8]==barcolor[0] and curpixelist[9]==barcolor[2] and curpixelist[10]==barcolor[0])):
