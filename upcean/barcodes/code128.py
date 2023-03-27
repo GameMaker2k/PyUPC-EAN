@@ -131,17 +131,17 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  upc_to_dec = list([int(x, 16) for x in upc_matches]);
  upc_size_add = ((len(upc_matches) * 11) + (len(re.findall("6c", upc)) * 2)) * barwidth;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((29 * barwidth) + upc_size_add, barheight[1] + 9));
+  upc_preimg = Image.new("RGB", ((29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth)));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((29 * barwidth) + upc_size_add, barheight[1] + 9)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (29 * barwidth) + upc_size_add, barheight[1] + 9);
+   upc_preimg = cairo.SVGSurface(None, (29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth) + upc_size_add, barheight[1] + 9);
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (29 * barwidth) + upc_size_add, barheight[1] + 9);
+  upc_img.rectangle(0, 0, (29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -446,7 +446,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   LineStart += barwidth;
   BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize)), Image.NEAREST); # use nearest neighbour
+  new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -464,9 +464,9 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, (34 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize), (barheight[1] + 9) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, (34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(resize), (barheight[1] + 9) * int(resize), (barheight[1] + 9) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
@@ -475,7 +475,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   NumTxtZero = 0; 
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10 * int(resize), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
+   drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 11 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
