@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.encode.getsfname, upcean.support;
+import re, sys, upcean.encode.getsfname, upcean.support;
 try:
  from io import StringIO, BytesIO;
 except ImportError:

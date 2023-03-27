@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.encode.getsfname, upcean.support;
+import re, sys, upcean.encode.getsfname, upcean.support;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -315,26 +315,68 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
    return new_upc_preimg;
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
+   stdoutfile = StringIO();
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.fileno(), new_upc_img.tobytes()());
+      stdoutfile.write(new_upc_img.tobytes());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
       new_upc_img.save(stdoutfile, outfileext);
+      stdoutfile.seek(0);
+      return stdoutfile;
     if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-     new_upc_preimg.write_to_png(sys.stdout);
+     if(outfileext=="BYTES"):
+      stdoutfile.write(new_upc_preimg.get_data().tobytes());
+      stdoutfile.seek(0);
+      return stdoutfile;
+     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
+      new_upc_preimg.flush();
+      new_upc_preimg.finish(); 
+      svgoutfile.seek(0);
+      svgouttext = svgoutfile.read();
+      stdoutfile.write(svgouttext);
+      svgoutfile.close();
+      stdoutfile.seek(0);
+      return stdoutfile;
+     else:
+      new_upc_preimg.write_to_png(stdoutfile);
+      stdoutfile.seek(0);
+      return stdoutfile;
    except:
     return False;
  if(sys.version[0]>="3"):
+  stdoutfile = BytesIO();
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
-      os.write(sys.stdout.buffer.fileno(), new_upc_img.tobytes()());
+      stdoutfile.write(new_upc_img.tobytes());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(sys.stdout.buffer, outfileext);
+      new_upc_img.save(stdoutfile, outfileext);
+      stdoutfile.seek(0);
+      return stdoutfile;
     if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-     new_upc_preimg.write_to_png(sys.stdout.buffer);
+     if(outfileext=="BYTES"):
+      stdoutfile.write(new_upc_preimg.get_data().tobytes());
+      stdoutfile.seek(0);
+      return stdoutfile;
+     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
+      new_upc_preimg.flush();
+      new_upc_preimg.finish(); 
+      svgoutfile.seek(0);
+      svgouttext = svgoutfile.read();
+      stdoutfile.write(svgouttext);
+      svgoutfile.close();
+      stdoutfile.seek(0);
+      return stdoutfile;
+     else:
+      new_upc_preimg.write_to_png(stdoutfile);
+      stdoutfile.seek(0);
+      return stdoutfile;
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
@@ -346,7 +388,21 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
     else:
      new_upc_img.save(outfile, outfileext);
    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-    new_upc_preimg.write_to_png(outfile);
+    if(outfileext=="BYTES"):
+     with open(outfile, 'wb+') as f:
+      f.write(new_upc_preimg.get_data().tobytes());
+     return True;
+    elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
+     new_upc_preimg.flush();
+     new_upc_preimg.finish(); 
+     svgoutfile.seek(0);
+     svgouttext = svgoutfile.read();
+     with open(outfile, 'wb+') as f:
+      f.write(svgouttext);
+     return True;
+    else:
+     new_upc_preimg.write_to_png(outfile);
+     return True;
   except:
    return False;
  return True;
