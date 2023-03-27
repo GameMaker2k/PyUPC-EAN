@@ -17,7 +17,15 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, upcean.encode.getsfname, upcean.support;
 from PIL import Image, UnidentifiedImageError;
-
+try:
+ from io import StringIO, BytesIO;
+except ImportError:
+ try:
+  from cStringIO import StringIO;
+  from cStringIO import StringIO as BytesIO;
+ except ImportError:
+  from StringIO import StringIO;
+  from StringIO import StringIO as BytesIO;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 from upcean.encode.predraw import *;
@@ -32,9 +40,13 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
  if(isinstance(infile, Image.Image)):
   upc_img = infile.convert('RGB');
  elif(cairosupport and isinstance(infile, cairo.ImageSurface)):
-  #upc_img = Image.frombuffer("RGB", (infile.get_width(), infile.get_height()), infile.get_data().tobytes(), "raw", "BGR", 0, 1).convert('RGB');
-  #upc_img = Image.frombytes("RGB", (infile.get_width(), infile.get_height()), infile.get_data().tobytes()).convert('RGB');
-  return False;
+  if(sys.version[0]=="2"):
+   stdoutfile = StringIO();
+  if(sys.version[0]>="3"):
+   stdoutfile = BytesIO();
+  infile.write_to_png(stdoutfile);
+  stdoutfile.seek(0);
+  upc_img = Image.open(stdoutfile).convert('RGB');
  else:
   try:
    infile.seek(0);
