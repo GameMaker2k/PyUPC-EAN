@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean2.py - Last Update: 3/26/2023 Ver. 2.8.11 RC 1 - Author: cooldude2k $
+    $FileInfo: ean2.py - Last Update: 3/27/2023 Ver. 2.8.12 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -77,6 +77,8 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
+  barwidth = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
    pil_ver = Image.PILLOW_VERSION;
@@ -359,6 +361,8 @@ def draw_ean2_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),bar
 def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
+  barwidth = 1;
  upc_preimg = Image.new("RGB", (((29 * barwidth) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth)) * int(resize)));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (((29 * barwidth) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth)) * int(resize))], fill=barcolor[2]);

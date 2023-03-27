@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: ean13.py - Last Update: 3/26/2023 Ver. 2.8.11 RC 1 - Author: cooldude2k $
+    $FileInfo: ean13.py - Last Update: 3/27/2023 Ver. 2.8.12 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -27,6 +27,8 @@ if(cairosupport):
 def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
+  barwidth = 1;
  if(isinstance(infile, Image.Image)):
   upc_img = infile.convert('RGB');
  elif(cairosupport and isinstance(infile, cairo.ImageSurface)):
