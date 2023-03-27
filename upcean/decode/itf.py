@@ -54,14 +54,6 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
  starty = int(upc_img.size[1] / 2) + shiftxy[1];
  left_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
  right_barcode_dict = { '00110': "0", '10001': "1", '01001': "2", '11000': "3", '00101': "4", '10100': "5", '01100': "6", '00011': "7", '10010': "8", '01010': "9" };
- barcodepresize = ((39 * barwidth) ) * int(resize);
- barcodesize = int( ( (upc_img.size[0]) - barcodepresize ) / 18 );
- if(threewidebar):
-  barcodepresize = ((39 * barwidth) ) * int(resize);
-  barcodesize = int( ( (upc_img.size[0]) - barcodepresize ) / 18 );
- else:
-  barcodepresize = ((38 * barwidth) ) * int(resize);
-  barcodesize = int( ( (upc_img.size[0]) - barcodepresize ) / 14 );
  startx = 17;
  if(shiftxy[0] is None):
   prestartx = 0;
