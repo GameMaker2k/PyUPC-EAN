@@ -10,4 +10,4 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import upcean;
 
-upcean.barcodes.create_barcode_from_json_file("./xml/barcodes.json");
+upcean.encode.create_barcode_from_json_file("./xml/barcodes.json");

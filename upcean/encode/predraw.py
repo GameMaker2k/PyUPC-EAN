@@ -19,10 +19,10 @@ import upcean.fonts, upcean.support;
 pilsupport = upcean.support.check_for_pil();
 if(pilsupport):
  from PIL import Image, ImageDraw, ImageFont;
- import upcean.barcodes.prepil;
+ import upcean.encode.prepil;
 cairosupport = upcean.support.check_for_cairo();
 if(cairosupport):
- import cairo, upcean.barcodes.precairo;
+ import cairo, upcean.encode.precairo;
 
 try:
  import pkg_resources;
@@ -53,11 +53,11 @@ def snapCoords( ctx, x, y, imageoutlib="pillow" ):
  if(not pilsupport and not cairosupport):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
-  return upcean.barcodes.prepil.snapCoords( ctx, x, y );
+  return upcean.encode.prepil.snapCoords( ctx, x, y );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-  return upcean.barcodes.precairo.snapCoords( ctx, x, y );
+  return upcean.encode.precairo.snapCoords( ctx, x, y );
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
@@ -75,11 +75,11 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow" ):
  if(not pilsupport and not cairosupport):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
-  return upcean.barcodes.prepil.drawColorLine( ctx, x1, y1, x2, y2, width, color );
+  return upcean.encode.prepil.drawColorLine( ctx, x1, y1, x2, y2, width, color );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-  return upcean.barcodes.precairo.drawColorLine( ctx, x1, y1, x2, y2, width, color );
+  return upcean.encode.precairo.drawColorLine( ctx, x1, y1, x2, y2, width, color );
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
@@ -97,11 +97,11 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
  if(not pilsupport and not cairosupport):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
-  return upcean.barcodes.prepil.drawColorRectangle( ctx, x1, y1, x2, y2, color );
+  return upcean.encode.prepil.drawColorRectangle( ctx, x1, y1, x2, y2, color );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-  return upcean.barcodes.precairo.drawColorRectangle( ctx, x1, y1, x2, y2, color );
+  return upcean.encode.precairo.drawColorRectangle( ctx, x1, y1, x2, y2, color );
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
@@ -119,11 +119,11 @@ def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb", imageoutlib="pi
  if(not pilsupport and not cairosupport):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
-  return upcean.barcodes.prepil.drawColorText( ctx, size, x, y, text, color, ftype );
+  return upcean.encode.prepil.drawColorText( ctx, size, x, y, text, color, ftype );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-  return upcean.barcodes.precairo.drawColorText( ctx, size, x, y, text, color, ftype );
+  return upcean.encode.precairo.drawColorText( ctx, size, x, y, text, color, ftype );
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;
@@ -141,11 +141,11 @@ def drawColorRectangleAlt( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
  if(not pilsupport and not cairosupport):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
-  return upcean.barcodes.prepil.drawColorRectangleAlt( ctx, x1, y1, x2, y2, color );
+  return upcean.encode.prepil.drawColorRectangleAlt( ctx, x1, y1, x2, y2, color );
  if(not pilsupport and imageoutlib=="pillow"):
   return False;
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-  return upcean.barcodes.precairo.drawColorRectangleAlt( ctx, x1, y1, x2, y2, color );
+  return upcean.encode.precairo.drawColorRectangleAlt( ctx, x1, y1, x2, y2, color );
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   return False;
  return False;

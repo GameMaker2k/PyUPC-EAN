@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.barcodes.getsfname, upcean.support;
+import re, os, sys, types, upcean.encode.getsfname, upcean.support;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -25,14 +25,14 @@ except ImportError:
  except ImportError:
   from StringIO import StringIO;
   from StringIO import StringIO as BytesIO;
-import upcean.barcodes.ean2, upcean.barcodes.ean5;
+import upcean.encode.ean2, upcean.encode.ean5;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
-from upcean.barcodes.predraw import *;
+from upcean.encode.predraw import *;
 if(pilsupport):
- import upcean.barcodes.prepil;
+ import upcean.encode.prepil;
 if(cairosupport):
- import upcean.barcodes.precairo;
+ import upcean.encode.precairo;
 
 def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
@@ -65,7 +65,7 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];
@@ -415,23 +415,23 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
  del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
-   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
+   upc_sup_img = upcean.encode.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,((83 * barwidth) * int(resize), 0));
     del(upc_sup_img);
   if(supplement is not None and len(supplement)==5): 
-   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
+   upc_sup_img = upcean.encode.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,((83 * barwidth) * int(resize), 0));
     del(upc_sup_img);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(supplement!=None and len(supplement)==2):
-   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
+   upc_sup_img = upcean.encode.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
    new_upc_img.set_source_surface(upc_sup_img, (83 * barwidth) * int(resize), 0);
    new_upc_img.paint();
    del(upc_sup_img);
   if(supplement!=None and len(supplement)==5):
-   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
+   upc_sup_img = upcean.encode.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
    new_upc_img.set_source_surface(upc_sup_img, (83 * barwidth) * int(resize), 0);
    new_upc_img.paint();
    del(upc_sup_img);

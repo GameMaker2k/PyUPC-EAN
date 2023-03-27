@@ -11,11 +11,11 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: goodwill.py - Last Update: 3/26/2023 Ver. 2.8.11 RC 1 - Author: cooldude2k $
+    $FileInfo: plessey.py - Last Update: 3/26/2023 Ver. 2.8.11 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.barcodes.getsfname, upcean.support, upcean.getprefix.getprefix;
+import re, os, sys, types, upcean.encode.getsfname, upcean.support;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -25,17 +25,15 @@ except ImportError:
  except ImportError:
   from StringIO import StringIO;
   from StringIO import StringIO as BytesIO;
-import upcean.barcodes.ean2, upcean.barcodes.ean5;
-from upcean.barcodes.upca import *;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
-from upcean.barcodes.predraw import *;
+from upcean.encode.predraw import *;
 if(pilsupport):
- import upcean.barcodes.prepil;
+ import upcean.encode.prepil;
 if(cairosupport):
- import upcean.barcodes.precairo;
+ import upcean.encode.precairo;
 
-def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -61,7 +59,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];
@@ -70,19 +68,11 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
+ if(len(upc) < 1): 
+  return False;
  if(barwidth < 1): 
   barwidth = 1;
- upc_pieces = None;
- supplement = None;
- if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
-  upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
-  upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc)):
-  upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc);
-  upc_pieces = upc_pieces[0];
-  upc = upc_pieces[0]; supplement = upc_pieces[2];
- if(len(upc)>12 or len(upc)<12):
+ if(not re.findall("([0-9a-fA-F]+)", upc)):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -132,51 +122,103 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  else:
   pil_addon_fix = 0;
   cairo_addon_fix = 0;
- upc_matches = re.findall("(\d{1})(\d{5})(\d{5})(\d{1})", upc);
+ upc = upc.upper();
+ upc_matches = list(upc);
+ upc_size_add = ((len(upc_matches) * 16) + (len(upc_matches) + 1)) * barwidth;
  if(len(upc_matches)<=0):
   return False;
- goodwillinfo = upcean.getprefix.getprefix.get_goodwill_upca_barcode_info(upc);
- barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255));
- if(goodwillinfo['tagcolor']=="Pink"):
-  barcolor=((0, 0, 0), (0, 0, 0), (255, 192, 203));
- elif(goodwillinfo['tagcolor']=="Yellow"):
-  barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 0));
- elif(goodwillinfo['tagcolor']=="Green"):
-  barcolor=((0, 0, 0), (0, 0, 0), (207, 240, 236));
- elif(goodwillinfo['tagcolor']=="Blue"):
-  barcolor=((0, 0, 0), (0, 0, 0), (12, 191, 233));
- elif(goodwillinfo['tagcolor']=="Orange"):
-  barcolor=((0, 0, 0), (0, 0, 0), (255, 162, 0));
- else:
-  barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255));
- if(not goodwillinfo):
-  return False;
- upc_matches = upc_matches[0];
- PrefixDigit = upc_matches[0];
- LeftDigit = list(str(upc_matches[0])+str(upc_matches[1]));
- RightDigit = list(str(upc_matches[2])+str(upc_matches[3]));
- CheckDigit = upc_matches[3];
- addonsize = 0;
- if(supplement is not None and len(supplement)==2): 
-  addonsize = 29;
- if(supplement is not None and len(supplement)==5): 
-  addonsize = 56;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", (113 + addonsize, barheight[1] + (45 * barwidth)));
+  upc_preimg = Image.new("RGB", ((48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth)));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (113 + addonsize, barheight[1] + (45 * barwidth))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (113 + addonsize, barheight[1] + (45 * barwidth)));
+   upc_preimg = cairo.SVGSurface(None, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize, barheight[1] + (45 * barwidth)));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 113 + addonsize, barheight[1] + (45 * barwidth));
+  upc_img.rectangle(0, 0, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
+ upc_array = { 'upc': upc, 'code': [ ] };
+ LineSize = barheight[0];
+ if(hidetext):
+  LineSize = barheight[1];
+ start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+ LineStart = 0;
+ BarNum = 0;
+ start_bc_num_end = len(start_barcolor);
+ while(BarNum < start_bc_num_end):
+  if(start_barcolor[BarNum]==1):
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+  if(start_barcolor[BarNum]==0):
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
+  LineStart += barwidth;
+  BarNum += 1;
+ NumZero = 0; 
+ while (NumZero < len(upc_matches)):
+  left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="0"):
+   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="1"):
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="2"):
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="3"):
+   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="4"):
+   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="5"):
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="6"):
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="7"):
+   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="8"):
+   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="9"):
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="A"):
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="B"):
+   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="C"):
+   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="D"):
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="E"):
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="F"):
+   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+  InnerUPCNum = 0;
+  while (InnerUPCNum < len(left_barcolor)):
+   if(left_barcolor[InnerUPCNum]==1):
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
+    LineStart += barwidth;
+    BarNum += 1;
+   if(left_barcolor[InnerUPCNum]==0):
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
+    LineStart += barwidth;
+    BarNum += 1;
+   InnerUPCNum += 1;
+  drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
+  LineStart += barwidth; 
+  BarNum += 1;
+  NumZero += 1;
+ end_barcolor = [1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ end_bc_num = 0;
+ end_bc_num_end = len(end_barcolor);
+ while(end_bc_num < end_bc_num_end):
+  if(end_barcolor[end_bc_num]==1):
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+  if(end_barcolor[end_bc_num]==0):
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
+  end_bc_num += 1;
+  LineStart += barwidth;
+  BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth)) * int(resize)), Image.NEAREST);
+  new_upc_img = upc_preimg.resize((((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -194,54 +236,21 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, (113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
- if(pilsupport and imageoutlib=="pillow"):
-  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
-  new_upc_img.paste(upc_barcode_img,(0, 15 * resize));
-  del(upc_barcode_img);
- if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-  upc_barcode_img = draw_upca_barcode(upc,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
-  new_upc_img.set_source_surface(upc_barcode_img, 0, 15 * resize);
-  new_upc_img.paint();
   upc_img = new_upc_img;
-  del(upc_barcode_img);
- drawColorText(upc_img, 12 * int(resize * barwidth), 30 + (23 * (int(resize) - 1)) - (4 * (int(resize * barwidth) - 1)), (4 * int(resize * barwidth)), "Goodwill", barcolor[1], "ocrb", imageoutlib);
- if(len(goodwillinfo['pricewdnz'])<4):
-  goodwillinfo['pricewdnz'] = "0"+goodwillinfo['pricewdnz'];
- addonsize = 0;
- if(len(goodwillinfo['pricewdnz'])==5):
-  addonsize = -14;
- if(len(goodwillinfo['pricewdnz'])==6):
-  addonsize = -30;
- drawColorText(upc_img, 16 * int(resize * barwidth), 36 + addonsize + (23 * (int(resize) - 1)) - (4 * (int(resize * barwidth) - 1)), (75 * int(resize * barwidth)), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib);
+ if(not hidetext):
+  NumTxtZero = 0; 
+  LineTxtStart = 30 * int(resize);
+  while (NumTxtZero < len(upc_matches)):
+   drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (int(resize) - 1)) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
+   LineTxtStart += 16 * int(resize);
+   NumTxtZero += 1;
  del(upc_img);
- if(pilsupport and imageoutlib=="pillow"):
-  if(supplement is not None and len(supplement)==2): 
-   upc_sup_img = upcean.barcodes.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
-   if(upc_sup_img):
-    new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
-    del(upc_sup_img);
-  if(supplement is not None and len(supplement)==5): 
-   upc_sup_img = upcean.barcodes.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
-   if(upc_sup_img):
-    new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
-    del(upc_sup_img);
- if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
-  if(supplement!=None and len(supplement)==2):
-   upc_sup_img = draw_ean2_barcode_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
-   new_upc_img.set_source_surface(upc_sup_img, 113, 0);
-   new_upc_img.paint();
-   del(upc_sup_img);
-  if(supplement!=None and len(supplement)==5):
-   upc_sup_img = draw_ean5_barcode_supplement(supplement,1,hideinfo,barheight,barwidth,barcolor, imageoutlib);
-   new_upc_img.set_source_surface(upc_sup_img, 113, 0);
-   new_upc_img.paint();
-   del(upc_sup_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
@@ -341,5 +350,5 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    return False;
  return True;
 
-def draw_goodwill_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_goodwill_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
+def draw_plessey_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_plessey_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);

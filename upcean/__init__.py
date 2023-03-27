@@ -45,7 +45,7 @@ if(pilsupport):
 else:
  cairosupport = upcean.support.check_for_cairo();
 if(pilsupport or cairosupport):
- import upcean.fonts, upcean.xml, upcean.barcodes, upcean.barcodes.getsfname;
- import upcean.barcodes as encode;
+ import upcean.fonts, upcean.xml, upcean.encode, upcean.encode.getsfname;
+ import upcean.encode as barcodes;
 if(pilsupport):
  import upcean.decode;

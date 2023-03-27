@@ -15,12 +15,12 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, upcean.barcodes.getsfname, upcean.support;
+import re, upcean.encode.getsfname, upcean.support;
 from PIL import Image, UnidentifiedImageError;
 
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
-from upcean.barcodes.predraw import *;
+from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 

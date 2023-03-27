@@ -11,11 +11,11 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: plessey.py - Last Update: 3/26/2023 Ver. 2.8.11 RC 1 - Author: cooldude2k $
+    $FileInfo: code93.py - Last Update: 3/26/2023 Ver. 2.8.11 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.barcodes.getsfname, upcean.support;
+import re, os, sys, types, upcean.encode.getsfname, upcean.support;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -27,13 +27,13 @@ except ImportError:
   from StringIO import StringIO as BytesIO;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
-from upcean.barcodes.predraw import *;
+from upcean.encode.predraw import *;
 if(pilsupport):
- import upcean.barcodes.prepil;
+ import upcean.encode.prepil;
 if(cairosupport):
- import upcean.barcodes.precairo;
+ import upcean.encode.precairo;
 
-def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -59,7 +59,7 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];
@@ -72,7 +72,7 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
   return False;
  if(barwidth < 1): 
   barwidth = 1;
- if(not re.findall("([0-9a-fA-F]+)", upc)):
+ if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -124,28 +124,55 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
   cairo_addon_fix = 0;
  upc = upc.upper();
  upc_matches = list(upc);
- upc_size_add = ((len(upc_matches) * 16) + (len(upc_matches) + 1)) * barwidth;
  if(len(upc_matches)<=0):
   return False;
+ Code93Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K", 21: "L", 22: "M", 23: "N", 24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%", 43: "($)", 44: "(%)", 45: "(/)", 46: "(+)"};
+ Code93Values = dict(zip(Code93Array.values(),Code93Array));
+ upc_reverse = list(upc_matches);
+ upc_reverse.reverse();
+ upc_print = list(upc_matches);
+ UPC_Count = 0; 
+ UPC_Weight = 1; 
+ UPC_Sum = 0;
+ while (UPC_Count < len(upc_reverse)):
+  if(UPC_Weight>20):
+   UPC_Weight = 1;
+  UPC_Sum = UPC_Sum + (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])]);
+  UPC_Count += 1; 
+  UPC_Weight += 1;
+ upc_matches.append(Code93Array[UPC_Sum % 47]);
+ upc_reverse = list(upc_matches);
+ upc_reverse.reverse();
+ UPC_Count = 0; 
+ UPC_Weight = 1; 
+ UPC_Sum = 0;
+ while (UPC_Count < len(upc_reverse)):
+  if(UPC_Weight>15):
+   UPC_Weight = 1;
+  UPC_Sum = UPC_Sum + (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])]);
+  UPC_Count += 1; 
+  UPC_Weight += 1;
+ upc_matches.append(Code93Array[UPC_Sum % 47]);
+ upc_size_add = (len(upc_matches) * 9) * barwidth;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth)));
+  upc_preimg = Image.new("RGB", ((37 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth)));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((37 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+   upc_preimg = cairo.SVGSurface(None, (37 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (37 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+  upc_img.rectangle(0, 0, (37 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
  LineSize = barheight[0];
  if(hidetext):
   LineSize = barheight[1];
- start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+ start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0];
  LineStart = 0;
  BarNum = 0;
  start_bc_num_end = len(start_barcolor);
@@ -158,57 +185,130 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
   BarNum += 1;
  NumZero = 0; 
  while (NumZero < len(upc_matches)):
-  left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+  left_barcolor = [1, 0, 0, 0, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="0"):
-   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="1"):
-   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="2"):
-   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="3"):
-   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="4"):
-   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="5"):
-   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="6"):
-   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="7"):
-   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 1, 0, 0, 0, 0];
   if(upc_matches[NumZero]=="8"):
-   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="9"):
-   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 0, 1, 0, 1, 0];
   if(upc_matches[NumZero]=="A"):
-   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="B"):
-   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="C"):
-   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="D"):
-   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="E"):
-   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="F"):
-   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 1, 0, 1, 0];
+  if(upc_matches[NumZero]=="G"):
+   left_barcolor = [1, 0, 1, 1, 0, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="H"):
+   left_barcolor = [1, 0, 1, 1, 0, 0, 1, 0, 0];
+  if(upc_matches[NumZero]=="I"):
+   left_barcolor = [1, 0, 1, 1, 0, 0, 0, 1, 0];
+  if(upc_matches[NumZero]=="J"):
+   left_barcolor = [1, 0, 0, 1, 1, 0, 1, 0, 0];
+  if(upc_matches[NumZero]=="K"):
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 1, 0];
+  if(upc_matches[NumZero]=="L"):
+   left_barcolor = [1, 0, 1, 0, 1, 1, 0, 0, 0];
+  if(upc_matches[NumZero]=="M"):
+   left_barcolor = [1, 0, 1, 0, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="N"):
+   left_barcolor = [1, 0, 1, 0, 0, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="O"):
+   left_barcolor = [1, 0, 0, 1, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="P"):
+   left_barcolor = [1, 0, 0, 0, 1, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="Q"):
+   left_barcolor = [1, 1, 0, 1, 1, 0, 1, 0, 0];
+  if(upc_matches[NumZero]=="R"):
+   left_barcolor = [1, 1, 0, 1, 1, 0, 0, 1, 0];
+  if(upc_matches[NumZero]=="S"):
+   left_barcolor = [1, 1, 0, 1, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="T"):
+   left_barcolor = [1, 1, 0, 1, 0, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="U"):
+   left_barcolor = [1, 1, 0, 0, 1, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="V"):
+   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 1, 0];
+  if(upc_matches[NumZero]=="W"):
+   left_barcolor = [1, 0, 1, 1, 0, 1, 1, 0, 0];
+  if(upc_matches[NumZero]=="X"):
+   left_barcolor = [1, 0, 1, 1, 0, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="Y"):
+   left_barcolor = [1, 0, 0, 1, 1, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="Z"):
+   left_barcolor = [1, 0, 0, 1, 1, 1, 0, 1, 0];
+  if(upc_matches[NumZero]=="-"):
+   left_barcolor = [1, 0, 0, 1, 0, 1, 1, 1, 0];
+  if(upc_matches[NumZero]=="."):
+   left_barcolor = [1, 1, 1, 0, 1, 0, 1, 0, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 1, 1, 0, 1, 0, 0, 1, 0];
+  if(upc_matches[NumZero]=="$"):
+   left_barcolor = [1, 1, 1, 0, 0, 1, 0, 1, 0];
+  if(upc_matches[NumZero]=="/"):
+   left_barcolor = [1, 0, 1, 1, 0, 1, 1, 1, 0];
+  if(upc_matches[NumZero]=="+"):
+   left_barcolor = [1, 0, 1, 1, 1, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="%"):
+   left_barcolor = [1, 1, 0, 1, 0, 1, 1, 1, 0];
+  if(upc_matches[NumZero]=="($)"):
+   left_barcolor = [1, 0, 0, 1, 0, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="(%)"):
+   left_barcolor = [1, 1, 1, 0, 1, 1, 0, 1, 0];
+  if(upc_matches[NumZero]=="(/)"):
+   left_barcolor = [1, 1, 1, 0, 1, 0, 1, 1, 0];
+  if(upc_matches[NumZero]=="(+)"):
+   left_barcolor = [1, 0, 0, 1, 1, 0, 0, 1, 0];
+  ''' Unused barcodes
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 1, 1, 1, 0, 1, 0, 1, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 0, 1, 0, 1, 1, 1, 0, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 0, 1, 0, 0, 1, 1, 1, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 0, 1, 1, 1, 0, 1, 0, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 0, 1, 1, 1, 0, 0, 1, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 1, 0, 1, 1, 1, 0, 1, 0];
+  if(upc_matches[NumZero]==" "):
+   left_barcolor = [1, 1, 0, 1, 1, 0, 1, 1, 0];
+  '''
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
-    LineStart += barwidth;
-    BarNum += 1;
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
    if(left_barcolor[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
-    LineStart += barwidth;
-    BarNum += 1;
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
+   LineStart += barwidth;
+   BarNum += 1;
    InnerUPCNum += 1;
-  drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
-  LineStart += barwidth; 
-  BarNum += 1;
-  NumZero += 1;
- end_barcolor = [1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  NumZero += 1; 
+ end_barcolor = [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  end_bc_num = 0;
- end_bc_num_end = len(end_barcolor);
+ end_b
  while(end_bc_num < end_bc_num_end):
   if(end_barcolor[end_bc_num]==1):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
@@ -218,7 +318,7 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
   LineStart += barwidth;
   BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize((((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize)), Image.NEAREST); # use nearest neighbour
+  new_upc_img = upc_preimg.resize((((37 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -236,19 +336,19 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((37 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((37 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
   upc_img = new_upc_img;
  if(not hidetext):
   NumTxtZero = 0; 
-  LineTxtStart = 30 * int(resize);
-  while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (int(resize) - 1)) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
-   LineTxtStart += 16 * int(resize);
+  LineTxtStart = 18;
+  while (NumTxtZero < len(upc_print)):
+   drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (19 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
+   LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
@@ -350,5 +450,5 @@ def create_plessey_barcode(upc,outfile="./plessey.png",resize=1,hideinfo=(False,
    return False;
  return True;
 
-def draw_plessey_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
- return create_plessey_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
+def draw_code93_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+ return create_code93_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);

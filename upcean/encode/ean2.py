@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, os, sys, types, upcean.barcodes.getsfname, upcean.support;
+import re, os, sys, types, upcean.encode.getsfname, upcean.support;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -27,11 +27,11 @@ except ImportError:
   from StringIO import StringIO as BytesIO;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
-from upcean.barcodes.predraw import *;
+from upcean.encode.predraw import *;
 if(pilsupport):
- import upcean.barcodes.prepil;
+ import upcean.encode.prepil;
 if(cairosupport):
- import upcean.barcodes.precairo;
+ import upcean.encode.precairo;
 
 def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  upc = str(upc);
@@ -59,7 +59,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.barcodes.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];

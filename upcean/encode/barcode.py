@@ -18,39 +18,39 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import upcean.support, upcean.getprefix.getprefix;
 
 ''' // Code for making EAN-2 supplement by Kazuki Przyborowski '''
-from upcean.barcodes.ean2 import *;
+from upcean.encode.ean2 import *;
 ''' // Code for making EAN-5 supplement by Kazuki Przyborowski '''
-from upcean.barcodes.ean5 import *;
+from upcean.encode.ean5 import *;
 ''' // Code for making UPC-A by Kazuki Przyborowski '''
-from upcean.barcodes.upca import *;
+from upcean.encode.upca import *;
 ''' // Code for making Goodwill Barcodes by Kazuki Przyborowski '''
-from upcean.barcodes.goodwill import *;
+from upcean.encode.goodwill import *;
 ''' // Code for making UPC-E by Kazuki Przyborowski '''
-from upcean.barcodes.upce import *;
+from upcean.encode.upce import *;
 ''' // Code for making EAN-13 by Kazuki Przyborowski '''
-from upcean.barcodes.ean13 import *;
+from upcean.encode.ean13 import *;
 ''' // Code for making EAN-8 by Kazuki Przyborowski '''
-from upcean.barcodes.ean8 import *;
+from upcean.encode.ean8 import *;
 ''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
-from upcean.barcodes.stf import *;
+from upcean.encode.stf import *;
 ''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
-from upcean.barcodes.itf import *;
+from upcean.encode.itf import *;
 ''' // Code for making ITF-14 by Kazuki Przyborowski '''
-from upcean.barcodes.itf14 import *;
+from upcean.encode.itf14 import *;
 ''' // Code for making Code 11 by Kazuki Przyborowski '''
-from upcean.barcodes.code11 import *;
+from upcean.encode.code11 import *;
 ''' // Code for making Code 39 by Kazuki Przyborowski '''
-from upcean.barcodes.code39 import *;
+from upcean.encode.code39 import *;
 ''' // Code for making Code 93 by Kazuki Przyborowski '''
-from upcean.barcodes.code93 import *;
+from upcean.encode.code93 import *;
 ''' // Code for making Code 128 by Kazuki Przyborowski '''
-from upcean.barcodes.code128 import *;
+from upcean.encode.code128 import *;
 ''' // Code for making Codabar by Kazuki Przyborowski '''
-from upcean.barcodes.codabar import *;
+from upcean.encode.codabar import *;
 ''' // Code for making Plessey by Kazuki Przyborowski '''
-from upcean.barcodes.plessey import *;
+from upcean.encode.plessey import *;
 ''' // Code for making Modified Plessey by Kazuki Przyborowski '''
-from upcean.barcodes.msi import *;
+from upcean.encode.msi import *;
 
 def validate_create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
  if(len(upc)>12 or len(upc)<12):

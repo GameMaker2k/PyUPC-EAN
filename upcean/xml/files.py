@@ -40,7 +40,7 @@ if(sys.version[0]>="3"):
  import urllib.parse as urlparse;
 from xml.sax.saxutils import XMLGenerator;
 from upcean.versioninfo import __author__, __copyright__, __credits__, __email__, __license__, __maintainer__, __project__, __project_url__, __revision__, __status__, __version__, __version_alt__, __version_date__, __version_date_alt__, __version_date_info__, __version_info__, version_date, version_info;
-import upcean.barcodes.barcode, upcean.barcodes.shortcuts;
+import upcean.encode.barcode, upcean.encode.shortcuts;
 
 ''' // User-Agent string for http/https requests '''
 useragent_string = "Mozilla/5.0 (compatible; {proname}/{prover}; +{prourl})".format(proname=__project__, prover=__version_alt__, prourl=__project_url__);
@@ -135,7 +135,7 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
     xmlbarcode.update({"barcolor": colorlist});
    if('imageoutlib' in child.attrib):
     xmlbarcode.update({"imageoutlib": tuple(map(int, child.attrib['imgoutlib'].split()))});
-   bcstatinfo = upcean.barcodes.shortcuts.validate_create_barcode(**xmlbarcode);
+   bcstatinfo = upcean.encode.shortcuts.validate_create_barcode(**xmlbarcode);
    if(draw or 'file' not in child.attrib):
     bcdrawlist.append(bcstatinfo);
    if(not bcstatinfo):
@@ -276,7 +276,7 @@ def create_barcode_from_json_file(jsonfile, draw=False):
    jsonbarcode.update({"barcolor": colorlist});
   if('imageoutlib' in bctree[bctreect]):
    jsonbarcode.update({"imageoutlib": tuple(map(int, bctree[bctreect]['imgoutlib'].split()))});
-  bcstatinfo = upcean.barcodes.shortcuts.validate_create_barcode(**jsonbarcode);
+  bcstatinfo = upcean.encode.shortcuts.validate_create_barcode(**jsonbarcode);
   if(draw or 'file' not in bctree[bctreect]):
    bcdrawlist.append(bcstatinfo);
   if(not bcstatinfo):
@@ -445,7 +445,7 @@ def create_barcode_from_qs_file(qsfile, draw=False):
    pass;
   except IndexError:
    pass;
-  bcstatinfo = upcean.barcodes.shortcuts.validate_create_barcode(**qsbarcode);
+  bcstatinfo = upcean.encode.shortcuts.validate_create_barcode(**qsbarcode);
   if(draw or nofilesave ):
    bcdrawlist.append(bcstatinfo);
   if(not bcstatinfo):

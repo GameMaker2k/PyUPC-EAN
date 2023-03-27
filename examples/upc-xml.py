@@ -19,4 +19,4 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import upcean;
 
-upcean.barcodes.create_barcode_from_xml_file("./xml/barcodes.xml");
+upcean.encode.create_barcode_from_xml_file("./xml/barcodes.xml");

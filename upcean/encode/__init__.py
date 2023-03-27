@@ -38,7 +38,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 // Source: https://web.archive.org/web/20201004174654/http://www.barcodeisland.com/
 '''
 
-from upcean.barcodes.barcode import *;
-from upcean.barcodes.shortcuts import *;
+from upcean.encode.barcode import *;
+from upcean.encode.shortcuts import *;
 from upcean.xml.files import *;
 from upcean.xml.downloader import *;
