@@ -24,7 +24,7 @@ if(pilsupport):
  import upcean.decode;
 
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
-class barcode:
+class encode:
  ''' // Barcode Types '''
  EAN2="ean2";
  UPCS2="ean2";
@@ -121,11 +121,23 @@ class barcode:
    if(size is None):
     size = self.size;
    return upcean.encode.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+  def encode_barcode(self, size=None):
+   if(size is None):
+    size = self.size;
+   return upcean.encode.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
   def validate_draw_barcode(self, size=None):
    if(size is None):
     size = self.size;
    return upcean.encode.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+  def validate_encode_barcode(self, size=None):
+   if(size is None):
+    size = self.size;
+   return upcean.encode.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
   def fix_draw_barcode(self, size=None):
+   if(size is None):
+    size = self.size;
+   return upcean.encode.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+  def fix_encode_barcode(self, size=None):
    if(size is None):
     size = self.size;
    return upcean.encode.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
@@ -206,6 +218,8 @@ class barcode:
  ''' // getprefix/__init__.py funtions '''
  def get_barcode_info(self):
   return upcean.getprefix.get_barcode_info(self.type, self.code);
+
+barcode = encode;
 
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
 class decode:

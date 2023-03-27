@@ -22,6 +22,16 @@ import upcean.oopfuncs.oopfuncs, upcean.support;
 // oopfuncs
 '''
 
+def barcode_encode(type=None, code=None):
+ if(type not in upcean.support.supported_barcodes("tuple")):
+  return False;
+ return upcean.oopfuncs.oopfuncs.encode(type, code);
+
+def encode_barcode(type=None, code=None):
+ if(type not in upcean.support.supported_barcodes("tuple")):
+  return False;
+ return upcean.oopfuncs.oopfuncs.encode(type, code);
+
 def barcode_class(type=None, code=None):
  if(type not in upcean.support.supported_barcodes("tuple")):
   return False;
