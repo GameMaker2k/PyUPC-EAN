@@ -162,21 +162,21 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  if(supplement is not None and len(supplement)==5): 
   addonsize = 56;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", (113 + addonsize, barheight[1] + 45));
+  upc_preimg = Image.new("RGB", (113 + addonsize, barheight[1] + (45 * barwidth)));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), (113 + addonsize, barheight[1] + 45)], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), (113 + addonsize, barheight[1] + (45 * barwidth))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (113 + addonsize, barheight[1] + 45));
+   upc_preimg = cairo.SVGSurface(None, (113 + addonsize, barheight[1] + (45 * barwidth)));
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize, barheight[1] + 45));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize, barheight[1] + (45 * barwidth)));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 113 + addonsize, barheight[1] + 45);
+  upc_img.rectangle(0, 0, 113 + addonsize, barheight[1] + (45 * barwidth));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + 45) * int(resize)), Image.NEAREST);
+  new_upc_img = upc_preimg.resize(((113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth)) * int(resize)), Image.NEAREST);
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -194,9 +194,9 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, (113 + addonsize) * int(resize), (barheight[1] + 45) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, (113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth)) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(resize), (barheight[1] + 45) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth)) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
@@ -210,7 +210,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   new_upc_img.paint();
   upc_img = new_upc_img;
   del(upc_barcode_img);
- drawColorText(upc_img, 12 * int(resize), 30 + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (4 * int(resize)), "Goodwill", barcolor[1], "ocrb", imageoutlib);
+ drawColorText(upc_img, 12 * int(resize * barwidth), 30 + (23 * (int(resize) - 1)) - (4 * (int(resize * barwidth) - 1)), (4 * int(resize * barwidth)), "Goodwill", barcolor[1], "ocrb", imageoutlib);
  if(len(goodwillinfo['pricewdnz'])<4):
   goodwillinfo['pricewdnz'] = "0"+goodwillinfo['pricewdnz'];
  addonsize = 0;
@@ -218,7 +218,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
   addonsize = -14;
  if(len(goodwillinfo['pricewdnz'])==6):
   addonsize = -30;
- drawColorText(upc_img, 16 * int(resize), 36 + addonsize + (23 * (int(resize) - 1)) - (4 * (int(resize) - 1)), (75 * int(resize)), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib);
+ drawColorText(upc_img, 16 * int(resize * barwidth), 36 + addonsize + (23 * (int(resize) - 1)) - (4 * (int(resize * barwidth) - 1)), (75 * int(resize * barwidth)), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
   if(supplement is not None and len(supplement)==2): 
