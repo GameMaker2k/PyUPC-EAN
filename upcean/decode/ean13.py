@@ -72,6 +72,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
     imaxc = 3;
     while(icount < imaxi):
      curpixelist.append(upc_img.getpixel((inprestartx+(imaxi * (barwidth * int(resize))), starty)));
+     imaxi += 1;
     inprestartx += (3 + 42) * (barwidth * int(resize));
     jumpcode = inprestartx;
     if(inprestartx+(4 * (barwidth * int(resize))) > upc_img.size[0]):
@@ -80,6 +81,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
     imaxc = 5;
     while(icount < imaxi):
      curpixelist.append(upc_img.getpixel((inprestartx+(imaxi * (barwidth * int(resize))), starty)));
+     imaxi += 1;
     inprestartx += (5 + 42) * (barwidth * int(resize));
     if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):
      return False;
@@ -87,6 +89,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
     imaxc = 3;
     while(icount < imaxi):
      curpixelist.append(upc_img.getpixel((inprestartx+(imaxi * (barwidth * int(resize))), starty)));
+     imaxi += 1;
     if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]) and (curpixelist[3]==barcolor[2] and curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[2] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2]) and (curpixelist[8]==barcolor[0] and curpixelist[9]==barcolor[2] and curpixelist[10]==barcolor[0])):
      startx = substartx;
      break;
