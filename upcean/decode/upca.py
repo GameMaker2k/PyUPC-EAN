@@ -65,24 +65,26 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
    if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
     if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):
      return False;
-    curpixelist.append(upc_img.getpixel((inprestartx, starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
+    icount = 0;
+    imaxc = 3;
+    while(icount < imaxi):
+     curpixelist.append(upc_img.getpixel((inprestartx+(icounti * (barwidth * int(resize))), starty)));
+     icount += 1;
     inprestartx += (3 + 42) * (barwidth * int(resize));
     jumpcode = inprestartx;
     if(inprestartx+(4 * (barwidth * int(resize))) > upc_img.size[0]):
      return False;
-    curpixelist.append(upc_img.getpixel((inprestartx, starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+(3 * (barwidth * int(resize))), starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+(4 * (barwidth * int(resize))), starty)));
+    icount = 0;
+    imaxc = 5;
+    while(icount < imaxi):
+     curpixelist.append(upc_img.getpixel((inprestartx+(imaxi * (barwidth * int(resize))), starty)));
     inprestartx += (5 + 42) * (barwidth * int(resize));
     if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):
      return False;
-    curpixelist.append(upc_img.getpixel((inprestartx, starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+(1 * (barwidth * int(resize))), starty)));
-    curpixelist.append(upc_img.getpixel((inprestartx+(2 * (barwidth * int(resize))), starty)));
+    icount = 0;
+    imaxc = 3;
+    while(icount < imaxi):
+    curpixelist.append(upc_img.getpixel((inprestartx+(imaxi * (barwidth * int(resize))), starty)));
     if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]) and (curpixelist[3]==barcolor[2] and curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[2] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2]) and (curpixelist[8]==barcolor[0] and curpixelist[9]==barcolor[2] and curpixelist[10]==barcolor[0])):
      startx = substartx;	 
      break;
