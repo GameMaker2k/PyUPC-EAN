@@ -19,7 +19,7 @@ import sys, os, re, upcean.support;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 
-def get_save_filename(outfile, imageoutlib="pillow"):
+def get_save_filename(outfile,imageoutlib="pillow"):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";

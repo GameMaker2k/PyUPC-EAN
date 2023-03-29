@@ -32,7 +32,7 @@ from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 
-def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):

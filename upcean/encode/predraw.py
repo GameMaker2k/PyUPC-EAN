@@ -40,7 +40,7 @@ fontpathocrbalt = upcean.fonts.fontpathocrbalt;
 fontpath = upcean.fonts.fontpath;
 
 ''' // Source: http://stevehanov.ca/blog/index.php?id=28 '''
-def snapCoords( ctx, x, y, imageoutlib="pillow" ):
+def snapCoords( ctx, x, y,imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
@@ -62,7 +62,7 @@ def snapCoords( ctx, x, y, imageoutlib="pillow" ):
   return False;
  return False;
 
-def drawColorLine( ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow" ):
+def drawColorLine( ctx, x1, y1, x2, y2, width, color,imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
@@ -84,7 +84,7 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow" ):
   return False;
  return False;
 
-def drawColorRectangle( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
+def drawColorRectangle( ctx, x1, y1, x2, y2, color,imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
@@ -106,7 +106,7 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
   return False;
  return False;
 
-def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb", imageoutlib="pillow" ):
+def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb",imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
@@ -128,7 +128,7 @@ def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb", imageoutlib="pi
   return False;
  return False;
 
-def drawColorRectangleAlt( ctx, x1, y1, x2, y2, color, imageoutlib="pillow" ):
+def drawColorRectangleAlt( ctx, x1, y1, x2, y2, color,imageoutlib="pillow" ):
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";

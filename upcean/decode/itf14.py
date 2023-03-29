@@ -32,7 +32,7 @@ from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 
-def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
@@ -239,5 +239,5 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
   upc = "".join(barcode_list);
  return upc;
 
-def decode_itf6_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def decode_itf6_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_itf14_barcode(infile,resize,barheight,barwidth,barcolor, imageoutlib);
