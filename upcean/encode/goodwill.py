@@ -270,7 +270,11 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
       stdoutfile.seek(0);
       return stdoutfile;
      elif(outfileext=="XBM"):
-      stdoutfile.write(new_upc_img.convert(mode ="1").tobitmap());
+      stdoutfile.write(new_upc_img.convert(mode="1").tobitmap());
+      stdoutfile.seek(0);
+      return stdoutfile;
+     elif(outfileext=="XPM"):
+      new_upc_img.convert(mode="P").save(stdoutfile, outfileext, **exargdict);
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -318,6 +322,10 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
       stdoutfile.write(new_upc_img.convert(mode='1').tobitmap());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="XPM"):
+      new_upc_img.convert(mode="P").save(stdoutfile, outfileext, **exargdict);
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
       new_upc_img.save(stdoutfile, outfileext, **exargdict);
       stdoutfile.seek(0);
@@ -359,6 +367,8 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
     elif(outfileext=="XBM"):
      with open(outfile, 'wb+') as f:
       f.write(new_upc_preimg.get_data().tobytes());
+    elif(outfileext=="XPM"):
+     new_upc_img.convert(mode="P").save(outfile, outfileext, **exargdict);
     else:
      new_upc_img.save(outfile, outfileext, **exargdict);
    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):

@@ -70,7 +70,7 @@ def get_save_filename(outfile,imageoutlib="pillow"):
      outfileext = "TIFF";
     if(outfileext=="BYTES"):
      outfileext = "BYTES";
-    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
+    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="TGA" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
      outfileext = "PNG";
    elif(imageoutlib=="pillow"):
     outfileext = "PNG";
@@ -109,7 +109,7 @@ def get_save_filename(outfile,imageoutlib="pillow"):
      outfileext = "TIFF";
     if(outfileext=="BYTES"):
      outfileext = "BYTES";
-    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
+    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="TGA" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
      outfileext = "PNG";
    elif(imageoutlib=="pillow"):
     outfileext = "PNG";
