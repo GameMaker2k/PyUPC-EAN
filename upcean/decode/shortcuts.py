@@ -27,6 +27,9 @@ def decode_barcode(bctype,infile,resize=1,barheight=(48, 54),barwidth=1,shiftxy=
   return False;
  return False;
 
+def get_barcode_location(bctype,infile,resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+ return decode_barcode(bctype,infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+
 def validate_decode_barcode(bctype,infile="./barcode.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  if(bctype not in upcean.support.supported_barcodes("tuple")):
   return False;
