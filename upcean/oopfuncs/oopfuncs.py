@@ -265,6 +265,7 @@ class decode:
   self.imageoutlib = "pillow";
   self.return_check = False;
   self.return_type = "dict";
+  self.locatebarcode = False;
  if(pilsupport):
   def decode_barcode(self, filename=None, size=None):
    if(filename is None):
