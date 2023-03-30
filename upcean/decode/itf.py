@@ -246,11 +246,11 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
   upc = "".join(barcode_list);
  return upc;
 
-def get_itf_barcode_location(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+def get_itf_barcode_location(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_itf_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
 
 def decode_code25_interleaved_barcode(infile="./code25.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_itf_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def get_code25_interleaved_barcode_location(infile="./code25.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+def get_code25_interleaved_barcode_location(infile="./code25.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_code25_interleaved_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);

@@ -143,3 +143,6 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
  barcode_list.append(last_number_dict.get(get_parity_pattern, "0"));
  upc = "".join(barcode_list);
  return upc;
+
+def get_upce_barcode_location(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+ return decode_upce_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);

@@ -152,7 +152,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
   upc = "".join(barcode_list);
  return upc;
 
-def get_upca_barcode_location(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+def get_upca_barcode_location(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_upca_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
 
 def decode_ean12_barcode(infile="./ean12.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
@@ -161,14 +161,14 @@ def decode_ean12_barcode(infile="./ean12.png",resize=1,barheight=(48, 54),barwid
 def decode_gtin12_barcode(infile="./gtin12.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def get_ean12_barcode_location(infile="./ean12.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+def get_ean12_barcode_location(infile="./ean12.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_ean12_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
 
-def get_gtin12_barcode_location(infile="./gtin12.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+def get_gtin12_barcode_location(infile="./gtin12.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_gtin12_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
 
 def decode_ucc12_barcode(infile="./ucc12.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def get_ucc12_barcode_location(infile="./ucc12.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+def get_ucc12_barcode_location(infile="./ucc12.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_ucc12_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
