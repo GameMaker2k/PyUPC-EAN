@@ -246,5 +246,12 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
   upc = "".join(barcode_list);
  return upc;
 
-def decode_itf6_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
- return decode_itf14_barcode(infile,resize,barheight,barwidth,barcolor, imageoutlib);
+
+def get_itf14_barcode_location(infile="./itf14.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+ return decode_itf14_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+
+def decode_itf6_barcode(infile="./itf6.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+ return decode_itf14_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
+
+def get_itf6_barcode_location(infile="./itf6.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+ return decode_itf6_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);

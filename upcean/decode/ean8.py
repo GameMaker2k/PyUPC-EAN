@@ -151,3 +151,18 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
   listcount += 1;
   upc = "".join(barcode_list);
  return upc;
+
+def get_ean8_barcode_location(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+ return decode_ean8_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+
+def decode_gtin8_barcode(infile="./gtin8.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+ return decode_ean8_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
+
+def get_gtin8_barcode_location(infile="./gtin8.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+ return decode_gtin8_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+
+def decode_ucc8_barcode(infile="./ucc8.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+ return decode_ean8_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
+
+def get_ucc8_barcode_location(infile="./ucc8.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+ return decode_ucc8_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);

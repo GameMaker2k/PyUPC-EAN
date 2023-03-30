@@ -162,3 +162,18 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
   listcount += 1;
   upc = "".join(barcode_list);
  return upc;
+
+def get_ean13_barcode_location(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+ return decode_ean13_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+
+def decode_gtin13_barcode(infile="./gtin13.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+ return decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
+
+def get_gtin13_barcode_location(infile="./gtin13.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+ return decode_gtin13_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+
+def decode_ucc13_barcode(infile="./ucc13.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+ return decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
+
+def get_ucc13_barcode_location(infile="./ucc13.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow")
+ return decode_ucc13_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
