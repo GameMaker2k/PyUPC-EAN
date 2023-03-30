@@ -32,7 +32,7 @@ from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 
-def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
@@ -110,6 +110,10 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
   startx = ((12 * (barwidth * int(resize)))  + shiftxy[0]);
   jumpcode = ((54 * (barwidth * int(resize))) + shiftxy[0]);
  endx = (42 + 42) * (barwidth * int(resize));
+ if(locatebarcode):
+  prestartx = startx - (3 * (barwidth * int(resize)));
+  postendx = endx + (3 * (barwidth * int(resize)));
+  return (prestartx, startx, 12, endx, postendx); 
  startxalt = 0;
  listcount = 0;
  pre_upc_whole = [];

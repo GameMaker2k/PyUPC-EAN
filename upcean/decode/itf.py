@@ -32,7 +32,7 @@ from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 
-def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
@@ -181,9 +181,16 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
   barcodesize = int((barcodesize) / 2);
  endx = int(startx + ( (barcodesize * 18 ) * (barwidth * int(resize)) ));
  if(threewidebar):
+  if(locatebarcode):
+   postendx = endx + (5 * (barwidth * int(resize)));
   endx = int(startx + ( (barcodesize * 18 ) * (barwidth * int(resize)) ));
  else:
+  if(locatebarcode):
+   postendx = endx + (4 * (barwidth * int(resize)));
   endx = int(startx + ( (barcodesize * 14 ) * (barwidth * int(resize)) ));
+ if(locatebarcode):
+  prestartx = startx - (4 * (barwidth * int(resize)));
+  return (prestartx, startx, (barcodesize * 2), endx, postendx); 
  listcount = 0;
  pre_upc_whole_left = [];
  pre_upc_whole_right = [];
