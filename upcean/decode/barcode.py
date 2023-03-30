@@ -29,6 +29,8 @@ from upcean.decode.ean8 import *;
 from upcean.decode.itf import *;
 ''' // Code for making ITF-14 by Kazuki Przyborowski '''
 from upcean.decode.itf14 import *;
+''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
+from upcean.decode.stf import *;
 
 def validate_decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  upc = decode_upca_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,locatebarcode,imageoutlib);
