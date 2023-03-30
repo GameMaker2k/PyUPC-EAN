@@ -254,6 +254,7 @@ class decode:
   if(filename is not None):
    self.filename = filename;
   self.code = None;
+  self.info = None;
   self.size = 1;
   self.barheight = (48, 54);
   self.barwidth = 1;
@@ -272,6 +273,13 @@ class decode:
     size = self.size;
    self.code = upcean.decode.decode_barcode(self.type, filename, size, self.barheight, self.barwidth, self.shiftxy, (self.barcolor, self.textcolor, self.bgcolor), self.locatebarcode, self.imageoutlib);
    return self.code;
+  def get_barcode_info(self, filename=None, size=None):
+   if(filename is None):
+    filename = self.filename;
+   if(size is None):
+    size = self.size;
+   self.info = upcean.decode.get_barcode_info(self.type, filename, size, self.barheight, self.barwidth, self.shiftxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+   return self.info;
   def validate_decode_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
