@@ -246,6 +246,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    new_upc_img.set_source_surface(upc_sup_img, 113, 0);
    new_upc_img.paint();
    del(upc_sup_img);
+ exargdict = {};
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
@@ -254,14 +255,26 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    stdoutfile = StringIO();
+   if(outfileext=="WEBP"):
+    exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+   elif(outfileext=="JPEG"):
+    exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+   elif(outfileext=="PNG"):
+    exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+   else:
+    exargdict = {};
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
       stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="XBM"):
+      stdoutfile.write(new_upc_img.convert(mode ="1").tobitmap());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(stdoutfile, outfileext);
+      new_upc_img.save(stdoutfile, outfileext, **exargdict);
       stdoutfile.seek(0);
       return stdoutfile;
     if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -287,14 +300,26 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  if(sys.version[0]>="3"):
   stdoutfile = BytesIO();
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
+   if(outfileext=="WEBP"):
+    exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+   elif(outfileext=="JPEG"):
+    exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+   elif(outfileext=="PNG"):
+    exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+   else:
+    exargdict = {};
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
       stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="XBM"):
+      stdoutfile.write(new_upc_img.convert(mode='1').tobitmap());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(stdoutfile, outfileext);
+      new_upc_img.save(stdoutfile, outfileext, **exargdict);
       stdoutfile.seek(0);
       return stdoutfile;
     if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -318,13 +343,24 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
+  if(outfileext=="WEBP"):
+   exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+  elif(outfileext=="JPEG"):
+   exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+  elif(outfileext=="PNG"):
+   exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+  else:
+   exargdict = {};
   try:
    if(pilsupport and imageoutlib=="pillow"):
     if(outfileext=="BYTES"):
      with open(outfile, 'wb+') as f:
       f.write(new_upc_img.tobytes());
+    elif(outfileext=="XBM"):
+     with open(outfile, 'wb+') as f:
+      f.write(new_upc_preimg.get_data().tobytes());
     else:
-     new_upc_img.save(outfile, outfileext);
+     new_upc_img.save(outfile, outfileext, **exargdict);
    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
     if(outfileext=="BYTES"):
      with open(outfile, 'wb+') as f:

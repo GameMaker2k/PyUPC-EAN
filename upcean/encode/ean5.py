@@ -343,6 +343,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
   drawColorText(upc_img, 10 * int(resize * barwidth), (24 + (24 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[2], barcolor[1], "ocrb", imageoutlib);
   drawColorText(upc_img, 10 * int(resize * barwidth), (32 + (32 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[3], barcolor[1], "ocrb", imageoutlib);
   drawColorText(upc_img, 10 * int(resize * barwidth), (40 + (40 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[4], barcolor[1], "ocrb", imageoutlib);
+ exargdict = {};
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
@@ -351,14 +352,26 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    stdoutfile = StringIO();
+   if(outfileext=="WEBP"):
+    exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+   elif(outfileext=="JPEG"):
+    exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+   elif(outfileext=="PNG"):
+    exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+   else:
+    exargdict = {};
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
       stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="XBM"):
+      stdoutfile.write(new_upc_img.convert(mode ="1").tobitmap());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(stdoutfile, outfileext);
+      new_upc_img.save(stdoutfile, outfileext, **exargdict);
       stdoutfile.seek(0);
       return stdoutfile;
     if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -384,14 +397,26 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  if(sys.version[0]>="3"):
   stdoutfile = BytesIO();
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
+   if(outfileext=="WEBP"):
+    exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+   elif(outfileext=="JPEG"):
+    exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+   elif(outfileext=="PNG"):
+    exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+   else:
+    exargdict = {};
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
       stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="XBM"):
+      stdoutfile.write(new_upc_img.convert(mode='1').tobitmap());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(stdoutfile, outfileext);
+      new_upc_img.save(stdoutfile, outfileext, **exargdict);
       stdoutfile.seek(0);
       return stdoutfile;
     if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -415,13 +440,24 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
+  if(outfileext=="WEBP"):
+   exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+  elif(outfileext=="JPEG"):
+   exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+  elif(outfileext=="PNG"):
+   exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+  else:
+   exargdict = {};
   try:
    if(pilsupport and imageoutlib=="pillow"):
     if(outfileext=="BYTES"):
      with open(outfile, 'wb+') as f:
       f.write(new_upc_img.tobytes());
+    elif(outfileext=="XBM"):
+     with open(outfile, 'wb+') as f:
+      f.write(new_upc_preimg.get_data().tobytes());
     else:
-     new_upc_img.save(outfile, outfileext);
+     new_upc_img.save(outfile, outfileext, **exargdict);
    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
     if(outfileext=="BYTES"):
      with open(outfile, 'wb+') as f:
@@ -461,6 +497,7 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
   return False;
  upc_preimg.paste(upc_sup_img,(8 * int(resize),0));
  del(upc_sup_img);
+ exargdict = {};
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
    return new_upc_img;
@@ -469,14 +506,26 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
  if(sys.version[0]=="2"):
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
    stdoutfile = StringIO();
+   if(outfileext=="WEBP"):
+    exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+   elif(outfileext=="JPEG"):
+    exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+   elif(outfileext=="PNG"):
+    exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+   else:
+    exargdict = {};
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
       stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="XBM"):
+      stdoutfile.write(new_upc_img.convert(mode ="1").tobitmap());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(stdoutfile, outfileext);
+      new_upc_img.save(stdoutfile, outfileext, **exargdict);
       stdoutfile.seek(0);
       return stdoutfile;
     if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -502,14 +551,26 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
  if(sys.version[0]>="3"):
   stdoutfile = BytesIO();
   if(outfile=="-" or outfile=="" or outfile==" " or outfile is None):
+   if(outfileext=="WEBP"):
+    exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+   elif(outfileext=="JPEG"):
+    exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+   elif(outfileext=="PNG"):
+    exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+   else:
+    exargdict = {};
    try:
     if(pilsupport and imageoutlib=="pillow"):
      if(outfileext=="BYTES"):
       stdoutfile.write(new_upc_img.tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
+     elif(outfileext=="XBM"):
+      stdoutfile.write(new_upc_img.convert(mode='1').tobitmap());
+      stdoutfile.seek(0);
+      return stdoutfile;
      else:
-      new_upc_img.save(stdoutfile, outfileext);
+      new_upc_img.save(stdoutfile, outfileext, **exargdict);
       stdoutfile.seek(0);
       return stdoutfile;
     if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -533,13 +594,24 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
    except:
     return False;
  if(outfile!="-" and outfile!="" and outfile!=" "):
+  if(outfileext=="WEBP"):
+   exargdict.update( { 'lossless': True, 'quality': 100, 'method': 6 } );
+  elif(outfileext=="JPEG"):
+   exargdict.update( { 'quality': 95, 'optimize': True, 'progressive': True } );
+  elif(outfileext=="PNG"):
+   exargdict.update( { 'optimize': True, 'compress_level': 9 } );
+  else:
+   exargdict = {};
   try:
    if(pilsupport and imageoutlib=="pillow"):
     if(outfileext=="BYTES"):
      with open(outfile, 'wb+') as f:
       f.write(new_upc_img.tobytes());
+    elif(outfileext=="XBM"):
+     with open(outfile, 'wb+') as f:
+      f.write(new_upc_preimg.get_data().tobytes());
     else:
-     new_upc_img.save(outfile, outfileext);
+     new_upc_img.save(outfile, outfileext, **exargdict);
    if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
     if(outfileext=="BYTES"):
      with open(outfile, 'wb+') as f:
