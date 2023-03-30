@@ -270,19 +270,19 @@ class decode:
     filename = self.filename;
    if(size is None):
     size = self.size;
-   self.code = upcean.decode.decode_barcode(self.type, filename, size, self.barheight, self.barwidth, self.shiftxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+   self.code = upcean.decode.decode_barcode(self.type, filename, size, self.barheight, self.barwidth, self.shiftxy, (self.barcolor, self.textcolor, self.bgcolor), self.locatebarcode, self.imageoutlib);
    return self.code;
   def validate_decode_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
    if(size is None):
     size = self.size;
-   self.code = upcean.decode.decode_barcode(self.type, filename, size, self.barheight, self.barwidth, self.shiftxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+   self.code = upcean.decode.decode_barcode(self.type, filename, size, self.barheight, self.barwidth, self.shiftxy, (self.barcolor, self.textcolor, self.bgcolor), self.locatebarcode, self.imageoutlib);
    return self.code;
   def fix_decode_barcode(self, filename=None, size=None):
    if(filename is None):
     filename = self.filename;
    if(size is None):
     size = self.size;
-   self.code = upcean.decode.fix_decode_barcode(self.type, filename, size, self.barheight, self.barwidth, self.shiftxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib);
+   self.code = upcean.decode.fix_decode_barcode(self.type, filename, size, self.barheight, self.barwidth, self.shiftxy, (self.barcolor, self.textcolor, self.bgcolor), self.locatebarcode, self.imageoutlib);
    return self.code;

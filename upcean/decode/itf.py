@@ -190,7 +190,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=1
   endx = int(startx + ( (barcodesize * 14 ) * (barwidth * int(resize)) ));
  if(locatebarcode):
   prestartx = startx - (4 * (barwidth * int(resize)));
-  return (prestartx, startx, (barcodesize * 2), endx, postendx); 
+  return ("itf", prestartx, startx, (barcodesize * 2), endx, postendx); 
  listcount = 0;
  pre_upc_whole_left = [];
  pre_upc_whole_right = [];

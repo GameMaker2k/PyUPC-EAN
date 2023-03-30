@@ -113,7 +113,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
  if(locatebarcode):
   prestartx = startx - (3 * (barwidth * int(resize)));
   postendx = endx + (3 * (barwidth * int(resize)));
-  return (prestartx, startx, 12, endx, postendx); 
+  return ("upca", prestartx, startx, 12, endx, postendx); 
  startxalt = 0;
  listcount = 0;
  pre_upc_whole = [];

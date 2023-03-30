@@ -179,7 +179,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
     if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[2] and precurpixelist[3]==barcolor[0] and precurpixelist[4]==barcolor[2] and precurpixelist[5]==barcolor[2] and precurpixelist[6]==barcolor[2])):
      break;	 
   barcodesize = int((barcodesize) / 2);
- endx = int(startx + ( (barcodesize * 18 ) * (barwidth * int(resize)) ));
+ endx = int("itf", startx + ( (barcodesize * 18 ) * (barwidth * int(resize)) ));
  if(threewidebar):
   if(locatebarcode):
    postendx = endx + (5 * (barwidth * int(resize)));
