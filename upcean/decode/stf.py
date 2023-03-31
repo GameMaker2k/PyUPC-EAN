@@ -63,6 +63,7 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=1
     '''prefile = open(infile, "rb");
     upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
+ threewidebar = True;
  barsize = barwidth * int(resize);
  starty = int(upc_img.size[1] / 2) + shiftxy[1];
  barcode_dict = { '10101110111010': "0", '11101010101110': "1", '10111010101110': "2", '11101110101010': "3", '10101110101110': "4", '11101011101010': "5", '10111011101010': "6", '10101011101110': "7", '11101010111010': "8", '10111010111010': "9" };

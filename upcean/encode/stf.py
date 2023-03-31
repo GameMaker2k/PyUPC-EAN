@@ -38,6 +38,7 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
+ threewidebar = True;
  imageoutlib = imageoutlib.lower();
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
@@ -121,7 +122,10 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   pil_addon_fix = 0;
   cairo_addon_fix = 0;
  upc_matches = list(upc);
- upc_size_add = (len(upc_matches) * 14) * barwidth;
+ if(threewidebar):
+  upc_size_add = (len(upc_matches) * 14) * barwidth;
+ else:
+  upc_size_add = (len(upc_matches) * 12) * barwidth;
  if(len(upc_matches)<=0):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
@@ -155,27 +159,50 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   BarNum += 1;
  NumZero = 0; 
  while (NumZero < len(upc_matches)):
-  left_barcolor = [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0];
-  if(int(upc_matches[NumZero])==0):
+  if(threewidebar):
    left_barcolor = [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0];
-  if(int(upc_matches[NumZero])==1):
-   left_barcolor = [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0];
-  if(int(upc_matches[NumZero])==2):
-   left_barcolor = [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0];
-  if(int(upc_matches[NumZero])==3):
-   left_barcolor = [1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0];
-  if(int(upc_matches[NumZero])==4):
-   left_barcolor = [1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0];
-  if(int(upc_matches[NumZero])==5):
-   left_barcolor = [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0];
-  if(int(upc_matches[NumZero])==6):
-   left_barcolor = [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0];
-  if(int(upc_matches[NumZero])==7):
-   left_barcolor = [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0];
-  if(int(upc_matches[NumZero])==8):
-   left_barcolor = [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0];
-  if(int(upc_matches[NumZero])==9):
-   left_barcolor = [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==0):
+    left_barcolor = [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==1):
+    left_barcolor = [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0];
+   if(int(upc_matches[NumZero])==2):
+    left_barcolor = [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0];
+   if(int(upc_matches[NumZero])==3):
+    left_barcolor = [1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==4):
+    left_barcolor = [1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0];
+   if(int(upc_matches[NumZero])==5):
+    left_barcolor = [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==6):
+    left_barcolor = [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==7):
+    left_barcolor = [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0];
+   if(int(upc_matches[NumZero])==8):
+    left_barcolor = [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==9):
+    left_barcolor = [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0];
+  else:
+   left_barcolor = [1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==0):
+    left_barcolor = [1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==1):
+    left_barcolor = [1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0];
+   if(int(upc_matches[NumZero])==2):
+    left_barcolor = [1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0];
+   if(int(upc_matches[NumZero])==3):
+    left_barcolor = [1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==4):
+    left_barcolor = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0];
+   if(int(upc_matches[NumZero])==5):
+    left_barcolor = [1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==6):
+    left_barcolor = [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==7):
+    left_barcolor = [1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0];
+   if(int(upc_matches[NumZero])==8):
+    left_barcolor = [1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0];
+   if(int(upc_matches[NumZero])==9):
+    left_barcolor = [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0];
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
@@ -230,7 +257,10 @@ def create_stf_barcode(upc,outfile="./stf.png",resize=1,hideinfo=(False, False, 
   LineTxtStart = 24;
   while (NumTxtZero < len(upc_matches)):
    drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (24 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
-   LineTxtStart += 14 * int(resize);
+   if(threewidebar):
+    LineTxtStart += 14 * int(resize);
+   else:
+    LineTxtStart += 12 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
  exargdict = {};
