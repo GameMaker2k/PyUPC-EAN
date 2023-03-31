@@ -386,6 +386,14 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    shift_cur_set = cur_set;
    start_shift = 1;
    cur_set = old_cur_set;
+  if(cur_set==0 and upc_to_dec[NumZero]<64):
+   upc_print.append(codecharset[cur_set][upc_matches[NumZero]]);
+  elif(cur_set==1 and upc_to_dec[NumZero]<95):
+   upc_print.append(codecharset[cur_set][upc_matches[NumZero]]);
+  elif(cur_set==2 and upc_to_dec[NumZero]<100):
+   upc_print.append(codecharset[cur_set][upc_matches[NumZero]]);
+  else:
+   upc_print.append(" ");
   if(upc_matches[NumZero]=="63"):
    left_barcolor =  [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0];
    if(cur_set==0 or cur_set==1):
@@ -415,14 +423,6 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    left_barcolor =  [1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="6c"):
    left_barcolor =  [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1];
-  if(cur_set==0 and upc_to_dec[NumZero]<64):
-   upc_print.append(codecharset[cur_set][upc_matches[NumZero]]);
-  elif(cur_set==1 and upc_to_dec[NumZero]<95):
-   upc_print.append(codecharset[cur_set][upc_matches[NumZero]]);
-  elif(cur_set==2 and upc_to_dec[NumZero]<100):
-   upc_print.append(codecharset[cur_set][upc_matches[NumZero]]);
-  else:
-   upc_print.append(" ");
   if(start_shift==1):
    cur_set = old_cur_set;
    start_shift = 0;
