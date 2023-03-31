@@ -32,7 +32,7 @@ from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 
-def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
@@ -70,9 +70,9 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
  left_barcode_o_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
  left_barcode_e_dict = { '0100111': "0", '0110011': "1", '0011011': "2", '0100001': "3", '0011101': "4", '0111001': "5", '0000101': "6", '0010001': "7", '0001001': "8", '0010111': "9" };
  startx = 12;
- if(shiftxy[0] is None):
-  startx = 0;
-  prestartx = 0;
+ if(shiftcheck):
+  prestartx = shiftxy[0];
+  startx = shiftxy[0];
   gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
@@ -144,5 +144,5 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
  upc = "".join(barcode_list);
  return upc;
 
-def get_upce_barcode_location(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
- return decode_upce_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+def get_upce_barcode_location(infile="./upce.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+ return decode_upce_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);

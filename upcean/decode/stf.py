@@ -32,7 +32,7 @@ from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 
-def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
@@ -67,9 +67,9 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=1
  starty = int(upc_img.size[1] / 2) + shiftxy[1];
  barcode_dict = { '10101110111010': "0", '11101010101110': "1", '10111010101110': "2", '11101110101010': "3", '10101110101110': "4", '11101011101010': "5", '10111011101010': "6", '10101011101110': "7", '11101010111010': "8", '10111010111010': "9" };
  startx = 17;
- if(shiftxy[0] is None):
-  prestartx = 0;
-  startx = 0;
+ if(shiftcheck):
+  prestartx = shiftxy[0];
+  startx = shiftxy[0];
   gotvalue = False;
   barcodesize = 0;
   while(prestartx<upc_img.size[0]):
@@ -169,11 +169,11 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=1
   upc = "".join(barcode_list);
  return upc;
 
-def get_stf_barcode_location(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
- return decode_itf14_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+def get_stf_barcode_location(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+ return decode_itf14_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
 
 def decode_code25_barcode(infile="./code25.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_stf_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def get_code25_barcode_location(infile="./code25.png",resize=1,barheight=(48, 54),barwidth=1,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
- return decode_code25_barcode(infile,resize,barheight,barwidth,shiftxy,barcolor,True,imageoutlib);
+def get_code25_barcode_location(infile="./code25.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+ return decode_code25_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
