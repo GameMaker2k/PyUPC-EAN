@@ -33,7 +33,7 @@ if(pilsupport):
 if(cairosupport):
  import upcean.encode.precairo;
 
-def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -70,14 +70,14 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
     imageoutlib = "cairo";
  if(len(upc) < 1): 
   return False;
- if(barwidth < 1): 
-  barwidth = 1;
+ if(barwidth[0] < 1): 
+  barwidth[0] = 1;
  if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
-  barwidth = 1;
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
+  barwidth[0] = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
    pil_ver = Image.PILLOW_VERSION;
@@ -126,21 +126,21 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
   cairo_addon_fix = 0;
  upc = upc.upper();
  upc_matches = list(upc);
- upc_size_add = ((len(upc_matches) * 15) + (len(upc_matches) + 1)) * barwidth;
+ upc_size_add = ((len(upc_matches) * 15) + (len(upc_matches) + 1)) * barwidth[0];
  if(len(upc_matches)<=0):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth)));
+  upc_preimg = Image.new("RGB", ((48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1])));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+   upc_preimg = cairo.SVGSurface(None, (48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (48 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+  upc_img.rectangle(0, 0, (48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -153,10 +153,10 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  start_bc_num_end = len(start_barcolor);
  while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
   if(start_barcolor[BarNum]==0):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
-  LineStart += barwidth;
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
+  LineStart += barwidth[0];
   BarNum += 1;
  NumZero = 0; 
  while (NumZero < len(upc_matches)):
@@ -250,16 +250,16 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib); 
-    LineStart += barwidth;
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib); 
+    LineStart += barwidth[0];
     BarNum += 1;
    if(left_barcolor[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
-    LineStart += barwidth;
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib); 
+    LineStart += barwidth[0];
     BarNum += 1;
    InnerUPCNum += 1;
-  drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib); 
-  LineStart += barwidth; 
+  drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib); 
+  LineStart += barwidth[0]; 
   BarNum += 1;
   NumZero += 1;
  end_barcolor = [0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -267,14 +267,14 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  end_bc_num_end = len(end_barcolor);
  while(end_bc_num < end_bc_num_end):
   if(end_barcolor[end_bc_num]==1):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
   if(end_barcolor[end_bc_num]==0):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   end_bc_num += 1;
-  LineStart += barwidth;
+  LineStart += barwidth[0];
   BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize((((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize)), Image.NEAREST); # use nearest neighbour
+  new_upc_img = upc_preimg.resize((((48 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -292,23 +292,23 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((48 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
   upc_img = new_upc_img;
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize * barwidth), (14 * int(resize)) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize * barwidth[1]), (14 * int(resize)) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
   NumTxtZero = 0; 
   LineTxtStart = 30 * int(resize);
   while (NumTxtZero < len(upc_matches)):
-   drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (int(resize) - 1)) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
+   drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (int(resize) - 1)) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 16 * int(resize);
    NumTxtZero += 1;
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (int(resize) - 1)) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (int(resize) - 1)) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  exargdict = {};
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
@@ -455,8 +455,8 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
    return False;
  return True;
 
-def draw_code39_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def draw_code39_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_code39_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def encode_code39_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def encode_code39_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_code39_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);

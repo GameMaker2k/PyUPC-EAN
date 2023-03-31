@@ -33,7 +33,7 @@ if(pilsupport):
 if(cairosupport):
  import upcean.encode.precairo;
 
-def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -68,8 +68,8 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
- if(barwidth < 1): 
-  barwidth = 1;
+ if(barwidth[0] < 1): 
+  barwidth[0] = 1;
  if(len(upc)>5 or len(upc)<5): 
   return False;
  upc_matches = re.findall("(\d{5})", upc);
@@ -77,8 +77,8 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
-  barwidth = 1;
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
+  barwidth[0] = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
    pil_ver = Image.PILLOW_VERSION;
@@ -129,17 +129,17 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  CheckSum = (int(LeftDigit[0]) * 3) + (int(LeftDigit[1]) * 9) + (int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3);
  CheckSum = CheckSum % 10;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((56 * barwidth), barheight[1] + (9 * barwidth)));
+  upc_preimg = Image.new("RGB", ((56 * barwidth[0]), barheight[1] + (9 * barwidth[1])));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((56 * barwidth), barheight[1] + (9 * barwidth))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((56 * barwidth[0]), barheight[1] + (9 * barwidth[1]))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (56 * barwidth), barheight[1] + (9 * barwidth));
+   upc_preimg = cairo.SVGSurface(None, (56 * barwidth[0]), barheight[1] + (9 * barwidth[1]));
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * barwidth), barheight[1] + (9 * barwidth));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * barwidth[0]), barheight[1] + (9 * barwidth[1]));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 83, barheight[1] + (9 * barwidth));
+  upc_img.rectangle(0, 0, 83, barheight[1] + (9 * barwidth[1]));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -153,10 +153,10 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
  start_bc_num_end = len(start_barcolor);
  while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
   if(start_barcolor[BarNum]==0):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
-  LineStart += barwidth;
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
+  LineStart += barwidth[0];
   BarNum += 1;
  NumZero = 0; 
  while (NumZero < len(LeftDigit)):
@@ -297,22 +297,22 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
    if(left_barcolor[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
-   LineStart += barwidth;
+    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
+   LineStart += barwidth[0];
    BarNum += 1;
    InnerUPCNum += 1;
   if(NumZero < 4):
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
-   LineStart += barwidth;
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
+   LineStart += barwidth[0];
    BarNum += 1;
-   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
-   LineStart += barwidth;
+   drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
+   LineStart += barwidth[0];
    BarNum += 1;
   NumZero += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize(((56 * barwidth) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize)), Image.NEAREST);
+  new_upc_img = upc_preimg.resize(((56 * barwidth[0]) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize)), Image.NEAREST);
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -330,19 +330,19 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, (56 * barwidth) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, (56 * barwidth[0]) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * barwidth) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * barwidth[0]) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
   upc_img = new_upc_img;
  if(not hidetext):
-  drawColorText(upc_img, 10 * int(resize * barwidth), (7 + (7 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (16 + (15 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (24 + (24 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[2], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (32 + (32 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[3], barcolor[1], "ocrb", imageoutlib);
-  drawColorText(upc_img, 10 * int(resize * barwidth), (40 + (40 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[4], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize * barwidth[1]), (7 + (7 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize * barwidth[1]), (16 + (15 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[1], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize * barwidth[1]), (24 + (24 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[2], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize * barwidth[1]), (32 + (32 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[3], barcolor[1], "ocrb", imageoutlib);
+  drawColorText(upc_img, 10 * int(resize * barwidth[1]), (40 + (40 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[4], barcolor[1], "ocrb", imageoutlib);
  exargdict = {};
  if(oldoutfile is None or isinstance(oldoutfile, bool)):
   if(pilsupport and imageoutlib=="pillow"):
@@ -488,20 +488,20 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
    return False;
  return True;
 
-def draw_ean5_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def draw_ean5_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_ean5_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def encode_ean5_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def encode_ean5_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_ean5_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
-  barwidth = 1;
- upc_preimg = Image.new("RGB", (((56 * barwidth) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth)) * int(resize)));
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
+  barwidth[0] = 1;
+ upc_preimg = Image.new("RGB", (((56 * barwidth[0]) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth[1])) * int(resize)));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (((56 * barwidth) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth)) * int(resize))], fill=barcolor[2]);
+ upc_img.rectangle([(0, 0), (((56 * barwidth[0]) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth[1])) * int(resize))], fill=barcolor[2]);
  upc_sup_img = create_ean5_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
  if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
   return False;
@@ -652,8 +652,8 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
    return False;
  return True;
 
-def draw_ean5_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def draw_ean5_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_ean5_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def encode_ean5_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def encode_ean5_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_ean5_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);

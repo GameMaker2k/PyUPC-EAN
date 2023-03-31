@@ -33,7 +33,7 @@ if(pilsupport):
 if(cairosupport):
  import upcean.encode.precairo;
 
-def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  upc = str(upc).lower();
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -68,8 +68,8 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
- if(barwidth < 1): 
-  barwidth = 1;
+ if(barwidth[0] < 1): 
+  barwidth[0] = 1;
  if(len(upc) % 2):
   return False;
  if(len(upc) < 8): 
@@ -78,8 +78,8 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
-  barwidth = 1;
+ if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
+  barwidth[0] = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
    pil_ver = Image.PILLOW_VERSION;
@@ -131,19 +131,19 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   return False;
  upc_matches = re.findall("[0-9a-f]{2}", upc);
  upc_to_dec = list([int(x, 16) for x in upc_matches]);
- upc_size_add = ((len(upc_matches) * 11) + (len(re.findall("6c", upc)) * 2)) * barwidth;
+ upc_size_add = ((len(upc_matches) * 11) + (len(re.findall("6c", upc)) * 2)) * barwidth[0];
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth)));
+  upc_preimg = Image.new("RGB", ((29 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1])));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((29 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+   upc_preimg = cairo.SVGSurface(None, (29 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (29 * barwidth) + upc_size_add, barheight[1] + (9 * barwidth));
+  upc_img.rectangle(0, 0, (29 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -156,10 +156,10 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  start_bc_num_end = len(start_barcolor);
  while(BarNum < start_bc_num_end):
   if(start_barcolor[BarNum]==1):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
   if(start_barcolor[BarNum]==0):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
-  LineStart += barwidth;
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
+  LineStart += barwidth[0];
   BarNum += 1;
  NumZero = 0; 
  cur_set = 0;
@@ -429,10 +429,10 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   InnerUPCNum = 0;
   while (InnerUPCNum < len(left_barcolor)):
    if(left_barcolor[InnerUPCNum]==1):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
    if(left_barcolor[InnerUPCNum]==0):
-    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
-   LineStart += barwidth;
+    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
+   LineStart += barwidth[0];
    BarNum += 1;
    InnerUPCNum += 1;
   NumZero += 1;
@@ -441,14 +441,14 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
  end_bc_num_end = len(end_barcolor);
  while(end_bc_num < end_bc_num_end):
   if(end_barcolor[end_bc_num]==1):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[0], imageoutlib);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
   if(end_barcolor[end_bc_num]==0):
-   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth, barcolor[2], imageoutlib);
+   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   end_bc_num += 1;
-  LineStart += barwidth;
+  LineStart += barwidth[0];
   BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize)), Image.NEAREST); # use nearest neighbour
+  new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -466,9 +466,9 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, (34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, (34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize), (barheight[1] + (9 * barwidth)) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
@@ -477,7 +477,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
   NumTxtZero = 0; 
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10 * int(resize * barwidth), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth, cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
+   drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 11 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
@@ -626,10 +626,10 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    return False;
  return True;
 
-def draw_code128_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def draw_code128_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_code128_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def encode_code128_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def encode_code128_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_code128_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
 def convert_ascii_code128_to_hex_code128(upc):
@@ -654,7 +654,7 @@ def convert_hex_code128_to_ascii_code128(upc):
   barcodeout = barcodeout + hextoascii.get(upcpart, '');
  return barcodeout;
 
-def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -694,13 +694,13 @@ def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
  upc = convert_ascii_code128_to_hex_code128(upc);
  return create_code128_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def draw_code128alt_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def draw_code128alt_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_code128alt_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def encode_code128alt_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def encode_code128alt_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_code128alt_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  upc = str(upc);
  hidesn = hideinfo[0];
  hidecd = hideinfo[1];
@@ -753,9 +753,9 @@ def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
  upc = upcout;
  return create_code128_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def draw_code128dec_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def draw_code128dec_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_code128dec_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
-def encode_code128dec_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=1,textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def encode_code128dec_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return create_code128dec_barcode(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 
