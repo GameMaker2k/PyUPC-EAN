@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf14.py - Last Update: 3/27/2023 Ver. 2.8.13 RC 1 - Author: cooldude2k $
+    $FileInfo: itf14.py - Last Update: 4/1/2023 Ver. 2.8.14 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;

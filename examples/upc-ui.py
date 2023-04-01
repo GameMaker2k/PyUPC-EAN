@@ -13,7 +13,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upc-ui.py - Last Update: 3/27/2023 Ver. 2.8.13 RC 1  - Author: cooldude2k $
+    $FileInfo: upc-ui.py - Last Update: 4/1/2023 Ver. 2.8.14 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import division, absolute_import, print_function;
@@ -59,7 +59,7 @@ def tuple_color_to_hex(color):
  return "#"+hex(int(color[0])).replace("0x", "").upper().zfill(2)+hex(int(color[1])).replace("0x", "").upper().zfill(2)+hex(int(color[2])).replace("0x", "").upper().zfill(2);
 def tkColorPicker(color, title):
  return tkColorChooser.askcolor(title=title, initialcolor=color, parent=rootwin)[1].upper();
-''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326 
+''' Right Click Box by: jepler @ http://bytes.com/topic/python/answers/156826-cut-paste-text-between-tkinter-widgets#post601326
     http://ebook.pldworld.com/_eBook/_OReilly/133.Books/Python/programming_python_2ed-2001/1.9.htm '''
 def make_ccp_menu(w):
  the_menu = Menu(w, tearoff=0);

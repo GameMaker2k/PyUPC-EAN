@@ -36,10 +36,10 @@ class MainWin(tk.Frame):
         self.barcode_bar_color = (0, 0, 0)
         self.barcode_text_color = (0, 0, 0)
         self.barcode_list = {
-            "UPC-A": "upca", 
-            "UPC-E": "upce", 
-            "EAN-13": "ean13", 
-            "EAN-8": "ean8", 
+            "UPC-A": "upca",
+            "UPC-E": "upce",
+            "EAN-13": "ean13",
+            "EAN-8": "ean8",
             "EAN-5": "ean5"}
         self.bcsize = tk.IntVar()
         self.bctype = tk.StringVar()

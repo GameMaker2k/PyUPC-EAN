@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: getprefix.py - Last Update: 3/27/2023 Ver. 2.8.13 RC 1 - Author: cooldude2k $
+    $FileInfo: getprefix.py - Last Update: 4/1/2023 Ver. 2.8.14 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -376,6 +376,12 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
  upc_matches = re.findall("^4(\d{5})(\d{5})(\d{1})", upc);
  upc_matches = upc_matches[0];
  gw_item_type = None;
+ # 400310
+ # 400321
+ # 400322
+ # 400323
+ # 400324
+ # 400325
  if(re.findall("^(4111)", upc)):
   gw_item_type = "Softlines";
  elif(re.findall("^(4666)", upc)):
