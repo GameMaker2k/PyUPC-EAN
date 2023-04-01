@@ -12,7 +12,7 @@
     Copyright 2011-2023 Game Maker 2k - http://intdb.sourceforge.net/
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: precairo.py - Last Update: 4/1/2023 Ver. 2.8.14 RC 1  - Author: cooldude2k $
+    $FileInfo: precairo.py - Last Update: 4/1/2023 Ver. 2.8.17 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
