@@ -69,9 +69,9 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
- if(len(upc) < 1): 
+ if(len(upc) < 1):
   return False;
- if(barwidth[0] < 1): 
+ if(barwidth[0] < 1):
   barwidth[0] = 1;
  if(not re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
   return False;
@@ -169,7 +169,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   LineStart += barwidth[0];
   BarNum += 1;
- NumZero = 0; 
+ NumZero = 0;
  while (NumZero < len(upc_matches)):
   left_barcolor = [1, 0, 1, 0, 1, 0, 0, 1, 1];
   if(upc_matches[NumZero]=="0"):
@@ -216,7 +216,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
   drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   LineStart += barwidth[0];
   BarNum += 1;
-  NumZero += 1; 
+  NumZero += 1;
  end_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  if(pre_upc_matches[2]=="A" or pre_upc_matches[2]=="T"):
   end_barcolor = [1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -263,14 +263,14 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
   new_upc_img.paint();
   upc_img = new_upc_img;
  if(not hidetext):
-  NumTxtZero = 0; 
+  NumTxtZero = 0;
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
    drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
    LineTxtStart += 9 * int(resize);
    NumTxtZero += 1;
  if(not hidetext):
-  NumTxtZero = 0; 
+  NumTxtZero = 0;
   LineTxtStart = 20;
   while (NumTxtZero < len(upc_matches)):
    drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
@@ -319,7 +319,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -368,7 +368,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -409,7 +409,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
      return True;
     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
-     new_upc_preimg.finish(); 
+     new_upc_preimg.finish();
      svgoutfile.seek(0);
      svgouttext = svgoutfile.read();
      with open(outfile, 'wb+') as f:

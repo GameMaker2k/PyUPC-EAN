@@ -81,7 +81,7 @@ def get_save_filename(outfile,imageoutlib="pillow"):
      outfileext = "SVG";
     else:
      outfileext = "PNG";
-   return (outfile, outfileext.upper());   
+   return (outfile, outfileext.upper());
  if(sys.version[0]>="3"):
   if(isinstance(oldoutfile, str)):
    if(outfile!="-" and outfile!="" and outfile!=" "):

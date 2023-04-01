@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    FileInfo: ean5.py - Last Update: 3/27/2023 Ver. 2.8.13 RC 1 - Author: cooldude2k 
+    FileInfo: ean5.py - Last Update: 3/27/2023 Ver. 2.8.13 RC 1 - Author: cooldude2k
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -68,10 +68,10 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
- if(len(upc)>5 or len(upc)<5): 
+ if(len(upc)>5 or len(upc)<5):
   return False;
  upc_matches = re.findall("(\d{5})", upc);
- if(len(upc_matches)<=0): 
+ if(len(upc_matches)<=0):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -154,39 +154,39 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   LineStart += barwidth[0];
   BarNum += 1;
- NumZero = 0; 
+ NumZero = 0;
  while (NumZero < len(LeftDigit)):
-  left_barcolor_l = [0, 0, 0, 0, 0, 0, 0]; 
+  left_barcolor_l = [0, 0, 0, 0, 0, 0, 0];
   left_barcolor_g = [1, 1, 1, 1, 1, 1, 1];
-  if(int(LeftDigit[NumZero])==0): 
-   left_barcolor_l = [0, 0, 0, 1, 1, 0, 1]; 
+  if(int(LeftDigit[NumZero])==0):
+   left_barcolor_l = [0, 0, 0, 1, 1, 0, 1];
    left_barcolor_g = [0, 1, 0, 0, 1, 1, 1];
-  if(int(LeftDigit[NumZero])==1): 
-   left_barcolor_l = [0, 0, 1, 1, 0, 0, 1]; 
+  if(int(LeftDigit[NumZero])==1):
+   left_barcolor_l = [0, 0, 1, 1, 0, 0, 1];
    left_barcolor_g = [0, 1, 1, 0, 0, 1, 1];
-  if(int(LeftDigit[NumZero])==2): 
-   left_barcolor_l = [0, 0, 1, 0, 0, 1, 1]; 
+  if(int(LeftDigit[NumZero])==2):
+   left_barcolor_l = [0, 0, 1, 0, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 1, 0, 1, 1];
-  if(int(LeftDigit[NumZero])==3): 
-   left_barcolor_l = [0, 1, 1, 1, 1, 0, 1]; 
+  if(int(LeftDigit[NumZero])==3):
+   left_barcolor_l = [0, 1, 1, 1, 1, 0, 1];
    left_barcolor_g = [0, 1, 0, 0, 0, 0, 1];
-  if(int(LeftDigit[NumZero])==4): 
-   left_barcolor_l = [0, 1, 0, 0, 0, 1, 1]; 
+  if(int(LeftDigit[NumZero])==4):
+   left_barcolor_l = [0, 1, 0, 0, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 1, 1, 0, 1];
-  if(int(LeftDigit[NumZero])==5): 
-   left_barcolor_l = [0, 1, 1, 0, 0, 0, 1]; 
+  if(int(LeftDigit[NumZero])==5):
+   left_barcolor_l = [0, 1, 1, 0, 0, 0, 1];
    left_barcolor_g = [0, 1, 1, 1, 0, 0, 1];
-  if(int(LeftDigit[NumZero])==6): 
-   left_barcolor_l = [0, 1, 0, 1, 1, 1, 1]; 
+  if(int(LeftDigit[NumZero])==6):
+   left_barcolor_l = [0, 1, 0, 1, 1, 1, 1];
    left_barcolor_g = [0, 0, 0, 0, 1, 0, 1];
-  if(int(LeftDigit[NumZero])==7): 
-   left_barcolor_l = [0, 1, 1, 1, 0, 1, 1]; 
+  if(int(LeftDigit[NumZero])==7):
+   left_barcolor_l = [0, 1, 1, 1, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 0, 0, 0, 1];
-  if(int(LeftDigit[NumZero])==8): 
-   left_barcolor_l = [0, 1, 1, 0, 1, 1, 1]; 
+  if(int(LeftDigit[NumZero])==8):
+   left_barcolor_l = [0, 1, 1, 0, 1, 1, 1];
    left_barcolor_g = [0, 0, 0, 1, 0, 0, 1];
-  if(int(LeftDigit[NumZero])==9): 
-   left_barcolor_l = [0, 0, 0, 1, 0, 1, 1]; 
+  if(int(LeftDigit[NumZero])==9):
+   left_barcolor_l = [0, 0, 0, 1, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 0, 1, 1, 1];
   left_barcolor = left_barcolor_l;
   if(CheckSum==0 and NumZero==0):
@@ -381,7 +381,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -430,7 +430,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -471,7 +471,7 @@ def create_ean5_barcode_supplement(upc,outfile="./ean5_supplement.png",resize=1,
      return True;
     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
-     new_upc_preimg.finish(); 
+     new_upc_preimg.finish();
      svgoutfile.seek(0);
      svgouttext = svgoutfile.read();
      with open(outfile, 'wb+') as f:
@@ -543,7 +543,7 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -592,7 +592,7 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -633,7 +633,7 @@ def create_ean5_barcode(upc,outfile="./ean5.png",resize=1,hideinfo=(False, False
      return True;
     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
-     new_upc_preimg.finish(); 
+     new_upc_preimg.finish();
      svgoutfile.seek(0);
      svgouttext = svgoutfile.read();
      with open(outfile, 'wb+') as f:

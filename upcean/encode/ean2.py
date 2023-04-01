@@ -68,10 +68,10 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
- if(len(upc)>2 or len(upc)<2): 
+ if(len(upc)>2 or len(upc)<2):
   return False;
  upc_matches = re.findall("(\d{2})", upc);
- if(len(upc_matches)<=0): 
+ if(len(upc_matches)<=0):
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
@@ -153,56 +153,56 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   LineStart += barwidth[0];
   BarNum += 1;
- NumZero = 0; 
+ NumZero = 0;
  while (NumZero < len(LeftDigit)):
-  left_barcolor_l = [0, 0, 0, 0, 0, 0, 0]; 
+  left_barcolor_l = [0, 0, 0, 0, 0, 0, 0];
   left_barcolor_g = [1, 1, 1, 1, 1, 1, 1];
-  if(int(LeftDigit[NumZero])==0): 
-   left_barcolor_l = [0, 0, 0, 1, 1, 0, 1]; 
+  if(int(LeftDigit[NumZero])==0):
+   left_barcolor_l = [0, 0, 0, 1, 1, 0, 1];
    left_barcolor_g = [0, 1, 0, 0, 1, 1, 1];
-  if(int(LeftDigit[NumZero])==1): 
-   left_barcolor_l = [0, 0, 1, 1, 0, 0, 1]; 
+  if(int(LeftDigit[NumZero])==1):
+   left_barcolor_l = [0, 0, 1, 1, 0, 0, 1];
    left_barcolor_g = [0, 1, 1, 0, 0, 1, 1];
-  if(int(LeftDigit[NumZero])==2): 
-   left_barcolor_l = [0, 0, 1, 0, 0, 1, 1]; 
+  if(int(LeftDigit[NumZero])==2):
+   left_barcolor_l = [0, 0, 1, 0, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 1, 0, 1, 1];
-  if(int(LeftDigit[NumZero])==3): 
-   left_barcolor_l = [0, 1, 1, 1, 1, 0, 1]; 
+  if(int(LeftDigit[NumZero])==3):
+   left_barcolor_l = [0, 1, 1, 1, 1, 0, 1];
    left_barcolor_g = [0, 1, 0, 0, 0, 0, 1];
-  if(int(LeftDigit[NumZero])==4): 
-   left_barcolor_l = [0, 1, 0, 0, 0, 1, 1]; 
+  if(int(LeftDigit[NumZero])==4):
+   left_barcolor_l = [0, 1, 0, 0, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 1, 1, 0, 1];
-  if(int(LeftDigit[NumZero])==5): 
-   left_barcolor_l = [0, 1, 1, 0, 0, 0, 1]; 
+  if(int(LeftDigit[NumZero])==5):
+   left_barcolor_l = [0, 1, 1, 0, 0, 0, 1];
    left_barcolor_g = [0, 1, 1, 1, 0, 0, 1];
-  if(int(LeftDigit[NumZero])==6): 
-   left_barcolor_l = [0, 1, 0, 1, 1, 1, 1]; 
+  if(int(LeftDigit[NumZero])==6):
+   left_barcolor_l = [0, 1, 0, 1, 1, 1, 1];
    left_barcolor_g = [0, 0, 0, 0, 1, 0, 1];
-  if(int(LeftDigit[NumZero])==7): 
-   left_barcolor_l = [0, 1, 1, 1, 0, 1, 1]; 
+  if(int(LeftDigit[NumZero])==7):
+   left_barcolor_l = [0, 1, 1, 1, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 0, 0, 0, 1];
-  if(int(LeftDigit[NumZero])==8): 
-   left_barcolor_l = [0, 1, 1, 0, 1, 1, 1]; 
+  if(int(LeftDigit[NumZero])==8):
+   left_barcolor_l = [0, 1, 1, 0, 1, 1, 1];
    left_barcolor_g = [0, 0, 0, 1, 0, 0, 1];
-  if(int(LeftDigit[NumZero])==9): 
-   left_barcolor_l = [0, 0, 0, 1, 0, 1, 1]; 
+  if(int(LeftDigit[NumZero])==9):
+   left_barcolor_l = [0, 0, 0, 1, 0, 1, 1];
    left_barcolor_g = [0, 0, 1, 0, 1, 1, 1];
   left_barcolor = left_barcolor_l;
-  if(CheckSum==0 and NumZero==0): 
+  if(CheckSum==0 and NumZero==0):
    left_barcolor = left_barcolor_l;
-  if(CheckSum==0 and NumZero==1): 
+  if(CheckSum==0 and NumZero==1):
    left_barcolor = left_barcolor_l;
-  if(CheckSum==1 and NumZero==0): 
+  if(CheckSum==1 and NumZero==0):
    left_barcolor = left_barcolor_l;
-  if(CheckSum==1 and NumZero==1): 
+  if(CheckSum==1 and NumZero==1):
    left_barcolor = left_barcolor_g;
-  if(CheckSum==2 and NumZero==0): 
+  if(CheckSum==2 and NumZero==0):
    left_barcolor = left_barcolor_g;
-  if(CheckSum==2 and NumZero==1): 
+  if(CheckSum==2 and NumZero==1):
    left_barcolor = left_barcolor_l;
-  if(CheckSum==3 and NumZero==0): 
+  if(CheckSum==3 and NumZero==0):
    left_barcolor = left_barcolor_g;
-  if(CheckSum==3 and NumZero==1): 
+  if(CheckSum==3 and NumZero==1):
    left_barcolor = left_barcolor_g;
   upc_array['code'].append( left_barcolor );
   InnerUPCNum = 0;
@@ -294,7 +294,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -343,7 +343,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -384,7 +384,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
      return True;
     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
-     new_upc_preimg.finish(); 
+     new_upc_preimg.finish();
      svgoutfile.seek(0);
      svgouttext = svgoutfile.read();
      with open(outfile, 'wb+') as f:
@@ -457,7 +457,7 @@ def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -506,7 +506,7 @@ def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -547,7 +547,7 @@ def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False
      return True;
     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
-     new_upc_preimg.finish(); 
+     new_upc_preimg.finish();
      svgoutfile.seek(0);
      svgouttext = svgoutfile.read();
      with open(outfile, 'wb+') as f:

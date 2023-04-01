@@ -68,7 +68,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
- if(len(upc) < 1): 
+ if(len(upc) < 1):
   return False;
  if(not re.findall("([0-9\-]+)", upc)):
   return False;
@@ -129,26 +129,26 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  upc_reverse = list(upc_matches);
  upc_reverse.reverse();
  upc_print = list(upc_matches);
- UPC_Count = 0; 
- UPC_Weight = 1; 
+ UPC_Count = 0;
+ UPC_Weight = 1;
  UPC_Sum = 0;
  while (UPC_Count < len(upc_reverse)):
   if(UPC_Weight>10):
    UPC_Weight = 1;
   UPC_Sum = UPC_Sum + (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])]);
-  UPC_Count += 1; 
+  UPC_Count += 1;
   UPC_Weight += 1;
  upc_matches.append(Code11Array[UPC_Sum % 11]);
  upc_reverse = list(upc_matches);
  upc_reverse.reverse();
- UPC_Count = 0; 
- UPC_Weight = 1; 
+ UPC_Count = 0;
+ UPC_Weight = 1;
  UPC_Sum = 0;
  while (UPC_Count < len(upc_reverse)):
   if(UPC_Weight>9):
    UPC_Weight = 1;
   UPC_Sum = UPC_Sum + (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])]);
-  UPC_Count += 1; 
+  UPC_Count += 1;
   UPC_Weight += 1;
  upc_matches.append(Code11Array[UPC_Sum % 11]);
  bcsize6 = len(re.findall("([09\-])", "".join(upc_matches)));
@@ -185,7 +185,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   LineStart += barwidth[0];
   BarNum += 1;
- NumZero = 0;  
+ NumZero = 0;
  while (NumZero < len(upc_matches)):
   left_barcolor = [1, 0, 1, 0, 1, 1];
   if(upc_matches[NumZero]=="0"):
@@ -264,7 +264,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
   new_upc_img.paint();
   upc_img = new_upc_img;
  if(not hidetext):
-  NumTxtZero = 0; 
+  NumTxtZero = 0;
   LineTxtStart = 16;
   while (NumTxtZero < len(upc_print)):
    drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
@@ -313,7 +313,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -362,7 +362,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -403,7 +403,7 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
      return True;
     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
-     new_upc_preimg.finish(); 
+     new_upc_preimg.finish();
      svgoutfile.seek(0);
      svgouttext = svgoutfile.read();
      with open(outfile, 'wb+') as f:

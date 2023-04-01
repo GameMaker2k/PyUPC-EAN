@@ -157,9 +157,9 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  RightDigit = list(str(upc_matches[2])+str(upc_matches[3]));
  CheckDigit = upc_matches[3];
  addonsize = 0;
- if(supplement is not None and len(supplement)==2): 
+ if(supplement is not None and len(supplement)==2):
   addonsize = 29;
- if(supplement is not None and len(supplement)==5): 
+ if(supplement is not None and len(supplement)==5):
   addonsize = 56;
  if(pilsupport and imageoutlib=="pillow"):
   upc_preimg = Image.new("RGB", (113 + addonsize, barheight[1] + (45 * barwidth[0])));
@@ -221,12 +221,12 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
  drawColorText(upc_img, 16 * int(resize * barwidth[0]), 36 + addonsize + (23 * (int(resize) - 1)) - (4 * (int(resize * barwidth[0]) - 1)), (75 * int(resize * barwidth[0])), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib);
  del(upc_img);
  if(pilsupport and imageoutlib=="pillow"):
-  if(supplement is not None and len(supplement)==2): 
+  if(supplement is not None and len(supplement)==2):
    upc_sup_img = upcean.encode.ean2.draw_ean2_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
     del(upc_sup_img);
-  if(supplement is not None and len(supplement)==5): 
+  if(supplement is not None and len(supplement)==5):
    upc_sup_img = upcean.encode.ean5.draw_ean5_barcode_supplement(supplement,resize,hideinfo,barheight,barwidth,textxy,barcolor, imageoutlib);
    if(upc_sup_img):
     new_upc_img.paste(upc_sup_img,(113 * int(resize),0));
@@ -284,7 +284,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -333,7 +333,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
       return stdoutfile;
      elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
-      new_upc_preimg.finish(); 
+      new_upc_preimg.finish();
       svgoutfile.seek(0);
       svgouttext = svgoutfile.read();
       stdoutfile.write(svgouttext);
@@ -374,7 +374,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
      return True;
     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
-     new_upc_preimg.finish(); 
+     new_upc_preimg.finish();
      svgoutfile.seek(0);
      svgouttext = svgoutfile.read();
      with open(outfile, 'wb+') as f:

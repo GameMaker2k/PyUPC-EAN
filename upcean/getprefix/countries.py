@@ -401,7 +401,7 @@ def get_isbn_identifier(upc):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>10):
-  fix_matches = re.findall("^(\d{9})(\d{1}|X{1})", upc); 
+  fix_matches = re.findall("^(\d{9})(\d{1}|X{1})", upc);
   fix_matches = fix_matches[0]
   upc = fix_matches[0]+fix_matches[1];
  if(len(upc)>10 or len(upc)<10):

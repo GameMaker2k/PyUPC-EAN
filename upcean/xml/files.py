@@ -64,12 +64,12 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
   xmlheaders = {'User-Agent': useragent_string};
   try:
    tree = cElementTree.ElementTree(file=urllib2.urlopen(urllib2.Request(xmlfile, None, xmlheaders)));
-  except cElementTree.ParseError: 
+  except cElementTree.ParseError:
    return False;
  else:
   try:
    tree = cElementTree.ElementTree(file=xmlfile);
-  except cElementTree.ParseError: 
+  except cElementTree.ParseError:
    return False;
  root = tree.getroot();
  bcdrawlist = [];
@@ -156,12 +156,12 @@ def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
   xmlheaders = {'User-Agent': useragent_string};
   try:
    tree = cElementTree.ElementTree(file=urllib2.urlopen(urllib2.Request(xmlfile, None, xmlheaders)));
-  except cElementTree.ParseError: 
+  except cElementTree.ParseError:
    return False;
  else:
   try:
    tree = cElementTree.ElementTree(file=xmlfile);
-  except cElementTree.ParseError: 
+  except cElementTree.ParseError:
    return False;
  bctree = tree.getroot();
  bctreeln = len(bctree);
@@ -212,7 +212,7 @@ def create_barcode_from_json_file(jsonfile, draw=False):
   jsonfile.close();
  try:
   bctree = tree['barcodes']['barcode'];
- except: 
+ except:
   return False;
  bctreeln = len(bctree);
  bctreect = 0;
@@ -304,7 +304,7 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
   jsonfile.close();
  try:
   bctree = tree['barcodes']['barcode'];
- except: 
+ except:
   return False;
  bctreeln = len(bctree);
  bctreect = 0;

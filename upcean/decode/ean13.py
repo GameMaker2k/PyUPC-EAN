@@ -114,7 +114,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
  if(locatebarcode):
   prestartx = startx - (3 * (barwidth[0] * int(resize)));
   postendx = endx + (3 * (barwidth[0] * int(resize)));
-  return ("ean18", prestartx, startx, 13, endx, postendx); 
+  return ("ean18", prestartx, startx, 13, endx, postendx);
  startxalt = 0;
  listcount = 0;
  pre_upc_whole = [];

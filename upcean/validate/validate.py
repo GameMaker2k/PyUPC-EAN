@@ -88,11 +88,11 @@ def fix_luhn_checksum(upc, upclen):
  upclen = int(upclen);
  upclendwn = upclen - 1;
  if(len(upc)>upclendwn):
-  fix_matches = re.findall("^(\d{"+str(upclendwn)+"})", upc); 
+  fix_matches = re.findall("^(\d{"+str(upclendwn)+"})", upc);
   upc = fix_matches[0];
  return upc+str(get_luhn_checksum(upc,upclen));
 
-def validate_upca_checksum(upc, return_check=False): 
+def validate_upca_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>12):
   fix_matches = re.findall("^(\d{12})", upc);
@@ -124,7 +124,7 @@ def get_upca_checksum(upc):
 def fix_upca_checksum(upc):
  upc = str(upc);
  if(len(upc)>11):
-  fix_matches = re.findall("^(\d{11})", upc); 
+  fix_matches = re.findall("^(\d{11})", upc);
   upc = fix_matches[0];
  return upc+str(get_upca_checksum(upc));
 
@@ -160,14 +160,14 @@ def get_ean13_checksum(upc):
 def fix_ean13_checksum(upc):
  upc = str(upc);
  if(len(upc)>12):
-  fix_matches = re.findall("^(\d{12})", upc); 
+  fix_matches = re.findall("^(\d{12})", upc);
   upc = fix_matches[0];
  return upc+str(get_ean13_checksum(upc));
 
 def validate_itf6_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>6):
-  fix_matches = re.findall("^(\d{6})", upc); 
+  fix_matches = re.findall("^(\d{6})", upc);
   upc = fix_matches[0];
  if(len(upc)>6 or len(upc)<5):
   return False;
@@ -189,14 +189,14 @@ def get_itf6_checksum(upc):
 def fix_itf6_checksum(upc):
  upc = str(upc);
  if(len(upc)>5):
-  fix_matches = re.findall("^(\d{5})", upc); 
+  fix_matches = re.findall("^(\d{5})", upc);
   upc = fix_matches[0];
  return upc+str(get_itf6_checksum(upc));
 
 def validate_itf14_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>14):
-  fix_matches = re.findall("^(\d{14})", upc); 
+  fix_matches = re.findall("^(\d{14})", upc);
   upc = fix_matches[0];
  if(len(upc)>14 or len(upc)<13):
   return False;
@@ -225,14 +225,14 @@ def get_itf14_checksum(upc):
 def fix_itf14_checksum(upc):
  upc = str(upc);
  if(len(upc)>13):
-  fix_matches = re.findall("^(\d{13})", upc); 
+  fix_matches = re.findall("^(\d{13})", upc);
   upc = fix_matches[0];
  return upc+str(get_itf14_checksum(upc));
 
 def get_itf_checksum(upc):
  upc = str(upc);
  if(len(upc)>14):
-  fix_matches = re.findall("^(\d{14})", upc); 
+  fix_matches = re.findall("^(\d{14})", upc);
   upc = fix_matches[0];
  if(len(upc)>14 or len(upc)<13):
   return False;
@@ -265,7 +265,7 @@ def get_stf_checksum(upc):
 def validate_ean8_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>8):
-  fix_matches = re.findall("^(\d{8})", upc); 
+  fix_matches = re.findall("^(\d{8})", upc);
   upc = fix_matches[0];
  if(len(upc)>8 or len(upc)<7):
   return False;
@@ -282,7 +282,7 @@ def validate_ean8_checksum(upc, return_check=False):
  if(not return_check and len(upc)==8):
   if(CheckSum!=upc_matches2[3]):
    return False;
-  if(CheckSum==upc_matches2[3]): 
+  if(CheckSum==upc_matches2[3]):
    return True;
  if(return_check):
   return str(CheckSum);
@@ -294,14 +294,14 @@ def get_ean8_checksum(upc):
 def fix_ean8_checksum(upc):
  upc = str(upc);
  if(len(upc)>7):
-  fix_matches = re.findall("^(\d{7})", upc); 
+  fix_matches = re.findall("^(\d{7})", upc);
   upc = fix_matches[0];
  return upc+str(get_ean8_checksum(upc));
 
 def validate_upce_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>8):
-  fix_matches = re.findall("/^(\d{8})/", upc); 
+  fix_matches = re.findall("/^(\d{8})/", upc);
   upc = fix_matches[0];
  if(len(upc)>8 or len(upc)<7):
   return False;
@@ -370,11 +370,11 @@ def get_upce_checksum(upc):
 def fix_upce_checksum(upc):
  upc = str(upc);
  if(len(upc)>7):
-  fix_matches = re.findall("^(\d{7})", upc); 
+  fix_matches = re.findall("^(\d{7})", upc);
   upc = fix_matches[0];
  return upc+str(get_upce_checksum(upc));
 
-def validate_ean2_checksum(upc, return_check=False): 
+def validate_ean2_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>3):
   fix_matches = re.findall("^(\d{3})", upc);
@@ -388,7 +388,7 @@ def validate_ean2_checksum(upc, return_check=False):
   upc_matches = re.findall("^(\d{2})(\d{1})", upc);
   upc_matches = upc_matches[0];
   upc_matches = [int(x) for x in upc_matches];
- if(len(upc_matches)<=0): 
+ if(len(upc_matches)<=0):
   return False;
  CheckSum = upc_matches[0] % 4;
  if(not return_check and len(upc)==3):
@@ -406,11 +406,11 @@ def get_ean2_checksum(upc):
 def fix_ean2_checksum(upc):
  upc = str(upc);
  if(len(upc)>2):
-  fix_matches = re.findall("^(\d{2})", upc); 
+  fix_matches = re.findall("^(\d{2})", upc);
   upc = fix_matches[0];
  return upc+str(get_ean2_checksum(upc));
 
-def validate_ean5_checksum(upc, return_check=False): 
+def validate_ean5_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>6):
   fix_matches = re.findall("^(\d{6})", upc);
@@ -422,7 +422,7 @@ def validate_ean5_checksum(upc, return_check=False):
  if(len(upc)==6):
   upc_matches = re.findall("^(\d{5})(\d{1})", upc);
   upc_matches = upc_matches[0];
- if(len(upc_matches)<=0): 
+ if(len(upc_matches)<=0):
   return False;
  LeftDigit = list(upc_matches[0]);
  LeftDigit = [int(x) for x in LeftDigit];
@@ -444,7 +444,7 @@ def get_ean5_checksum(upc):
 def fix_ean5_checksum(upc):
  upc = str(upc);
  if(len(upc)>5):
-  fix_matches = re.findall("^(\d{5})", upc); 
+  fix_matches = re.findall("^(\d{5})", upc);
   upc = fix_matches[0];
  return upc+str(get_ean5_checksum(upc));
 
@@ -452,7 +452,7 @@ def fix_ean5_checksum(upc):
 // Get USPS Checkdigit by MACY8167
 // Source: http://www.mrexcel.com/forum/excel-questions/530675-usps-mod-10-check-digit.html
 '''
-def validate_usps_checksum(upc, return_check=False): 
+def validate_usps_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>22):
   fix_matches = re.findall("^(\d{22})", upc);
@@ -484,7 +484,7 @@ def get_usps_checksum(upc):
 def fix_usps_checksum(upc):
  upc = str(upc);
  if(len(upc)>21):
-  fix_matches = re.findall("^(\d{21})", upc); 
+  fix_matches = re.findall("^(\d{21})", upc);
   upc = fix_matches[0];
  return upc+str(get_usps_checksum(upc));
 
@@ -493,7 +493,7 @@ def fix_usps_checksum(upc):
 // Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit
 // Source: http://www.codeproject.com/Articles/21224/Calculating-the-UPS-Tracking-Number-Check-Digit?msg=2961884#xx2961884xx
 '''
-def validate_ups_checksum(upc, return_check=False): 
+def validate_ups_checksum(upc, return_check=False):
  upc = str(upc).upper();
  if(not re.findall("^1Z", upc)):
   return False;
@@ -549,7 +549,7 @@ def get_ups_checksum(upc):
 def fix_ups_checksum(upc):
  upc = str(upc);
  if(len(upc)>17):
-  fix_matches = re.findall("^(\w{17})", upc); 
+  fix_matches = re.findall("^(\w{17})", upc);
   upc = fix_matches[0];
  return upc+str(get_ups_checksum(upc));
 
@@ -557,7 +557,7 @@ def fix_ups_checksum(upc):
 // Get FEDEX Checkdigit by jbf777-ga
 // Source: http://answers.google.com/answers/threadview/id/207899.html
 '''
-def validate_fedex_checksum(upc, return_check=False): 
+def validate_fedex_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>12):
   fix_matches = re.findall("^(\d{12})", upc);
@@ -587,7 +587,7 @@ def get_fedex_checksum(upc):
 def fix_fedex_checksum(upc):
  upc = str(upc);
  if(len(upc)>11):
-  fix_matches = re.findall("^(\d{11})", upc); 
+  fix_matches = re.findall("^(\d{11})", upc);
   upc = fix_matches[0];
  return upc+str(get_fedex_checksum(upc));
 
@@ -626,7 +626,7 @@ def get_imei_checksum(upc):
 def fix_imei_checksum(upc):
  upc = str(upc);
  if(len(upc)>14):
-  fix_matches = re.findall("^(\d{14})", upc); 
+  fix_matches = re.findall("^(\d{14})", upc);
   upc = fix_matches[0];
  return upc+str(get_imei_checksum(upc));
 
@@ -672,7 +672,7 @@ def fix_bcn_checksum(upc):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>15):
-  fix_matches = re.findall("^(\d{15})", upc); 
+  fix_matches = re.findall("^(\d{15})", upc);
   upc = fix_matches[0];
  return upc+str(get_bcn_checksum(upc));
 
@@ -682,7 +682,7 @@ def fix_bcn_checksum(upc):
 // Source: http://en.wikipedia.org/wiki/Code_11
 '''
 def get_code11_checksum(upc):
- if(len(upc) < 1): 
+ if(len(upc) < 1):
   return False;
  if(not re.findall("([0-9\-]+)", upc)):
   return False;
@@ -695,26 +695,26 @@ def get_code11_checksum(upc):
  upc_reverse = list(upc_matches);
  upc_reverse.reverse();
  upc_print = list(upc_matches);
- UPC_Count = 0; 
- UPC_Weight = 1; 
+ UPC_Count = 0;
+ UPC_Weight = 1;
  UPC_Sum = 0;
  while (UPC_Count < len(upc_reverse)):
   if(UPC_Weight>10):
    UPC_Weight = 1;
   UPC_Sum += (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])]);
-  UPC_Count += 1; 
+  UPC_Count += 1;
   UPC_Weight += 1;
  CheckSum = str(Code11Array[UPC_Sum % 11]);
  upc_reverse = list(upc_matches);
  upc_reverse.reverse();
- UPC_Count = 0; 
- UPC_Weight = 1; 
+ UPC_Count = 0;
+ UPC_Weight = 1;
  UPC_Sum = 0;
  while (UPC_Count < len(upc_reverse)):
   if(UPC_Weight>9):
    UPC_Weight = 1;
   UPC_Sum += (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])]);
-  UPC_Count += 1; 
+  UPC_Count += 1;
   UPC_Weight += 1;
  CheckSum = str(CheckSum)+str(Code11Array[UPC_Sum % 11]);
  return str(CheckSum);
@@ -725,7 +725,7 @@ def get_code11_checksum(upc):
 // Source: http://en.wikipedia.org/wiki/Code_39
 '''
 def get_code39_checksum_mod10(upc):
- if(len(upc) < 1): 
+ if(len(upc) < 1):
   return False;
  if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
   return False;
@@ -736,16 +736,16 @@ def get_code39_checksum_mod10(upc):
  Code39Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K", 21: "L", 22: "M", 23: "N", 24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%"};
  Code39Values = dict(zip(Code39Array.values(),Code39Array));
  upc_print = list(upc_matches);
- UPC_Count = 0; 
+ UPC_Count = 0;
  UPC_Sum = 0;
  while (UPC_Count < len(upc_matches)):
   UPC_Sum += Code39Values[str(upc_matches[UPC_Count])];
-  UPC_Count += 1; 
+  UPC_Count += 1;
  CheckSum = str(Code39Array[UPC_Sum % 10]);
  return str(CheckSum);
 
 def get_code39_checksum_mod43(upc):
- if(len(upc) < 1): 
+ if(len(upc) < 1):
   return False;
  if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
   return False;
@@ -756,11 +756,11 @@ def get_code39_checksum_mod43(upc):
  Code39Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K", 21: "L", 22: "M", 23: "N", 24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%"};
  Code39Values = dict(zip(Code39Array.values(),Code39Array));
  upc_print = list(upc_matches);
- UPC_Count = 0; 
+ UPC_Count = 0;
  UPC_Sum = 0;
  while (UPC_Count < len(upc_matches)):
   UPC_Sum += Code39Values[str(upc_matches[UPC_Count])];
-  UPC_Count += 1; 
+  UPC_Count += 1;
  CheckSum = str(Code39Array[UPC_Sum % 43]);
  return str(CheckSum);
 
@@ -780,7 +780,7 @@ def get_code39_checksum(upc, getmod="43"):
 // Source: http://en.wikipedia.org/wiki/Code_93
 '''
 def get_code93_checksum(upc):
- if(len(upc) < 1): 
+ if(len(upc) < 1):
   return False;
  if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
   return False;
@@ -793,26 +793,26 @@ def get_code93_checksum(upc):
  upc_reverse = list(upc_matches);
  upc_reverse.reverse();
  upc_print = list(upc_matches);
- UPC_Count = 0; 
- UPC_Weight = 1; 
+ UPC_Count = 0;
+ UPC_Weight = 1;
  UPC_Sum = 0;
  while (UPC_Count < len(upc_reverse)):
   if(UPC_Weight>20):
    UPC_Weight = 1;
   UPC_Sum += (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])]);
-  UPC_Count += 1; 
+  UPC_Count += 1;
   UPC_Weight += 1;
  CheckSum = str(Code93Array[UPC_Sum % 47]);
  upc_reverse = list(upc_matches);
  upc_reverse.reverse();
- UPC_Count = 0; 
- UPC_Weight = 1; 
+ UPC_Count = 0;
+ UPC_Weight = 1;
  UPC_Sum = 0;
  while (UPC_Count < len(upc_reverse)):
   if(UPC_Weight>15):
    UPC_Weight = 1;
   UPC_Sum += (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])]);
-  UPC_Count += 1; 
+  UPC_Count += 1;
   UPC_Weight += 1;
  CheckSum = str(CheckSum)+str(Code93Array[UPC_Sum % 47]);
  return str(CheckSum);
@@ -825,12 +825,12 @@ def get_code93_checksum(upc):
 def get_code128_checksum(upc):
  if(len(upc) % 2):
   return False;
- if(len(upc) < 6): 
+ if(len(upc) < 6):
   return False;
  if(not re.findall("([0-9a-f]+)", upc)):
   return False;
  upc = upc.lower();
- if(not re.findall("[0-9a-f]{2}", upc)): 
+ if(not re.findall("[0-9a-f]{2}", upc)):
   return False;
  upc_matches = re.findall("[0-9a-f]{2}", upc);
  upc_to_dec = list([int(x, 16) for x in upc_matches]);
@@ -856,7 +856,7 @@ def get_code128_checksum(upc):
 
 def convert_hex_code128_to_ascii_code128(upc):
  upc = str(upc);
- if(len(upc) < 8): 
+ if(len(upc) < 8):
   return False;
  hextoascii = { '00': " ", '01': "!", '02': "\"", '03': "#", '04': "$", '05': "%", '06': "&", '07': "'", '08': "(", '09': ")", '0a': "*", '0b': "+", '0c': ",", '0d': "-", '0e': ".", '0f': "/", '10': "0", '11': "1", '12': "2", '13': "3", '14': "4", '15': "5", '16': "6", '17': "7", '18': "8", '19': "9", '1a': ":", '1b': ";", '1c': "<", '1d': "=", '1e': ">", '1f': "?", '20': "@", '21': "A", '22': "B", '23': "C", '24': "D", '25': "E", '26': "F", '27': "G", '28': "H", '29': "I", '2a': "J", '2b': "K", '2c': "L", '2d': "M", '2e': "N", '2f': "O", '30': "P", '31': "Q", '32': "R", '33': "S", '34': "T", '35': "U", '36': "V", '37': "W", '38': "X", '39': "Y", '3a': "Z", '3b': "[", '3c': "\\", '3d': "]", '3e': "^", '3f': "_", '40': "`", '41': "a", '42': "b", '43': "c", '44': "d", '45': "e", '46': "f", '47': "g", '48': "h", '49': "i", '4a': "j", '4b': "k", '4c': "l", '4d': "m", '4e': "n", '4f': "o", '50': "p", '51': "q", '52': "r", '53': "s", '54': "t", '55': "u", '56': "v", '57': "w", '58': "x", '59': "y", '5a': "z", '5b': "{", '5c': "|", '5d': "}", '5e': "~", '5f': "Ã", '60': "Ä", '61': "Å", '62': "Æ", '63': "Ç", '64': "È", '65': "É", '66': "Ê", '67': "Ë", '68': "Ì", '69': "Í", '6a': "Î", '6b': "Ï", '6c': "Î" };
  asciitohex = { ' ': "00", '!': "01", '"': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e", 'O': "2f", 'P': "30", 'Q': "31", 'R': "32", 'S': "33", 'T': "34", 'U': "35", 'V': "36", 'W': "37", 'X': "38", 'Y': "39", 'Z': "3a", '[': "3b", '\\': "3c", ']': "3d", '^': "3e", '_': "3f", '`': "40", 'a': "41", 'b': "42", 'c': "43", 'd': "44", 'e': "45", 'f': "46", 'g': "47", 'h': "48", 'i': "49", 'j': "4a", 'k': "4b", 'l': "4c", 'm': "4d", 'n': "4e", 'o': "4f", 'p': "50", 'q': "51", 'r': "52", 's': "53", 't': "54", 'u': "55", 'v': "56", 'w': "57", 'x': "58", 'y': "59", 'z': "5a", '{': "5b", '|': "5c", '}': "5d", '~': "5e", 'Ã': "5f", 'Ä': "60", 'Å': "61", 'Æ': "62", 'Ç': "63", 'È': "64", 'É': "65", 'Ê': "66", 'Ë': "67", 'Ì': "68", 'Í': "69", 'Î': "6a", 'Ï': "6b", 'Î': "6c" };
@@ -867,16 +867,16 @@ def convert_hex_code128_to_ascii_code128(upc):
 
 def get_code128alt_checksum(upc):
  upc = str(upc);
- if(len(upc) < 4): 
+ if(len(upc) < 4):
   return False;
  upc = convert_ascii_code128_to_hex_code128(upc);
  return get_code128_checksum(upc);
 
 def get_code128dec_checksum(upc):
  upc = str(upc);
- if(len(upc) < 12): 
+ if(len(upc) < 12):
   return False;
- if(not re.findall("[0-9]{3}", upc)): 
+ if(not re.findall("[0-9]{3}", upc)):
   return False;
  upc_matches = re.findall("[0-9]{3}", upc);
  il = len(upc_matches);
@@ -933,7 +933,7 @@ def validate_issn8_checksum(upc, return_check=False):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>8):
-  fix_matches = re.findall("^(\d{8})", upc); 
+  fix_matches = re.findall("^(\d{8})", upc);
   fix_matches = fix_matches[0];
   upc = fix_matches[0]+fix_matches[1];
  if(len(upc)>8 or len(upc)<7):
@@ -967,7 +967,7 @@ def fix_issn8_checksum(upc):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>7):
-  fix_matches = re.findall("^(\d{7})", upc); 
+  fix_matches = re.findall("^(\d{7})", upc);
   upc = fix_matches[0];
  return upc+str(get_issn8_checksum(upc));
 def validate_issn13_checksum(upc, return_check=False):
@@ -995,7 +995,7 @@ def validate_isbn10_checksum(upc, return_check=False):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>10):
-  fix_matches = re.findall("^(\d{9})(\d{1}|X{1})", upc); 
+  fix_matches = re.findall("^(\d{9})(\d{1}|X{1})", upc);
   fix_matches = fix_matches[0];
   upc = fix_matches[0]+fix_matches[1];
  if(len(upc)>10 or len(upc)<9):
@@ -1062,7 +1062,7 @@ def validate_ismn10_checksum(upc, return_check=False):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>9):
-  fix_matches = re.findall("^(\d{8})(\d{1})", upc); 
+  fix_matches = re.findall("^(\d{8})(\d{1})", upc);
   fix_matches = fix_matches[0];
   upc = fix_matches[0]+fix_matches[1];
  if(len(upc)>9 or len(upc)<8):
@@ -1098,7 +1098,7 @@ def fix_ismn10_checksum(upc):
  upc = upc.replace("-", "");
  upc = upc.replace(" ", "");
  if(len(upc)>9):
-  fix_matches = re.findall("^(\d{9})", upc); 
+  fix_matches = re.findall("^(\d{9})", upc);
   upc = fix_matches[1];
  return upc+str(get_ismn10_checksum(upc));
 def validate_ismn13_checksum(upc, return_check=False):
@@ -1150,7 +1150,7 @@ def validate_vw_price_checksum(price, return_check=False):
   price_split[1] = numrep1[price_split[1]];
   price_split[2] = numrep1[price_split[2]];
   price_split[3] = numrep2[price_split[3]];
-  price_split[4] = numrep3[price_split[4]]; 
+  price_split[4] = numrep3[price_split[4]];
   price_add = (price_split[1] + price_split[2] + price_split[3] + price_split[4]) * 3;
  CheckSum = price_add % 10;
  if(not return_check and len(price)==5):
@@ -1181,10 +1181,10 @@ def fix_vw_price_checksum(price):
  if(len(price)==3):
   price = "0"+price;
  if(len(price)==5):
-  fix_matches = re.findall("^(\d{1})(\d{4})", price); 
+  fix_matches = re.findall("^(\d{1})(\d{4})", price);
   fix_matches = fix_matches[0];
   price = fix_matches[1];
  if(len(price)>4):
-  fix_matches = re.findall("^(\d{4})", price); 
+  fix_matches = re.findall("^(\d{4})", price);
   price = fix_matches[0];
  return str(get_vw_price_checksum(price,True))+price;

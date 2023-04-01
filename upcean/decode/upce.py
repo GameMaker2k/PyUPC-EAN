@@ -103,7 +103,7 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
  if(locatebarcode):
   prestartx = startx - (3 * (barwidth[0] * int(resize)));
   postendx = endx + (6 * (barwidth[0] * int(resize)));
-  return ("upce", prestartx, startx, 8, endx, postendx); 
+  return ("upce", prestartx, startx, 8, endx, postendx);
  listcount = 0;
  startxalt = 0;
  pre_upc_whole = [];

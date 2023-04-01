@@ -40,7 +40,7 @@ def drawColorRectangle( ctx, x1, y1, x2, y2, color ):
  return True;
 
 def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
- if(width < 1): 
+ if(width < 1):
   width = 1;
  width -= 1;
  if(width < 1):

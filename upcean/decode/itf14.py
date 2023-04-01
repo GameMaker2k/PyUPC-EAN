@@ -142,7 +142,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
        icount += 1;
       if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0] and curpixelist[3]==barcolor[2]) and (curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[0] and curpixelist[6]==barcolor[2] and curpixelist[7]==barcolor[0])):
        startx = substartx;
-       break;	   
+       break;
    prestartx += 1;
   shiftxy = (0, shiftxy[1]);
  else:
@@ -175,7 +175,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
     preinprestartx += (7 * (barwidth[0] * int(resize)));
     barcodesize += 1;
     if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[2] and precurpixelist[3]==barcolor[0] and precurpixelist[4]==barcolor[2] and precurpixelist[5]==barcolor[2] and precurpixelist[6]==barcolor[2])):
-     break;	 
+     break;
   barcodesize = int((barcodesize) / 2);
  endx = int(startx + ( (barcodesize * 18 ) * (barwidth[0] * int(resize)) ));
  if(threewidebar):
@@ -188,7 +188,7 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
   endx = int(startx + ( (barcodesize * 14 ) * (barwidth[0] * int(resize)) ));
  if(locatebarcode):
   prestartx = startx - (4 * (barwidth[0] * int(resize)));
-  return (prestartx, startx, (barcodesize * 2), endx, postendx); 
+  return (prestartx, startx, (barcodesize * 2), endx, postendx);
  listcount = 0;
  pre_upc_whole_left = [];
  pre_upc_whole_right = [];
