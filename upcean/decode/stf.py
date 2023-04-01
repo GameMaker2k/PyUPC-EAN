@@ -185,32 +185,14 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=(
     if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[2] and precurpixelist[3]==barcolor[0] and precurpixelist[4]==barcolor[2] and precurpixelist[5]==barcolor[0] and precurpixelist[6]==barcolor[0] and precurpixelist[7]==barcolor[2] and precurpixelist[8]==barcolor[2])):
      break;
    else:
-    if((preinprestartx+(14 * (barwidth[0] * int(resize))) > upc_img.size[0])):
+    if((preinprestartx+(12 * (barwidth[0] * int(resize))) > upc_img.size[0])):
      return False;
     icount = 0;
-    imaxc = 14;
+    imaxc = 12;
     while(icount < imaxc):
      precurpixelist.append(upc_img.getpixel((preinprestartx+(icount * (barwidth[0] * int(resize))), starty)));
      icount += 1;
-    preinprestartx += (14 * (barwidth[0] * int(resize)));
-    barcodesize += 1;
-    if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[2] and precurpixelist[3]==barcolor[0] and precurpixelist[4]==barcolor[2] and precurpixelist[5]==barcolor[0] and precurpixelist[6]==barcolor[0] and precurpixelist[7]==barcolor[2] and precurpixelist[8]==barcolor[2])):
-     break;
-  startx = ((21 * (barwidth[0] * int(resize)))  + shiftxy[0]);
-  preinprestartx = startx;
-  precurpixelist = [];
-  barcodesize = 0;
-  while(preinprestartx<upc_img.size[0]):
-   precurpixelist = [];
-   if(threewidebar):
-    if((preinprestartx+(14 * (barwidth[0] * int(resize))) > upc_img.size[0])):
-     return False;
-    icount = 0;
-    imaxc = 14;
-    while(icount < imaxc):
-     precurpixelist.append(upc_img.getpixel((preinprestartx+(icount * (barwidth[0] * int(resize))), starty)));
-     icount += 1;
-    preinprestartx += (14 * (barwidth[0] * int(resize)));
+    preinprestartx += (12 * (barwidth[0] * int(resize)));
     barcodesize += 1;
     if((precurpixelist[0]==barcolor[0] and precurpixelist[1]==barcolor[0] and precurpixelist[2]==barcolor[2] and precurpixelist[3]==barcolor[0] and precurpixelist[4]==barcolor[2] and precurpixelist[5]==barcolor[0] and precurpixelist[6]==barcolor[0] and precurpixelist[7]==barcolor[2] and precurpixelist[8]==barcolor[2])):
      break;
