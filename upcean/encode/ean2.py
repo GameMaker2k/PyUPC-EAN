@@ -68,8 +68,6 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
- if(barwidth[0] < 1): 
-  barwidth[0] = 1;
  if(len(upc)>2 or len(upc)<2): 
   return False;
  upc_matches = re.findall("(\d{2})", upc);
@@ -77,8 +75,6 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
-  barwidth[0] = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
    pil_ver = Image.PILLOW_VERSION;
@@ -410,8 +406,6 @@ def encode_ean2_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),b
 def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
-  barwidth[0] = 1;
  upc_preimg = Image.new("RGB", (((29 * barwidth[0]) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth[1])) * int(resize)));
  upc_img = ImageDraw.Draw(upc_preimg);
  upc_img.rectangle([(0, 0), (((29 * barwidth[0]) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth[1])) * int(resize))], fill=barcolor[2]);

@@ -74,8 +74,6 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
     imageoutlib = "cairosvg";
    if(cairosupport and imageoutlib=="cairosvg" and outfileext!="SVG"):
     imageoutlib = "cairo";
- if(barwidth[0] < 1): 
-  barwidth[0] = 1;
  upc_pieces = None; 
  supplement = None;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
@@ -92,8 +90,6 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
-  barwidth[0] = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
    pil_ver = Image.PILLOW_VERSION;

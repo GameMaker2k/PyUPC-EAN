@@ -76,8 +76,6 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
     imageoutlib = "cairo";
  upc_pieces = None; 
  supplement = None;
- if(barwidth[0] < 1): 
-  barwidth[0] = 1;
  if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
   upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc);
   upc_pieces = upc_pieces[0];
@@ -92,8 +90,6 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
   return False;
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
-  barwidth[0] = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
    pil_ver = Image.PILLOW_VERSION;

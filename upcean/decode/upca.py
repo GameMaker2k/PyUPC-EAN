@@ -32,11 +32,9 @@ from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 
-def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
-  barwidth = 1;
  if(isinstance(infile, Image.Image)):
   upc_img = infile.convert('RGB');
  elif(cairosupport and isinstance(infile, cairo.ImageSurface)):
@@ -54,17 +52,18 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
     upc_img = Image.open(infile).convert('RGB');
    except UnidentifiedImageError:
     return False;
-    '''upc_img = Image.frombytes("RGB", (((113 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
+    '''upc_img = Image.frombytes("RGB", (((113 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
   except AttributeError:
    try:
     upc_img = Image.open(infile).convert('RGB');
    except UnidentifiedImageError:
     return False;
     '''prefile = open(infile, "rb");
-    upc_img = Image.frombytes("RGB", (((113 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
+    upc_img = Image.frombytes("RGB", (((113 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
- barsize = barwidth * int(resize);
- starty = int(upc_img.size[1] / 2) + shiftxy[1];
+ barsize = barwidth[0] * int(resize);
+ starty = (int(upc_img.size[1] / 2) - ((barwidth[1] - 1) * 6) ) + shiftxy[1];
+ print(starty); 
  left_barcode_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
  right_barcode_dict = { '1110010': "0", '1100110': "1", '1101100': "2", '1000010': "3", '1011100': "4", '1001110': "5", '1010000': "6", '1000100': "7", '1001000': "8", '1110100': "9" };
  startx = 12;
@@ -74,32 +73,32 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
   gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
-   substartx = prestartx + (3 * (barwidth * int(resize)));
+   substartx = prestartx + (3 * (barwidth[0] * int(resize)));
    curpixelist=[];
    if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
-    if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):
+    if(inprestartx+(2 * (barwidth[0] * int(resize))) > upc_img.size[0]):
      return False;
     icount = 0;
     imaxc = 3;
     while(icount < imaxc):
-     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
+     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth[0] * int(resize))), starty)));
      icount += 1;
-    inprestartx += (3 + 42) * (barwidth * int(resize));
+    inprestartx += (3 + 42) * (barwidth[0] * int(resize));
     jumpcode = inprestartx;
-    if(inprestartx+(4 * (barwidth * int(resize))) > upc_img.size[0]):
+    if(inprestartx+(4 * (barwidth[0] * int(resize))) > upc_img.size[0]):
      return False;
     icount = 0;
     imaxc = 5;
     while(icount < imaxc):
-     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
+     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth[0] * int(resize))), starty)));
      icount += 1;
-    inprestartx += (5 + 42) * (barwidth * int(resize));
-    if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):
+    inprestartx += (5 + 42) * (barwidth[0] * int(resize));
+    if(inprestartx+(2 * (barwidth[0] * int(resize))) > upc_img.size[0]):
      return False;
     icount = 0;
     imaxc = 3;
     while(icount < imaxc):
-     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
+     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth[0] * int(resize))), starty)));
      icount += 1;
     if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]) and (curpixelist[3]==barcolor[2] and curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[2] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2]) and (curpixelist[8]==barcolor[0] and curpixelist[9]==barcolor[2] and curpixelist[10]==barcolor[0])):
      startx = substartx;	 
@@ -107,12 +106,12 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
    prestartx += 1;
   shiftxy = (0, shiftxy[1]);
  else:
-  startx = ((12 * (barwidth * int(resize)))  + shiftxy[0]);
-  jumpcode = ((54 * (barwidth * int(resize))) + shiftxy[0]);
- endx = (42 + 42) * (barwidth * int(resize));
+  startx = ((12 * (barwidth[0] * int(resize)))  + shiftxy[0]);
+  jumpcode = ((54 * (barwidth[0] * int(resize))) + shiftxy[0]);
+ endx = (42 + 42) * (barwidth[0] * int(resize));
  if(locatebarcode):
-  prestartx = startx - (3 * (barwidth * int(resize)));
-  postendx = endx + (3 * (barwidth * int(resize)));
+  prestartx = startx - (3 * (barwidth[0] * int(resize)));
+  postendx = endx + (3 * (barwidth[0] * int(resize)));
   return ("upca", prestartx, startx, 12, endx, postendx); 
  startxalt = 0;
  listcount = 0;
@@ -123,14 +122,14 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
   pre_upc_list = [];
   while(listcount<7):
    if(startx==jumpcode):
-    startx += 5 * (barwidth * int(resize));
+    startx += 5 * (barwidth[0] * int(resize));
    curpixel = upc_img.getpixel((startx, starty));
    if(curpixel==barcolor[0]):
     pre_upc_list.append("1");
    if(curpixel==barcolor[2]):
     pre_upc_list.append("0");
-   startx += 1 * (barwidth * int(resize));
-   startxalt += 1 * (barwidth * int(resize));
+   startx += 1 * (barwidth[0] * int(resize));
+   startxalt += 1 * (barwidth[0] * int(resize));
    listcount += 1;
   pre_upc_whole.append("".join(pre_upc_list));
  upc_img.close();
@@ -152,23 +151,23 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
   upc = "".join(barcode_list);
  return upc;
 
-def get_upca_barcode_location(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def get_upca_barcode_location(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_upca_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
 
-def decode_ean12_barcode(infile="./ean12.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_ean12_barcode(infile="./ean12.png",resize=1,barheight=(48, 54),barwidth=(1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def decode_gtin12_barcode(infile="./gtin12.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_gtin12_barcode(infile="./gtin12.png",resize=1,barheight=(48, 54),barwidth=(1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def get_ean12_barcode_location(infile="./ean12.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def get_ean12_barcode_location(infile="./ean12.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_ean12_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
 
-def get_gtin12_barcode_location(infile="./gtin12.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def get_gtin12_barcode_location(infile="./gtin12.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_gtin12_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
 
-def decode_ucc12_barcode(infile="./ucc12.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_ucc12_barcode(infile="./ucc12.png",resize=1,barheight=(48, 54),barwidth=(1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_upca_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def get_ucc12_barcode_location(infile="./ucc12.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def get_ucc12_barcode_location(infile="./ucc12.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_ucc12_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);

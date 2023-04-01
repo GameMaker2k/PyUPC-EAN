@@ -32,11 +32,9 @@ from upcean.encode.predraw import *;
 if(cairosupport):
  import cairo;
 
-def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth)) or int(barwidth) < 1):
-  barwidth = 1;
  if(isinstance(infile, Image.Image)):
   upc_img = infile.convert('RGB');
  elif(cairosupport and isinstance(infile, cairo.ImageSurface)):
@@ -54,17 +52,17 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
     upc_img = Image.open(infile).convert('RGB');
    except UnidentifiedImageError:
     return False;
-    '''upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
+    '''upc_img = Image.frombytes("RGB", (((115 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
   except AttributeError:
    try:
     upc_img = Image.open(infile).convert('RGB');
    except UnidentifiedImageError:
     return False;
     '''prefile = open(infile, "rb");
-    upc_img = Image.frombytes("RGB", (((115 * barwidth) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
+    upc_img = Image.frombytes("RGB", (((115 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
     prefile.close();'''
- barsize = barwidth * int(resize);
- starty = int(upc_img.size[1] / 2) + shiftxy[1];
+ barsize = barwidth[0] * int(resize);
+ starty = (int(upc_img.size[1] / 2) - ((barwidth[1] - 1) * 9) ) + shiftxy[1];
  fist_number_dict = { 'LLLLLL': "0", 'LLGLGG': "1", 'LLGGLG': "2", 'LLGGGL': "3", 'LGLLGG': "4", 'LGGLLG': "5", 'LGGGLL': "6", 'LGLGLG': "7", 'LGLGGL': "8", 'LGGLGL': "9" };
  left_barcode_l_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
  left_barcode_g_dict = { '0100111': "0", '0110011': "1", '0011011': "2", '0100001': "3", '0011101': "4", '0111001': "5", '0000101': "6", '0010001': "7", '0001001': "8", '0010111': "9" };
@@ -77,32 +75,32 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
   gotvalue = False;
   while(prestartx<upc_img.size[0]):
    inprestartx = prestartx;
-   substartx = prestartx + (3 * (barwidth * int(resize)));
+   substartx = prestartx + (3 * (barwidth[0] * int(resize)));
    curpixelist=[];
    if(upc_img.getpixel((inprestartx, starty))==barcolor[0]):
-    if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):
+    if(inprestartx+(2 * (barwidth[0] * int(resize))) > upc_img.size[0]):
      return False;
     icount = 0;
     imaxc = 3;
     while(icount < imaxc):
-     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
+     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth[0] * int(resize))), starty)));
      icount += 1;
-    inprestartx += (3 + 42) * (barwidth * int(resize));
+    inprestartx += (3 + 42) * (barwidth[0] * int(resize));
     jumpcode = inprestartx;
-    if(inprestartx+(4 * (barwidth * int(resize))) > upc_img.size[0]):
+    if(inprestartx+(4 * (barwidth[0] * int(resize))) > upc_img.size[0]):
      return False;
     icount = 0;
     imaxc = 5;
     while(icount < imaxc):
-     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
+     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth[0] * int(resize))), starty)));
      icount += 1;
-    inprestartx += (5 + 42) * (barwidth * int(resize));
-    if(inprestartx+(2 * (barwidth * int(resize))) > upc_img.size[0]):
+    inprestartx += (5 + 42) * (barwidth[0] * int(resize));
+    if(inprestartx+(2 * (barwidth[0] * int(resize))) > upc_img.size[0]):
      return False;
     icount = 0;
     imaxc = 3;
     while(icount < imaxc):
-     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth * int(resize))), starty)));
+     curpixelist.append(upc_img.getpixel((inprestartx+(icount * (barwidth[0] * int(resize))), starty)));
      icount += 1;
     if((curpixelist[0]==barcolor[0] and curpixelist[1]==barcolor[2] and curpixelist[2]==barcolor[0]) and (curpixelist[3]==barcolor[2] and curpixelist[4]==barcolor[0] and curpixelist[5]==barcolor[2] and curpixelist[6]==barcolor[0] and curpixelist[7]==barcolor[2]) and (curpixelist[8]==barcolor[0] and curpixelist[9]==barcolor[2] and curpixelist[10]==barcolor[0])):
      startx = substartx;
@@ -110,12 +108,12 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
    prestartx += 1;
   shiftxy = (0, shiftxy[1]);
  else:
-  startx = ((14 * (barwidth * int(resize))) + shiftxy[0]);
-  jumpcode = ((56 * (barwidth * int(resize))) + shiftxy[0]);
- endx = (42 + 42) * (barwidth * int(resize));
+  startx = ((14 * (barwidth[0] * int(resize))) + shiftxy[0]);
+  jumpcode = ((56 * (barwidth[0] * int(resize))) + shiftxy[0]);
+ endx = (42 + 42) * (barwidth[0] * int(resize));
  if(locatebarcode):
-  prestartx = startx - (3 * (barwidth * int(resize)));
-  postendx = endx + (3 * (barwidth * int(resize)));
+  prestartx = startx - (3 * (barwidth[0] * int(resize)));
+  postendx = endx + (3 * (barwidth[0] * int(resize)));
   return ("ean18", prestartx, startx, 13, endx, postendx); 
  startxalt = 0;
  listcount = 0;
@@ -126,14 +124,14 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
   pre_upc_list = [];
   while(listcount<7):
    if(startx==jumpcode):
-    startx += 5 * (barwidth * int(resize));
+    startx += 5 * (barwidth[0] * int(resize));
    curpixel = upc_img.getpixel((startx, starty));
    if(curpixel==barcolor[0]):
     pre_upc_list.append("1");
    if(curpixel==barcolor[2]):
     pre_upc_list.append("0");
-   startx += 1 * (barwidth * int(resize));
-   startxalt += 1 * (barwidth * int(resize));
+   startx += 1 * (barwidth[0] * int(resize));
+   startxalt += 1 * (barwidth[0] * int(resize));
    listcount += 1;
   pre_upc_whole.append("".join(pre_upc_list));
  upc_img.close();
@@ -163,17 +161,17 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
   upc = "".join(barcode_list);
  return upc;
 
-def get_ean13_barcode_location(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def get_ean13_barcode_location(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_ean13_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
 
-def decode_gtin13_barcode(infile="./gtin13.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_gtin13_barcode(infile="./gtin13.png",resize=1,barheight=(48, 54),barwidth=(1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def get_gtin13_barcode_location(infile="./gtin13.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def get_gtin13_barcode_location(infile="./gtin13.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_gtin13_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
 
-def decode_ucc13_barcode(infile="./ucc13.png",resize=1,barheight=(48, 54),barwidth=1,barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
+def decode_ucc13_barcode(infile="./ucc13.png",resize=1,barheight=(48, 54),barwidth=(1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_ean13_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
 
-def get_ucc13_barcode_location(infile="./ucc13.png",resize=1,barheight=(48, 54),barwidth=1,shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
+def get_ucc13_barcode_location(infile="./ucc13.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  return decode_ucc13_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
