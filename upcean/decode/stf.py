@@ -240,7 +240,7 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=(
  return upc;
 
 def get_stf_barcode_location(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
- return decode_itf14_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
+ return decode_stf_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,True,imageoutlib);
 
 def decode_code25_barcode(infile="./code25.png",resize=1,barheight=(48, 54),barwidth=(1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  return decode_stf_barcode(infile,resize,barheight,barwidth,barcolor,locatebarcode,imageoutlib);
