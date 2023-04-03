@@ -170,14 +170,14 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
  LineSize = barheight[0];
  if(hidetext):
   LineSize = barheight[1];
- start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0];
+ start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0];
  LineStart = 0;
  BarNum = 0;
- start_bc_num_end = len(start_barcolor);
+ start_bc_num_end = len(start_barcode);
  while(BarNum < start_bc_num_end):
-  if(start_barcolor[BarNum]==1):
+  if(start_barcode[BarNum]==1):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
-  if(start_barcolor[BarNum]==0):
+  if(start_barcode[BarNum]==0):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   LineStart += barwidth[0];
   BarNum += 1;
@@ -304,13 +304,13 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
    BarNum += 1;
    InnerUPCNum += 1;
   NumZero += 1;
- end_barcolor = [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ end_barcode = [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  end_bc_num = 0;
  end_b
  while(end_bc_num < end_bc_num_end):
-  if(end_barcolor[end_bc_num]==1):
+  if(end_barcode[end_bc_num]==1):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
-  if(end_barcolor[end_bc_num]==0):
+  if(end_barcode[end_bc_num]==0):
    drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   end_bc_num += 1;
   LineStart += barwidth[0];

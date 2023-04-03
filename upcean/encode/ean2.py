@@ -142,14 +142,14 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  if(hidetext):
   LineSize = barheight[1];
  upc_array['code'].append( [0, 1, 0, 1, 1] );
- start_barcolor = [0, 1, 0, 1, 1];
+ start_barcode = [0, 1, 0, 1, 1];
  LineStart = 0;
  BarNum = 0;
- start_bc_num_end = len(start_barcolor);
+ start_bc_num_end = len(start_barcode);
  while(BarNum < start_bc_num_end):
-  if(start_barcolor[BarNum]==1):
+  if(start_barcode[BarNum]==1):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
-  if(start_barcolor[BarNum]==0):
+  if(start_barcode[BarNum]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   LineStart += barwidth[0];
   BarNum += 1;

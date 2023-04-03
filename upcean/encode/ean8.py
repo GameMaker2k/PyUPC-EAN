@@ -172,10 +172,10 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
  upc_array = { 'upc': upc, 'code': [ ] };
  upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
  upc_array['code'].append( [1, 0, 1] );
- start_barcolor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1];
+ start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1];
  LineStart = 0;
  BarNum = 0;
- start_bc_num_end = len(start_barcolor);
+ start_bc_num_end = len(start_barcode);
  LineSize = barheight[1];
  while(BarNum < start_bc_num_end):
   if(BarNum<12):
@@ -184,9 +184,9 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
    LineSize = barheight[0];
   if(hidetext):
    LineSize = barheight[1];
-  if(start_barcolor[BarNum]==1):
+  if(start_barcode[BarNum]==1):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
-  if(start_barcolor[BarNum]==0):
+  if(start_barcode[BarNum]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   LineStart += barwidth[0];
   BarNum += 1;
@@ -303,14 +303,14 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
    InnerUPCNum += 1;
   NumZero += 1;
  upc_array['code'].append( [0, 1, 0, 1, 0] );
- mid_barcolor = [0, 1, 0, 1, 0];
+ mid_barcode = [0, 1, 0, 1, 0];
  mid_bc_num = 0;
- mid_bc_num_end = len(mid_barcolor);
+ mid_bc_num_end = len(mid_barcode);
  LineSize = barheight[1];
  while(mid_bc_num < mid_bc_num_end):
-  if(mid_barcolor[mid_bc_num]==1):
+  if(mid_barcode[mid_bc_num]==1):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
-  if(mid_barcolor[mid_bc_num]==0):
+  if(mid_barcode[mid_bc_num]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   mid_bc_num += 1;
   LineStart += barwidth[0];
@@ -354,9 +354,9 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
   NumZero += 1;
  upc_array['code'].append( [1, 0, 1] );
  upc_array['code'].append( [0, 0, 0, 0, 0, 0, 0, 0, 0] );
- end_barcolor = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ end_barcode = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
  end_bc_num = 0;
- end_bc_num_end = len(end_barcolor);
+ end_bc_num_end = len(end_barcode);
  LineSize = barheight[1];
  while(end_bc_num < end_bc_num_end):
   if(end_bc_num<4):
@@ -365,9 +365,9 @@ def create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False
    LineSize = barheight[0];
   if(hidetext):
    LineSize = barheight[1];
-  if(end_barcolor[end_bc_num]==1):
+  if(end_barcode[end_bc_num]==1):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib);
-  if(end_barcolor[end_bc_num]==0):
+  if(end_barcode[end_bc_num]==0):
    drawColorLine(upc_img, LineStart, 10, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib);
   end_bc_num = 1 + end_bc_num;
   LineStart += barwidth[0];
