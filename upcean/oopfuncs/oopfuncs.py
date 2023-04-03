@@ -61,7 +61,7 @@ class encode:
   self.hidetext = False;
   self.textxy = (1, 1, 1);
   self.barheight = (48, 54);
-  self.barwidth = 1;
+  self.barwidth = (1, 1);
   self.barcolor = (0, 0, 0);
   self.textcolor = (0, 0, 0);
   self.bgcolor = (255, 255, 255);
