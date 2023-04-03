@@ -201,8 +201,22 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=(
   while(listcount<14):
    curpixel = upc_img.getpixel((startx, starty));
    if(curpixel==barcolor[0]):
+    incount = 0;
+    inbarwidth = barwidth[0] - 1;
+    while(incount<=inbarwidth):
+     incurpixel = upc_img.getpixel((startx + incount, starty));
+     if(incurpixel!=barcolor[0]):
+      return False;
+     incount += 1;
     pre_upc_list.append("1");
    if(curpixel==barcolor[2]):
+    incount = 0;
+    inbarwidth = barwidth[0] - 1;
+    while(incount<=inbarwidth):
+     incurpixel = upc_img.getpixel((startx + incount, starty));
+     if(incurpixel!=barcolor[2]):
+      return False;
+     incount += 1;
     pre_upc_list.append("0");
    startx += 1 * (barwidth[0] * int(resize));
    startxalt += 1 * (barwidth[0] * int(resize));

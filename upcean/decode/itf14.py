@@ -202,16 +202,60 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
   listcount = 0;
   curpixel = upc_img.getpixel((startx, starty));
   if(curpixel==barcolor[0]):
+   incount = 0;
+   inbarwidth = barwidth[0] - 1;
+   while(incount<=inbarwidth):
+    incurpixel = upc_img.getpixel((startx + incount, starty));
+    if(incurpixel!=barcolor[0]):
+     return False;
+    incount += 1;
    nexpixel = upc_img.getpixel((startx + (1 * (barwidth[0] * int(resize))), starty));
    if(nexpixel==barcolor[0] and startx<(endx - (2* (barwidth[0] * int(resize))) + 1)):
+    incount = 0;
+    inbarwidth = barwidth[0] - 1;
+    while(incount<=inbarwidth):
+     incurpixel = upc_img.getpixel(((startx + (1 * (barwidth[0] * int(resize)))) + incount, starty));
+     if(incurpixel!=barcolor[0]):
+      return False;
+     incount += 1;
+    if(threewidebar):
+     incount = 0;
+     inbarwidth = barwidth[0] - 1;
+     while(incount<=inbarwidth):
+      incurpixel = upc_img.getpixel(((startx + (2 * (barwidth[0] * int(resize)))) + incount, starty));
+      if(incurpixel!=barcolor[0]):
+       return False;
+      incount += 1;
     pre_upc_list_left.append("1");
     skiptwo = True;
    else:
     pre_upc_list_left.append("0");
     skiptwo = False;
   if(curpixel==barcolor[2]):
+   incount = 0;
+   inbarwidth = barwidth[0] - 1;
+   while(incount<=inbarwidth):
+    incurpixel = upc_img.getpixel((startx + incount, starty));
+    if(incurpixel!=barcolor[2]):
+     return False;
+    incount += 1;
    nexpixel = upc_img.getpixel((startx + (1 * (barwidth[0] * int(resize))), starty));
    if(nexpixel==barcolor[2] and startx<(endx - (2* (barwidth[0] * int(resize))) + 1)):
+    incount = 0;
+    inbarwidth = barwidth[0] - 1;
+    while(incount<=inbarwidth):
+     incurpixel = upc_img.getpixel(((startx + (1 * (barwidth[0] * int(resize)))) + incount, starty));
+     if(incurpixel!=barcolor[2]):
+      return False;
+     incount += 1;
+    if(threewidebar):
+     incount = 0;
+     inbarwidth = barwidth[0] - 1;
+     while(incount<=inbarwidth):
+      incurpixel = upc_img.getpixel(((startx + (2 * (barwidth[0] * int(resize)))) + incount, starty));
+      if(incurpixel!=barcolor[2]):
+       return False;
+      incount += 1;
     pre_upc_list_right.append("1");
     skiptwo = True;
    else:
