@@ -207,12 +207,12 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=(
    postendx = endx + (5 * (barwidth[0] * int(resize)));
   endx = int(startx + ( (barcodesize * 12 ) * (barwidth[0] * int(resize)) ));
  if(locatebarcode):
-  prestartx = startx - (4 * (barwidth[0] * int(resize)));
-  return ("stf", prestartx, startx, (barcodesize * 2), endx, postendx);
+  prestartx = startx - (8 * (barwidth[0] * int(resize)));
+  endx -= (1 * (barwidth[0] * int(resize)));
+  return ("stf", prestartx, startx, 0, 0, endx, postendx, barcodesize);
  startxalt = startx;
  listcount = 0;
  pre_upc_whole = [];
- prestartx = startx;
  while(startxalt < endx):
   listcount = 0;
   pre_upc_list = [];

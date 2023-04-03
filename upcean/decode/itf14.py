@@ -178,6 +178,8 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
      break;
   barcodesize = int((barcodesize) / 2);
  endx = int(startx + ( (barcodesize * 18 ) * (barwidth[0] * int(resize)) ));
+ if(locatebarcode):
+  endx -= (1 * (barwidth[0] * int(resize)));
  if(threewidebar):
   if(locatebarcode):
    postendx = endx + (5 * (barwidth[0] * int(resize)));
@@ -188,14 +190,14 @@ def decode_itf14_barcode(infile="./itf14.png",resize=1,barheight=(48, 54),barwid
   endx = int(startx + ( (barcodesize * 14 ) * (barwidth[0] * int(resize)) ));
  if(locatebarcode):
   prestartx = startx - (4 * (barwidth[0] * int(resize)));
-  return (prestartx, startx, (barcodesize * 2), endx, postendx);
+  endx -= (1 * (barwidth[0] * int(resize)));
+  return (prestartx, startx, 0, 0, endx, postendx, (barcodesize * 2));
  listcount = 0;
  pre_upc_whole_left = [];
  pre_upc_whole_right = [];
  pre_upc_list_left = [];
  pre_upc_list_right = [];
  skiptwo = False;
- prestartx = startx;
  while(startx < endx):
   listcount = 0;
   curpixel = upc_img.getpixel((startx, starty));

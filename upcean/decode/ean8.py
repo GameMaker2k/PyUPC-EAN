@@ -112,8 +112,10 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
  endx = (28 + 28) * (barwidth[0] * int(resize));
  if(locatebarcode):
   prestartx = startx - (3 * (barwidth[0] * int(resize)));
+  jumpcodeend = jumpcode + (4 * (barwidth[0] * int(resize)));
+  endx = startx + ((28 + 4 + 28) * (barwidth[0] * int(resize)));
   postendx = endx + (3 * (barwidth[0] * int(resize)));
-  return ("ean8", prestartx, startx, 8, endx, postendx);
+  return ("ean8", prestartx, startx, jumpcode, jumpcodeend, endx, postendx, 8);
  startxalt = 0;
  listcount = 0;
  pre_upc_whole = [];
