@@ -16,7 +16,12 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, upcean.encode.getsfname, upcean.support;
-from PIL import Image, UnidentifiedImageError;
+try:
+ from PIL import Image, UnidentifiedImageError;
+ hasuie = True;
+except ImportError:
+ from PIL import Image;
+ hasuie = False;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -48,19 +53,35 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=(
  else:
   try:
    infile.seek(0);
-   try:
-    upc_img = Image.open(infile).convert('RGB');
-   except UnidentifiedImageError:
-    return False;
-    '''upc_img = Image.frombytes("RGB", (((115 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
+   if(hasuie):
+    try:
+     upc_img = Image.open(infile).convert('RGB');
+    except UnidentifiedImageError:
+     return False;
+     '''upc_img = Image.frombytes("RGB", (((115 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
+   else:
+    try:
+     upc_img = Image.open(infile).convert('RGB');
+    except IOError:
+     return False;
+     '''upc_img = Image.frombytes("RGB", (((115 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
   except AttributeError:
-   try:
-    upc_img = Image.open(infile).convert('RGB');
-   except UnidentifiedImageError:
-    return False;
-    '''prefile = open(infile, "rb");
-    upc_img = Image.frombytes("RGB", (((115 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
-    prefile.close();'''
+   if(hasuie):
+    try:
+     upc_img = Image.open(infile).convert('RGB');
+    except UnidentifiedImageError:
+     return False;
+     '''prefile = open(infile, "rb");
+     upc_img = Image.frombytes("RGB", (((115 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
+     prefile.close();'''
+   else:
+    try:
+     upc_img = Image.open(infile).convert('RGB');
+    except IOError:
+     return False;
+     '''prefile = open(infile, "rb");
+     upc_img = Image.frombytes("RGB", (((115 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
+     prefile.close();'''
  threewidebar = True;
  barsize = barwidth[0] * int(resize);
  starty = (int(upc_img.size[1] / 2) - ((barwidth[1] - 1) * 9) ) + shiftxy[1];

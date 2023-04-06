@@ -16,7 +16,12 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, upcean.encode.getsfname, upcean.support;
-from PIL import Image, UnidentifiedImageError;
+try:
+ from PIL import Image, UnidentifiedImageError;
+ hasuie = True;
+except ImportError:
+ from PIL import Image;
+ hasuie = False;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -48,19 +53,35 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
  else:
   try:
    infile.seek(0);
-   try:
-    upc_img = Image.open(infile).convert('RGB');
-   except UnidentifiedImageError:
-    return False;
-    '''upc_img = Image.frombytes("RGB", (((83 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
+   if(hasuie):
+    try:
+     upc_img = Image.open(infile).convert('RGB');
+    except UnidentifiedImageError:
+     return False;
+     '''upc_img = Image.frombytes("RGB", (((69 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
+   else:
+    try:
+     upc_img = Image.open(infile).convert('RGB');
+    except IOError:
+     return False;
+     '''upc_img = Image.frombytes("RGB", (((69 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
   except AttributeError:
-   try:
-    upc_img = Image.open(infile).convert('RGB');
-   except UnidentifiedImageError:
-    return False;
-    '''prefile = open(infile, "rb");
-    upc_img = Image.frombytes("RGB", (((83 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
-    prefile.close();'''
+   if(hasuie):
+    try:
+     upc_img = Image.open(infile).convert('RGB');
+    except UnidentifiedImageError:
+     return False;
+     '''prefile = open(infile, "rb");
+     upc_img = Image.frombytes("RGB", (((69 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
+     prefile.close();'''
+   else:
+    try:
+     upc_img = Image.open(infile).convert('RGB');
+    except IOError:
+     return False;
+     '''prefile = open(infile, "rb");
+     upc_img = Image.frombytes("RGB", (((69 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
+     prefile.close();'''
  barsize = barwidth[0] * int(resize);
  starty = (int(upc_img.size[1] / 2) - ((barwidth[1] - 1) * 9) ) + shiftxy[1];
  left_barcode_l_dict = { '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3", '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9" };
