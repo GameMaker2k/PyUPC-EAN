@@ -85,11 +85,9 @@ def drawText( ctx, size, x, y, text, ftype = "ocrb"  ):
  ctx.select_font_face( "Monospace" );
  ctx.set_font_size( size );
  fo = cairo.FontOptions();
- fo.set_antialias(cairo.ANTIALIAS_NONE);
- '''
- fo.set_hint_style(cairo.HINT_STYLE_NONE);
- fo.set_hint_metrics(cairo.HINT_METRICS_OFF);
- '''
+ fo.set_antialias(cairo.ANTIALIAS_DEFAULT);
+ fo.set_hint_style(cairo.HINT_STYLE_FULL);
+ fo.set_hint_metrics(cairo.HINT_METRICS_ON);
  ctx.set_font_options(fo);
  ctx.move_to( point1[0], point1[1] );
  ctx.show_text( text );
