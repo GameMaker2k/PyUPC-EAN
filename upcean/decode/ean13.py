@@ -132,7 +132,7 @@ def decode_ean13_barcode(infile="./ean13.png",resize=1,barheight=(48, 54),barwid
     break;
    countydown -= 1;
   countydown -= 1;
-  return ("ean18", prestartx, startx, jumpcode, jumpcodeend, endx, countyup, round(postendx / 2), round(countydown / 2), countydown, countyup, 13);
+  return ("ean18", prestartx, startx, jumpcode, jumpcodeend, endx, countyup, round(countyup / 2), round(countydown * 2), countydown, countyup, 13);
  startxalt = 0;
  listcount = 0;
  pre_upc_whole = [];
