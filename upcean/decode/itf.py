@@ -191,7 +191,23 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=(
  if(locatebarcode):
   prestartx = startx - (4 * (barwidth[0] * int(resize)));
   endx -= (1 * (barwidth[0] * int(resize)));
-  return ("itf", prestartx, startx, 0, 0, endx, postendx , (barcodesize * 2));
+  countyup = starty;
+  while(countyup >= 0):
+   curonepixel = upc_img.getpixel((prestartx, countyup));
+   curtwopixel = upc_img.getpixel((prestartx + (1 * (barwidth[0] * int(resize))), countyup));
+   if(curonepixel==barcolor[2] or curtwopixel==barcolor[0]):
+    break;
+   countyup += 1;
+  countyup -= 1;
+  countydown = starty;
+  while(countydown <= upc_img.size[1]):
+   curonepixel = upc_img.getpixel((prestartx, countydown));
+   curtwopixel = upc_img.getpixel((prestartx + (1 * (barwidth[0] * int(resize))), countydown));
+   if(curonepixel==barcolor[2] or curtwopixel==barcolor[0]):
+    break;
+   countydown -= 1;
+  countydown -= 1;
+  return ("itf", prestartx, startx, 0, 0, endx, postendx, countyup, countydown, (barcodesize * 2));
  listcount = 0;
  pre_upc_whole_left = [];
  pre_upc_whole_right = [];
