@@ -18,6 +18,11 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import sys, os, re, upcean.support;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
+from upcean.encode.predraw import *;
+if(pilsupport):
+ import upcean.encode.prepil;
+if(cairosupport):
+ import upcean.encode.precairo;
 
 def get_save_filename(outfile,imageoutlib="pillow"):
  imageoutlib = imageoutlib.lower();
