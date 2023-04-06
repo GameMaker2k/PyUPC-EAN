@@ -403,7 +403,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
     else:
      new_upc_preimg.set_eps(False);
    else:
-    new_upc_preimg = cairo.SVGSurface(imgoutfile, ((115 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((115 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
   else:
    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((115 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);

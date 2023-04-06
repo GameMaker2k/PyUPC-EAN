@@ -274,7 +274,7 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
     else:
      new_upc_preimg.set_eps(False);
    else:
-    new_upc_preimg = cairo.SVGSurface(imgoutfile, ((40 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((40 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   else:
    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((40 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);

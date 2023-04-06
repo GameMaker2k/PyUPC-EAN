@@ -292,7 +292,7 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
     else:
      new_upc_preimg.set_eps(False);
    else:
-    new_upc_preimg = cairo.SVGSurface(imgoutfile, ((44 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((44 * barwidth[0]) + upc_size_add) * int(resize), (barheight[0] + (15 * barwidth[0])) * int(resize));
   else:
    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((44 * barwidth[0]) + upc_size_add) * int(resize), (barheight[0] + (15 * barwidth[0])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);

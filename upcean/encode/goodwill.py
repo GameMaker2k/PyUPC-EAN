@@ -213,7 +213,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
     else:
      new_upc_preimg.set_eps(False);
    else:
-    new_upc_preimg = cairo.SVGSurface(imgoutfile, ((113 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth[0])) * int(resize));
   else:
    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth[0])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
