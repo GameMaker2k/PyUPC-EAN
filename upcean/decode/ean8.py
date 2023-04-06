@@ -131,7 +131,7 @@ def decode_ean8_barcode(infile="./ean8.png",resize=1,barheight=(48, 54),barwidth
     break;
    countydown -= 1;
   countydown -= 1;
-  return ("ean8", prestartx, startx, jumpcode, jumpcodeend, endx, postendx, countyup, countydown, 8);
+  return ("ean8", prestartx, startx, jumpcode, jumpcodeend, endx, countyup, (postendx / 2), (countydown / 2), countydown, countyup, 8);
  startxalt = 0;
  listcount = 0;
  pre_upc_whole = [];

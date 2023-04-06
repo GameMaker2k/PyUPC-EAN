@@ -207,7 +207,7 @@ def decode_stf_barcode(infile="./stf.png",resize=1,barheight=(48, 54),barwidth=(
     break;
    countydown -= 1;
   countydown -= 1;
-  return ("stf", prestartx, startx, 0, 0, endx, postendx, countyup, countydown, barcodesize);
+  return ("stf", prestartx, startx, 0, 0, endx, countyup, (postendx / 2), (countydown / 2), countydown, countyup, barcodesize);
  startxalt = startx;
  listcount = 0;
  pre_upc_whole = [];

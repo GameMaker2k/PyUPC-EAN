@@ -207,7 +207,7 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=(
     break;
    countydown -= 1;
   countydown -= 1;
-  return ("itf", prestartx, startx, 0, 0, endx, postendx, countyup, countydown, (barcodesize * 2));
+  return ("itf", prestartx, startx, 0, 0, endx, countyup, (postendx / 2), (countydown / 2), countydown, countyup, (barcodesize * 2));
  listcount = 0;
  pre_upc_whole_left = [];
  pre_upc_whole_right = [];
