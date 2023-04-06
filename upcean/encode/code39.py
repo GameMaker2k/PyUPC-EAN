@@ -126,17 +126,17 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
  if(len(upc_matches)<=0):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1])));
+  upc_preimg = Image.new("RGB", ((50 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1])));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((50 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
+   upc_preimg = cairo.SVGSurface(None, (50 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (50 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (48 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
+  upc_img.rectangle(0, 0, (50 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -270,7 +270,7 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
   LineStart += barwidth[0];
   BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize((((48 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize)), Image.NEAREST); # use nearest neighbour
+  new_upc_img = upc_preimg.resize((((50 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -288,9 +288,9 @@ def create_code39_barcode(upc,outfile="./code39.png",resize=1,hideinfo=(False, F
      svgoutfile = StringIO();
     if(sys.version[0]>="3"):
      svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((48 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
+   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((50 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((48 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((50 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
