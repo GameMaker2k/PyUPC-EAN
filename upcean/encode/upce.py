@@ -161,8 +161,12 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
    upc_preimg = cairo.SVGSurface(None, (69 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
   elif(outfileext=="PDF"):
    upc_preimg = cairo.PDFSurface(None, (69 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
-  elif(outfileext=="PS"):
+  elif(outfileext=="PS" or outfileext=="EPS"):
    upc_preimg = cairo.PSSurface(None, (69 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
+   if(outfileext=="EPS"):
+    upc_preimg.set_eps(True);
+   else:
+    upc_preimg.set_eps(False);
   else:
    upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (69 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
   upc_img = cairo.Context (upc_preimg);
@@ -414,7 +418,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
   scaler.scale(1/int(resize),1/int(resize));
   upc_imgpat.set_matrix(scaler);
   upc_imgpat.set_filter(cairo.FILTER_NEAREST);
-  if(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS"):
+  if(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or outfileext=="EPS"):
    if(outfile is None):
     imgoutfile = None;
    else:
@@ -426,8 +430,12 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
     new_upc_preimg = cairo.SVGSurface(imgoutfile, ((69 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
    elif(outfileext=="PDF"):
     new_upc_preimg = cairo.PDFSurface(imgoutfile, ((69 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
-   elif(outfileext=="PS"):
+   elif(outfileext=="PS" or outfileext=="EPS"):
     new_upc_preimg = cairo.PSSurface(imgoutfile, ((69 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+    if(outfileext=="EPS"):
+     new_upc_preimg.set_eps(True);
+    else:
+     new_upc_preimg.set_eps(False);
    else:
     new_upc_preimg = cairo.SVGSurface(imgoutfile, ((69 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
   else:
@@ -509,7 +517,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
       stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
-     elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or imageoutlib=="cairosvg"):
+     elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or outfileext=="EPS" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
       new_upc_preimg.finish();
       imgoutfile.seek(0);
@@ -558,7 +566,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
       stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
-     elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or imageoutlib=="cairosvg"):
+     elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or outfileext=="EPS" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
       new_upc_preimg.finish();
       imgoutfile.seek(0);
@@ -599,7 +607,7 @@ def create_upce_barcode(upc,outfile="./upce.png",resize=1,hideinfo=(False, False
      with open(outfile, 'wb+') as f:
       f.write(new_upc_preimg.get_data().tobytes());
      return True;
-    elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or imageoutlib=="cairosvg"):
+    elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or outfileext=="EPS" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
      new_upc_preimg.finish();
      imgoutfile.seek(0);

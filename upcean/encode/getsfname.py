@@ -83,6 +83,8 @@ def get_save_filename(outfile,imageoutlib="pillow"):
      outfileext = "PDF";
     elif(outfileext=="PS"):
      outfileext = "PS";
+    elif(outfileext=="EPS"):
+     outfileext = "EPS";
     else:
      outfileext = "PNG";
    return (outfile, outfileext.upper());
@@ -126,6 +128,8 @@ def get_save_filename(outfile,imageoutlib="pillow"):
      outfileext = "PDF";
     elif(outfileext=="PS"):
      outfileext = "PS";
+    elif(outfileext=="EPS"):
+     outfileext = "EPS";
     else:
      outfileext = "PNG";
    return (outfile, outfileext.upper());
