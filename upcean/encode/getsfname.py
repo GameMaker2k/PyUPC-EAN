@@ -56,7 +56,10 @@ def get_save_filename(outfile,imageoutlib="pillow"):
     if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
      outfileext = "PNG";
    if(imageoutlib=="pillow"):
-    outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
+    if(outfileext=="BYTES"):
+     outfileext = "BYTES";
+    else:
+     outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
    else:
     if(outfileext=="BYTES"):
      outfileext = "BYTES";
@@ -84,7 +87,10 @@ def get_save_filename(outfile,imageoutlib="pillow"):
     if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
      outfileext = "PNG";
    if(imageoutlib=="pillow"):
-    outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
+    if(outfileext=="BYTES"):
+     outfileext = "BYTES";
+    else:
+     outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
    else:
     if(outfileext=="BYTES"):
      outfileext = "BYTES";
