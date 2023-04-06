@@ -120,7 +120,7 @@ def decode_upce_barcode(infile="./upce.png",resize=1,barheight=(48, 54),barwidth
     break;
    countydown -= 1;
   countydown -= 1;
-  return ("upce", prestartx, startx, 0, 0, endx, postendx, countyup, (postendx / 2), (countydown / 2), countydown, 8);
+  return ("upce", prestartx, startx, 0, 0, endx, postendx, countyup, round(postendx / 2), round(countydown / 2), countydown, 8);
  listcount = 0;
  startxalt = 0;
  pre_upc_whole = [];

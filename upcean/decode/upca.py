@@ -129,7 +129,7 @@ def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth
     break;
    countydown -= 1;
   countydown -= 1;
-  return ("upca", prestartx, startx, jumpcode, jumpcodeend, endx, countyup, (postendx / 2), (countydown / 2), countydown, countyup, 12);
+  return ("upca", prestartx, startx, jumpcode, jumpcodeend, endx, countyup, round(postendx / 2), round(countydown / 2), countydown, countyup, 12);
  startxalt = 0;
  listcount = 0;
  pre_upc_whole = [];
