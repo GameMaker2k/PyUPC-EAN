@@ -159,6 +159,10 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
    upc_preimg = cairo.SVGSurface(None, (37 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
+  elif(outfileext=="PDF"):
+   upc_preimg = cairo.PDFSurface(None, (37 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
+  elif(outfileext=="PS"):
+   upc_preimg = cairo.PSSurface(None, (37 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
   else:
    upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (37 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
   upc_img = cairo.Context (upc_preimg);
@@ -326,15 +330,22 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
   scaler.scale(1/int(resize),1/int(resize));
   upc_imgpat.set_matrix(scaler);
   upc_imgpat.set_filter(cairo.FILTER_NEAREST);
-  if(outfileext=="SVG"):
+  if(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS"):
    if(outfile is None):
-    svgoutfile = None;
+    imgoutfile = None;
    else:
     if(sys.version[0]=="2"):
-     svgoutfile = StringIO();
+     imgoutfile = StringIO();
     if(sys.version[0]>="3"):
-     svgoutfile = BytesIO();
-   new_upc_preimg = cairo.SVGSurface(svgoutfile, ((37 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
+     imgoutfile = BytesIO();
+   if(outfileext=="SVG"):
+    new_upc_preimg = cairo.SVGSurface(imgoutfile, ((37 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+   elif(outfileext=="PDF"):
+    new_upc_preimg = cairo.PDFSurface(imgoutfile, ((37 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+   elif(outfileext=="PS"):
+    new_upc_preimg = cairo.PSSurface(imgoutfile, ((37 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+   else:
+    new_upc_preimg = cairo.SVGSurface(imgoutfile, ((37 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
   else:
    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((37 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
@@ -389,13 +400,13 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
       stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
-     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
+     elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
       new_upc_preimg.finish();
-      svgoutfile.seek(0);
-      svgouttext = svgoutfile.read();
+      imgoutfile.seek(0);
+      svgouttext = imgoutfile.read();
       stdoutfile.write(svgouttext);
-      svgoutfile.close();
+      imgoutfile.close();
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -438,13 +449,13 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
       stdoutfile.write(new_upc_preimg.get_data().tobytes());
       stdoutfile.seek(0);
       return stdoutfile;
-     elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
+     elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or imageoutlib=="cairosvg"):
       new_upc_preimg.flush();
       new_upc_preimg.finish();
-      svgoutfile.seek(0);
-      svgouttext = svgoutfile.read();
+      imgoutfile.seek(0);
+      svgouttext = imgoutfile.read();
       stdoutfile.write(svgouttext);
-      svgoutfile.close();
+      imgoutfile.close();
       stdoutfile.seek(0);
       return stdoutfile;
      else:
@@ -479,11 +490,11 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
      with open(outfile, 'wb+') as f:
       f.write(new_upc_preimg.get_data().tobytes());
      return True;
-    elif(outfileext=="SVG" or imageoutlib=="cairosvg"):
+    elif(outfileext=="SVG" or outfileext=="PDF" or outfileext=="PS" or imageoutlib=="cairosvg"):
      new_upc_preimg.flush();
      new_upc_preimg.finish();
-     svgoutfile.seek(0);
-     svgouttext = svgoutfile.read();
+     imgoutfile.seek(0);
+     svgouttext = imgoutfile.read();
      with open(outfile, 'wb+') as f:
       f.write(svgouttext);
      return True;

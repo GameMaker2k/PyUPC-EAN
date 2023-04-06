@@ -79,6 +79,10 @@ def get_save_filename(outfile,imageoutlib="pillow"):
      outfileext = "BYTES";
     elif(outfileext=="SVG"):
      outfileext = "SVG";
+    elif(outfileext=="PDF"):
+     outfileext = "PDF";
+    elif(outfileext=="PS"):
+     outfileext = "PS";
     else:
      outfileext = "PNG";
    return (outfile, outfileext.upper());
@@ -118,6 +122,10 @@ def get_save_filename(outfile,imageoutlib="pillow"):
      outfileext = "BYTES";
     elif(outfileext=="SVG"):
      outfileext = "SVG";
+    elif(outfileext=="PDF"):
+     outfileext = "PDF";
+    elif(outfileext=="PS"):
+     outfileext = "PS";
     else:
      outfileext = "PNG";
    return (outfile, outfileext.upper());
