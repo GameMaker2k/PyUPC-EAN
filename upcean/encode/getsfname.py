@@ -56,24 +56,7 @@ def get_save_filename(outfile,imageoutlib="pillow"):
     if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
      outfileext = "PNG";
    if(imageoutlib=="pillow"):
-    if(outfileext=="DIB"):
-     outfileext = "BMP";
-    if(outfileext=="PS"):
-     outfileext = "EPS";
-    if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
-     outfileext = "JPEG";
-    if(outfileext=="JP2" or outfileext=="J2K" or outfileext=="JPX" or outfileext=="JPEG2"):
-     outfileext = "JPEG2000";
-    if(outfileext=="PBM" or outfileext=="PGM"):
-     outfileext = "PPM";
-    if(outfileext=="TIF"):
-     outfileext = "TIFF";
-    if(outfileext=="BYTES"):
-     outfileext = "BYTES";
-    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="TGA" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
-     outfileext = "PNG";
-   elif(imageoutlib=="pillow"):
-    outfileext = "PNG";
+    outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
    else:
     if(outfileext=="BYTES"):
      outfileext = "BYTES";
@@ -101,24 +84,7 @@ def get_save_filename(outfile,imageoutlib="pillow"):
     if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
      outfileext = "PNG";
    if(imageoutlib=="pillow"):
-    if(outfileext=="DIB"):
-     outfileext = "BMP";
-    if(outfileext=="PS"):
-     outfileext = "EPS";
-    if(outfileext=="JPG" or outfileext=="JPE" or outfileext=="JFIF" or outfileext=="JFI"):
-     outfileext = "JPEG";
-    if(outfileext=="JP2" or outfileext=="J2K" or outfileext=="JPX" or outfileext=="JPEG2"):
-     outfileext = "JPEG2000";
-    if(outfileext=="PBM" or outfileext=="PGM"):
-     outfileext = "PPM";
-    if(outfileext=="TIF"):
-     outfileext = "TIFF";
-    if(outfileext=="BYTES"):
-     outfileext = "BYTES";
-    if(outfileext!="BMP" and outfileext!="DCX" and outfileext!="EPS" and outfileext!="GIF" and outfileext!="IM" and outfileext!="JPEG" and outfileext!="JPEG2000" and outfileext!="MSP" and outfileext!="PCX" and outfileext!="PDF" and outfileext!="PNG" and outfileext!="PPM" and outfileext!="TIFF" and outfileext!="TGA" and outfileext!="WEBP" and outfileext!="XPM" and outfileext!="BYTES"):
-     outfileext = "PNG";
-   elif(imageoutlib=="pillow"):
-    outfileext = "PNG";
+    outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
    else:
     if(outfileext=="BYTES"):
      outfileext = "BYTES";
