@@ -205,6 +205,16 @@ def get_pillow_version(infotype=None):
    pillow_info = {'pillow_ver': pillow_ver, 'pil_is_pillow': pil_is_pillow};
    return pillow_info.get(infotype, pillow_info);
 
+def get_cairo_version(infotype=None):
+ cairosupport = check_for_cairo();
+ if(not cairosupport):
+  return cairosupport;
+ if(cairosupport):
+  import cairo;
+  cairo_ver = cairo.version;
+  cairo_info = {'cairo_ver': cairo_ver};
+  return cairo_info.get(infotype, cairo_info);
+
 linuxdist = None;
 try:
  linuxdist = platform.linux_distribution();
