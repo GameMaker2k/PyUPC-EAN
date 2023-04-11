@@ -897,7 +897,7 @@ def get_code128dec_checksum(upc):
 // Source: http://www.barcodeisland.com/msi.phtml
 // Source: http://en.wikipedia.org/wiki/MSI_Barcode
 '''
-def get_msi_checksum(upc):
+def get_msi_checksum_mod10(upc):
  upc = str(upc);
  upc = upc.upper();
  upc_matches = list(upc);
@@ -923,6 +923,50 @@ def get_msi_checksum(upc):
   PreCount += 1;
  CheckSum = 10 - (UPC_Sum % 10);
  return str(CheckSum);
+
+def get_msi_checksum_mod11(upc, modtype="ibm"):
+ if(modtype=="ibm"):
+  countup = (2, 3, 4, 5, 6, 7);
+ elif(modtype=="ncr"):
+  countup = (2, 3, 4, 5, 6, 7, 8, 9);
+ else:
+  countup = (2, 3, 4, 5, 6, 7);
+ upc_reverse = list(upc);
+ upc_reverse.reverse();
+ startcount = 0;
+ seccount = countup[0];
+ endcount = len(upc_reverse);
+ UPC_Sum = 0;
+ while(startcount<endcount):
+  if(seccount>countup[-1]):
+   seccount = countup[0];
+  UPC_Sum += int(upc_reverse[startcount]) * seccount;
+  seccount += 1;
+  startcount += 1;
+ CheckSum = ((11 - (UPC_Sum % 11)) % 11) % 11;
+ return str(CheckSum);
+ 
+def get_msi_checksum_mod1010(upc):
+ CheckSum = get_msi_checksum_mod10(get_msi_checksum_mod10(upc));
+ return str(CheckSum);
+
+def get_msi_checksum_mod1110(upc, modtype="ibm"):
+ CheckSum = get_msi_checksum_mod10(get_msi_checksum_mod11(upc, modtype));
+ return str(CheckSum);
+
+def get_msi_checksum(upc, getmod="10", modtype="ibm"):
+ getmod = str(getmod);
+ if(getmod!="10" and getmod!="11" and getmod!="1010" and getmod!="1110"):
+  getmod = "10";
+ if(getmod=="10"):
+  return get_msi_checksum_mod10(upc);
+ if(getmod=="11"):
+  return get_msi_checksum_mod11(upc, modtype);
+ if(getmod=="1010"):
+  return get_msi_checksum_mod1010(upc);
+ if(getmod=="1110"):
+  return get_msi_checksum_mod1110(upc, modtype);
+ return False;
 
 '''
 // ISSN (International Standard Serial Number)
