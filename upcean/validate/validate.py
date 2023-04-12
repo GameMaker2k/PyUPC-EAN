@@ -50,8 +50,8 @@ def validate_luhn_checksum(upc, upclen, return_check=False):
  upc_matches1 = upc_matches[0:][::2];
  upc_count1 = 0;
  upc_len1 = len(upc_matches1);
- if(len(upc)==upclen and upclen%2==1):
-  upc_len1 = len(upc_matches1) - 1;
+ #if(len(upc)==upclen and upclen%2==1):
+ # upc_len1 = len(upc_matches1) - 1;
  OddSum = 0;
  while(upc_count1<upc_len1):
   OddSum = OddSum + upc_matches1[upc_count1];
@@ -59,13 +59,17 @@ def validate_luhn_checksum(upc, upclen, return_check=False):
  upc_matches2 = upc_matches[1:][::2];
  upc_count2 = 0;
  upc_len2 = len(upc_matches2);
- if(len(upc)==upclen and upclen%2==0):
-  upc_len2 = len(upc_matches2) - 1;
+ #if(len(upc)==upclen and upclen%2==0):
+ # upc_len2 = len(upc_matches2) - 1;
  EvenSum = 0;
  while(upc_count2<upc_len2):
-  EvenSum = EvenSum + get_digital_root(upc_matches2[upc_count2] * 2);
+  EvenSum = EvenSum + upc_matches2[upc_count2];
   upc_count2 = upc_count2 + 1;
- AllSum = OddSum + EvenSum;
+ AllSum = OddSum + (EvenSum * 3);
+ if(upclen % 2)==0:
+  AllSum = OddSum + (EvenSum * 3);
+ else:
+  AllSum = (OddSum * 3) + EvenSum;
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
