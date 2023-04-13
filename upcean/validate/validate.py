@@ -85,15 +85,14 @@ def validate_luhn_checksum(upc, upclen, return_check=False):
 def get_luhn_checksum(upc, upclen):
  upc = str(upc);
  upclen = int(upclen);
- upclendwn = upclen - 1;
  return validate_luhn_checksum(upc,upclen,True);
 def fix_luhn_checksum(upc, upclen):
  upc = str(upc);
  upclen = int(upclen);
- upclendwn = upclen - 1;
- if(len(upc)>upclendwn):
-  fix_matches = re.findall("^(\d{"+str(upclendwn)+"})", upc);
+ if(len(upc)>upclen):
+  fix_matches = re.findall("^(\d{"+str(upclen)+"})", upc);
   upc = fix_matches[0];
+ print(upc);
  return upc+str(get_luhn_checksum(upc,upclen));
 
 def validate_upca_checksum(upc, return_check=False):
