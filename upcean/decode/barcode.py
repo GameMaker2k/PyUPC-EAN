@@ -19,18 +19,26 @@ import upcean.support, upcean.getprefix.getprefix;
 
 ''' // Code for decoding UPC-A by Kazuki Przyborowski '''
 from upcean.decode.upca import *;
+import upcean.decode.upca as gtin12;
+import upcean.decode.upca as ucc12;
 ''' // Code for decoding UPC-E by Kazuki Przyborowski '''
 from upcean.decode.upce import *;
 ''' // Code for decoding EAN-13 by Kazuki Przyborowski '''
 from upcean.decode.ean13 import *;
+import upcean.decode.ean13 as gtin13;
+import upcean.decode.ean13 as ucc13;
 ''' // Code for decoding EAN-8 by Kazuki Przyborowski '''
 from upcean.decode.ean8 import *;
+import upcean.decode.ean8 as gtin8;
+import upcean.decode.ean8 as ucc8;
 ''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
 from upcean.decode.itf import *;
 ''' // Code for making ITF-14 by Kazuki Przyborowski '''
 from upcean.decode.itf14 import *;
+import upcean.decode.itf14 as itf6;
 ''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
 from upcean.decode.stf import *;
+import upcean.decode.stf as code25;
 
 def validate_decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  upc = decode_upca_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,locatebarcode,imageoutlib);
