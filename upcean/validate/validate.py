@@ -892,17 +892,6 @@ def convert_text_to_hex_code128(upc):
     incharset = 3;
     skipcheck = True;
     textc += 1;
-  if(hextocharsetone.get(upc[textc], False) and not skipcheck):
-   if(incharset==1):
-    textlist.append(hextocharsetone.get(upc[textc], False));
-   else:
-    if(textc==0):
-     textlist.append("67");
-    else:
-     textlist.append("65");
-    textlist.append(hextocharsetone.get(upc[textc], False));
-   skipcheck = True;
-   incharset = 1;
   if(hextocharsettwo.get(upc[textc], False) and not skipcheck):
    if(incharset==2):
     textlist.append(hextocharsettwo.get(upc[textc], False));
@@ -914,6 +903,17 @@ def convert_text_to_hex_code128(upc):
     textlist.append(hextocharsettwo.get(upc[textc], False));
    skipcheck = True;
    incharset = 2;
+  if(hextocharsetone.get(upc[textc], False) and not skipcheck):
+   if(incharset==1):
+    textlist.append(hextocharsetone.get(upc[textc], False));
+   else:
+    if(textc==0):
+     textlist.append("67");
+    else:
+     textlist.append("65");
+    textlist.append(hextocharsetone.get(upc[textc], False));
+   skipcheck = True;
+   incharset = 1;
   textc += 1;
  return str(''.join(textlist));
 
