@@ -915,7 +915,7 @@ def convert_text_to_hex_code128(upc):
    skipcheck = True;
    incharset = 2;
   textc += 1;
- return str(''.join(textlist))
+ return str(''.join(textlist));
 
 def convert_text_to_hex_code128_with_checksum(upc):
  code128out = convert_text_to_hex_code128(upc);
