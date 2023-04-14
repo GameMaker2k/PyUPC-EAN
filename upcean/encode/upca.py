@@ -41,7 +41,7 @@ def create_upca_barcode(upc,outfile="./upca.png",resize=1,hideinfo=(False, False
  hidetext = hideinfo[2];
  imageoutlib = imageoutlib.lower();
  barheightadd = barheight[1];
- if(barheight[0] > barheight[1]):
+ if(barheight[0] >= barheight[1]):
   barheightadd = barheight[0] + 6;
  else:
   barheightadd = barheight[1];

@@ -39,6 +39,11 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
  imageoutlib = imageoutlib.lower();
+ barheightadd = barheight[1];
+ if(barheight[0] >= barheight[1]):
+  barheightadd = barheight[0] + 6;
+ else:
+  barheightadd = barheight[1];
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -124,12 +129,12 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
  CheckSum = int(upc_matches[0]) % 4;
  LeftDigit = list(upc_matches[0]);
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((29 * barwidth[0]), barheight[1] + (9 * barwidth[1])));
+  upc_preimg = Image.new("RGB", ((29 * barwidth[0]), barheightadd + (9 * barwidth[1])));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((29 * barwidth[0]), barheight[1] + (9 * barwidth[1]))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((29 * barwidth[0]), barheightadd + (9 * barwidth[1]))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (29 * barwidth[0]), barheight[1] + (9 * barwidth[1]));
+   upc_preimg = cairo.SVGSurface(None, (29 * barwidth[0]), barheightadd + (9 * barwidth[1]));
   elif(outfileext=="PDF"):
    upc_preimg = cairo.PDFSurface(None, (29 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
   elif(outfileext=="PS" or outfileext=="EPS"):
@@ -139,10 +144,10 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
    else:
     upc_preimg.set_eps(False);
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth[0]), barheight[1] + (9 * barwidth[1]));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth[0]), barheightadd + (9 * barwidth[1]));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, 83, barheight[1] + (9 * barwidth[1]));
+  upc_img.rectangle(0, 0, 83, barheightadd + (9 * barwidth[1]));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -231,7 +236,7 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
    BarNum += 1;
   NumZero += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize(((29 * barwidth[0]) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize)), Image.NEAREST);
+  new_upc_img = upc_preimg.resize(((29 * barwidth[0]) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)), Image.NEAREST);
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -260,9 +265,9 @@ def create_ean2_barcode_supplement(upc,outfile="./ean2_supplement.png",resize=1,
     else:
      new_upc_preimg.set_eps(False);
    else:
-    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth[0]) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth[0]) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth[0]) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (29 * barwidth[0]) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
@@ -425,9 +430,9 @@ def encode_ean2_barcode_supplement(upc,resize=1,hideinfo=(False, False, False),b
 def create_ean2_barcode(upc,outfile="./ean2.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
- upc_preimg = Image.new("RGB", (((29 * barwidth[0]) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth[1])) * int(resize)));
+ upc_preimg = Image.new("RGB", (((29 * barwidth[0]) * int(resize)) + (8 * int(resize)), (barheightadd + (9 * barwidth[1])) * int(resize)));
  upc_img = ImageDraw.Draw(upc_preimg);
- upc_img.rectangle([(0, 0), (((29 * barwidth[0]) * int(resize)) + (8 * int(resize)), (barheight[1] + (9 * barwidth[1])) * int(resize))], fill=barcolor[2]);
+ upc_img.rectangle([(0, 0), (((29 * barwidth[0]) * int(resize)) + (8 * int(resize)), (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2]);
  upc_sup_img = create_ean2_barcode_supplement(upc,None,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
  if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
   return False;

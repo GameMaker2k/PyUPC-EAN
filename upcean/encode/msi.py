@@ -39,6 +39,11 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
  hidecd = hideinfo[1];
  hidetext = hideinfo[2];
  imageoutlib = imageoutlib.lower();
+ barheightadd = barheight[1];
+ if(barheight[0] >= barheight[1]):
+  barheightadd = barheight[0] + 6;
+ else:
+  barheightadd = barheight[1];
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -141,12 +146,12 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
  upc_matches.append(str(10 - (UPC_Sum % 10)));
  upc_size_add = (len(upc_matches) * 12) * barwidth[0];
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((34 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1])));
+  upc_preimg = Image.new("RGB", ((34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1])));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((34 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (34 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
+   upc_preimg = cairo.SVGSurface(None, (34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]));
   elif(outfileext=="PDF"):
    upc_preimg = cairo.PDFSurface(None, (34 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
   elif(outfileext=="PS" or outfileext=="EPS"):
@@ -156,10 +161,10 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
    else:
     upc_preimg.set_eps(False);
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (34 * barwidth[0]) + upc_size_add, barheight[1] + (9 * barwidth[1]));
+  upc_img.rectangle(0, 0, (34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -222,7 +227,7 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
   LineStart += barwidth[0];
   BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize((((34 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize)), Image.NEAREST); # use nearest neighbour
+  new_upc_img = upc_preimg.resize((((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -251,9 +256,9 @@ def create_msi_barcode(upc,outfile="./msi.png",resize=1,hideinfo=(False, False, 
     else:
      new_upc_preimg.set_eps(False);
    else:
-    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheight[1] + (9 * barwidth[1])) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();

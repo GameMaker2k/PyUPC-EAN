@@ -40,6 +40,11 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  hidetext = hideinfo[2];
  threewidebar = True;
  imageoutlib = imageoutlib.lower();
+ barheightadd = barheight[1];
+ if(barheight[0] >= barheight[1]):
+  barheightadd = barheight[0] + 6;
+ else:
+  barheightadd = barheight[1];
  if(not pilsupport and imageoutlib=="pillow"):
   imageoutlib = "cairo";
  if(not cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
@@ -129,25 +134,25 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
  if(len(upc_matches)<=0):
   return False;
  if(pilsupport and imageoutlib=="pillow"):
-  upc_preimg = Image.new("RGB", ((39 * barwidth[0]) + upc_size_add, barheight[0] + (15 * barwidth[0])));
+  upc_preimg = Image.new("RGB", ((39 * barwidth[0]) + upc_size_add, barheightadd + (15 * barwidth[0])));
   upc_img = ImageDraw.Draw(upc_preimg);
-  upc_img.rectangle([(0, 0), ((39 * barwidth[0]) + upc_size_add, barheight[0] + (15 * barwidth[0]))], fill=barcolor[2]);
+  upc_img.rectangle([(0, 0), ((39 * barwidth[0]) + upc_size_add, barheightadd + (15 * barwidth[0]))], fill=barcolor[2]);
  if(cairosupport and (imageoutlib=="cairo" or imageoutlib=="cairosvg")):
   if(outfileext=="SVG"):
-   upc_preimg = cairo.SVGSurface(None, (39 * barwidth[0]) + upc_size_add, barheight[0] + (15 * barwidth[0]));
+   upc_preimg = cairo.SVGSurface(None, (39 * barwidth[0]) + upc_size_add, barheightadd + (15 * barwidth[0]));
   elif(outfileext=="PDF"):
-   upc_preimg = cairo.PDFSurface(None, (39 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
+   upc_preimg = cairo.PDFSurface(None, (39 * barwidth[0]) + addonsize, barheightadd + (15 * barwidth[1]));
   elif(outfileext=="PS" or outfileext=="EPS"):
-   upc_preimg = cairo.PSSurface(None, (39 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]));
+   upc_preimg = cairo.PSSurface(None, (39 * barwidth[0]) + addonsize, barheightadd + (15 * barwidth[1]));
    if(outfileext=="EPS"):
     upc_preimg.set_eps(True);
    else:
     upc_preimg.set_eps(False);
   else:
-   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (39 * barwidth[0]) + upc_size_add, barheight[0] + (15 * barwidth[0]));
+   upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (39 * barwidth[0]) + upc_size_add, barheightadd + (15 * barwidth[0]));
   upc_img = cairo.Context (upc_preimg);
   upc_img.set_antialias(cairo.ANTIALIAS_NONE);
-  upc_img.rectangle(0, 0, (39 * barwidth[0]) + upc_size_add, barheight[0] + (15 * barwidth[0]));
+  upc_img.rectangle(0, 0, (39 * barwidth[0]) + upc_size_add, barheightadd + (15 * barwidth[0]));
   upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2]);
   upc_img.fill();
  upc_array = { 'upc': upc, 'code': [ ] };
@@ -259,7 +264,7 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
   LineStart += barwidth[0];
   BarNum += 1;
  if(pilsupport and imageoutlib=="pillow"):
-  new_upc_img = upc_preimg.resize((((39 * barwidth[0]) + upc_size_add) * int(resize), (barheight[0] + (15 * barwidth[0])) * int(resize)), Image.NEAREST); # use nearest neighbour
+  new_upc_img = upc_preimg.resize((((39 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[0])) * int(resize)), Image.NEAREST); # use nearest neighbour
   del(upc_img);
   del(upc_preimg);
   upc_img = ImageDraw.Draw(new_upc_img);
@@ -278,19 +283,19 @@ def create_itf_barcode(upc,outfile="./itf.png",resize=1,hideinfo=(False, False, 
     if(sys.version[0]>="3"):
      imgoutfile = BytesIO();
    if(outfileext=="SVG"):
-    new_upc_preimg = cairo.SVGSurface(imgoutfile, ((39 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.SVGSurface(imgoutfile, ((39 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize));
    elif(outfileext=="PDF"):
-    new_upc_preimg = cairo.PDFSurface(imgoutfile, ((39 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.PDFSurface(imgoutfile, ((39 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize));
    elif(outfileext=="PS" or outfileext=="EPS"):
-    new_upc_preimg = cairo.PSSurface(imgoutfile, ((39 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize));
+    new_upc_preimg = cairo.PSSurface(imgoutfile, ((39 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize));
     if(outfileext=="EPS"):
      new_upc_preimg.set_eps(True);
     else:
      new_upc_preimg.set_eps(False);
    else:
-    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((39 * barwidth[0]) + upc_size_add) * int(resize), (barheight[0] + (15 * barwidth[0])) * int(resize));
+    new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((39 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[0])) * int(resize));
   else:
-   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((39 * barwidth[0]) + upc_size_add) * int(resize), (barheight[0] + (15 * barwidth[0])) * int(resize));
+   new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((39 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[0])) * int(resize));
   new_upc_img = cairo.Context(new_upc_preimg);
   new_upc_img.set_source(upc_imgpat);
   new_upc_img.paint();
