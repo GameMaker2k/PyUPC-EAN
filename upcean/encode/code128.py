@@ -494,14 +494,11 @@ def create_code128hex_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
   while (NumTxtZero < len(upc_print)):
    if(len(upc_print[NumTxtZero])==1):
     drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
-    print(NumTxtZero, upc_print[NumTxtZero], LineTxtStart);
     LineTxtStart += 12 * int(resize);
    if(len(upc_print[NumTxtZero])==2):
     drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero][0], barcolor[1], "ocrb", imageoutlib);
-    print(NumTxtZero, upc_print[NumTxtZero][0], LineTxtStart);
     LineTxtStart += 6 * int(resize);
     drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero][1], barcolor[1], "ocrb", imageoutlib);
-    print(NumTxtZero, upc_print[NumTxtZero][1], LineTxtStart);
     LineTxtStart += 6 * int(resize);
    NumTxtZero += 1;
  del(upc_img);
