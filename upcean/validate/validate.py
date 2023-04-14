@@ -894,10 +894,11 @@ def convert_text_to_hex_code128(upc):
  while(textc < textlen):
   skipcheck = False;
   if(asciitohex.get(upc[textc], False)):
-   if(textc==0):
-    textlist.append("67");
-    incharset = 2;
-   textlist.append(asciitohex.get(upc[textc], False));
+   if((upc[textc]=="Ä" and (incharset==1 or incharset==2 or incharset is None)) or (upc[textc]=="Å" and (incharset==1 or incharset==2 or incharset is None)) or (upc[textc]=="È" and (incharset==2 or incharset is None)) or (upc[textc]=="É" and (incharset==1 or incharset is None)) or upc[textc]=="Ê"):
+    if(textc==0):
+     textlist.append("67");
+     incharset = 2;
+    textlist.append(asciitohex.get(upc[textc], False));
   elif((incharset==1 and upc[textc]==" ") or (incharset==2 and upc[textc]==" ")):
    textlist.append(hextocharsetone.get(upc[textc], False));
   elif((upc[textc].isnumeric() and ((textc+1) < textlen) and upc[textc+1].isnumeric()) and not skipcheck):
