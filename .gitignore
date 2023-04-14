@@ -31,3 +31,5 @@ pip-delete-this-directory.txt
 
 # Translations
 *.mo
+upcean/fonts/OCRA.ttf
+upcean/fonts/OCRB.ttf
