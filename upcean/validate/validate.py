@@ -896,7 +896,7 @@ def convert_text_to_hex_code128(upc):
   if(asciitohex.get(upc[textc], False)):
    if(textc==0):
     textlist.append("67");
-    incharset = 1;
+    incharset = 2;
    textlist.append(asciitohex.get(upc[textc], False));
   elif((incharset==1 and upc[textc]==" ") or (incharset==2 and upc[textc]==" ")):
    textlist.append(hextocharsetone.get(upc[textc], False));
@@ -913,14 +913,14 @@ def convert_text_to_hex_code128(upc):
     incharset = 3;
     skipcheck = True;
     textc += 1;
-  elif(hextocharsettwo.get(upc[textc], False) and not skipcheck):
+  elif(hextocharsettwo.get(upc[textc], False) and not (incharset==1 and shiftcharset is None and hextocharsetone.get(upc[textc], False)) and not skipcheck):
    if(incharset==2):
     textlist.append(hextocharsettwo.get(upc[textc], False));
    else:
     if(textc==0):
      textlist.append("68");
     else:
-     if(hextocharsettwo.get(upc[textc]+1, False) or incharset==3):
+     if(((textc+1) < textlen) and hextocharsettwo.get(upc[textc+1], False) or incharset==3):
       textlist.append("64");
      else:
       textlist.append("62");
@@ -938,7 +938,7 @@ def convert_text_to_hex_code128(upc):
     if(textc==0):
      textlist.append("67");
     else:
-     if(hextocharsetone.get(upc[textc]+1, False) or incharset==3):
+     if(((textc+1) < textlen) and hextocharsetone.get(upc[textc+1], False) or incharset==3):
       textlist.append("65");
      else:
       textlist.append("62");
