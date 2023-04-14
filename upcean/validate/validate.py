@@ -1009,13 +1009,13 @@ def convert_text_to_hex_code128_with_checksum(upc):
  code128out = convert_text_to_hex_code128(upc);
  if(not code128out):
   return False;
- return code128out + "6d" + get_code128_checksum(code128out)+"6c";
+ return code128out+"6d"+get_code128_checksum(code128out)+"6c";
 
 def convert_text_to_hex_code128_manual_with_checksum(upc):
  code128out = convert_text_to_hex_code128_manual(upc);
  if(not code128out):
   return False;
- return code128out + "6d" + get_code128_checksum(code128out)+"6c";
+ return code128out+"6d"+get_code128_checksum(code128out)+"6c";
 
 def get_code128alt_checksum(upc):
  upc = str(upc);

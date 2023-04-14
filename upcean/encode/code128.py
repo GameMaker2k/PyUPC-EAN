@@ -186,203 +186,203 @@ def create_code128hex_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
    cur_set = shift_cur_set;
   left_barcolor = [1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="00"):
-   left_barcolor =  [1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="01"):
-   left_barcolor =  [1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="02"):
-   left_barcolor =  [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="03"):
-   left_barcolor =  [1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="04"):
-   left_barcolor =  [1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="05"):
-   left_barcolor =  [1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="06"):
-   left_barcolor =  [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="07"):
-   left_barcolor =  [1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="08"):
-   left_barcolor =  [1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="09"):
-   left_barcolor =  [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="0a"):
-   left_barcolor =  [1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="0b"):
-   left_barcolor =  [1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="0c"):
-   left_barcolor =  [1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="0d"):
-   left_barcolor =  [1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="0e"):
-   left_barcolor =  [1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="0f"):
-   left_barcolor =  [1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="10"):
-   left_barcolor =  [1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="11"):
-   left_barcolor =  [1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="12"):
-   left_barcolor =  [1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="13"):
-   left_barcolor =  [1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="14"):
-   left_barcolor =  [1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="15"):
-   left_barcolor =  [1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="16"):
-   left_barcolor =  [1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="17"):
-   left_barcolor =  [1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="18"):
-   left_barcolor =  [1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="19"):
-   left_barcolor =  [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="1a"):
-   left_barcolor =  [1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="1b"):
-   left_barcolor =  [1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="1c"):
-   left_barcolor =  [1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="1d"):
-   left_barcolor =  [1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="1e"):
-   left_barcolor =  [1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="1f"):
-   left_barcolor =  [1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="20"):
-   left_barcolor =  [1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="21"):
-   left_barcolor =  [1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="22"):
-   left_barcolor =  [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="23"):
-   left_barcolor =  [1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="24"):
-   left_barcolor =  [1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="25"):
-   left_barcolor =  [1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="26"):
-   left_barcolor =  [1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="27"):
-   left_barcolor =  [1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="28"):
-   left_barcolor =  [1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="29"):
-   left_barcolor =  [1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="2a"):
-   left_barcolor =  [1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="2b"):
-   left_barcolor =  [1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="2c"):
-   left_barcolor =  [1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="2d"):
-   left_barcolor =  [1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="2e"):
-   left_barcolor =  [1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="2f"):
-   left_barcolor =  [1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="30"):
-   left_barcolor =  [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="31"):
-   left_barcolor =  [1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="32"):
-   left_barcolor =  [1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="33"):
-   left_barcolor =  [1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="34"):
-   left_barcolor =  [1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="35"):
-   left_barcolor =  [1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="36"):
-   left_barcolor =  [1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="37"):
-   left_barcolor =  [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="38"):
-   left_barcolor =  [1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="39"):
-   left_barcolor =  [1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="3a"):
-   left_barcolor =  [1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="3b"):
-   left_barcolor =  [1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0];
   if(upc_matches[NumZero]=="3c"):
-   left_barcolor =  [1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0];
   if(upc_matches[NumZero]=="3d"):
-   left_barcolor =  [1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="3e"):
-   left_barcolor =  [1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0];
   if(upc_matches[NumZero]=="3f"):
-   left_barcolor =  [1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0];
   if(upc_matches[NumZero]=="40"):
-   left_barcolor =  [1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="41"):
-   left_barcolor =  [1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0];
   if(upc_matches[NumZero]=="42"):
-   left_barcolor =  [1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="43"):
-   left_barcolor =  [1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="44"):
-   left_barcolor =  [1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="45"):
-   left_barcolor =  [1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0];
   if(upc_matches[NumZero]=="46"):
-   left_barcolor =  [1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="47"):
-   left_barcolor =  [1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0];
   if(upc_matches[NumZero]=="48"):
-   left_barcolor =  [1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="49"):
-   left_barcolor =  [1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="4a"):
-   left_barcolor =  [1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0];
+   left_barcolor = [1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="4b"):
-   left_barcolor =  [1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="4c"):
-   left_barcolor =  [1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0];
   if(upc_matches[NumZero]=="4d"):
-   left_barcolor =  [1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0];
   if(upc_matches[NumZero]=="4e"):
-   left_barcolor =  [1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="4f"):
-   left_barcolor =  [1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0];
   if(upc_matches[NumZero]=="50"):
-   left_barcolor =  [1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="51"):
-   left_barcolor =  [1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0];
   if(upc_matches[NumZero]=="52"):
-   left_barcolor =  [1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="53"):
-   left_barcolor =  [1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="54"):
-   left_barcolor =  [1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="55"):
-   left_barcolor =  [1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0];
+   left_barcolor = [1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="56"):
-   left_barcolor =  [1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="57"):
-   left_barcolor =  [1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0];
   if(upc_matches[NumZero]=="58"):
-   left_barcolor =  [1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="59"):
-   left_barcolor =  [1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="5a"):
-   left_barcolor =  [1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="5b"):
-   left_barcolor =  [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0];
   if(upc_matches[NumZero]=="5c"):
-   left_barcolor =  [1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="5d"):
-   left_barcolor =  [1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0];
+   left_barcolor = [1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="5e"):
-   left_barcolor =  [1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0];
+   left_barcolor = [1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="5f"):
-   left_barcolor =  [1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="60"):
-   left_barcolor =  [1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0];
+   left_barcolor = [1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0];
   if(upc_matches[NumZero]=="61"):
-   left_barcolor =  [1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="62"):
-   left_barcolor =  [1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0];
    old_cur_set = cur_set;
    if(cur_set==0):
     cur_set = 1;
@@ -400,36 +400,36 @@ def create_code128hex_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
   else:
    upc_print.append(" ");
   if(upc_matches[NumZero]=="63"):
-   left_barcolor =  [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0];
+   left_barcolor = [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0];
    if(cur_set==0 or cur_set==1):
     cur_set = 2;
   if(upc_matches[NumZero]=="64"):
-   left_barcolor =  [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0];
    if(cur_set==0 or cur_set==2):
     cur_set = 1;
   if(upc_matches[NumZero]=="65"):
-   left_barcolor =  [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0];
+   left_barcolor = [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0];
    if(cur_set==1 or cur_set==2):
     cur_set = 0;
   if(upc_matches[NumZero]=="66"):
-   left_barcolor =  [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0];
+   left_barcolor = [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0];
   if(upc_matches[NumZero]=="67"):
-   left_barcolor =  [1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0];
    cur_set = 0;
   if(upc_matches[NumZero]=="68"):
-   left_barcolor =  [1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0];
    cur_set = 1;
   if(upc_matches[NumZero]=="69"):
-   left_barcolor =  [1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0];
    cur_set = 2;
   if(upc_matches[NumZero]=="6a"):
-   left_barcolor =  [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0];
+   left_barcolor = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0];
   if(upc_matches[NumZero]=="6b"):
-   left_barcolor =  [1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0];
+   left_barcolor = [1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="6c"):
-   left_barcolor =  [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1];
+   left_barcolor = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1];
   if(upc_matches[NumZero]=="6d"):
-   left_barcolor =  [];
+   left_barcolor = [];
    cur_set = 3;
   if(start_shift==1):
    cur_set = old_cur_set;
