@@ -428,6 +428,9 @@ def create_code128hex_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
    left_barcolor =  [1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0];
   if(upc_matches[NumZero]=="6c"):
    left_barcolor =  [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1];
+  if(upc_matches[NumZero]=="6d"):
+   left_barcolor =  [];
+   cur_set = 3;
   if(start_shift==1):
    cur_set = old_cur_set;
    start_shift = 0;
