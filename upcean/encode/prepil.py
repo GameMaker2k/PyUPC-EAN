@@ -52,9 +52,15 @@ def drawColorLine( ctx, x1, y1, x2, y2, width, color ):
 def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb" ):
  font = ImageFont.truetype(fontpathocra, size);
  if(ftype=="ocra"):
-  font = ImageFont.truetype(fontpathocra, size);
+  try:
+   font = ImageFont.truetype(fontpathocra, size);
+  except OSError:
+   font = ImageFont.truetype(fontpathocraalt, size);
  if(ftype=="ocrb"):
-  font = ImageFont.truetype(fontpathocrb, size);
+  try:
+   font = ImageFont.truetype(fontpathocrb, size);
+  except OSError:
+   font = ImageFont.truetype(fontpathocrbalt, size);
  text = str(text);
  ctx.text((x, y), text, font=font, fill=color);
  del(font);
