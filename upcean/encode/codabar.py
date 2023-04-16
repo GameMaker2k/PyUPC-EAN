@@ -288,13 +288,6 @@ def create_codabar_barcode(upc,outfile="./codabar.png",resize=1,hideinfo=(False,
   upc_img = new_upc_img;
  if(not hidetext):
   NumTxtZero = 0;
-  LineTxtStart = 16;
-  while (NumTxtZero < len(upc_print)):
-   drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
-   LineTxtStart += 9 * int(resize);
-   NumTxtZero += 1;
- if(not hidetext):
-  NumTxtZero = 0;
   LineTxtStart = 20;
   while (NumTxtZero < len(upc_matches)):
    drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib);
