@@ -23,6 +23,10 @@ if(pilsupport):
  import upcean.encode.prepil;
 if(cairosupport):
  import upcean.encode.precairo;
+try:
+ basestring;
+except NameError:
+ basestring = str;
 
 def get_save_filename(outfile,imageoutlib="pillow"):
  imageoutlib = imageoutlib.lower();
