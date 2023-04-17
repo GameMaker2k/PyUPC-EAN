@@ -36,16 +36,17 @@ def get_save_filename(outfile,imageoutlib="pillow"):
   imageoutlib = "pillow";
  if(not pilsupport and not cairosupport):
   return False;
- if(sys.version[0]=="2"):
-  if(isinstance(outfile, str) or isinstance(outfile, unicode)):
-   oldoutfile = outfile[:];
- if(sys.version[0]>="3"):
-  if(isinstance(outfile, str)):
-   oldoutfile = outfile[:];
- if(isinstance(outfile, tuple)):
+ oldoutfile = None;
+ if(isinstance(outfile, basestring)):
+  oldoutfile = outfile[:];
+ elif(isinstance(outfile, tuple)):
   oldoutfile = tuple(outfile[:]);
- if(isinstance(outfile, list)):
+ elif(isinstance(outfile, list)):
   oldoutfile = list(outfile[:]);
+ elif(outfile is None or isinstance(whatever, bool)):
+  return None;
+ else:
+  return False;
  if(outfile is None or isinstance(outfile, bool)):
   oldoutfile = None;
  if(sys.version[0]=="2"):
