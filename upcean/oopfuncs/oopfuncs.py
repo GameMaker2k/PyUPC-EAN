@@ -224,7 +224,6 @@ barcode = encode;
 ''' // Object-oriented classes and functions by Kazuki Przyborowski '''
 class decode:
  ''' // Barcode Types '''
- ''' // Barcode Types '''
  EAN2="ean2";
  UPCS2="ean2";
  EAN5="ean5";
