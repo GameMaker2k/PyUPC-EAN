@@ -43,12 +43,10 @@ def get_save_filename(outfile,imageoutlib="pillow"):
   oldoutfile = tuple(outfile[:]);
  elif(isinstance(outfile, list)):
   oldoutfile = list(outfile[:]);
- elif(outfile is None or isinstance(whatever, bool)):
-  return None;
+ elif(outfile is None or isinstance(outfile, bool)):
+  oldoutfile = None;
  else:
   return False;
- if(outfile is None or isinstance(outfile, bool)):
-  oldoutfile = None;
  if(sys.version[0]=="2"):
   if(isinstance(oldoutfile, str) or isinstance(outfile, unicode)):
    if(outfile!="-" and outfile!="" and outfile!=" "):
