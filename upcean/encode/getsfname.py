@@ -47,72 +47,42 @@ def get_save_filename(outfile,imageoutlib="pillow"):
   oldoutfile = None;
  else:
   return False;
- if(sys.version[0]=="2"):
-  if(isinstance(oldoutfile, str) or isinstance(outfile, unicode)):
-   if(outfile!="-" and outfile!="" and outfile!=" "):
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
-     outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
-     tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
-     del(outfile);
-     outfile = tmpoutfile[0][0];
-     outfileext = tmpoutfile[0][1].upper();
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
-     outfileext = "PNG";
-   if(imageoutlib=="pillow"):
-    if(outfileext=="BYTES"):
-     outfileext = "BYTES";
-    else:
-     outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
+ if(isinstance(oldoutfile, basestring)):
+  if(outfile!="-" and outfile!="" and outfile!=" "):
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
+    outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+    tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+    del(outfile);
+    outfile = tmpoutfile[0][0];
+    outfileext = tmpoutfile[0][1].upper();
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+    outfileext = "PNG";
+  if(imageoutlib=="pillow"):
+   if(outfileext=="BYTES"):
+    outfileext = "BYTES";
    else:
-    if(outfileext=="BYTES"):
-     outfileext = "BYTES";
-    elif(outfileext=="SVG"):
-     outfileext = "SVG";
-    elif(outfileext=="PDF"):
-     outfileext = "PDF";
-    elif(outfileext=="PS"):
-     outfileext = "PS";
-    elif(outfileext=="EPS"):
-     outfileext = "EPS";
-    else:
-     outfileext = "PNG";
-   return (outfile, outfileext.upper());
- if(sys.version[0]>="3"):
-  if(isinstance(oldoutfile, str)):
-   if(outfile!="-" and outfile!="" and outfile!=" "):
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
-     outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
-     tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
-     del(outfile);
-     outfile = tmpoutfile[0][0];
-     outfileext = tmpoutfile[0][1].upper();
-    if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
-     outfileext = "PNG";
-   if(imageoutlib=="pillow"):
-    if(outfileext=="BYTES"):
-     outfileext = "BYTES";
-    else:
-     outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
+    outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG");
+  else:
+   if(outfileext=="BYTES"):
+    outfileext = "BYTES";
+   elif(outfileext=="SVG"):
+    outfileext = "SVG";
+   elif(outfileext=="PDF"):
+    outfileext = "PDF";
+   elif(outfileext=="PS"):
+    outfileext = "PS";
+   elif(outfileext=="EPS"):
+    outfileext = "EPS";
    else:
-    if(outfileext=="BYTES"):
-     outfileext = "BYTES";
-    elif(outfileext=="SVG"):
-     outfileext = "SVG";
-    elif(outfileext=="PDF"):
-     outfileext = "PDF";
-    elif(outfileext=="PS"):
-     outfileext = "PS";
-    elif(outfileext=="EPS"):
-     outfileext = "EPS";
-    else:
-     outfileext = "PNG";
-   return (outfile, outfileext.upper());
- if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+    outfileext = "PNG";
+  return (outfile, outfileext.upper());
+ elif(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
   del(outfile);
   outfile = oldoutfile[0];
   outfileext = oldoutfile[1];
   return (outfile, outfileext.upper());
- if(outfile is None or isinstance(outfile, bool) or isinstance(outfile, file)):
+ elif(outfile is None or isinstance(outfile, bool) or isinstance(outfile, file)):
   return outfile;
+ else:
+  return False;
