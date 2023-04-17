@@ -109,7 +109,7 @@ def validate_encode_ean13_barcode(upc,resize=1,hideinfo=(False, False, False),ba
 def validate_create_ean8_barcode(upc,outfile="./ean8.png",resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
  if(len(upc)>8 or len(upc)<8):
   return False;
- if(not upcean.validate.validate_upce_checksum(upc)):
+ if(not upcean.validate.validate_ean8_checksum(upc)):
   return False;
  return create_upce_barcode(upc,outfile,resize,hideinfo,barheight,barwidth,textxy,barcolor,imageoutlib);
 def validate_draw_ean8_barcode(upc,resize=1,hideinfo=(False, False, False),barheight=(48, 54),barwidth=(1, 1),textxy=(1, 1, 1),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),imageoutlib="pillow"):
