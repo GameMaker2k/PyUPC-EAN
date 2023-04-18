@@ -17,7 +17,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import upcean.convert.convert, upcean.support;
 
-
 '''
 // Shortcut Codes by Kazuki Przyborowski
 // convert
