@@ -62,6 +62,12 @@ except:
  pass
 ''' // Code for making Code 11 by Kazuki Przyborowski '''
 from upcean.encode.code11 import *;
+''' // Code for making Code 32 by Kazuki Przyborowski '''
+from upcean.encode.code32 import *;
+try:
+ import upcean.encode.code32 as pharmacode;
+except:
+ pass
 ''' // Code for making Code 39 by Kazuki Przyborowski '''
 from upcean.encode.code39 import *;
 ''' // Code for making Code 93 by Kazuki Przyborowski '''
