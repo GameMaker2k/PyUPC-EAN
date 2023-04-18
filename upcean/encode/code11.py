@@ -129,33 +129,6 @@ def create_code11_barcode(upc,outfile="./code11.png",resize=1,hideinfo=(False, F
  upc_matches = list(upc);
  if(len(upc_matches)<=0):
   return False;
- Code11Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "-"};
- Code11Values = dict(zip(Code11Array.values(),Code11Array));
- upc_reverse = list(upc_matches);
- upc_reverse.reverse();
- upc_print = list(upc_matches);
- UPC_Count = 0;
- UPC_Weight = 1;
- UPC_Sum = 0;
- while (UPC_Count < len(upc_reverse)):
-  if(UPC_Weight>10):
-   UPC_Weight = 1;
-  UPC_Sum = UPC_Sum + (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])]);
-  UPC_Count += 1;
-  UPC_Weight += 1;
- upc_matches.append(Code11Array[UPC_Sum % 11]);
- upc_reverse = list(upc_matches);
- upc_reverse.reverse();
- UPC_Count = 0;
- UPC_Weight = 1;
- UPC_Sum = 0;
- while (UPC_Count < len(upc_reverse)):
-  if(UPC_Weight>9):
-   UPC_Weight = 1;
-  UPC_Sum = UPC_Sum + (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])]);
-  UPC_Count += 1;
-  UPC_Weight += 1;
- upc_matches.append(Code11Array[UPC_Sum % 11]);
  bcsize6 = len(re.findall("([09\-])", "".join(upc_matches)));
  bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)));
  upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) + len(upc_matches) - 1) * barwidth[0];
