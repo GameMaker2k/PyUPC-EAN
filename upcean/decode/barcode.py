@@ -15,30 +15,45 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.support, upcean.getprefix.getprefix;
+import sys, upcean.support, upcean.getprefix.getprefix;
 
 ''' // Code for decoding UPC-A by Kazuki Przyborowski '''
 from upcean.decode.upca import *;
-import upcean.decode.upca as gtin12;
-import upcean.decode.upca as ucc12;
+try:
+ import upcean.decode.upca as gtin12;
+ import upcean.decode.upca as ucc12;
+except:
+ pass
 ''' // Code for decoding UPC-E by Kazuki Przyborowski '''
 from upcean.decode.upce import *;
 ''' // Code for decoding EAN-13 by Kazuki Przyborowski '''
 from upcean.decode.ean13 import *;
-import upcean.decode.ean13 as gtin13;
-import upcean.decode.ean13 as ucc13;
+try:
+ import upcean.decode.ean13 as gtin13;
+ import upcean.decode.ean13 as ucc13;
+except:
+ pass
 ''' // Code for decoding EAN-8 by Kazuki Przyborowski '''
 from upcean.decode.ean8 import *;
-import upcean.decode.ean8 as gtin8;
-import upcean.decode.ean8 as ucc8;
+try:
+ import upcean.decode.ean8 as gtin8;
+ import upcean.decode.ean8 as ucc8;
+except:
+ pass
 ''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
 from upcean.decode.itf import *;
 ''' // Code for making ITF-14 by Kazuki Przyborowski '''
 from upcean.decode.itf14 import *;
-import upcean.decode.itf14 as itf6;
+try:
+ import upcean.decode.itf14 as itf6;
+except:
+ pass
 ''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
 from upcean.decode.stf import *;
-import upcean.decode.stf as code25;
+try:
+ import upcean.decode.stf as code25;
+except:
+ pass
 
 def validate_decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
  upc = decode_upca_barcode(infile,resize,barheight,barwidth,shiftcheck,shiftxy,barcolor,locatebarcode,imageoutlib);

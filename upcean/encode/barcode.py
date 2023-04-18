@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.support, upcean.getprefix.getprefix;
+import sys, upcean.support, upcean.getprefix.getprefix;
 
 ''' // Code for making EAN-2 supplement by Kazuki Przyborowski '''
 from upcean.encode.ean2 import *;
@@ -23,28 +23,43 @@ from upcean.encode.ean2 import *;
 from upcean.encode.ean5 import *;
 ''' // Code for making UPC-A by Kazuki Przyborowski '''
 from upcean.encode.upca import *;
-import upcean.encode.upca as gtin12;
-import upcean.encode.upca as ucc12;
+try:
+ import upcean.encode.upca as gtin12;
+ import upcean.encode.upca as ucc12;
+except:
+ pass
 ''' // Code for making Goodwill Barcodes by Kazuki Przyborowski '''
 from upcean.encode.goodwill import *;
 ''' // Code for making UPC-E by Kazuki Przyborowski '''
 from upcean.encode.upce import *;
 ''' // Code for making EAN-13 by Kazuki Przyborowski '''
 from upcean.encode.ean13 import *;
-import upcean.encode.ean13 as gtin13;
-import upcean.encode.ean13 as ucc13;
+try:
+ import upcean.encode.ean13 as gtin13;
+ import upcean.encode.ean13 as ucc13;
+except:
+ pass
 ''' // Code for making EAN-8 by Kazuki Przyborowski '''
 from upcean.encode.ean8 import *;
-import upcean.encode.ean8 as gtin8;
-import upcean.encode.ean8 as ucc8;
+try:
+ import upcean.encode.ean8 as gtin8;
+ import upcean.encode.ean8 as ucc8;
+except:
+ pass
 ''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
 from upcean.encode.stf import *;
-import upcean.encode.stf as code25;
+try:
+ import upcean.encode.stf as code25;
+except:
+ pass
 ''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
 from upcean.encode.itf import *;
 ''' // Code for making ITF-14 by Kazuki Przyborowski '''
 from upcean.encode.itf14 import *;
-import upcean.encode.itf14 as itf6;
+try:
+ import upcean.encode.itf14 as itf6;
+except:
+ pass
 ''' // Code for making Code 11 by Kazuki Przyborowski '''
 from upcean.encode.code11 import *;
 ''' // Code for making Code 39 by Kazuki Przyborowski '''
