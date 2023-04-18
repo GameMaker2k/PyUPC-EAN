@@ -15,4 +15,8 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-from upcean.encode.predraw import get_save_filename;
+import upcean.support;
+pilsupport = upcean.support.check_for_pil();
+cairosupport = upcean.support.check_for_cairo();
+if(pilsupport or cairosupport):
+ from upcean.encode.predraw import get_save_filename;
