@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import sys, upcean.support, upcean.getprefix.getprefix;
+import upcean.support, upcean.getprefix.getprefix;
 
 ''' // Code for decoding UPC-A by Kazuki Przyborowski '''
 from upcean.decode.upca import *;
