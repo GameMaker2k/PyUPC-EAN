@@ -16,7 +16,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import cairo, upcean.fonts;
+import os, re, cairo, upcean.fonts;
 
 try:
  import pkg_resources;
@@ -29,6 +29,11 @@ try:
  pkgres = True;
 except ImportError:
  pkgres = False;
+
+try:
+ basestring;
+except NameError:
+ basestring = str;
 
 fontpathocra = upcean.fonts.fontpathocra;
 fontpathocraalt = upcean.fonts.fontpathocraalt;
@@ -99,3 +104,49 @@ def drawColorText( ctx, size, x, y, text, color, ftype = "ocrb"  ):
  ctx.set_source_rgb(color[0], color[1], color[2]);
  drawText(ctx, size, x, y, text, ftype);
  return True;
+
+def get_save_filename(outfile):
+ oldoutfile = None;
+ if(isinstance(outfile, basestring)):
+  oldoutfile = outfile[:];
+ elif(isinstance(outfile, tuple)):
+  oldoutfile = tuple(outfile[:]);
+ elif(isinstance(outfile, list)):
+  oldoutfile = list(outfile[:]);
+ elif(outfile is None or isinstance(outfile, bool)):
+  oldoutfile = None;
+ else:
+  return False;
+ if(isinstance(oldoutfile, basestring)):
+  if(outfile!="-" and outfile!="" and outfile!=" "):
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))>0):
+    outfileext = re.findall("^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper();
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))>0):
+    tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile);
+    del(outfile);
+    outfile = tmpoutfile[0][0];
+    outfileext = tmpoutfile[0][1].upper();
+   if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))==0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile))==0):
+    outfileext = "PNG";
+  if(outfileext=="BYTES"):
+   outfileext = "BYTES";
+  elif(outfileext=="SVG"):
+   outfileext = "SVG";
+  elif(outfileext=="PDF"):
+   outfileext = "PDF";
+  elif(outfileext=="PS"):
+   outfileext = "PS";
+  elif(outfileext=="EPS"):
+   outfileext = "EPS";
+  else:
+   outfileext = "PNG";
+  return (outfile, outfileext.upper());
+ elif(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+  del(outfile);
+  outfile = oldoutfile[0];
+  outfileext = oldoutfile[1];
+  return (outfile, outfileext.upper());
+ elif(outfile is None or isinstance(outfile, bool) or isinstance(outfile, file)):
+  return outfile;
+ else:
+  return False;

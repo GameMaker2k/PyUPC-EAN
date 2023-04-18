@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, sys, upcean.encode.getsfname, upcean.support;
+import re, sys, upcean.support;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -65,7 +65,7 @@ def create_ean13_barcode(upc,outfile="./ean13.png",resize=1,hideinfo=(False, Fal
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.predraw.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];

@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.validate, upcean.convert, upcean.getprefix, upcean.encode.getsfname, upcean.support;
+import upcean.validate, upcean.convert, upcean.getprefix, upcean.support;
 pilsupport = upcean.support.check_for_pil();
 cairosupport = upcean.support.check_for_cairo();
 if(pilsupport or cairosupport):
@@ -214,7 +214,7 @@ class encode:
   def get_save_filename(self, filename=None):
    if(filename is None):
     filename = self.filename;
-   return upcean.encode.getsfname.get_save_filename(self.filename);
+   return upcean.encode.predraw.get_save_filename(self.filename);
  ''' // getprefix/__init__.py funtions '''
  def get_barcode_info(self):
   return upcean.getprefix.get_barcode_info(self.type, self.code);

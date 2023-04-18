@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, sys, upcean.encode.getsfname, upcean.support, upcean.getprefix.getprefix;
+import re, sys, upcean.support, upcean.getprefix.getprefix;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
@@ -61,7 +61,7 @@ def create_goodwill_barcode(upc,outfile="./goodwill.png",resize=1,hideinfo=(Fals
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.predraw.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];

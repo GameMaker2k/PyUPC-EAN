@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
-import re, sys, upcean.encode.getsfname, upcean.support;
+import re, sys, upcean.support;
 from upcean.validate import convert_ascii_code128_to_hex_code128, convert_text_to_hex_code128_with_checksum, convert_text_to_hex_code128_manual_with_checksum;
 try:
  from io import StringIO, BytesIO;
@@ -65,7 +65,7 @@ def create_code128hex_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.predraw.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];
@@ -694,7 +694,7 @@ def create_code128alt_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.predraw.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];
@@ -745,7 +745,7 @@ def create_code128dec_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.predraw.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];
@@ -809,7 +809,7 @@ def create_code128_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(False,
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.predraw.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];
@@ -860,7 +860,7 @@ def create_code128man_barcode(upc,outfile="./code128.png",resize=1,hideinfo=(Fal
    outfile = None;
    outfileext = None;
  else:
-  oldoutfile = upcean.encode.getsfname.get_save_filename(outfile, imageoutlib);
+  oldoutfile = upcean.encode.predraw.get_save_filename(outfile, imageoutlib);
   if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
    del(outfile);
    outfile = oldoutfile[0];
