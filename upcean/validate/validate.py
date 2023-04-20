@@ -50,8 +50,8 @@ def validate_luhn_checksum(upc, upclen, return_check=False):
  upc_matches1 = upc_matches[0:][::2];
  upc_count1 = 0;
  upc_len1 = len(upc_matches1);
- #if(len(upc)==upclen and upclen%2==1):
- # upc_len1 = len(upc_matches1) - 1;
+ if(len(upc)==upclen and upclen%2==1):
+  upc_len1 = len(upc_matches1) - 1;
  OddSum = 0;
  while(upc_count1<upc_len1):
   OddSum = OddSum + upc_matches1[upc_count1];
@@ -59,17 +59,16 @@ def validate_luhn_checksum(upc, upclen, return_check=False):
  upc_matches2 = upc_matches[1:][::2];
  upc_count2 = 0;
  upc_len2 = len(upc_matches2);
- #if(len(upc)==upclen and upclen%2==0):
- # upc_len2 = len(upc_matches2) - 1;
+ if(len(upc)==upclen and upclen%2==0):
+  upc_len2 = len(upc_matches2) - 1;
  EvenSum = 0;
  while(upc_count2<upc_len2):
   EvenSum = EvenSum + upc_matches2[upc_count2];
   upc_count2 = upc_count2 + 1;
- AllSum = OddSum + (EvenSum * 3);
  if(upclen % 2)==0:
-  AllSum = OddSum + (EvenSum * 3);
- else:
   AllSum = (OddSum * 3) + EvenSum;
+ else:
+  AllSum = OddSum + (EvenSum * 3);
  CheckSum = AllSum % 10;
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
@@ -130,6 +129,19 @@ def fix_upca_checksum(upc):
   upc = fix_matches[0];
  return upc+str(get_upca_checksum(upc));
 
+def validate_upca_alt_checksum(upc, return_check=False):
+ upc = str(upc);
+ return validate_luhn_checksum(upc, 12);
+def get_upca_alt_checksum(upc):
+ upc = str(upc);
+ return validate_upca_alt_checksum(upc,True);
+def fix_upca_alt_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>11):
+  fix_matches = re.findall("^(\d{11})", upc);
+  upc = fix_matches[0];
+ return upc+str(get_upca_alt_checksum(upc));
+
 def validate_ean13_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>13):
@@ -166,6 +178,19 @@ def fix_ean13_checksum(upc):
   upc = fix_matches[0];
  return upc+str(get_ean13_checksum(upc));
 
+def validate_ean13_alt_checksum(upc, return_check=False):
+ upc = str(upc);
+ return validate_luhn_checksum(upc, 13);
+def get_ean13_alt_checksum(upc):
+ upc = str(upc);
+ return validate_ean13_alt_checksum(upc,True);
+def fix_ean13_alt_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>12):
+  fix_matches = re.findall("^(\d{12})", upc);
+  upc = fix_matches[0];
+ return upc+str(get_ean13_alt_checksum(upc));
+
 def validate_itf6_checksum(upc, return_check=False):
  upc = str(upc);
  if(len(upc)>6):
@@ -194,6 +219,19 @@ def fix_itf6_checksum(upc):
   fix_matches = re.findall("^(\d{5})", upc);
   upc = fix_matches[0];
  return upc+str(get_itf6_checksum(upc));
+
+def validate_itf6_alt_checksum(upc, return_check=False):
+ upc = str(upc);
+ return validate_luhn_checksum(upc, 6);
+def get_itf6_checksum(upc):
+ upc = str(upc);
+ return validate_itf6_alt_checksum(upc,True);
+def fix_itf6_alt_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>5):
+  fix_matches = re.findall("^(\d{5})", upc);
+  upc = fix_matches[0];
+ return upc+str(get_itf6_alt_checksum(upc));
 
 def validate_itf14_checksum(upc, return_check=False):
  upc = str(upc);
@@ -231,7 +269,20 @@ def fix_itf14_checksum(upc):
   upc = fix_matches[0];
  return upc+str(get_itf14_checksum(upc));
 
-def get_itf_checksum(upc):
+def validate_itf14_alt_checksum(upc, return_check=False):
+ upc = str(upc);
+ return validate_luhn_checksum(upc, 14);
+def get_itf14_checksum(upc):
+ upc = str(upc);
+ return validate_itf14_alt_checksum(upc,True);
+def fix_itf14_alt_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>13):
+  fix_matches = re.findall("^(\d{13})", upc);
+  upc = fix_matches[0];
+ return upc+str(get_itf14_alt_checksum(upc));
+
+def validate_itf_checksum(upc):
  upc = str(upc);
  if(len(upc)>14):
   fix_matches = re.findall("^(\d{14})", upc);
@@ -259,9 +310,36 @@ def get_itf_checksum(upc):
  if(CheckSum>0):
   CheckSum = 10 - CheckSum;
  return str(CheckSum);
+def get_itf_checksum(upc):
+ upc = str(upc);
+ return validate_itf_checksum(upc,True);
+def fix_itf_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>13):
+  fix_matches = re.findall("^(\d{13})", upc);
+  upc = fix_matches[0];
+ return upc+str(get_itf_checksum(upc));
+def validate_itf_alt_checksum(upc):
+ upc = str(upc);
+ return validate_luhn_checksum(upc, 14);
+def get_itf_alt_checksum(upc):
+ upc = str(upc);
+ return validate_itf_alt_checksum(upc,True);
+def fix_itf_alt_checksum(upc):
+ upc = str(upc);
+ if(len(upc)>13):
+  fix_matches = re.findall("^(\d{13})", upc);
+  upc = fix_matches[0];
+ return upc+str(get_itf_alt_checksum(upc));
 
+def validate_stf_checksum(upc):
+ CheckSum = validate_itf_checksum(upc);
+ return str(CheckSum);
 def get_stf_checksum(upc):
  CheckSum = get_itf_checksum(upc);
+ return str(CheckSum);
+def fix_stf_checksum(upc):
+ CheckSum = fix_itf_checksum(upc);
  return str(CheckSum);
 
 def validate_ean8_checksum(upc, return_check=False):
