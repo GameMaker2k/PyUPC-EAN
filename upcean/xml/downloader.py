@@ -21,14 +21,14 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 
 haverequests = False;
 try:
- imp.find_module('requests');
+ import requests;
  haverequests = True;
  import requests;
 except ImportError:
  haverequests = False;
 havemechanize = False;
 try:
- imp.find_module('mechanize');
+ import mechanize;
  havemechanize = True;
  import mechanize;
 except ImportError:
