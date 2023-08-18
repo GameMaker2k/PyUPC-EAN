@@ -43,7 +43,7 @@ def check_for_cairo():
  # PIL Support Check
  cairosupport = True;
  try:
-  imp.find_module('cairo');
+  import cairo;
   cairosupport = True;
  except ImportError:
   cairosupport = False
@@ -53,11 +53,11 @@ def check_for_pil():
  # PIL Support Check
  pilsupport = True;
  try:
-  imp.find_module('PIL');
+  import PIL;
   pilsupport = True;
  except ImportError:
   try:
-   imp.find_module('Image');
+   import Image;
    pilsupport = True;
   except ImportError:
    try:
