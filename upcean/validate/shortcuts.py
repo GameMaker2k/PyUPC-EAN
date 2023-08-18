@@ -24,24 +24,24 @@ import upcean.validate.validate, upcean.support;
 def validate_checksum(bctype, upc, return_check=False):
  if(bctype not in upcean.support.supported_barcodes("tuple")):
   return False;
- if(hasattr(upcean.validate.validate, "validate_"+bctype+"_checksum") and callable(getattr(upcean.validate.validate, "validate_"+bctype+"_checksum"))):
-  return getattr(upcean.validate.validate, "validate_"+bctype+"_checksum")(upc,return_check);
- if(not hasattr(upcean.validate.validate, "validate_"+bctype+"_checksum") or not callable(getattr(upcean.validate.validate, "validate_"+bctype+"_checksum"))):
+ if(hasattr(upcean.validate, "validate_"+bctype+"_checksum") and callable(getattr(upcean.validate, "validate_"+bctype+"_checksum"))):
+  return getattr(upcean.validate, "validate_"+bctype+"_checksum")(upc,return_check);
+ if(not hasattr(upcean.validate, "validate_"+bctype+"_checksum") or not callable(getattr(upcean.validate, "validate_"+bctype+"_checksum"))):
   return False;
  return False;
 def get_checksum(bctype, upc):
  if(bctype not in upcean.support.supported_barcodes("tuple")):
   return False;
- if(hasattr(upcean.validate.validate, "get_"+bctype+"_checksum") and callable(getattr(upcean.validate.validate, "get_"+bctype+"_checksum"))):
-  return getattr(upcean.validate.validate, "get_"+bctype+"_checksum")(upc);
- if(not hasattr(upcean.validate.validate, "get_"+bctype+"_checksum") or not callable(getattr(upcean.validate.validate, "get_"+bctype+"_checksum"))):
+ if(hasattr(upcean.validate, "get_"+bctype+"_checksum") and callable(getattr(upcean.validate, "get_"+bctype+"_checksum"))):
+  return getattr(upcean.validate, "get_"+bctype+"_checksum")(upc);
+ if(not hasattr(upcean.validate, "get_"+bctype+"_checksum") or not callable(getattr(upcean.validate, "get_"+bctype+"_checksum"))):
   return False;
  return False;
 def fix_checksum(bctype, upc):
  if(bctype not in upcean.support.supported_barcodes("tuple")):
   return False;
- if(hasattr(upcean.validate.validate, "fix_"+bctype+"_checksum") and callable(getattr(upcean.validate.validate, "fix_"+bctype+"_checksum"))):
-  return getattr(upcean.validate.validate, "fix_"+bctype+"_checksum")(upc);
- if(not hasattr(upcean.validate.validate, "fix_"+bctype+"_checksum") or not callable(getattr(upcean.validate.validate, "fix_"+bctype+"_checksum"))):
+ if(hasattr(upcean.validate, "fix_"+bctype+"_checksum") and callable(getattr(upcean.validate, "fix_"+bctype+"_checksum"))):
+  return getattr(upcean.validate, "fix_"+bctype+"_checksum")(upc);
+ if(not hasattr(upcean.validate, "fix_"+bctype+"_checksum") or not callable(getattr(upcean.validate, "fix_"+bctype+"_checksum"))):
   return False;
  return False;
