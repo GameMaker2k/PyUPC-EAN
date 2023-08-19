@@ -76,9 +76,9 @@ def create_code93_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False, F
     imageoutlib = "cairo";
  if(len(upc) < 1):
   return False;
- if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
+ if(not re.findall(r"([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
   return False;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+ if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
@@ -536,9 +536,9 @@ def create_code93extended_barcode(upc,outfile="./code93extended.png",resize=1,hi
     imageoutlib = "cairo";
  if(len(upc) < 1):
   return False;
- if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
+ if(not re.findall(r"([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
   return False;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+ if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
@@ -1029,9 +1029,9 @@ def create_code93alt_barcode(upc,outfile="./code93.png",resize=1,hideinfo=(False
     imageoutlib = "cairo";
  if(len(upc) < 1):
   return False;
- if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
+ if(not re.findall(r"([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
   return False;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+ if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:

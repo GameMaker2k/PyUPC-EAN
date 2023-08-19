@@ -39,7 +39,7 @@ if(cairosupport):
  import cairo;
 
 def decode_upca_barcode(infile="./upca.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+ if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(isinstance(infile, Image.Image)):
   upc_img = infile.convert('RGB');

@@ -39,7 +39,7 @@ if(cairosupport):
  import cairo;
 
 def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=(1, 1),shiftcheck=False,shiftxy=(0, 0),barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)),locatebarcode=False,imageoutlib="pillow"):
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+ if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(isinstance(infile, Image.Image)):
   upc_img = infile.convert('RGB');
@@ -309,8 +309,8 @@ def decode_itf_barcode(infile="./itf.png",resize=1,barheight=(48, 54),barwidth=(
  pre_upc_whole_left = "".join(pre_upc_list_left);
  pre_upc_whole_right = "".join(pre_upc_list_right);
  upc_img.close();
- pre_upc_whole_left_re = re.findall("([0-9]{5})", pre_upc_whole_left);
- pre_upc_whole_right_re = re.findall("([0-9]{5})", pre_upc_whole_right);
+ pre_upc_whole_left_re = re.findall(r"([0-9]{5})", pre_upc_whole_left);
+ pre_upc_whole_right_re = re.findall(r"([0-9]{5})", pre_upc_whole_right);
  countlist = barcodesize;
  listcount = 0;
  barcode_list = [];

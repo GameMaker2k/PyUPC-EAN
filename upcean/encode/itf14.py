@@ -79,7 +79,7 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
   return False;
  if(len(upc) < 6):
   return False;
- if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+ if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
   resize = 1;
  if(pilsupport and imageoutlib=="pillow"):
   try:
@@ -127,7 +127,7 @@ def create_itf14_barcode(upc,outfile="./itf14.png",resize=1,hideinfo=(False, Fal
  else:
   pil_addon_fix = 0;
   cairo_addon_fix = 0;
- upc_matches = re.findall("([0-9]{2})", upc);
+ upc_matches = re.findall(r"([0-9]{2})", upc);
  if(threewidebar):
   upc_size_add = (len(upc_matches) * 18) * barwidth[0];
  else:
