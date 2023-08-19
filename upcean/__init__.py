@@ -40,12 +40,13 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 
 import upcean.validate, upcean.convert, upcean.support, upcean.getprefix, upcean.oopfuncs;
 pilsupport = upcean.support.check_for_pil();
-if(pilsupport):
+pillowsupport = upcean.support.check_for_pillow();
+if(pilsupport or pillowsupport):
  cairosupport = False;
 else:
  cairosupport = upcean.support.check_for_cairo();
-if(pilsupport or cairosupport):
+if(pilsupport or pillowsupport or cairosupport):
  import upcean.fonts, upcean.xml, upcean.encode, upcean.encode.getsfname;
  import upcean.encode as barcodes;
-if(pilsupport):
+if(pilsupport or pillowsupport):
  import upcean.decode;
