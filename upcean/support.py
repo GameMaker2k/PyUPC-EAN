@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: support.py - Last Update: 4/14/2023 Ver. 2.9.5 RC 1 - Author: cooldude2k $
+    $FileInfo: support.py - Last Update: 8/18/2023 Ver. 2.9.9 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -233,4 +233,5 @@ def get_python_info(infotype=None):
   return python_info.get(infotype, python_info);
 
 pilsupport = check_for_pil();
+pillowsupport = check_for_pillow();
 cairosupport = check_for_cairo();

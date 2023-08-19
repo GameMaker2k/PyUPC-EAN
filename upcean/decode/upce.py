@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: upce.py - Last Update: 4/14/2023 Ver. 2.9.5 RC 1 - Author: cooldude2k $
+    $FileInfo: upce.py - Last Update: 8/18/2023 Ver. 2.9.9 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
@@ -32,6 +32,7 @@ except ImportError:
   from StringIO import StringIO;
   from StringIO import StringIO as BytesIO;
 pilsupport = upcean.support.check_for_pil();
+pillowsupport = upcean.support.check_for_pillow();
 cairosupport = upcean.support.check_for_cairo();
 from upcean.encode.predraw import *;
 if(cairosupport):
