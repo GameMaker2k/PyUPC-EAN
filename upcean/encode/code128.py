@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import re, sys, upcean.support;
-from upcean.validate import convert_ascii_code128_to_hex_code128, convert_text_to_hex_code128_with_checksum, convert_text_to_hex_code128_manual_with_checksum;
+from upcean.convert import convert_ascii_code128_to_hex_code128, convert_text_to_hex_code128_with_checksum, convert_text_to_hex_code128_manual_with_checksum;
 try:
  from io import StringIO, BytesIO;
 except ImportError:
