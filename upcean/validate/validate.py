@@ -131,7 +131,7 @@ def fix_upca_checksum(upc):
 
 def validate_upca_alt_checksum(upc, return_check=False):
  upc = str(upc);
- return validate_luhn_checksum(upc, 12);
+ return validate_luhn_checksum(upc, 12, return_check);
 def get_upca_alt_checksum(upc):
  upc = str(upc);
  return validate_upca_alt_checksum(upc,True);
@@ -180,7 +180,7 @@ def fix_ean13_checksum(upc):
 
 def validate_ean13_alt_checksum(upc, return_check=False):
  upc = str(upc);
- return validate_luhn_checksum(upc, 13);
+ return validate_luhn_checksum(upc, 13, return_check);
 def get_ean13_alt_checksum(upc):
  upc = str(upc);
  return validate_ean13_alt_checksum(upc,True);
@@ -222,7 +222,7 @@ def fix_itf6_checksum(upc):
 
 def validate_itf6_alt_checksum(upc, return_check=False):
  upc = str(upc);
- return validate_luhn_checksum(upc, 6);
+ return validate_luhn_checksum(upc, 6, return_check);
 def get_itf6_checksum(upc):
  upc = str(upc);
  return validate_itf6_alt_checksum(upc,True);
@@ -271,7 +271,7 @@ def fix_itf14_checksum(upc):
 
 def validate_itf14_alt_checksum(upc, return_check=False):
  upc = str(upc);
- return validate_luhn_checksum(upc, 14);
+ return validate_luhn_checksum(upc, 14, return_check);
 def get_itf14_checksum(upc):
  upc = str(upc);
  return validate_itf14_alt_checksum(upc,True);
@@ -319,9 +319,9 @@ def fix_itf_checksum(upc):
   fix_matches = re.findall(r"^(\d{13})", upc);
   upc = fix_matches[0];
  return upc+str(get_itf_checksum(upc));
-def validate_itf_alt_checksum(upc):
+def validate_itf_alt_checksum(upc, return_check=False):
  upc = str(upc);
- return validate_luhn_checksum(upc, 14);
+ return validate_luhn_checksum(upc, 14, return_check);
 def get_itf_alt_checksum(upc):
  upc = str(upc);
  return validate_itf_alt_checksum(upc,True);
