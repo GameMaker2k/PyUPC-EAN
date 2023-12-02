@@ -17,19 +17,38 @@
 from __future__ import absolute_import, division, print_function, unicode_literals;
 import os;
 
+implib = False
+pkgres = False;
 try:
- import pkg_resources;
- pkgres = True;
+ import importlib.resources;
+ implib = True;
 except ImportError:
- pkgres = False;
+ implib = False
+ try:
+  import pkg_resources;
+  pkgres = True;
+ except ImportError:
+  pkgres = False;
 
-if(pkgres):
+if(implib):
+ fontpathocra = os.path.join(importlib.resources.files(__name__), "OCRA.otf");
+ fontpathocraalt = os.path.join(importlib.resources.files(__name__), "OCRA.ttf");
+ fontpathocrb = os.path.join(importlib.resources.files(__name__), "OCRB.otf");
+ fontpathocrbalt = os.path.join(importlib.resources.files(__name__), "OCRB.ttf");
+ fontpath = os.path.dirname(fontpathocrb);
+elif(pkgres):
  fontpathocra = pkg_resources.resource_filename(__name__, "OCRA.otf");
  fontpathocraalt = pkg_resources.resource_filename(__name__, "OCRA.ttf");
  fontpathocrb = pkg_resources.resource_filename(__name__, "OCRB.otf");
  fontpathocrbalt = pkg_resources.resource_filename(__name__, "OCRB.ttf");
  fontpath = os.path.dirname(fontpathocrb);
-if(not pkgres):
+elif(not pkgres):
+ fontpathocra = os.path.dirname(__file__)+os.sep+"OCRA.otf";
+ fontpathocraalt = os.path.dirname(__file__)+os.sep+"OCRA.ttf";
+ fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf";
+ fontpathocrbalt = os.path.dirname(__file__)+os.sep+"OCRB.ttf";
+ fontpath = os.path.dirname(fontpathocrb);
+else:
  fontpathocra = os.path.dirname(__file__)+os.sep+"OCRA.otf";
  fontpathocraalt = os.path.dirname(__file__)+os.sep+"OCRA.ttf";
  fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf";
