@@ -15,26 +15,32 @@
     $FileInfo: which.py - Last Update: 2/15/2016 Ver. 0.0.5 RC 3 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals;
-import os, sys, argparse;
+from __future__ import absolute_import, division, print_function, unicode_literals
+import os
+import sys
+import argparse
 
-__version_info__ = (0, 0, 5, "rc3");
-if(__version_info__[3]!=None):
- __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+"+"+str(__version_info__[3]);
-if(__version_info__[3]==None):
- __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2]);
+__version_info__ = (0, 0, 5, "rc3")
+if(__version_info__[3] != None):
+    __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(
+        __version_info__[2])+"+"+str(__version_info__[3])
+if(__version_info__[3] == None):
+    __version__ = str(
+        __version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])
 
-proname = "which";
-prover = __version__;
-profullname = proname+" "+prover;
+proname = "which"
+prover = __version__
+profullname = proname+" "+prover
+
 
 def which_exec(execfile):
- for path in os.environ["PATH"].split(":"):
-  if os.path.exists(path + "/" + execfile):
-   return path + "/" + execfile;
+    for path in os.environ["PATH"].split(":"):
+        if os.path.exists(path + "/" + execfile):
+            return path + "/" + execfile
 
-parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
-parser.add_argument("-v", "--version", action = "version", version = profullname);
-parser.add_argument("filename", help = "enter a file name/path");
-getargs = parser.parse_args();
-print(which_exec(getargs.filename));
+
+parser = argparse.ArgumentParser(conflict_handler="resolve", add_help=True)
+parser.add_argument("-v", "--version", action="version", version=profullname)
+parser.add_argument("filename", help="enter a file name/path")
+getargs = parser.parse_args()
+print(which_exec(getargs.filename))

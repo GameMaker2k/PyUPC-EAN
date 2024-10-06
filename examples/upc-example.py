@@ -7,7 +7,7 @@
          $FileInfo: upc-example.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1  - Author: fizyk20 $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals;
+from __future__ import absolute_import, division, print_function, unicode_literals
 import upcean
 
 barcode = upcean.oopfuncs.barcode('ean13', '1234567890128')

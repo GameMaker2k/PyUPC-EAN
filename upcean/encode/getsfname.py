@@ -14,10 +14,10 @@
     $FileInfo: getsfname.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals;
-import upcean.support;
-pilsupport = upcean.support.check_for_pil();
-pillowsupport = upcean.support.check_for_pillow();
-cairosupport = upcean.support.check_for_cairo();
+from __future__ import absolute_import, division, print_function, unicode_literals
+import upcean.support
+pilsupport = upcean.support.check_for_pil()
+pillowsupport = upcean.support.check_for_pillow()
+cairosupport = upcean.support.check_for_cairo()
 if(pilsupport or cairosupport):
- from upcean.encode.predraw import get_save_filename;
+    from upcean.encode.predraw import get_save_filename

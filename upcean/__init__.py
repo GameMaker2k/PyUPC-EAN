@@ -14,8 +14,13 @@
     $FileInfo: __init__.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals;
-from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, get_build_python_info, __revision__, __revision_id__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date;
+from __future__ import absolute_import, division, print_function, unicode_literals
+import upcean.oopfuncs
+import upcean.getprefix
+import upcean.support
+import upcean.convert
+import upcean.validate
+from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, get_build_python_info, __revision__, __revision_id__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date
 
 '''
 // UPC Resources and Info
@@ -38,15 +43,17 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 // Source: http://www.barcodeisland.com/
 '''
 
-import upcean.validate, upcean.convert, upcean.support, upcean.getprefix, upcean.oopfuncs;
-pilsupport = upcean.support.check_for_pil();
-pillowsupport = upcean.support.check_for_pillow();
+pilsupport = upcean.support.check_for_pil()
+pillowsupport = upcean.support.check_for_pillow()
 if(pilsupport or pillowsupport):
- cairosupport = False;
+    cairosupport = False
 else:
- cairosupport = upcean.support.check_for_cairo();
+    cairosupport = upcean.support.check_for_cairo()
 if(pilsupport or pillowsupport or cairosupport):
- import upcean.fonts, upcean.xml, upcean.encode, upcean.encode.getsfname;
- import upcean.encode as barcodes;
+    import upcean.fonts
+    import upcean.xml
+    import upcean.encode
+    import upcean.encode.getsfname
+    import upcean.encode as barcodes
 if(pilsupport or pillowsupport):
- import upcean.decode;
+    import upcean.decode
