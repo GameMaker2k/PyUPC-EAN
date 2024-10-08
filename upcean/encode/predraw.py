@@ -14,16 +14,21 @@
     $FileInfo: predraw.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import upcean.fonts
 import upcean.support
+
 pilsupport = upcean.support.check_for_pil()
-if(pilsupport):
+if (pilsupport):
     from PIL import Image, ImageDraw, ImageFont
+
     import upcean.encode.prepil
 cairosupport = upcean.support.check_for_cairo()
-if(cairosupport):
+if (cairosupport):
     import cairo
+
     import upcean.encode.precairo
 
 try:
@@ -52,137 +57,159 @@ fontpath = upcean.fonts.fontpath
 
 def snapCoords(ctx, x, y, imageoutlib="pillow"):
     imageoutlib = imageoutlib.lower()
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
+    if (not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+    if (imageoutlib != "pillow" and imageoutlib !=
+            "cairo" and imageoutlib != "cairosvg"):
         imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport):
+    if (not pilsupport and not cairosupport):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
+    if (pilsupport and imageoutlib == "pillow"):
         return upcean.encode.prepil.snapCoords(ctx, x, y)
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (not pilsupport and imageoutlib == "pillow"):
         return False
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         return upcean.encode.precairo.snapCoords(ctx, x, y)
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         return False
     return False
 
 
 def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow"):
     imageoutlib = imageoutlib.lower()
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
+    if (not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+    if (imageoutlib != "pillow" and imageoutlib !=
+            "cairo" and imageoutlib != "cairosvg"):
         imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport):
+    if (not pilsupport and not cairosupport):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
-        return upcean.encode.prepil.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (pilsupport and imageoutlib == "pillow"):
+        return upcean.encode.prepil.drawColorLine(
+            ctx, x1, y1, x2, y2, width, color)
+    if (not pilsupport and imageoutlib == "pillow"):
         return False
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        return upcean.encode.precairo.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        return upcean.encode.precairo.drawColorLine(
+            ctx, x1, y1, x2, y2, width, color)
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         return False
     return False
 
 
 def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
     imageoutlib = imageoutlib.lower()
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
+    if (not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+    if (imageoutlib != "pillow" and imageoutlib !=
+            "cairo" and imageoutlib != "cairosvg"):
         imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport):
+    if (not pilsupport and not cairosupport):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
-        return upcean.encode.prepil.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (pilsupport and imageoutlib == "pillow"):
+        return upcean.encode.prepil.drawColorRectangle(
+            ctx, x1, y1, x2, y2, color)
+    if (not pilsupport and imageoutlib == "pillow"):
         return False
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        return upcean.encode.precairo.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        return upcean.encode.precairo.drawColorRectangle(
+            ctx, x1, y1, x2, y2, color)
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         return False
     return False
 
 
-def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib="pillow"):
+def drawColorText(
+        ctx,
+        size,
+        x,
+        y,
+        text,
+        color,
+        ftype="ocrb",
+        imageoutlib="pillow"):
     imageoutlib = imageoutlib.lower()
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
+    if (not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+    if (imageoutlib != "pillow" and imageoutlib !=
+            "cairo" and imageoutlib != "cairosvg"):
         imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport):
+    if (not pilsupport and not cairosupport):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
-        return upcean.encode.prepil.drawColorText(ctx, size, x, y, text, color, ftype)
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (pilsupport and imageoutlib == "pillow"):
+        return upcean.encode.prepil.drawColorText(
+            ctx, size, x, y, text, color, ftype)
+    if (not pilsupport and imageoutlib == "pillow"):
         return False
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        return upcean.encode.precairo.drawColorText(ctx, size, x, y, text, color, ftype)
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        return upcean.encode.precairo.drawColorText(
+            ctx, size, x, y, text, color, ftype)
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         return False
     return False
 
 
 def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
     imageoutlib = imageoutlib.lower()
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
+    if (not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+    if (imageoutlib != "pillow" and imageoutlib !=
+            "cairo" and imageoutlib != "cairosvg"):
         imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport):
+    if (not pilsupport and not cairosupport):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
-        return upcean.encode.prepil.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (pilsupport and imageoutlib == "pillow"):
+        return upcean.encode.prepil.drawColorRectangleAlt(
+            ctx, x1, y1, x2, y2, color)
+    if (not pilsupport and imageoutlib == "pillow"):
         return False
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        return upcean.encode.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        return upcean.encode.precairo.drawColorRectangleAlt(
+            ctx, x1, y1, x2, y2, color)
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         return False
     return False
 
 
 def get_save_filename(outfile, imageoutlib="pillow"):
     imageoutlib = imageoutlib.lower()
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
+    if (not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+    if (imageoutlib != "pillow" and imageoutlib !=
+            "cairo" and imageoutlib != "cairosvg"):
         imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport):
+    if (not pilsupport and not cairosupport):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
+    if (pilsupport and imageoutlib == "pillow"):
         return upcean.encode.prepil.get_save_filename(outfile)
-    if(not pilsupport and imageoutlib == "pillow"):
+    if (not pilsupport and imageoutlib == "pillow"):
         return False
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         return upcean.encode.precairo.get_save_filename(outfile)
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    if (not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         return False
     return False

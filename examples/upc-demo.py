@@ -16,16 +16,19 @@
     $FileInfo: upc-ui.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1  - Author: cooldude2k $
 '''
 
-from __future__ import division, absolute_import, print_function
+from __future__ import absolute_import, division, print_function
+
 import os
-import sys
 import platform
-import re
-import upcean
-import pygame
 import random
-from PIL import Image, ImageDraw, ImageFont
+import re
+import sys
+
 import PIL
+import pygame
+from PIL import Image, ImageDraw, ImageFont
+
+import upcean
 
 
 def rot_center(image, rect, angle):
@@ -46,7 +49,7 @@ DisPlayRes = pygame.display.Info()
 size = width, height = DisPlayRes.current_w, DisPlayRes.current_h
 screen = pygame.display.set_mode(size)
 screen_rect = screen.get_rect()
-pygame.display.set_caption("PyUPC-EAN Demo - "+upcean. __version__)
+pygame.display.set_caption("PyUPC-EAN Demo - " + upcean. __version__)
 pygame.display.toggle_fullscreen()
 '''
 pybgimg = pygame.image.load("/usr/share/wallpapers/Sky.jpg");
@@ -63,123 +66,138 @@ randsubbarcode = {}
 randchck = {}
 count = 0
 maxnum = numbarcodes
-print("Python Version: "+platform.python_version())
+print("Python Version: " + platform.python_version())
 pygamesdlver = pygame.get_sdl_version()
-pygamesdlstr = str(pygamesdlver[0])+"." + \
-    str(pygamesdlver[1])+"."+str(pygamesdlver[2])
-del(pygamesdlver)
-print("SDL Version: "+pygamesdlstr)
-del(pygamesdlstr)
+pygamesdlstr = str(pygamesdlver[0]) + "." + \
+    str(pygamesdlver[1]) + "." + str(pygamesdlver[2])
+del (pygamesdlver)
+print("SDL Version: " + pygamesdlstr)
+del (pygamesdlstr)
 pygamever = pygame.version.vernum
-pygamestr = str(pygamever[0])+"."+str(pygamever[1])+"."+str(pygamever[2])
-del(pygamever)
-print("PyGame Version: "+pygamestr)
-del(pygamestr)
+pygamestr = str(pygamever[0]) + "." + \
+    str(pygamever[1]) + "." + str(pygamever[2])
+del (pygamever)
+print("PyGame Version: " + pygamestr)
+del (pygamestr)
 try:
-    print("PIL Version: "+Image.VERSION)
+    print("PIL Version: " + Image.VERSION)
 except AttributeError:
     pass
 except NameError:
     pass
 try:
-    print("Pillow Version: "+Image.PILLOW_VERSION)
+    print("Pillow Version: " + Image.PILLOW_VERSION)
 except AttributeError:
     try:
-        print("Pillow Version: "+PIL.__version__)
+        print("Pillow Version: " + PIL.__version__)
     except AttributeError:
         pass
     except NameError:
         pass
 except NameError:
     try:
-        print("Pillow Version: "+PIL.__version__)
+        print("Pillow Version: " + PIL.__version__)
     except AttributeError:
         pass
     except NameError:
         pass
-print("PyUPC-EAN Version: "+upcean.__version__)
-while(count < maxnum):
+print("PyUPC-EAN Version: " + upcean.__version__)
+while (count < maxnum):
     barcodeobj[count] = upcean.oopfuncs.barcode()
     randbarcode[count] = random.randint(1, 9)
-    if(randbarcode[count] == 1):
+    if (randbarcode[count] == 1):
         barcodeobj[count].type = "upca"
         barcodeobj[count].code = str(random.randint(0, 99999999999)).zfill(11)
-    if(randbarcode[count] == 2):
+    if (randbarcode[count] == 2):
         barcodeobj[count].type = "upce"
         barcodeobj[count].code = str(random.randint(0, 1999999)).zfill(7)
-    if(randbarcode[count] == 3):
+    if (randbarcode[count] == 3):
         barcodeobj[count].type = "ean13"
         barcodeobj[count].code = str(random.randint(0, 999999999999)).zfill(12)
-    if(randbarcode[count] == 4):
+    if (randbarcode[count] == 4):
         barcodeobj[count].type = "ean8"
         barcodeobj[count].code = str(random.randint(0, 9999999)).zfill(7)
-    if(randbarcode[count] == 5):
+    if (randbarcode[count] == 5):
         barcodeobj[count].type = "itf14"
         barcodeobj[count].code = str(
             random.randint(0, 9999999999999)).zfill(13)
-    if(randbarcode[count] == 6):
+    if (randbarcode[count] == 6):
         randsubbarcode[count] = random.randint(1, 3)
         barcodeobj[count].type = "upce"
-        if(randsubbarcode[count] == 1):
+        if (randsubbarcode[count] == 1):
             barcodeobj[count].outtype = "upca"
-        if(randsubbarcode[count] == 2):
+        if (randsubbarcode[count] == 2):
             barcodeobj[count].outtype = "ean13"
-        if(randsubbarcode[count] == 3):
+        if (randsubbarcode[count] == 3):
             barcodeobj[count].outtype = "itf14"
         barcodeobj[count].code = str(random.randint(0, 1999999)).zfill(7)
-    if(randbarcode[count] == 7):
+    if (randbarcode[count] == 7):
         randsubbarcode[count] = random.randint(1, 2)
         barcodeobj[count].type = "upca"
-        if(randsubbarcode[count] == 1):
+        if (randsubbarcode[count] == 1):
             barcodeobj[count].outtype = "ean13"
-        if(randsubbarcode[count] == 2):
+        if (randsubbarcode[count] == 2):
             barcodeobj[count].outtype = "itf14"
         barcodeobj[count].code = str(random.randint(0, 99999999999)).zfill(11)
-    if(randbarcode[count] == 8):
+    if (randbarcode[count] == 8):
         barcodeobj[count].type = "ean13"
         barcodeobj[count].outtype = "itf14"
         barcodeobj[count].code = str(random.randint(0, 999999999999)).zfill(12)
-    if(randbarcode[count] == 9):
+    if (randbarcode[count] == 9):
         randsubbarcode[count] = random.randint(1, 3)
         barcodeobj[count].type = "ean8"
-        if(randsubbarcode[count] == 1):
+        if (randsubbarcode[count] == 1):
             barcodeobj[count].outtype = "upca"
-        if(randsubbarcode[count] == 2):
+        if (randsubbarcode[count] == 2):
             barcodeobj[count].outtype = "ean13"
-        if(randsubbarcode[count] == 3):
+        if (randsubbarcode[count] == 3):
             barcodeobj[count].outtype = "itf14"
         barcodeobj[count].code = str(random.randint(0, 9999999)).zfill(7)
     barcodeobj[count].code = barcodeobj[count].fix_checksum()
-    if(randbarcode[count] == 6 or randbarcode[count] == 7 or randbarcode[count] == 8 or randbarcode[count] == 9):
+    if (randbarcode[count] == 6 or randbarcode[count] ==
+            7 or randbarcode[count] == 8 or randbarcode[count] == 9):
         barcodeobj[count].code = barcodeobj[count].convert_barcode()
         barcodeobj[count].type = barcodeobj[count].outtype
     barcodeobj[count].size = barcodesize
     barcodedrw[count] = barcodeobj[count].validate_draw_barcode().convert(
         "RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True)
     barcodeimg[count] = pygame.image.fromstring(
-        barcodedrw[count].tobytes(), barcodedrw[count].size, barcodedrw[count].mode)
+        barcodedrw[count].tobytes(),
+        barcodedrw[count].size,
+        barcodedrw[count].mode)
     position[count] = barcodeimg[count].get_rect()
     position[count].move_ip([1, 1])
     position[count] = position[count].move(
         random.randint(0, 800), random.randint(0, height))
     dirx[count] = random.randint(-2, 2)
     diry[count] = random.randint(-2, 2)
-    if(dirx[count] == 0 and diry[count] == 0):
+    if (dirx[count] == 0 and diry[count] == 0):
         randchck[count] = random.randint(1, 4)
-        if(randchck[count] == 1):
+        if (randchck[count] == 1):
             dirx[count] = random.randint(1, 2)
             diry[count] = random.randint(1, 2)
-        if(randchck[count] == 2):
+        if (randchck[count] == 2):
             dirx[count] = random.randint(-2, -1)
             diry[count] = random.randint(-2, -1)
-        if(randchck[count] == 3):
+        if (randchck[count] == 3):
             dirx[count] = random.randint(1, 2)
             diry[count] = random.randint(-2, -1)
-        if(randchck[count] == 4):
+        if (randchck[count] == 4):
             dirx[count] = random.randint(-2, -1)
             diry[count] = random.randint(1, 2)
-    print("Generating Barcode "+str(count + 1)+"\nType: "+barcodeobj[count].type+"\nRand: "+str(
-        randbarcode[count])+"\nCode: "+barcodeobj[count].code+"\nPosition: X:"+str(position[count].center[0])+",Y:"+str(position[count].center[0]))
+    print("Generating Barcode " +
+          str(count +
+              1) +
+          "\nType: " +
+          barcodeobj[count].type+
+          "\nRand: " +
+          str(randbarcode[count]) +
+          "\nCode: " +
+          barcodeobj[count].code +
+          "\nPosition: X:" +
+          str(position[count].center[0]) +
+          ",Y:" +
+          str(position[count].center[0]))
     count = count + 1
 running = True
 while running:
@@ -188,68 +206,70 @@ while running:
  screen.blit(pybgimg,(0,0));
  '''
     count = 0
-    while(count < maxnum):
-        if((position[count].center[0] < 0 or position[count].center[0] > width) or (position[count].center[1] < 0 or position[count].center[1] > height)):
+    while (count < maxnum):
+        if ((position[count].center[0] < 0 or position[count].center[0] > width) or (
+                position[count].center[1] < 0 or position[count].center[1] > height)):
             barcodeobj[count] = upcean.oopfuncs.barcode()
             randbarcode[count] = random.randint(1, 9)
-            if(randbarcode[count] == 1):
+            if (randbarcode[count] == 1):
                 barcodeobj[count].type = "upca"
                 barcodeobj[count].code = str(
                     random.randint(0, 99999999999)).zfill(11)
-            if(randbarcode[count] == 2):
+            if (randbarcode[count] == 2):
                 barcodeobj[count].type = "upce"
                 barcodeobj[count].code = str(
                     random.randint(0, 1999999)).zfill(7)
-            if(randbarcode[count] == 3):
+            if (randbarcode[count] == 3):
                 barcodeobj[count].type = "ean13"
                 barcodeobj[count].code = str(
                     random.randint(0, 999999999999)).zfill(12)
-            if(randbarcode[count] == 4):
+            if (randbarcode[count] == 4):
                 barcodeobj[count].type = "ean8"
                 barcodeobj[count].code = str(
                     random.randint(0, 9999999)).zfill(7)
-            if(randbarcode[count] == 5):
+            if (randbarcode[count] == 5):
                 barcodeobj[count].type = "itf14"
                 barcodeobj[count].code = str(
                     random.randint(0, 9999999999999)).zfill(13)
-            if(randbarcode[count] == 6):
+            if (randbarcode[count] == 6):
                 randsubbarcode[count] = random.randint(1, 3)
                 barcodeobj[count].type = "upce"
-                if(randsubbarcode[count] == 1):
+                if (randsubbarcode[count] == 1):
                     barcodeobj[count].outtype = "upca"
-                if(randsubbarcode[count] == 2):
+                if (randsubbarcode[count] == 2):
                     barcodeobj[count].outtype = "ean13"
-                if(randsubbarcode[count] == 3):
+                if (randsubbarcode[count] == 3):
                     barcodeobj[count].outtype = "itf14"
                 barcodeobj[count].code = str(
                     random.randint(0, 1999999)).zfill(7)
-            if(randbarcode[count] == 7):
+            if (randbarcode[count] == 7):
                 randsubbarcode[count] = random.randint(1, 2)
                 barcodeobj[count].type = "upca"
-                if(randsubbarcode[count] == 1):
+                if (randsubbarcode[count] == 1):
                     barcodeobj[count].outtype = "ean13"
-                if(randsubbarcode[count] == 2):
+                if (randsubbarcode[count] == 2):
                     barcodeobj[count].outtype = "itf14"
                 barcodeobj[count].code = str(
                     random.randint(0, 99999999999)).zfill(11)
-            if(randbarcode[count] == 8):
+            if (randbarcode[count] == 8):
                 barcodeobj[count].type = "ean13"
                 barcodeobj[count].outtype = "itf14"
                 barcodeobj[count].code = str(
                     random.randint(0, 999999999999)).zfill(12)
-            if(randbarcode[count] == 9):
+            if (randbarcode[count] == 9):
                 randsubbarcode[count] = random.randint(1, 3)
                 barcodeobj[count].type = "ean8"
-                if(randsubbarcode[count] == 1):
+                if (randsubbarcode[count] == 1):
                     barcodeobj[count].outtype = "upca"
-                if(randsubbarcode[count] == 2):
+                if (randsubbarcode[count] == 2):
                     barcodeobj[count].outtype = "ean13"
-                if(randsubbarcode[count] == 3):
+                if (randsubbarcode[count] == 3):
                     barcodeobj[count].outtype = "itf14"
                 barcodeobj[count].code = str(
                     random.randint(0, 9999999)).zfill(7)
             barcodeobj[count].code = barcodeobj[count].fix_checksum()
-            if(randbarcode[count] == 6 or randbarcode[count] == 7 or randbarcode[count] == 8 or randbarcode[count] == 9):
+            if (randbarcode[count] == 6 or randbarcode[count] ==
+                    7 or randbarcode[count] == 8 or randbarcode[count] == 9):
                 barcodeobj[count].code = barcodeobj[count].convert_barcode()
                 barcodeobj[count].type = barcodeobj[count].outtype
             barcodeobj[count].size = barcodesize
@@ -263,22 +283,33 @@ while running:
                 random.randint(0, width), random.randint(0, height))
             dirx[count] = random.randint(-2, 2)
             diry[count] = random.randint(-2, 2)
-            if(dirx[count] == 0 and diry[count] == 0):
+            if (dirx[count] == 0 and diry[count] == 0):
                 randchck[count] = random.randint(1, 4)
-                if(randchck[count] == 1):
+                if (randchck[count] == 1):
                     dirx[count] = random.randint(1, 2)
                     diry[count] = random.randint(1, 2)
-                if(randchck[count] == 2):
+                if (randchck[count] == 2):
                     dirx[count] = random.randint(-2, -1)
                     diry[count] = random.randint(-2, -1)
-                if(randchck[count] == 3):
+                if (randchck[count] == 3):
                     dirx[count] = random.randint(1, 2)
                     diry[count] = random.randint(-2, -1)
-                if(randchck[count] == 4):
+                if (randchck[count] == 4):
                     dirx[count] = random.randint(-2, -1)
                     diry[count] = random.randint(1, 2)
-            print("Generating Barcode "+str(count + 1)+"\nType: "+barcodeobj[count].type+"\nRand: "+str(
-                randbarcode[count])+"\nCode: "+barcodeobj[count].code+"\nPosition: X:"+str(position[count].center[0])+",Y:"+str(position[count].center[0]))
+            print("Generating Barcode " +
+                  str(count +
+                      1) +
+                  "\nType: " +
+                  barcodeobj[count].type+
+                  "\nRand: " +
+                  str(randbarcode[count]) +
+                  "\nCode: " +
+                  barcodeobj[count].code +
+                  "\nPosition: X:" +
+                  str(position[count].center[0]) +
+                  ",Y:" +
+                  str(position[count].center[0]))
         screen.blit(barcodeimg[count], position[count])
         position[count] = position[count].move(dirx[count], diry[count])
         count = count + 1

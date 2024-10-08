@@ -14,11 +14,13 @@
     $FileInfo: __init__.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
+from upcean.encode.barcode import *
+from upcean.encode.shortcuts import *
 from upcean.xml.downloader import *
 from upcean.xml.files import *
-from upcean.encode.shortcuts import *
-from upcean.encode.barcode import *
 
 '''
 // UPC Resources and Info

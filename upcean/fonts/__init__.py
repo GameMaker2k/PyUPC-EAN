@@ -14,7 +14,9 @@
     $FileInfo: __init__.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import os
 
 implib = False
@@ -30,7 +32,7 @@ except ImportError:
     except ImportError:
         pkgres = False
 
-if(implib):
+if (implib):
     fontpathocra = os.path.join(
         importlib.resources.files(__name__), "OCRA.otf")
     fontpathocraalt = os.path.join(
@@ -40,21 +42,21 @@ if(implib):
     fontpathocrbalt = os.path.join(
         importlib.resources.files(__name__), "OCRB.ttf")
     fontpath = os.path.dirname(fontpathocrb)
-elif(pkgres):
+elif (pkgres):
     fontpathocra = pkg_resources.resource_filename(__name__, "OCRA.otf")
     fontpathocraalt = pkg_resources.resource_filename(__name__, "OCRA.ttf")
     fontpathocrb = pkg_resources.resource_filename(__name__, "OCRB.otf")
     fontpathocrbalt = pkg_resources.resource_filename(__name__, "OCRB.ttf")
     fontpath = os.path.dirname(fontpathocrb)
-elif(not pkgres):
-    fontpathocra = os.path.dirname(__file__)+os.sep+"OCRA.otf"
-    fontpathocraalt = os.path.dirname(__file__)+os.sep+"OCRA.ttf"
-    fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf"
-    fontpathocrbalt = os.path.dirname(__file__)+os.sep+"OCRB.ttf"
+elif (not pkgres):
+    fontpathocra = os.path.dirname(__file__) + os.sep + "OCRA.otf"
+    fontpathocraalt = os.path.dirname(__file__) + os.sep + "OCRA.ttf"
+    fontpathocrb = os.path.dirname(__file__) + os.sep + "OCRB.otf"
+    fontpathocrbalt = os.path.dirname(__file__) + os.sep + "OCRB.ttf"
     fontpath = os.path.dirname(fontpathocrb)
 else:
-    fontpathocra = os.path.dirname(__file__)+os.sep+"OCRA.otf"
-    fontpathocraalt = os.path.dirname(__file__)+os.sep+"OCRA.ttf"
-    fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf"
-    fontpathocrbalt = os.path.dirname(__file__)+os.sep+"OCRB.ttf"
+    fontpathocra = os.path.dirname(__file__) + os.sep + "OCRA.otf"
+    fontpathocraalt = os.path.dirname(__file__) + os.sep + "OCRA.ttf"
+    fontpathocrb = os.path.dirname(__file__) + os.sep + "OCRB.otf"
+    fontpathocrbalt = os.path.dirname(__file__) + os.sep + "OCRB.ttf"
     fontpath = os.path.dirname(fontpathocrb)

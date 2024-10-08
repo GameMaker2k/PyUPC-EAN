@@ -14,12 +14,16 @@
     $FileInfo: files.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-import sys
-import re
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import platform
-import upcean.validate
+import re
+import sys
+
 import upcean.support
+import upcean.validate
+
 try:
     import simplejson as json
 except ImportError:
@@ -29,7 +33,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as cElementTree
 try:
-    from io import StringIO, BytesIO
+    from io import BytesIO, StringIO
 except ImportError:
     try:
         from cStringIO import StringIO
@@ -37,34 +41,58 @@ except ImportError:
     except ImportError:
         from StringIO import StringIO
         from StringIO import StringIO as BytesIO
-if(sys.version[0] == "2"):
+if (sys.version[0] == "2"):
     import urllib2
     import urlparse
-if(sys.version[0] >= "3"):
+if (sys.version[0] >= "3"):
     import urllib.request as urllib2
     import urllib.parse as urlparse
+
 from xml.sax.saxutils import XMLGenerator
-from upcean.versioninfo import __author__, __copyright__, __credits__, __email__, __license__, __maintainer__, __project__, __project_url__, __revision__, __status__, __version__, __version_alt__, __version_date__, __version_date_alt__, __version_date_info__, __version_info__, version_date, version_info
+
 import upcean.encode.barcode
 import upcean.encode.shortcuts
+from upcean.versioninfo import (__author__, __copyright__, __credits__,
+                                __email__, __license__, __maintainer__,
+                                __project__, __project_url__, __revision__,
+                                __status__, __version__, __version_alt__,
+                                __version_date__, __version_date_alt__,
+                                __version_date_info__, __version_info__,
+                                version_date, version_info)
 
 ''' // User-Agent string for http/https requests '''
 useragent_string = "Mozilla/5.0 (compatible; {proname}/{prover}; +{prourl})".format(
     proname=__project__, prover=__version_alt__, prourl=__project_url__)
-if(platform.python_implementation() != ""):
-    useragent_string_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {pyimp}/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(osver=platform.system()+" "+platform.release(
-    ), archtype=platform.machine(), prourl=__project_url__, pyimp=platform.python_implementation(), pyver=platform.python_version(), proname=__project__, prover=__version_alt__)
-if(platform.python_implementation() == ""):
-    useragent_string_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {pyimp}/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(osver=platform.system(
-    )+" "+platform.release(), archtype=platform.machine(), prourl=__project_url__, pyimp="Python", pyver=platform.python_version(), proname=__project__, prover=__version_alt__)
+if (platform.python_implementation() != ""):
+    useragent_string_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {pyimp}/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(
+        osver=platform.system() +
+        " " +
+        platform.release(),
+        archtype=platform.machine(),
+        prourl=__project_url__,
+        pyimp=platform.python_implementation(),
+        pyver=platform.python_version(),
+        proname=__project__,
+        prover=__version_alt__)
+if (platform.python_implementation() == ""):
+    useragent_string_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {pyimp}/{pyver} (KHTML, like Gecko) {proname}/{prover}".format(
+        osver=platform.system() +
+        " " +
+        platform.release(),
+        archtype=platform.machine(),
+        prourl=__project_url__,
+        pyimp="Python",
+        pyver=platform.python_version(),
+        proname=__project__,
+        prover=__version_alt__)
 
 
 def check_if_string(strtext):
-    if(sys.version[0] == "2"):
-        if(isinstance(strtext, basestring)):
+    if (sys.version[0] == "2"):
+        if (isinstance(strtext, basestring)):
             return True
-    if(sys.version[0] >= "3"):
-        if(isinstance(strtext, str)):
+    if (sys.version[0] >= "3"):
+        if (isinstance(strtext, str)):
             return True
     return False
 
@@ -73,7 +101,8 @@ def check_if_string(strtext):
 
 
 def create_barcode_from_xml_file(xmlfile, draw=False):
-    if(check_if_string(xmlfile) and re.findall(r"^(http|https)\:\/\/", xmlfile)):
+    if (check_if_string(xmlfile) and re.findall(
+            r"^(http|https)\:\/\/", xmlfile)):
         xmlheaders = {'User-Agent': useragent_string}
         try:
             tree = cElementTree.ElementTree(file=urllib2.urlopen(
@@ -88,92 +117,101 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
     root = tree.getroot()
     bcdrawlist = []
     for child in root:
-        if(child.tag == "python"):
+        if (child.tag == "python"):
             exec(child.text)
-        if(child.tag == "barcode"):
-            if(draw):
+        if (child.tag == "barcode"):
+            if (draw):
                 xmlbarcode = {
-                    "bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": None}
-            if(not draw):
-                if('file' in child.attrib):
+                    "bctype": child.attrib['type'],
+                    "upc": child.attrib['code'],
+                    "outfile": None}
+            if (not draw):
+                if ('file' in child.attrib):
                     xmlbarcode = {
-                        "bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": child.attrib['file']}
-                if('file' not in child.attrib):
+                        "bctype": child.attrib['type'],
+                        "upc": child.attrib['code'],
+                        "outfile": child.attrib['file']}
+                if ('file' not in child.attrib):
                     xmlbarcode = {
-                        "bctype": child.attrib['type'], "upc": child.attrib['code'], "outfile": None}
-            if('size' in child.attrib):
+                        "bctype": child.attrib['type'],
+                        "upc": child.attrib['code'],
+                        "outfile": None}
+            if ('size' in child.attrib):
                 xmlbarcode.update({"resize": int(child.attrib['size'])})
-            if('hideinfo' in child.attrib):
+            if ('hideinfo' in child.attrib):
                 hidebcinfo = child.attrib['hideinfo'].split()
                 hidebcinfoval = []
-                if(hidebcinfo[0] == "0"):
+                if (hidebcinfo[0] == "0"):
                     hidebcinfoval.append(False)
-                if(hidebcinfo[0] == "1"):
+                if (hidebcinfo[0] == "1"):
                     hidebcinfoval.append(True)
-                if(hidebcinfo[1] == "0"):
+                if (hidebcinfo[1] == "0"):
                     hidebcinfoval.append(False)
-                if(hidebcinfo[1] == "1"):
+                if (hidebcinfo[1] == "1"):
                     hidebcinfoval.append(True)
-                if(hidebcinfo[2] == "0"):
+                if (hidebcinfo[2] == "0"):
                     hidebcinfoval.append(False)
-                if(hidebcinfo[2] == "1"):
+                if (hidebcinfo[2] == "1"):
                     hidebcinfoval.append(True)
                 xmlbarcode.update({"hideinfo": tuple(hidebcinfoval)})
-            if('height' in child.attrib):
-                xmlbarcode.update(
-                    {"barheight": tuple(map(int, child.attrib['height'].split()))})
-            if('width' in child.attrib):
+            if ('height' in child.attrib):
+                xmlbarcode.update({"barheight": tuple(
+                    map(int, child.attrib['height'].split()))})
+            if ('width' in child.attrib):
                 xmlbarcode.update(
                     {"barwidth": tuple(map(int, child.attrib['width'].split()))})
-            if('textxy' in child.attrib):
+            if ('textxy' in child.attrib):
                 xmlbarcode.update(
                     {"textxy": tuple(map(int, child.attrib['textxy'].split()))})
-            if('color' in child.attrib):
+            if ('color' in child.attrib):
                 colorsplit = child.attrib['color'].split()
                 colorsplit[0] = re.sub(r"\s+", "", colorsplit[0])
-                if(re.findall(r"^\#", colorsplit[0])):
+                if (re.findall(r"^\#", colorsplit[0])):
                     colorsplit1 = re.findall(
                         r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
-                if(re.findall(r"^rgb", colorsplit[0])):
+                if (re.findall(r"^rgb", colorsplit[0])):
                     colorsplit1 = re.findall(
-                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[0])
+                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                        colorsplit[0])
                 colorsplit1 = colorsplit1[0]
                 colorlist1 = (int(colorsplit1[0], 16), int(
                     colorsplit1[1], 16), int(colorsplit1[2], 16))
                 colorsplit[1] = re.sub(r"\s+", "", colorsplit[1])
-                if(re.findall(r"^\#", colorsplit[1])):
+                if (re.findall(r"^\#", colorsplit[1])):
                     colorsplit2 = re.findall(
                         r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
-                if(re.findall(r"^rgb", colorsplit[1])):
+                if (re.findall(r"^rgb", colorsplit[1])):
                     colorsplit2 = re.findall(
-                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[1])
+                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                        colorsplit[1])
                 colorsplit2 = colorsplit2[0]
                 colorlist2 = (int(colorsplit2[0], 16), int(
                     colorsplit2[1], 16), int(colorsplit2[2], 16))
                 colorsplit[2] = re.sub(r"\s+", "", colorsplit[2])
-                if(re.findall(r"^\#", colorsplit[2])):
+                if (re.findall(r"^\#", colorsplit[2])):
                     colorsplit3 = re.findall(
                         r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
-                if(re.findall(r"^rgb", colorsplit[2])):
+                if (re.findall(r"^rgb", colorsplit[2])):
                     colorsplit3 = re.findall(
-                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[2])
+                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                        colorsplit[2])
                 colorsplit3 = colorsplit3[0]
                 colorlist3 = (int(colorsplit3[0], 16), int(
                     colorsplit3[1], 16), int(colorsplit3[2], 16))
                 colorlist = (colorlist1, colorlist2, colorlist3)
                 xmlbarcode.update({"barcolor": colorlist})
-            if('imageoutlib' in child.attrib):
+            if ('imageoutlib' in child.attrib):
                 xmlbarcode.update({"imageoutlib": tuple(
                     map(int, child.attrib['imgoutlib'].split()))})
             bcstatinfo = upcean.encode.shortcuts.validate_create_barcode(
                 **xmlbarcode)
-            if(draw or 'file' not in child.attrib):
+            if (draw or 'file' not in child.attrib):
                 bcdrawlist.append(bcstatinfo)
-            if(not bcstatinfo):
+            if (not bcstatinfo):
                 return False
-    if(draw or (not draw and len(bcdrawlist) > 0)):
+    if (draw or (not draw and len(bcdrawlist) > 0)):
         return bcdrawlist
-    if(not draw and len(bcdrawlist) == 0):
+    if (not draw and len(bcdrawlist) == 0):
         return True
 
 
@@ -190,7 +228,8 @@ def draw_barcode_from_xml_string(xmlfile):
 
 
 def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
-    if(check_if_string(jsonfile) and re.findall(r"^(http|https)\:\/\/", jsonfile)):
+    if (check_if_string(jsonfile) and re.findall(
+            r"^(http|https)\:\/\/", jsonfile)):
         xmlheaders = {'User-Agent': useragent_string}
         try:
             tree = cElementTree.ElementTree(file=urllib2.urlopen(
@@ -207,35 +246,35 @@ def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
     bctreect = 0
     jsonlist = {'barcodes': {'barcode': []}}
     for child in bctree:
-        if(child.tag == "barcode"):
+        if (child.tag == "barcode"):
             jsontmpdict = {}
-        if('type' in child.attrib):
+        if ('type' in child.attrib):
             jsontmpdict.update({"type": child.attrib['type']})
-        if('code' in child.attrib):
+        if ('code' in child.attrib):
             jsontmpdict.update({"code": child.attrib['code']})
-        if('file' in child.attrib):
+        if ('file' in child.attrib):
             jsontmpdict.update({"file": child.attrib['file']})
-        if('size' in child.attrib):
+        if ('size' in child.attrib):
             jsontmpdict.update({"size": child.attrib['size']})
-        if('hideinfo' in child.attrib):
+        if ('hideinfo' in child.attrib):
             jsontmpdict.update({"hideinfo": child.attrib['hideinfo']})
-        if('height' in child.attrib):
+        if ('height' in child.attrib):
             jsontmpdict.update({"height": child.attrib['height']})
-        if('width' in child.attrib):
+        if ('width' in child.attrib):
             jsontmpdict.update({"width": child.attrib['width']})
-        if('textxy' in child.attrib):
+        if ('textxy' in child.attrib):
             jsontmpdict.update({"textxy": child.attrib['textxy']})
-        if('color' in child.attrib):
+        if ('color' in child.attrib):
             jsontmpdict.update({"color": child.attrib['color']})
-        if('imageoutlib' in child.attrib):
+        if ('imageoutlib' in child.attrib):
             jsontmpdict.update({"imageoutlib": child.attrib['imageoutlib']})
         jsonlist['barcodes']['barcode'].append(jsontmpdict)
-    if(jsonfile is not None):
+    if (jsonfile is not None):
         jsonofile = open(jsonfile, "w+")
         json.dump(jsonlist, jsonofile)
         jsonofile.close()
         return True
-    if(jsonfile is None):
+    if (jsonfile is None):
         return json.dumps(jsonlist)
 
 
@@ -244,107 +283,118 @@ def convert_from_xml_to_json_string(xmlfile, jsonfile=None):
 
 
 def create_barcode_from_json_file(jsonfile, draw=False):
-    if(check_if_string(jsonfile) and re.findall(r"^(http|https)\:\/\/", jsonfile)):
+    if (check_if_string(jsonfile) and re.findall(
+            r"^(http|https)\:\/\/", jsonfile)):
         jsonheaders = {'User-Agent': useragent_string}
         tree = json.load(urllib2.urlopen(
             urllib2.Request(jsonfile, None, jsonheaders)))
     else:
-        if(check_if_string(jsonfile)):
+        if (check_if_string(jsonfile)):
             jsonfile = open(jsonfile, "r")
         tree = json.load(jsonfile)
         jsonfile.close()
     try:
         bctree = tree['barcodes']['barcode']
-    except:
+    except BaseException:
         return False
     bctreeln = len(bctree)
     bctreect = 0
     bcdrawlist = []
-    while(bctreect < bctreeln):
-        if(draw):
+    while (bctreect < bctreeln):
+        if (draw):
             jsonbarcode = {"bctype": bctree[bctreect]['type'],
                            "upc": bctree[bctreect]['code'], "outfile": None}
-        if(not draw):
-            if('file' in bctree[bctreect]):
-                jsonbarcode = {"bctype": bctree[bctreect]['type'],
-                               "upc": bctree[bctreect]['code'], "outfile": bctree[bctreect]['file']}
-            if('file' not in bctree[bctreect]):
+        if (not draw):
+            if ('file' in bctree[bctreect]):
                 jsonbarcode = {
-                    "bctype": bctree[bctreect]['type'], "upc": bctree[bctreect]['code'], "outfile": None}
-        if('size' in bctree[bctreect]):
+                    "bctype": bctree[bctreect]['type'],
+                    "upc": bctree[bctreect]['code'],
+                    "outfile": bctree[bctreect]['file']}
+            if ('file' not in bctree[bctreect]):
+                jsonbarcode = {
+                    "bctype": bctree[bctreect]['type'],
+                    "upc": bctree[bctreect]['code'],
+                    "outfile": None}
+        if ('size' in bctree[bctreect]):
             jsonbarcode.update({"resize": int(bctree[bctreect]['size'])})
-        if('hideinfo' in bctree[bctreect]):
+        if ('hideinfo' in bctree[bctreect]):
             hidebcinfo = bctree[bctreect]['hideinfo'].split()
             hidebcinfoval = []
-            if(hidebcinfo[0] == "0"):
+            if (hidebcinfo[0] == "0"):
                 hidebcinfoval.append(False)
-            if(hidebcinfo[0] == "1"):
+            if (hidebcinfo[0] == "1"):
                 hidebcinfoval.append(True)
-            if(hidebcinfo[1] == "0"):
+            if (hidebcinfo[1] == "0"):
                 hidebcinfoval.append(False)
-            if(hidebcinfo[1] == "1"):
+            if (hidebcinfo[1] == "1"):
                 hidebcinfoval.append(True)
-            if(hidebcinfo[2] == "0"):
+            if (hidebcinfo[2] == "0"):
                 hidebcinfoval.append(False)
-            if(hidebcinfo[2] == "1"):
+            if (hidebcinfo[2] == "1"):
                 hidebcinfoval.append(True)
             jsonbarcode.update({"hideinfo": tuple(hidebcinfoval)})
-        if('height' in bctree[bctreect]):
-            jsonbarcode.update(
-                {"barheight": tuple(map(int, bctree[bctreect]['height'].split()))})
-        if('width' in bctree[bctreect]):
+        if ('height' in bctree[bctreect]):
+            jsonbarcode.update({"barheight": tuple(
+                map(int, bctree[bctreect]['height'].split()))})
+        if ('width' in bctree[bctreect]):
             jsonbarcode.update(
                 {"barwidth": tuple(map(int, bctree[bctreect]['width'].split()))})
-        if('textxy' in bctree[bctreect]):
+        if ('textxy' in bctree[bctreect]):
             jsonbarcode.update(
                 {"textxy": tuple(map(int, bctree[bctreect]['textxy'].split()))})
-        if('color' in bctree[bctreect]):
+        if ('color' in bctree[bctreect]):
             colorsplit = bctree[bctreect]['color'].split()
             colorsplit[0] = re.sub(r"\s+", "", colorsplit[0])
-            if(re.findall(r"^\#", colorsplit[0])):
+            if (re.findall(r"^\#", colorsplit[0])):
                 colorsplit1 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
-            if(re.findall(r"^rgb", colorsplit[0])):
+                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})",
+                    colorsplit[0])
+            if (re.findall(r"^rgb", colorsplit[0])):
                 colorsplit1 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[0])
+                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                    colorsplit[0])
             colorsplit1 = colorsplit1[0]
             colorlist1 = (int(colorsplit1[0], 16), int(
                 colorsplit1[1], 16), int(colorsplit1[2], 16))
             colorsplit[1] = re.sub(r"\s+", "", colorsplit[1])
-            if(re.findall(r"^\#", colorsplit[1])):
+            if (re.findall(r"^\#", colorsplit[1])):
                 colorsplit2 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
-            if(re.findall(r"^rgb", colorsplit[1])):
+                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})",
+                    colorsplit[1])
+            if (re.findall(r"^rgb", colorsplit[1])):
                 colorsplit2 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[1])
+                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                    colorsplit[1])
             colorsplit2 = colorsplit2[0]
             colorlist2 = (int(colorsplit2[0], 16), int(
                 colorsplit2[1], 16), int(colorsplit2[2], 16))
             colorsplit[2] = re.sub(r"\s+", "", colorsplit[2])
-            if(re.findall(r"^\#", colorsplit[2])):
+            if (re.findall(r"^\#", colorsplit[2])):
                 colorsplit3 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
-            if(re.findall(r"^rgb", colorsplit[2])):
+                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})",
+                    colorsplit[2])
+            if (re.findall(r"^rgb", colorsplit[2])):
                 colorsplit3 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[2])
+                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                    colorsplit[2])
             colorsplit3 = colorsplit3[0]
             colorlist3 = (int(colorsplit3[0], 16), int(
                 colorsplit3[1], 16), int(colorsplit3[2], 16))
             colorlist = (colorlist1, colorlist2, colorlist3)
             jsonbarcode.update({"barcolor": colorlist})
-        if('imageoutlib' in bctree[bctreect]):
+        if ('imageoutlib' in bctree[bctreect]):
             jsonbarcode.update({"imageoutlib": tuple(
                 map(int, bctree[bctreect]['imgoutlib'].split()))})
         bcstatinfo = upcean.encode.shortcuts.validate_create_barcode(
             **jsonbarcode)
-        if(draw or 'file' not in bctree[bctreect]):
+        if (draw or 'file' not in bctree[bctreect]):
             bcdrawlist.append(bcstatinfo)
-        if(not bcstatinfo):
+        if (not bcstatinfo):
             return False
         bctreect = bctreect + 1
-    if(draw or (not draw and len(bcdrawlist) > 0)):
+    if (draw or (not draw and len(bcdrawlist) > 0)):
         return bcdrawlist
-    if(not draw and len(bcdrawlist) == 0):
+    if (not draw and len(bcdrawlist) == 0):
         return True
 
 
@@ -361,18 +411,19 @@ def draw_barcode_from_json_string(jsonfile):
 
 
 def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
-    if(check_if_string(jsonfile) and re.findall(r"^(http|https)\:\/\/", jsonfile)):
+    if (check_if_string(jsonfile) and re.findall(
+            r"^(http|https)\:\/\/", jsonfile)):
         jsonheaders = {'User-Agent': useragent_string}
         tree = json.load(urllib2.urlopen(
             urllib2.Request(jsonfile, None, jsonheaders)))
     else:
-        if(check_if_string(jsonfile)):
+        if (check_if_string(jsonfile)):
             jsonfile = open(jsonfile, "r")
         tree = json.load(jsonfile)
         jsonfile.close()
     try:
         bctree = tree['barcodes']['barcode']
-    except:
+    except BaseException:
         return False
     bctreeln = len(bctree)
     bctreect = 0
@@ -382,7 +433,7 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
     upcxml.startDocument()
     upcxml.startElement("barcodes", {})
     upcxml.characters("\n")
-    while(bctreect < bctreeln):
+    while (bctreect < bctreeln):
         upcxml.characters(" ")
         upcxml.startElement("barcode", bctree[bctreect])
         upcxml.endElement("barcode")
@@ -391,12 +442,12 @@ def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
     upcxml.endElement("barcodes")
     upcxml.endDocument()
     xmlout.seek(0)
-    if(xmlfile is not None):
+    if (xmlfile is not None):
         xmlofile = open(xmlfile, "w+")
         xmlofile.write(xmlout.read())
         xmlofile.close()
         return True
-    if(xmlfile is None):
+    if (xmlfile is None):
         return xmlout.read()
 
 
@@ -405,35 +456,39 @@ def convert_from_json_to_xml_string(jsonfile, xmlfile=None):
 
 
 def create_barcode_from_qs_file(qsfile, draw=False):
-    if(check_if_string(qsfile) and re.findall(r"^(http|https)\:\/\/", qsfile)):
+    if (check_if_string(qsfile) and re.findall(r"^(http|https)\:\/\/", qsfile)):
         qsheaders = {'User-Agent': useragent_string}
         tree = urlparse.parse_qs(urllib2.urlopen(
             urllib2.Request(qsfile, None, qsheaders)).read())
     else:
-        if(check_if_string(qsfile)):
+        if (check_if_string(qsfile)):
             qsfile = open(qsfile, "r")
         qsfile.seek(0)
         tree = urlparse.parse_qs(qsfile.read())
         qsfile.close()
     bctree = tree
-    if(len(bctree['type']) < len(bctree['code']) or len(bctree['type']) == len(bctree['code'])):
+    if (len(bctree['type']) < len(bctree['code'])
+            or len(bctree['type']) == len(bctree['code'])):
         bctreeln = len(bctree['type'])
-    if(len(bctree['code']) < len(bctree['type'])):
+    if (len(bctree['code']) < len(bctree['type'])):
         bctreeln = len(bctree['code'])
     bctreect = 0
     bcdrawlist = []
-    while(bctreect < bctreeln):
+    while (bctreect < bctreeln):
         qsbarcode = {}
         nofilesave = False
-        if(draw):
+        if (draw):
             nofilesave = True
             qsbarcode.update(
                 {"bctype": bctree['type'][bctreect], "upc": bctree['code'][bctreect], "outfile": None})
-        if(not draw):
+        if (not draw):
             try:
                 nofilesave = False
                 qsbarcode.update(
-                    {"bctype": bctree['type'][bctreect], "upc": bctree['code'][bctreect], "outfile": bctree['file'][bctreect]})
+                    {
+                        "bctype": bctree['type'][bctreect],
+                        "upc": bctree['code'][bctreect],
+                        "outfile": bctree['file'][bctreect]})
             except KeyError:
                 nofilesave = True
                 qsbarcode.update(
@@ -451,17 +506,17 @@ def create_barcode_from_qs_file(qsfile, draw=False):
         try:
             hidebcinfo = bctree['hideinfo'][bctreect].split()
             hidebcinfoval = []
-            if(hidebcinfo[0] == "0"):
+            if (hidebcinfo[0] == "0"):
                 hidebcinfoval.append(False)
-            if(hidebcinfo[0] == "1"):
+            if (hidebcinfo[0] == "1"):
                 hidebcinfoval.append(True)
-            if(hidebcinfo[1] == "0"):
+            if (hidebcinfo[1] == "0"):
                 hidebcinfoval.append(False)
-            if(hidebcinfo[1] == "1"):
+            if (hidebcinfo[1] == "1"):
                 hidebcinfoval.append(True)
-            if(hidebcinfo[2] == "0"):
+            if (hidebcinfo[2] == "0"):
                 hidebcinfoval.append(False)
-            if(hidebcinfo[2] == "1"):
+            if (hidebcinfo[2] == "1"):
                 hidebcinfoval.append(True)
             qsbarcode.update({"hideinfo": tuple(hidebcinfoval)})
         except KeyError:
@@ -489,32 +544,38 @@ def create_barcode_from_qs_file(qsfile, draw=False):
         try:
             colorsplit = bctree['color'][bctreect].split()
             colorsplit[0] = re.sub(r"\s+", "", colorsplit[0])
-            if(re.findall(r"^\#", colorsplit[0])):
+            if (re.findall(r"^\#", colorsplit[0])):
                 colorsplit1 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
-            if(re.findall(r"^rgb", colorsplit[0])):
+                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})",
+                    colorsplit[0])
+            if (re.findall(r"^rgb", colorsplit[0])):
                 colorsplit1 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[0])
+                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                    colorsplit[0])
             colorsplit1 = colorsplit1[0]
             colorlist1 = (int(colorsplit1[0], 16), int(
                 colorsplit1[1], 16), int(colorsplit1[2], 16))
             colorsplit[1] = re.sub(r"\s+", "", colorsplit[1])
-            if(re.findall(r"^\#", colorsplit[1])):
+            if (re.findall(r"^\#", colorsplit[1])):
                 colorsplit2 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
-            if(re.findall(r"^rgb", colorsplit[1])):
+                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})",
+                    colorsplit[1])
+            if (re.findall(r"^rgb", colorsplit[1])):
                 colorsplit2 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[1])
+                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                    colorsplit[1])
             colorsplit2 = colorsplit2[0]
             colorlist2 = (int(colorsplit2[0], 16), int(
                 colorsplit2[1], 16), int(colorsplit2[2], 16))
             colorsplit[2] = re.sub(r"\s+", "", colorsplit[2])
-            if(re.findall(r"^\#", colorsplit[2])):
+            if (re.findall(r"^\#", colorsplit[2])):
                 colorsplit3 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
-            if(re.findall(r"^rgb", colorsplit[2])):
+                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})",
+                    colorsplit[2])
+            if (re.findall(r"^rgb", colorsplit[2])):
                 colorsplit3 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[2])
+                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)",
+                    colorsplit[2])
             colorsplit3 = colorsplit3[0]
             colorlist3 = (int(colorsplit3[0], 16), int(
                 colorsplit3[1], 16), int(colorsplit3[2], 16))
@@ -533,14 +594,14 @@ def create_barcode_from_qs_file(qsfile, draw=False):
             pass
         bcstatinfo = upcean.encode.shortcuts.validate_create_barcode(
             **qsbarcode)
-        if(draw or nofilesave):
+        if (draw or nofilesave):
             bcdrawlist.append(bcstatinfo)
-        if(not bcstatinfo):
+        if (not bcstatinfo):
             return False
         bctreect = bctreect + 1
-    if(draw or (not draw and len(bcdrawlist) > 0)):
+    if (draw or (not draw and len(bcdrawlist) > 0)):
         return bcdrawlist
-    if(not draw and len(bcdrawlist) == 0):
+    if (not draw and len(bcdrawlist) == 0):
         return True
 
 
@@ -557,21 +618,22 @@ def draw_barcode_from_qs_string(qsfile):
 
 
 def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
-    if(check_if_string(qsfile) and re.findall(r"^(http|https)\:\/\/", qsfile)):
+    if (check_if_string(qsfile) and re.findall(r"^(http|https)\:\/\/", qsfile)):
         qsheaders = {'User-Agent': useragent_string}
         tree = urlparse.parse_qs(urllib2.urlopen(
             urllib2.Request(qsfile, None, qsheaders)).read())
     else:
-        if(check_if_string(qsfile)):
+        if (check_if_string(qsfile)):
             qsfile = open(qsfile, "r")
         qsfile.seek(0)
         tree = urlparse.parse_qs(qsfile.read())
         qsfile.close()
     bctree = tree
     bctreeln = len(bctree)
-    if(len(bctree['type']) < len(bctree['code']) or len(bctree['type']) == len(bctree['code'])):
+    if (len(bctree['type']) < len(bctree['code'])
+            or len(bctree['type']) == len(bctree['code'])):
         bctreeln = len(bctree['type'])
-    if(len(bctree['code']) < len(bctree['type'])):
+    if (len(bctree['code']) < len(bctree['type'])):
         bctreeln = len(bctree['code'])
     bctreect = 0
     bcdrawlist = []
@@ -580,7 +642,7 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
     upcxml.startDocument()
     upcxml.startElement("barcodes", {})
     upcxml.characters("\n")
-    while(bctreect < bctreeln):
+    while (bctreect < bctreeln):
         qsbarcode = {}
         qsbarcode.update(
             {"type": bctree['type'][bctreect], "code": bctree['code'][bctreect]})
@@ -640,12 +702,12 @@ def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
     upcxml.endElement("barcodes")
     upcxml.endDocument()
     xmlout.seek(0)
-    if(xmlfile is not None):
+    if (xmlfile is not None):
         xmlofile = open(xmlfile, "w+")
         xmlofile.write(xmlout.read())
         xmlofile.close()
         return True
-    if(xmlfile is None):
+    if (xmlfile is None):
         return xmlout.read()
 
 
@@ -654,26 +716,27 @@ def convert_from_qs_to_xml_string(qsfile, xmlfile=None):
 
 
 def convert_from_qs_to_json_file(qsfile, jsonfile=None):
-    if(check_if_string(qsfile) and re.findall(r"^(http|https)\:\/\/", qsfile)):
+    if (check_if_string(qsfile) and re.findall(r"^(http|https)\:\/\/", qsfile)):
         qsheaders = {'User-Agent': useragent_string}
         tree = urlparse.parse_qs(urllib2.urlopen(
             urllib2.Request(qsfile, None, qsheaders)).read())
     else:
-        if(check_if_string(qsfile)):
+        if (check_if_string(qsfile)):
             qsfile = open(qsfile, "r")
         qsfile.seek(0)
         tree = urlparse.parse_qs(qsfile.read())
         qsfile.close()
     bctree = tree
     bctreeln = len(bctree)
-    if(len(bctree['type']) < len(bctree['code']) or len(bctree['type']) == len(bctree['code'])):
+    if (len(bctree['type']) < len(bctree['code'])
+            or len(bctree['type']) == len(bctree['code'])):
         bctreeln = len(bctree['type'])
-    if(len(bctree['code']) < len(bctree['type'])):
+    if (len(bctree['code']) < len(bctree['type'])):
         bctreeln = len(bctree['code'])
     bctreect = 0
     bcdrawlist = []
     jsonlist = {'barcodes': {'barcode': []}}
-    while(bctreect < bctreeln):
+    while (bctreect < bctreeln):
         qsbarcode = {}
         qsbarcode.update(
             {"type": bctree['type'][bctreect], "code": bctree['code'][bctreect]})
@@ -727,12 +790,12 @@ def convert_from_qs_to_json_file(qsfile, jsonfile=None):
             pass
         jsonlist['barcodes']['barcode'].append(qsbarcode)
         bctreect = bctreect + 1
-    if(jsonfile is not None):
+    if (jsonfile is not None):
         jsonofile = open(jsonfile, "w+")
         json.dump(jsonlist, jsonofile)
         jsonofile.close()
         return True
-    if(jsonfile is None):
+    if (jsonfile is None):
         return json.dumps(jsonlist)
 
 

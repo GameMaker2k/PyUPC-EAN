@@ -14,7 +14,9 @@
     $FileInfo: __init__.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import os
 
 implib = False
@@ -30,7 +32,7 @@ except ImportError:
     except ImportError:
         pkgres = False
 
-if(implib):
+if (implib):
     barcodedtd = os.path.join(
         importlib.resources.files(__name__), "barcodes.dtd")
     barcodexsl = os.path.join(
@@ -42,24 +44,24 @@ if(implib):
     barcodernc = os.path.join(
         importlib.resources.files(__name__), "barcodes.rnc")
     bcxmlpath = os.path.dirname(barcodedtd)
-elif(pkgres):
+elif (pkgres):
     barcodedtd = pkg_resources.resource_filename(__name__, "barcodes.dtd")
     barcodexsl = pkg_resources.resource_filename(__name__, "barcodes.xsl")
     barcodexsd = pkg_resources.resource_filename(__name__, "barcodes.xsd")
     barcoderng = pkg_resources.resource_filename(__name__, "barcodes.rng")
     barcodernc = pkg_resources.resource_filename(__name__, "barcodes.rnc")
     bcxmlpath = os.path.dirname(barcodedtd)
-elif(not pkgres):
-    barcodedtd = os.path.dirname(__file__)+os.sep+"barcodes.dtd"
-    barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl"
-    barcodexsd = os.path.dirname(__file__)+os.sep+"barcodes.xsd"
-    barcoderng = os.path.dirname(__file__)+os.sep+"barcodes.rng"
-    barcodernc = os.path.dirname(__file__)+os.sep+"barcodes.rnc"
+elif (not pkgres):
+    barcodedtd = os.path.dirname(__file__) + os.sep + "barcodes.dtd"
+    barcodexsl = os.path.dirname(__file__) + os.sep + "barcodes.xsl"
+    barcodexsd = os.path.dirname(__file__) + os.sep + "barcodes.xsd"
+    barcoderng = os.path.dirname(__file__) + os.sep + "barcodes.rng"
+    barcodernc = os.path.dirname(__file__) + os.sep + "barcodes.rnc"
     bcxmlpath = os.path.dirname(barcodedtd)
 else:
-    barcodedtd = os.path.dirname(__file__)+os.sep+"barcodes.dtd"
-    barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl"
-    barcodexsd = os.path.dirname(__file__)+os.sep+"barcodes.xsd"
-    barcoderng = os.path.dirname(__file__)+os.sep+"barcodes.rng"
-    barcodernc = os.path.dirname(__file__)+os.sep+"barcodes.rnc"
+    barcodedtd = os.path.dirname(__file__) + os.sep + "barcodes.dtd"
+    barcodexsl = os.path.dirname(__file__) + os.sep + "barcodes.xsl"
+    barcodexsd = os.path.dirname(__file__) + os.sep + "barcodes.xsd"
+    barcoderng = os.path.dirname(__file__) + os.sep + "barcodes.rng"
+    barcodernc = os.path.dirname(__file__) + os.sep + "barcodes.rnc"
     bcxmlpath = os.path.dirname(barcodedtd)

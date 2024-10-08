@@ -14,167 +14,452 @@
     $FileInfo: barcode.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-from upcean.decode.stf import *
-from upcean.decode.itf14 import *
-from upcean.decode.itf import *
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
+import upcean.getprefix.getprefix
+import upcean.support
 from upcean.decode.ean8 import *
 from upcean.decode.ean13 import *
-from upcean.decode.upce import *
+from upcean.decode.itf import *
+from upcean.decode.itf14 import *
+from upcean.decode.stf import *
 from upcean.decode.upca import *
-import upcean.support
-import upcean.getprefix.getprefix
+from upcean.decode.upce import *
 
 ''' // Code for decoding UPC-A by Kazuki Przyborowski '''
 try:
     import upcean.decode.upca as gtin12
     import upcean.decode.upca as ucc12
-except:
+except BaseException:
     pass
 ''' // Code for decoding UPC-E by Kazuki Przyborowski '''
 ''' // Code for decoding EAN-13 by Kazuki Przyborowski '''
 try:
     import upcean.decode.ean13 as gtin13
     import upcean.decode.ean13 as ucc13
-except:
+except BaseException:
     pass
 ''' // Code for decoding EAN-8 by Kazuki Przyborowski '''
 try:
     import upcean.decode.ean8 as gtin8
     import upcean.decode.ean8 as ucc8
-except:
+except BaseException:
     pass
 ''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
 ''' // Code for making ITF-14 by Kazuki Przyborowski '''
 try:
     import upcean.decode.itf14 as itf6
-except:
+except BaseException:
     pass
 ''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
 try:
     import upcean.decode.stf as code25
-except:
+except BaseException:
     pass
 
 
-def validate_decode_upca_barcode(infile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), locatebarcode=False, imageoutlib="pillow"):
-    upc = decode_upca_barcode(infile, resize, barheight, barwidth,
-                              shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 12 or len(upc) < 12):
+def validate_decode_upca_barcode(
+        infile="./upca.png",
+        resize=1,
+        barheight=(
+            48,
+            54),
+    barwidth=(
+            1,
+            1),
+        shiftcheck=False,
+        shiftxy=(
+            0,
+            0),
+        barcolor=(
+            (0,
+             0,
+             0),
+            (0,
+             0,
+             0),
+            (255,
+             255,
+             255)),
+        locatebarcode=False,
+        imageoutlib="pillow"):
+    upc = decode_upca_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 12 or len(upc) < 12):
         return False
-    if(not upcean.validate.validate_upca_checksum(upc)):
-        return False
-    return True
-
-
-def validate_decode_upce_barcode(infile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), locatebarcode=False, imageoutlib="pillow"):
-    upc = decode_upce_barcode(infile, resize, barheight, barwidth,
-                              shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 8 or len(upc) < 8):
-        return False
-    if(not upcean.validate.validate_upce_checksum(upc)):
-        return False
-    return True
-
-
-def validate_decode_ean13_barcode(infile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), locatebarcode=False, imageoutlib="pillow"):
-    upc = decode_ean13_barcode(infile, resize, barheight, barwidth,
-                               shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 13 or len(upc) < 13):
-        return False
-    if(not upcean.validate.validate_ean13_checksum(upc)):
-        return False
-    return True
-
-
-def validate_decode_itf_barcode(infile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), locatebarcode=False, imageoutlib="pillow"):
-    upc = decode_itf_barcode(infile, resize, barheight, barwidth,
-                             shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 14 or len(upc) < 14):
-        return False
-    if(not upcean.validate.validate_itf14_checksum(upc)):
-        return False
-    return True
-
-
-def validate_decode_itf6_barcode(infile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), locatebarcode=False, imageoutlib="pillow"):
-    upc = decode_itf6_barcode(infile, resize, barheight, barwidth,
-                              shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 6 or len(upc) < 6):
-        return False
-    if(not upcean.validate.validate_itf6_checksum(upc)):
+    if (not upcean.validate.validate_upca_checksum(upc)):
         return False
     return True
 
 
-def validate_decode_itf14_barcode(infile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), locatebarcode=False, imageoutlib="pillow"):
-    upc = decode_itf14_barcode(infile, resize, barheight, barwidth,
-                               shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 14 or len(upc) < 14):
+def validate_decode_upce_barcode(
+        infile="./upce.png",
+        resize=1,
+        barheight=(
+            48,
+            54),
+    barwidth=(
+            1,
+            1),
+        shiftcheck=False,
+        shiftxy=(
+            0,
+            0),
+        barcolor=(
+            (0,
+             0,
+             0),
+            (0,
+             0,
+             0),
+            (255,
+             255,
+             255)),
+        locatebarcode=False,
+        imageoutlib="pillow"):
+    upc = decode_upce_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 8 or len(upc) < 8):
         return False
-    if(not upcean.validate.validate_itf14_checksum(upc)):
+    if (not upcean.validate.validate_upce_checksum(upc)):
         return False
     return True
 
 
-def fix_decode_upca_barcode(infile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    upc = decode_upca_barcode(infile, resize, barheight, barwidth,
-                              shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 12 or len(upc) < 11):
+def validate_decode_ean13_barcode(
+        infile="./ean13.png",
+        resize=1,
+        barheight=(
+            48,
+            54),
+    barwidth=(
+            1,
+            1),
+        shiftcheck=False,
+        shiftxy=(
+            0,
+            0),
+        barcolor=(
+            (0,
+             0,
+             0),
+            (0,
+             0,
+             0),
+            (255,
+             255,
+             255)),
+        locatebarcode=False,
+        imageoutlib="pillow"):
+    upc = decode_ean13_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 13 or len(upc) < 13):
+        return False
+    if (not upcean.validate.validate_ean13_checksum(upc)):
+        return False
+    return True
+
+
+def validate_decode_itf_barcode(
+        infile="./itf.png",
+        resize=1,
+        barheight=(
+            48,
+            54),
+    barwidth=(
+            1,
+            1),
+        shiftcheck=False,
+        shiftxy=(
+            0,
+            0),
+        barcolor=(
+            (0,
+             0,
+             0),
+            (0,
+             0,
+             0),
+            (255,
+             255,
+             255)),
+        locatebarcode=False,
+        imageoutlib="pillow"):
+    upc = decode_itf_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 14 or len(upc) < 14):
+        return False
+    if (not upcean.validate.validate_itf14_checksum(upc)):
+        return False
+    return True
+
+
+def validate_decode_itf6_barcode(
+        infile="./itf6.png",
+        resize=1,
+        barheight=(
+            48,
+            54),
+    barwidth=(
+            1,
+            1),
+        shiftcheck=False,
+        shiftxy=(
+            0,
+            0),
+        barcolor=(
+            (0,
+             0,
+             0),
+            (0,
+             0,
+             0),
+            (255,
+             255,
+             255)),
+        locatebarcode=False,
+        imageoutlib="pillow"):
+    upc = decode_itf6_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 6 or len(upc) < 6):
+        return False
+    if (not upcean.validate.validate_itf6_checksum(upc)):
+        return False
+    return True
+
+
+def validate_decode_itf14_barcode(
+        infile="./itf14.png",
+        resize=1,
+        barheight=(
+            48,
+            54),
+    barwidth=(
+            1,
+            1),
+        shiftcheck=False,
+        shiftxy=(
+            0,
+            0),
+        barcolor=(
+            (0,
+             0,
+             0),
+            (0,
+             0,
+             0),
+            (255,
+             255,
+             255)),
+        locatebarcode=False,
+        imageoutlib="pillow"):
+    upc = decode_itf14_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 14 or len(upc) < 14):
+        return False
+    if (not upcean.validate.validate_itf14_checksum(upc)):
+        return False
+    return True
+
+
+def fix_decode_upca_barcode(
+    infile="./upca.png", resize=1, barheight=(
+        48, 54), barwidth=(
+            1, 1), shiftcheck=False, shiftxy=(
+                0, 0), barcolor=(
+                    (0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = decode_upca_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
     return upc
 
 
-def fix_decode_upce_barcode(infile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    upc = decode_upce_barcode(infile, resize, barheight, barwidth,
-                              shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 8 or len(upc) < 7):
+def fix_decode_upce_barcode(
+    infile="./upce.png", resize=1, barheight=(
+        48, 54), barwidth=(
+            1, 1), shiftcheck=False, shiftxy=(
+                0, 0), barcolor=(
+                    (0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = decode_upce_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_upce_checksum(upc)
     return upc
 
 
-def fix_decode_ean13_barcode(infile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    upc = decode_ean13_barcode(infile, resize, barheight, barwidth,
-                               shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 13 or len(upc) < 12):
+def fix_decode_ean13_barcode(
+    infile="./ean13.png", resize=1, barheight=(
+        48, 54), barwidth=(
+            1, 1), shiftcheck=False, shiftxy=(
+                0, 0), barcolor=(
+                    (0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = decode_ean13_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 13 or len(upc) < 12):
         return False
     upc = upcean.validate.fix_ean13_checksum(upc)
     return upc
 
 
-def fix_decode_ean8_barcode(infile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    upc = decode_ean8_barcode(infile, resize, barheight, barwidth,
-                              shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 8 or len(upc) < 7):
+def fix_decode_ean8_barcode(
+    infile="./ean8.png", resize=1, barheight=(
+        48, 54), barwidth=(
+            1, 1), shiftcheck=False, shiftxy=(
+                0, 0), barcolor=(
+                    (0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = decode_ean8_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_ean8_checksum(upc)
     return upc
 
 
-def fix_decode_itf_barcode(infile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    upc = decode_itf14_barcode(infile, resize, barheight, barwidth,
-                               shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 14 or len(upc) < 13):
+def fix_decode_itf_barcode(
+    infile="./itf.png", resize=1, barheight=(
+        48, 54), barwidth=(
+            1, 1), shiftcheck=False, shiftxy=(
+                0, 0), barcolor=(
+                    (0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = decode_itf14_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
     return upc
 
 
-def fix_decode_itf6_barcode(infile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    upc = decode_itf6_barcode(infile, resize, barheight, barwidth,
-                              shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 6 or len(upc) < 5):
+def fix_decode_itf6_barcode(
+    infile="./itf6.png", resize=1, barheight=(
+        48, 54), barwidth=(
+            1, 1), shiftcheck=False, shiftxy=(
+                0, 0), barcolor=(
+                    (0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = decode_itf6_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
     return upc
 
 
-def fix_decode_itf14_barcode(infile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    upc = decode_itf14_barcode(infile, resize, barheight, barwidth,
-                               shiftcheck, shiftxy, barcolor, locatebarcode, imageoutlib)
-    if(len(upc) > 14 or len(upc) < 13):
+def fix_decode_itf14_barcode(
+    infile="./itf14.png", resize=1, barheight=(
+        48, 54), barwidth=(
+            1, 1), shiftcheck=False, shiftxy=(
+                0, 0), barcolor=(
+                    (0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = decode_itf14_barcode(
+        infile,
+        resize,
+        barheight,
+        barwidth,
+        shiftcheck,
+        shiftxy,
+        barcolor,
+        locatebarcode,
+        imageoutlib)
+    if (len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
     return upc

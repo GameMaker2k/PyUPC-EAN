@@ -7,21 +7,25 @@
       $FileInfo: GUI-example-Windows.py - Last Update: 11/26/2019 Ver. 1.0.0  - Author: bzimor $
  '''
 
-import re
-import os
-import sys
-import upcean
 import csv
-if(sys.version[0] == "2"):
+import os
+import re
+import sys
+
+import upcean
+
+if (sys.version[0] == "2"):
     from ConfigParser import ConfigParser
-if(sys.version[0] >= "3"):
+if (sys.version[0] >= "3"):
     from configparser import ConfigParser
+
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox as mbox
-from tkinter import filedialog as fdial
-from PIL import ImageTk
 import tkinter.scrolledtext as tkst
+from tkinter import filedialog as fdial
+from tkinter import messagebox as mbox
+from tkinter import ttk
+
+from PIL import ImageTk
 
 
 class MainWin(tk.Frame):
@@ -230,9 +234,15 @@ class MainWin(tk.Frame):
 
         # Table
         self.frameMain.rowconfigure(0, weight=1)
-        self.tree = ttk.Treeview(self.frameMain, selectmode="extended", height=10, columns=("barcodes", "type",
-                                                                                            "comment"),
-                                 displaycolumns="barcodes type comment")
+        self.tree = ttk.Treeview(
+            self.frameMain,
+            selectmode="extended",
+            height=10,
+            columns=(
+                "barcodes",
+                "type",
+                "comment"),
+            displaycolumns="barcodes type comment")
         self.tree.grid(row=0, column=0, sticky="ns", padx=(5, 5), pady=(5, 5))
         self.vsb1 = ttk.Scrollbar(
             self.frameMain,
@@ -347,7 +357,7 @@ class MainWin(tk.Frame):
     def previewbarcode(self, bcodevalue):
         tmpbarcode = self.generatebarcode(bcodevalue)
         validbc = tmpbarcode.validate_draw_barcode()
-        if(validbc):
+        if (validbc):
             image1 = ImageTk.PhotoImage(validbc)
             self.imagepanel.create_image(
                 validbc.size[0] / 2, validbc.size[1] / 2, image=image1)
@@ -383,11 +393,11 @@ class MainWin(tk.Frame):
                      '*.pdf'),
                     ('Barcha fayllar',
                      '*.*')])
-        if(fname):
+        if (fname):
             tmpbarcode = self.generatebarcode(bcodevalue)
             tmpbarcode.filename = fname
             savestate = tmpbarcode.validate_create_barcode()
-            if(not savestate):
+            if (not savestate):
                 mbox.showerror("Warning", "Barcode saving error")
             else:
                 mbox.showinfo("Info", "Barcode is saved as file successfully")
@@ -437,9 +447,9 @@ class MainWin(tk.Frame):
                 nextcode = False
                 while nextcode == False:
                     if self.validate_ean13(newcode):
-                        if self.isunique(
-                                str(newcode) + str(self.validate_ean13(newcode))):
-                            nextcode == True
+                        if self.isunique(str(newcode) +
+                                         str(self.validate_ean13(newcode))):
+                            nextcode
                             break
                     newcode += 1
                 self.bcvalue.set(str(newcode) +
@@ -454,9 +464,9 @@ class MainWin(tk.Frame):
                 nextcode = False
                 while nextcode == False:
                     if self.validate_ean08(newcode):
-                        if self.isunique(
-                                str(newcode) + str(self.validate_ean08(newcode))):
-                            nextcode == True
+                        if self.isunique(str(newcode) +
+                                         str(self.validate_ean08(newcode))):
+                            nextcode
                             break
                     newcode += 1
                 self.bcvalue.set(str(newcode) +
@@ -471,7 +481,7 @@ class MainWin(tk.Frame):
                 nextcode = False
                 while nextcode == False:
                     if self.isunique(str(newcode)):
-                        nextcode == True
+                        nextcode
                         break
                     newcode += 1
                 self.bcvalue.set(str(newcode))
@@ -578,8 +588,9 @@ class MainWin(tk.Frame):
                     reader = csv.DictReader(
                         csvfile, fieldnames=None, delimiter=";")
                     for row in reader:
-                        self.tree.insert("", "end", row["id"], text=row["id"],
-                                         values=[row["barcodes"], row["type"], row["comment"]])
+                        self.tree.insert(
+                            "", "end", row["id"], text=row["id"], values=[
+                                row["barcodes"], row["type"], row["comment"]])
                 self.zebra()
             except BaseException:
                 mbox.showerror(
@@ -604,10 +615,10 @@ class MainWin(tk.Frame):
 
     def validate_ean13(self, upc, return_check=False):
         upc = str(upc)
-        if(len(upc) > 13):
+        if (len(upc) > 13):
             fix_matches = re.findall(r"^(\d{13})", upc)
             upc = fix_matches[0]
-        if(len(upc) > 13 or len(upc) < 12):
+        if (len(upc) > 13 or len(upc) < 12):
             return False
         upc_matches = list(upc)
         upc_matches = [int(x) for x in upc_matches]
@@ -619,24 +630,24 @@ class MainWin(tk.Frame):
             upc_matches1[3] + upc_matches1[4] + upc_matches1[5]
         AllSum = OddSum + EvenSum
         CheckSum = AllSum % 10
-        if(CheckSum > 0):
+        if (CheckSum > 0):
             CheckSum = 10 - CheckSum
-        if(not return_check and len(upc) == 13):
-            if(CheckSum != upc_matches1[6]):
+        if (not return_check and len(upc) == 13):
+            if (CheckSum != upc_matches1[6]):
                 return False
-            if(CheckSum == upc_matches1[6]):
+            if (CheckSum == upc_matches1[6]):
                 return True
-        if(return_check):
+        if (return_check):
             return str(CheckSum)
-        if(len(upc) == 12):
+        if (len(upc) == 12):
             return str(CheckSum)
 
     def validate_ean08(self, upc, return_check=False):
         upc = str(upc)
-        if(len(upc) > 8):
+        if (len(upc) > 8):
             fix_matches = re.findall(r"^(\d{8})", upc)
             upc = fix_matches[0]
-        if(len(upc) > 8 or len(upc) < 7):
+        if (len(upc) > 8 or len(upc) < 7):
             return False
         upc_matches = list(upc)
         upc_matches = [int(x) for x in upc_matches]
@@ -647,16 +658,16 @@ class MainWin(tk.Frame):
         OddSum = upc_matches2[0] + upc_matches2[1] + upc_matches2[2]
         AllSum = OddSum + EvenSum
         CheckSum = AllSum % 10
-        if(CheckSum > 0):
+        if (CheckSum > 0):
             CheckSum = 10 - CheckSum
-        if(not return_check and len(upc) == 8):
-            if(CheckSum != upc_matches2[3]):
+        if (not return_check and len(upc) == 8):
+            if (CheckSum != upc_matches2[3]):
                 return False
-            if(CheckSum == upc_matches2[3]):
+            if (CheckSum == upc_matches2[3]):
                 return True
-        if(return_check):
+        if (return_check):
             return str(CheckSum)
-        if(len(upc) == 7):
+        if (len(upc) == 7):
             return str(CheckSum)
 
 
@@ -833,8 +844,10 @@ class SettingWin(tk.Frame):
         self.pdfaddress.insert(0, self.pdfdir.get())
 
     def folder(self):
-        dirpath = fdial.askdirectory(mustexist=False,
-                                     parent=self.master, title='Choose the folder')
+        dirpath = fdial.askdirectory(
+            mustexist=False,
+            parent=self.master,
+            title='Choose the folder')
         if dirpath:
             self.default_dir.set(dirpath)
 

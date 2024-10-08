@@ -14,7 +14,9 @@
     $FileInfo: shortcuts.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import upcean.convert
 import upcean.support
 
@@ -25,44 +27,113 @@ import upcean.support
 
 
 def make_barcode(bctype, numbersystem, manufacturer, product):
-    if(bctype not in upcean.support.supported_barcodes("tuple")):
+    if (bctype not in upcean.support.supported_barcodes("tuple")):
         return False
-    if(hasattr(upcean.convert, "make_"+bctype+"_barcode") and callable(getattr(upcean.convert, "make_"+bctype+"_barcode"))):
-        return getattr(upcean.convert, "make_"+bctype+"_barcode")(numbersystem, manufacturer, product)
-    if(not hasattr(upcean.convert, "make_"+bctype+"_barcode") or not callable(getattr(upcean.convert, "make_"+bctype+"_barcode"))):
+    if (hasattr(upcean.convert, "make_" + bctype + "_barcode")
+            and callable(getattr(upcean.convert, "make_" + bctype + "_barcode"))):
+        return getattr(
+            upcean.convert,
+            "make_" +
+            bctype +
+            "_barcode")(
+            numbersystem,
+            manufacturer,
+            product)
+    if (not hasattr(upcean.convert, "make_" + bctype + "_barcode")
+            or not callable(getattr(upcean.convert, "make_" + bctype + "_barcode"))):
         return False
     return False
 
 
 def convert_barcode(intype, outtype, upc):
-    if(intype not in upcean.support.supported_barcodes("tuple")):
+    if (intype not in upcean.support.supported_barcodes("tuple")):
         return False
-    if(outtype not in upcean.support.supported_barcodes("tuple")):
+    if (outtype not in upcean.support.supported_barcodes("tuple")):
         return False
-    if(hasattr(upcean.convert, "convert_barcode_from_"+intype+"_to_"+outtype) and callable(getattr(upcean.convert, "convert_barcode_from_"+intype+"_to_"+outtype))):
-        return getattr(upcean.convert, "convert_barcode_from_"+intype+"_to_"+outtype)(upc)
-    if(not hasattr(upcean.convert, "convert_barcode_from_"+intype+"_to_"+outtype) or not callable(getattr(upcean.convert, "convert_barcode_from_"+intype+"_to_"+outtype))):
+    if (
+        hasattr(
+            upcean.convert,
+            "convert_barcode_from_" +
+            intype +
+            "_to_" +
+            outtype) and callable(
+            getattr(
+                upcean.convert,
+                "convert_barcode_from_" +
+                intype +
+                "_to_" +
+                outtype))):
+        return getattr(
+            upcean.convert,
+            "convert_barcode_from_" +
+            intype +
+            "_to_" +
+            outtype)(upc)
+    if (
+        not hasattr(
+            upcean.convert,
+            "convert_barcode_from_" +
+            intype +
+            "_to_" +
+            outtype) or not callable(
+            getattr(
+                upcean.convert,
+                "convert_barcode_from_" +
+                intype +
+                "_to_" +
+                outtype))):
         return False
     return False
 
 
 def print_barcode(bctype, upc):
-    if(bctype not in upcean.support.supported_barcodes("tuple")):
+    if (bctype not in upcean.support.supported_barcodes("tuple")):
         return False
-    if(hasattr(upcean.convert, "print_"+bctype+"_barcode") and callable(getattr(upcean.convert, "print_"+bctype+"_barcode"))):
-        return getattr(upcean.convert, "print_"+bctype+"_barcode")(upc)
-    if(not hasattr(upcean.convert, "print_"+bctype+"_barcode") or not callable(getattr(upcean.convert, "print_"+bctype+"_barcode"))):
+    if (hasattr(upcean.convert, "print_" + bctype + "_barcode")
+            and callable(getattr(upcean.convert, "print_" + bctype + "_barcode"))):
+        return getattr(upcean.convert, "print_" + bctype + "_barcode")(upc)
+    if (not hasattr(upcean.convert, "print_" + bctype + "_barcode")
+            or not callable(getattr(upcean.convert, "print_" + bctype + "_barcode"))):
         return False
     return False
 
 
 def print_convert_barcode(intype, outtype, upc):
-    if(intype not in upcean.support.supported_barcodes("tuple")):
+    if (intype not in upcean.support.supported_barcodes("tuple")):
         return False
-    if(outtype not in upcean.support.supported_barcodes("tuple")):
+    if (outtype not in upcean.support.supported_barcodes("tuple")):
         return False
-    if(hasattr(upcean.convert, "print_convert_barcode_from_"+intype+"_to_"+outtype) and callable(getattr(upcean.convert, "print_convert_barcode_from_"+intype+"_to_"+outtype))):
-        return getattr(upcean.convert, "print_convert_barcode_from_"+intype+"_to_"+outtype)(upc)
-    if(not hasattr(upcean.convert, "print_convert_barcode_from_"+intype+"_to_"+outtype) or not callable(getattr(upcean.convert, "print_convert_barcode_from_"+intype+"_to_"+outtype))):
+    if (
+        hasattr(
+            upcean.convert,
+            "print_convert_barcode_from_" +
+            intype +
+            "_to_" +
+            outtype) and callable(
+            getattr(
+                upcean.convert,
+                "print_convert_barcode_from_" +
+                intype +
+                "_to_" +
+                outtype))):
+        return getattr(
+            upcean.convert,
+            "print_convert_barcode_from_" +
+            intype +
+            "_to_" +
+            outtype)(upc)
+    if (
+        not hasattr(
+            upcean.convert,
+            "print_convert_barcode_from_" +
+            intype +
+            "_to_" +
+            outtype) or not callable(
+            getattr(
+                upcean.convert,
+                "print_convert_barcode_from_" +
+                intype +
+                "_to_" +
+                outtype))):
         return False
     return False

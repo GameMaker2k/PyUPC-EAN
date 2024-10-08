@@ -15,10 +15,14 @@
     $FileInfo: precairo.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1  - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import os
 import re
+
 import cairo
+
 import upcean.fonts
 
 try:
@@ -83,10 +87,10 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color):
 
 def drawColorLine(ctx, x1, y1, x2, y2, width, color):
     ctx.set_source_rgb(color[0], color[1], color[2])
-    if(width < 1):
+    if (width < 1):
         width = 1
     width -= 1
-    if(width < 1):
+    if (width < 1):
         drawLine(ctx, x1, y1, x2, y2)
     else:
         drawRectangle(ctx, x1, y1, x2 + width, y2)
@@ -119,47 +123,50 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb"):
 
 def get_save_filename(outfile):
     oldoutfile = None
-    if(isinstance(outfile, basestring)):
+    if (isinstance(outfile, basestring)):
         oldoutfile = outfile[:]
-    elif(isinstance(outfile, tuple)):
+    elif (isinstance(outfile, tuple)):
         oldoutfile = tuple(outfile[:])
-    elif(isinstance(outfile, list)):
+    elif (isinstance(outfile, list)):
         oldoutfile = list(outfile[:])
-    elif(outfile is None or isinstance(outfile, bool)):
+    elif (outfile is None or isinstance(outfile, bool)):
         oldoutfile = None
     else:
         return False
-    if(isinstance(oldoutfile, basestring)):
-        if(outfile != "-" and outfile != "" and outfile != " "):
-            if(len(re.findall(r"^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) > 0):
+    if (isinstance(oldoutfile, basestring)):
+        if (outfile != "-" and outfile != "" and outfile != " "):
+            if (len(re.findall(r"^\.([A-Za-z]+)$",
+                    os.path.splitext(oldoutfile)[1])) > 0):
                 outfileext = re.findall(
                     r"^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper()
-            if(len(re.findall(r"^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall(r"(.*)\:([a-zA-Z]+)", oldoutfile)) > 0):
+            if (len(re.findall(r"^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))
+                    == 0 and len(re.findall(r"(.*)\:([a-zA-Z]+)", oldoutfile)) > 0):
                 tmpoutfile = re.findall(r"(.*)\:([a-zA-Z]+)", oldoutfile)
-                del(outfile)
+                del (outfile)
                 outfile = tmpoutfile[0][0]
                 outfileext = tmpoutfile[0][1].upper()
-            if(len(re.findall(r"^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall(r"(.*)\:([a-zA-Z]+)", oldoutfile)) == 0):
+            if (len(re.findall(r"^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1]))
+                    == 0 and len(re.findall(r"(.*)\:([a-zA-Z]+)", oldoutfile)) == 0):
                 outfileext = "PNG"
-        if(outfileext == "BYTES"):
+        if (outfileext == "BYTES"):
             outfileext = "BYTES"
-        elif(outfileext == "SVG"):
+        elif (outfileext == "SVG"):
             outfileext = "SVG"
-        elif(outfileext == "PDF"):
+        elif (outfileext == "PDF"):
             outfileext = "PDF"
-        elif(outfileext == "PS"):
+        elif (outfileext == "PS"):
             outfileext = "PS"
-        elif(outfileext == "EPS"):
+        elif (outfileext == "EPS"):
             outfileext = "EPS"
         else:
             outfileext = "PNG"
         return (outfile, outfileext.upper())
-    elif(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-        del(outfile)
+    elif (isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+        del (outfile)
         outfile = oldoutfile[0]
         outfileext = oldoutfile[1]
         return (outfile, outfileext.upper())
-    elif(outfile is None or isinstance(outfile, bool) or isinstance(outfile, file)):
+    elif (outfile is None or isinstance(outfile, bool) or isinstance(outfile, file)):
         return outfile
     else:
         return False

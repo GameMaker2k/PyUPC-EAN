@@ -15,27 +15,29 @@
     $FileInfo: pydeb-gen.py - Last Update: 6/1/2016 Ver. 0.2.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-import re
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
+import argparse
+import datetime
+import json
 import os
+import re
+import subprocess
 import sys
 import time
-import datetime
-import argparse
-import subprocess
-import json
 
 __version_info__ = (0, 2, 0, "rc1")
-if(__version_info__[3] != None):
-    __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(
-        __version_info__[2])+"+"+str(__version_info__[3])
-if(__version_info__[3] == None):
-    __version__ = str(
-        __version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])
+if (__version_info__[3] is not None):
+    __version__ = str(__version_info__[0]) + "." + str(__version_info__[1]) + "." + str(
+        __version_info__[2]) + "+" + str(__version_info__[3])
+if (__version_info__[3] is None):
+    __version__ = str(__version_info__[
+        0]) + "." + str(__version_info__[1]) + "." + str(__version_info__[2])
 
 proname = "pydeb-gen"
 prover = __version__
-profullname = proname+" "+prover
+profullname = proname + " " + prover
 buildsystem = "pybuild"
 
 
@@ -45,15 +47,83 @@ def which_exec(execfile):
             return path + "/" + execfile
 
 
-distvertoupname = {'12.0': "Bookworm", '11.0': "Bullseye", '10.0': "Buster", '9.0': "Stretch", '8.0': "Jessie", '7.0': "Wheezy", '6.0': "Squeeze", '5.0': "Lenny",
-                   '4.0': "Etch", '3.1': "Sarge", '3.0': "Woody", '2.2': "Potato", '2.1': "Slink", '2.0': "Hamm", '1.3': "Bo", '1.2': "Rex", '1.1': "Buzz", '0.0': "Sid"}
-distvertoname = {'12.0': "bookworm", '11.0': "bullseye", '10.0': "buster", '9.0': "stretch", '8.0': "jessie", '7.0': "wheezy", '6.0': "squeeze", '5.0': "lenny",
-                 '4.0': "etch", '3.1': "sarge", '3.0': "woody", '2.2': "potato", '2.1': "slink", '2.0': "hamm", '1.3': "bo", '1.2': "rex", '1.1': "buzz", '0.0': "sid"}
+distvertoupname = {
+    '12.0': "Bookworm",
+    '11.0': "Bullseye",
+    '10.0': "Buster",
+    '9.0': "Stretch",
+    '8.0': "Jessie",
+    '7.0': "Wheezy",
+    '6.0': "Squeeze",
+    '5.0': "Lenny",
+    '4.0': "Etch",
+    '3.1': "Sarge",
+    '3.0': "Woody",
+    '2.2': "Potato",
+    '2.1': "Slink",
+    '2.0': "Hamm",
+    '1.3': "Bo",
+    '1.2': "Rex",
+    '1.1': "Buzz",
+    '0.0': "Sid"}
+distvertoname = {
+    '12.0': "bookworm",
+    '11.0': "bullseye",
+    '10.0': "buster",
+    '9.0': "stretch",
+    '8.0': "jessie",
+    '7.0': "wheezy",
+    '6.0': "squeeze",
+    '5.0': "lenny",
+    '4.0': "etch",
+    '3.1': "sarge",
+    '3.0': "woody",
+    '2.2': "potato",
+    '2.1': "slink",
+    '2.0': "hamm",
+    '1.3': "bo",
+    '1.2': "rex",
+    '1.1': "buzz",
+    '0.0': "sid"}
 distnamelist = distvertoname.values()
-distnametover = {'bookworm': "12.0", 'buster': "11.0", 'bullseye': "10.0", 'stretch': "9.0", 'jessie': "8.0", 'wheezy': "7.0", 'squeeze': "6.0", 'lenny': "5.0",
-                 'etch': "4.0", 'sarge': "3.1", 'woody': "3.0", 'potato': "2.2", 'slink': "2.1", 'hamm': "2.0", 'bo': "1.3", 'rex': "1.2", 'buzz': "1.1", 'sid': "0.0"}
-distupnametover = {'Bookworm': "12.0", 'Buster': "11.0", 'Bullseye': "10.0", 'Stretch': "9.0", 'Jessie': "8.0", 'Wheezy': "7.0", 'Squeeze': "6.0", 'Lenny': "5.0",
-                   'Etch': "4.0", 'Sarge': "3.1", 'Woody': "3.0", 'Potato': "2.2", 'Slink': "2.1", 'Hamm': "2.0", 'Bo': "1.3", 'Rex': "1.2", 'Buzz': "1.1", 'Sid': "0.0"}
+distnametover = {
+    'bookworm': "12.0",
+    'buster': "11.0",
+    'bullseye': "10.0",
+    'stretch': "9.0",
+    'jessie': "8.0",
+    'wheezy': "7.0",
+    'squeeze': "6.0",
+    'lenny': "5.0",
+    'etch': "4.0",
+    'sarge': "3.1",
+    'woody': "3.0",
+    'potato': "2.2",
+    'slink': "2.1",
+    'hamm': "2.0",
+    'bo': "1.3",
+    'rex': "1.2",
+    'buzz': "1.1",
+    'sid': "0.0"}
+distupnametover = {
+    'Bookworm': "12.0",
+    'Buster': "11.0",
+    'Bullseye': "10.0",
+    'Stretch': "9.0",
+    'Jessie': "8.0",
+    'Wheezy': "7.0",
+    'Squeeze': "6.0",
+    'Lenny': "5.0",
+    'Etch': "4.0",
+    'Sarge': "3.1",
+    'Woody': "3.0",
+    'Potato': "2.2",
+    'Slink': "2.1",
+    'Hamm': "2.0",
+    'Bo': "1.3",
+    'Rex': "1.2",
+    'Buzz': "1.1",
+    'Sid': "0.0"}
 distnamelistalt = distnametover.keys()
 
 debian_oldstable = "stretch"
@@ -80,22 +150,25 @@ parser.add_argument("-e", "--getpkgsource",
                     action="store_true", help="get pkg source")
 getargs = parser.parse_args()
 getargs.source = os.path.realpath(getargs.source)
-pkgsetuppy = os.path.realpath(getargs.source+os.path.sep+"setup.py")
+pkgsetuppy = os.path.realpath(getargs.source + os.path.sep + "setup.py")
 pyexecpath = os.path.realpath(sys.executable)
-if(not os.path.exists(getargs.source) or not os.path.isdir(getargs.source)):
+if (not os.path.exists(getargs.source) or not os.path.isdir(getargs.source)):
     raise Exception("Could not find directory.")
-if(not os.path.exists(pkgsetuppy) or not os.path.isfile(pkgsetuppy)):
+if (not os.path.exists(pkgsetuppy) or not os.path.isfile(pkgsetuppy)):
     raise Exception("Could not find setup.py in directory.")
 
 getargs.codename = getargs.codename.lower()
-if(not getargs.codename in distnamelist):
-    print("Could not build for debian "+getargs.codename+" codename.")
+if (getargs.codename not in distnamelist):
+    print("Could not build for debian " + getargs.codename + " codename.")
     sys.exit()
 
-pypkgenlistp = subprocess.Popen(
-    [pyexecpath, pkgsetuppy, "getversioninfo"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+pypkgenlistp = subprocess.Popen([pyexecpath,
+                                 pkgsetuppy,
+                                 "getversioninfo"],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
 pypkgenout, pypkgenerr = pypkgenlistp.communicate()
-if(sys.version[0] == "3"):
+if (sys.version[0] == "3"):
     pypkgenout = pypkgenout.decode('utf-8')
 pymodule = json.loads(pypkgenout)
 setuppy_verinfo = pymodule['versionlist']
@@ -110,142 +183,156 @@ setuppy_url = pymodule['url']
 setuppy_downloadurl = pymodule['downloadurl']
 setuppy_longdescription = pymodule['longdescription']
 setuppy_platforms = pymodule['platforms']
-standverfilename = os.path.realpath(os.path.sep+"usr"+os.path.sep+"share"+os.path.sep +
-                                    "lintian"+os.path.sep+"data"+os.path.sep+"standards-version"+os.path.sep+"release-dates")
-if(not os.path.exists(standverfilename) or not os.path.isfile(standverfilename)):
+standverfilename = os.path.realpath(
+    os.path.sep +
+    "usr" +
+    os.path.sep +
+    "share" +
+    os.path.sep +
+    "lintian" +
+    os.path.sep +
+    "data" +
+    os.path.sep +
+    "standards-version" +
+    os.path.sep +
+    "release-dates")
+if (not os.path.exists(standverfilename)
+        or not os.path.isfile(standverfilename)):
     sys.exit("You need to install lintian package for this to work")
 standverfile = open(standverfilename, "r")
 standverdata = standverfile.read()
 standverfile.close()
-getstandver = re.findall("([0-9]\.[0-9]\.[0-9])\s+([0-9]+)", standverdata)
+getstandver = re.findall("([0-9]\\.[0-9]\\.[0-9])\\s+([0-9]+)", standverdata)
 getcurstandver = getstandver[0][0]
 dpkglocatout = which_exec("dpkg")
 pydpkglistp = subprocess.Popen(
     [dpkglocatout, "-s", "debhelper"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 pydpkgout, pydpkgerr = pydpkglistp.communicate()
-if(sys.version[0] == "3"):
+if (sys.version[0] == "3"):
     pydpkgout = pydpkgout.decode("utf-8")
-pydpkg_esc = re.escape("Version:")+'\s+([0-9]+)'+re.escape(".")
+pydpkg_esc = re.escape("Version:") + '\\s+([0-9]+)' + re.escape(".")
 pydpkg_val = re.findall(pydpkg_esc, pydpkgout)[0]
 
-if(sys.version[0] == "2"):
+if (sys.version[0] == "2"):
     pkgsource = "py2upc-ean"
-if(sys.version[0] == "3"):
+if (sys.version[0] == "3"):
     pkgsource = "py3upc-ean"
 pkgupstreamname = "PyUPC-EAN"
-pkgveralt = str(setuppy_verinfo[0])+"." + \
-    str(setuppy_verinfo[1])+"."+str(setuppy_verinfo[2])
-pkgver = str(pkgveralt)+"~rc"+str(setuppy_verinfo[4])+"~"+getargs.codename+str(
+pkgveralt = str(setuppy_verinfo[0]) + "." + \
+    str(setuppy_verinfo[1]) + "." + str(setuppy_verinfo[2])
+pkgver = str(pkgveralt) + "~rc" + str(setuppy_verinfo[4]) + "~" + getargs.codename + str(
     distnametover.get(getargs.codename, "1").replace(".", ""))
 pkgdistname = getargs.codename
 pkgurgency = "urgency=low"
 pkgauthorname = setuppy_author
 pkgauthoremail = setuppy_authoremail
-pkgauthor = pkgauthorname+" <"+pkgauthoremail+">"
+pkgauthor = pkgauthorname + " <" + pkgauthoremail + ">"
 pkgmaintainername = setuppy_maintainer
 pkgmaintaineremail = setuppy_maintaineremail
-pkgmaintainer = pkgmaintainername+" <"+pkgmaintaineremail+">"
+pkgmaintainer = pkgmaintainername + " <" + pkgmaintaineremail + ">"
 pkggiturl = "https://github.com/GameMaker2k/PyUPC-EAN.git"
 pkghomepage = setuppy_url
 pkgsection = "python"
 pkgpriority = "optional"
-if(sys.version[0] == "2"):
+if (sys.version[0] == "2"):
     pkgbuilddepends = "python-setuptools, python-all, python-pil, debhelper, dh-python, devscripts"
-if(sys.version[0] == "3"):
+if (sys.version[0] == "3"):
     pkgbuilddepends = "python3-setuptools, python3-all, python3-pil, debhelper, dh-python, devscripts"
-if(getargs.codename == "squeeze" or getargs.codename == "wheezy"):
-    if(sys.version[0] == "2"):
+if (getargs.codename == "squeeze" or getargs.codename == "wheezy"):
+    if (sys.version[0] == "2"):
         pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper, dh-python, devscripts"
-    if(sys.version[0] == "3"):
+    if (sys.version[0] == "3"):
         pkgbuilddepends = "python3-setuptools, python3-all, python3-imaging, debhelper, dh-python, devscripts"
 pkgstandardsversion = getcurstandver
-if(sys.version[0] == "2"):
+if (sys.version[0] == "2"):
     pkgpackage = "python-pyupcean"
     pkgoldname = "python-upcean"
-if(sys.version[0] == "3"):
+if (sys.version[0] == "3"):
     pkgpackage = "python3-pyupcean"
     pkgoldname = "python3-upcean"
 pkgarchitecture = "all"
-if(sys.version[0] == "2"):
+if (sys.version[0] == "2"):
     pkgdepends = "${misc:Depends}, ${python:Depends}"
-if(sys.version[0] == "3"):
+if (sys.version[0] == "3"):
     pkgdepends = "${misc:Depends}, ${python3:Depends}"
-pkgdescription = setuppy_description+"\n "+setuppy_longdescription
+pkgdescription = setuppy_description + "\n " + setuppy_longdescription
 pkgtzstr = time.strftime("%a, %d %b %Y %H:%M:%S %z")
 
-if(getargs.getsource == True):
+if (getargs.getsource):
     print(getargs.source)
     sys.exit()
-if(getargs.getparent == True):
+if (getargs.getparent):
     print(os.path.realpath(os.path.dirname(getargs.source)))
     sys.exit()
-if(getargs.getdirname == True):
-    print(pkgsource+"_"+pkgveralt+".orig")
+if (getargs.getdirname):
+    print(pkgsource + "_" + pkgveralt + ".orig")
     sys.exit()
-if(getargs.gettarname == True):
-    print(pkgsource+"_"+pkgveralt+".orig.tar.gz")
+if (getargs.gettarname):
+    print(pkgsource + "_" + pkgveralt + ".orig.tar.gz")
     sys.exit()
-if(getargs.getpkgsource == True):
+if (getargs.getpkgsource):
     print(pkgsource)
     sys.exit()
 
 print("generating debian package build directory")
 
-debpkg_debian_dir = os.path.realpath(getargs.source+os.path.sep+"debian")
-print("creating directory "+debpkg_debian_dir)
-if(not os.path.exists(debpkg_debian_dir)):
+debpkg_debian_dir = os.path.realpath(getargs.source + os.path.sep + "debian")
+print("creating directory " + debpkg_debian_dir)
+if (not os.path.exists(debpkg_debian_dir)):
     os.makedirs(debpkg_debian_dir)
 os.chmod(debpkg_debian_dir, int("0755", 8))
 
 debpkg_changelog_file = os.path.realpath(
-    debpkg_debian_dir+os.path.sep+"changelog")
-print("generating file "+debpkg_changelog_file)
+    debpkg_debian_dir + os.path.sep + "changelog")
+print("generating file " + debpkg_changelog_file)
 debpkg_string_temp = pkgsource + \
-    " ("+pkgver+") "+pkgdistname+"; "+pkgurgency+"\n\n"
-debpkg_string_temp += "  * source package automatically created by "+profullname+"\n\n"
-debpkg_string_temp += " -- "+pkgmaintainer+"  "+pkgtzstr+"\n"
+    " (" + pkgver + ") " + pkgdistname + "; " + pkgurgency + "\n\n"
+debpkg_string_temp += "  * source package automatically created by " + profullname + "\n\n"
+debpkg_string_temp += " -- " + pkgmaintainer + "  " + pkgtzstr + "\n"
 debpkg_file_temp = open(debpkg_changelog_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_changelog_file, int("0644", 8))
 
-debpkg_compat_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"compat")
-print("generating file "+debpkg_compat_file)
-debpkg_string_temp = str(pydpkg_val)+"\n"
+debpkg_compat_file = os.path.realpath(
+    debpkg_debian_dir + os.path.sep + "compat")
+print("generating file " + debpkg_compat_file)
+debpkg_string_temp = str(pydpkg_val) + "\n"
 debpkg_file_temp = open(debpkg_compat_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_compat_file, int("0644", 8))
 
-debpkg_control_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"control")
-print("generating file "+debpkg_control_file)
-debpkg_string_temp = "Source: "+pkgsource+"\n"
-debpkg_string_temp += "Maintainer: "+pkgmaintainer+"\n"
-debpkg_string_temp += "Homepage: "+pkghomepage+"\n"
-debpkg_string_temp += "Vcs-Git: "+pkggiturl+"\n"
-debpkg_string_temp += "Vcs-Browser: "+pkghomepage+"\n"
-debpkg_string_temp += "Section: "+pkgsection+"\n"
-debpkg_string_temp += "Priority: "+pkgpriority+"\n"
-debpkg_string_temp += "Build-Depends: "+pkgbuilddepends+"\n"
-debpkg_string_temp += "Standards-Version: "+pkgstandardsversion+"\n\n"
-debpkg_string_temp += "Package: "+pkgpackage+"\n"
-debpkg_string_temp += "Architecture: "+pkgarchitecture+"\n"
-debpkg_string_temp += "Depends: "+pkgdepends+"\n"
-debpkg_string_temp += "Replaces: "+pkgoldname+"\n"
-debpkg_string_temp += "Description: "+pkgdescription+"\n"
+debpkg_control_file = os.path.realpath(
+    debpkg_debian_dir + os.path.sep + "control")
+print("generating file " + debpkg_control_file)
+debpkg_string_temp = "Source: " + pkgsource + "\n"
+debpkg_string_temp += "Maintainer: " + pkgmaintainer + "\n"
+debpkg_string_temp += "Homepage: " + pkghomepage + "\n"
+debpkg_string_temp += "Vcs-Git: " + pkggiturl + "\n"
+debpkg_string_temp += "Vcs-Browser: " + pkghomepage + "\n"
+debpkg_string_temp += "Section: " + pkgsection + "\n"
+debpkg_string_temp += "Priority: " + pkgpriority + "\n"
+debpkg_string_temp += "Build-Depends: " + pkgbuilddepends + "\n"
+debpkg_string_temp += "Standards-Version: " + pkgstandardsversion + "\n\n"
+debpkg_string_temp += "Package: " + pkgpackage + "\n"
+debpkg_string_temp += "Architecture: " + pkgarchitecture + "\n"
+debpkg_string_temp += "Depends: " + pkgdepends + "\n"
+debpkg_string_temp += "Replaces: " + pkgoldname + "\n"
+debpkg_string_temp += "Description: " + pkgdescription + "\n"
 debpkg_file_temp = open(debpkg_control_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_control_file, int("0644", 8))
 
 debpkg_copyright_file = os.path.realpath(
-    debpkg_debian_dir+os.path.sep+"copyright")
-print("generating file "+debpkg_copyright_file)
+    debpkg_debian_dir + os.path.sep + "copyright")
+print("generating file " + debpkg_copyright_file)
 debpkg_string_temp = "Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/\n"
-debpkg_string_temp += "Upstream-Name: "+pkgupstreamname+"\n"
-debpkg_string_temp += "Source: "+pkghomepage+"\n\n"
+debpkg_string_temp += "Upstream-Name: " + pkgupstreamname + "\n"
+debpkg_string_temp += "Source: " + pkghomepage + "\n\n"
 debpkg_string_temp += "Files: *\n"
-debpkg_string_temp += "Copyright: Copyright 2011-2016 "+pkgauthor+"\n"
+debpkg_string_temp += "Copyright: Copyright 2011-2016 " + pkgauthor + "\n"
 debpkg_string_temp += "License: BSD\n\n"
 debpkg_string_temp += "License: BSD\n"
 debpkg_string_temp += "		    Revised BSD License\n\n"
@@ -280,19 +367,23 @@ debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_copyright_file, int("0644", 8))
 
-debpkg_rules_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"rules")
-print("generating file "+debpkg_rules_file)
-if(sys.version[0] == "2" and (buildsystem == "python" or buildsystem == "python_distutils")):
+debpkg_rules_file = os.path.realpath(debpkg_debian_dir + os.path.sep + "rules")
+print("generating file " + debpkg_rules_file)
+if (sys.version[0] == "2" and (buildsystem ==
+                               "python" or buildsystem == "python_distutils")):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
-    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
+    debpkg_string_temp += "# This file was automatically generated by " + \
+        profullname + " at\n"
+    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --with python2 --buildsystem=python_distutils\n"
-if(sys.version[0] == "3" and (buildsystem == "python" or buildsystem == "python_distutils")):
+if (sys.version[0] == "3" and (buildsystem ==
+                               "python" or buildsystem == "python_distutils")):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
-    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
+    debpkg_string_temp += "# This file was automatically generated by " + \
+        profullname + " at\n"
+    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --with python3\n"
@@ -303,30 +394,36 @@ if(sys.version[0] == "3" and (buildsystem == "python" or buildsystem == "python_
     debpkg_string_temp += "override_dh_auto_install:\n"
     debpkg_string_temp += "	python3 setup.py install \\\n"
     debpkg_string_temp += "        --force --root=$(CURDIR)/debian/" + \
-        pkgpackage+" \\\n"
+        pkgpackage + " \\\n"
     debpkg_string_temp += "        --no-compile -O0 --install-layout=deb\n\n"
     debpkg_string_temp += "override_dh_auto_clean:\n"
     debpkg_string_temp += "	python3 setup.py clean\n"
-if(sys.version[0] == "2" and (buildsystem == "pybuild" or buildsystem == "python_build")):
+if (sys.version[0] == "2" and (buildsystem ==
+                               "pybuild" or buildsystem == "python_build")):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
-    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
+    debpkg_string_temp += "# This file was automatically generated by " + \
+        profullname + " at\n"
+    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n"
     debpkg_string_temp += "export PYBUILD_NAME=pyupcean\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --with python2 --buildsystem=pybuild\n"
-if(sys.version[0] == "3" and (buildsystem == "pybuild" or buildsystem == "python_build")):
+if (sys.version[0] == "3" and (buildsystem ==
+                               "pybuild" or buildsystem == "python_build")):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
-    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
+    debpkg_string_temp += "# This file was automatically generated by " + \
+        profullname + " at\n"
+    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n"
     debpkg_string_temp += "export PYBUILD_NAME=pyupcean\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --with python3 --buildsystem=pybuild\n"
-if((sys.version[0] == "2" or sys.version[0] == "3") and buildsystem == "cmake"):
+if ((sys.version[0] == "2" or sys.version[0] == "3")
+        and buildsystem == "cmake"):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
-    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
+    debpkg_string_temp += "# This file was automatically generated by " + \
+        profullname + " at\n"
+    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --buildsystem=cmake --parallel\n"
@@ -335,22 +432,25 @@ debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_rules_file, int("0755", 8))
 
-debpkg_source_dir = os.path.realpath(debpkg_debian_dir+os.path.sep+"source")
-print("creating directory "+debpkg_source_dir)
-if(not os.path.exists(debpkg_source_dir)):
+debpkg_source_dir = os.path.realpath(
+    debpkg_debian_dir + os.path.sep + "source")
+print("creating directory " + debpkg_source_dir)
+if (not os.path.exists(debpkg_source_dir)):
     os.makedirs(debpkg_source_dir)
 os.chmod(debpkg_source_dir, int("0755", 8))
 
-debpkg_format_file = os.path.realpath(debpkg_source_dir+os.path.sep+"format")
-print("generating file "+debpkg_format_file)
+debpkg_format_file = os.path.realpath(
+    debpkg_source_dir + os.path.sep + "format")
+print("generating file " + debpkg_format_file)
 debpkg_string_temp = "3.0 (native)\n"
 debpkg_file_temp = open(debpkg_format_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_format_file, int("0644", 8))
 
-debpkg_options_file = os.path.realpath(debpkg_source_dir+os.path.sep+"options")
-print("generating file "+debpkg_options_file)
+debpkg_options_file = os.path.realpath(
+    debpkg_source_dir + os.path.sep + "options")
+print("generating file " + debpkg_options_file)
 debpkg_string_temp = "extend-diff-ignore=\"\\.egg-info\"\n"
 debpkg_file_temp = open(debpkg_options_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
