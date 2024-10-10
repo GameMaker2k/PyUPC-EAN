@@ -244,15 +244,18 @@ def create_goodwill_barcode(
                     imgoutfile = BytesIO()
             if (outfileext == "SVG"):
                 new_upc_preimg = cairo.SVGSurface(imgoutfile,
-                                                  ((113 * barwidth[0]) + addonsize) * int(resize),
+                                                  ((113 * barwidth[0]) +
+                                                   addonsize) * int(resize),
                                                   (barheightadd + (9 * barwidth[1])) * int(resize))
             elif (outfileext == "PDF"):
                 new_upc_preimg = cairo.PDFSurface(imgoutfile,
-                                                  ((113 * barwidth[0]) + addonsize) * int(resize),
+                                                  ((113 * barwidth[0]) +
+                                                   addonsize) * int(resize),
                                                   (barheightadd + (9 * barwidth[1])) * int(resize))
             elif (outfileext == "PS" or outfileext == "EPS"):
                 new_upc_preimg = cairo.PSSurface(imgoutfile,
-                                                 ((113 * barwidth[0]) + addonsize) * int(resize),
+                                                 ((113 * barwidth[0]) +
+                                                  addonsize) * int(resize),
                                                  (barheightadd + (9 * barwidth[1])) * int(resize))
                 if (outfileext == "EPS"):
                     new_upc_preimg.set_eps(True)
@@ -295,7 +298,8 @@ def create_goodwill_barcode(
         del (upc_barcode_img)
     drawColorText(upc_img,
                   12 * int(resize * barwidth[0]),
-                  30 + (23 * (int(resize) - 1)) - (4 * (int(resize * barwidth[0]) - 1)),
+                  30 + (23 * (int(resize) - 1)) -
+                  (4 * (int(resize * barwidth[0]) - 1)),
                   (4 * int(resize * barwidth[0])),
                   "Goodwill",
                   barcolor[1],
@@ -310,7 +314,8 @@ def create_goodwill_barcode(
         addonsize = -30
     drawColorText(upc_img,
                   16 * int(resize * barwidth[0]),
-                  36 + addonsize + (23 * (int(resize) - 1)) - (4 * (int(resize * barwidth[0]) - 1)),
+                  36 + addonsize + (23 * (int(resize) - 1)) -
+                  (4 * (int(resize * barwidth[0]) - 1)),
                   (75 * int(resize * barwidth[0])),
                   "$" + goodwillinfo['pricewdnz'],
                   barcolor[1],

@@ -26,9 +26,8 @@ import sys
 
 import PIL
 import pygame
-from PIL import Image, ImageDraw, ImageFont
-
 import upcean
+from PIL import Image, ImageDraw, ImageFont
 
 
 def rot_center(image, rect, angle):

@@ -26,9 +26,8 @@ import time
 import uuid
 
 import cherrypy
-from PIL import Image, ImageDraw, ImageFont
-
 import upcean
+from PIL import Image, ImageDraw, ImageFont
 
 try:
     from io import BytesIO, StringIO

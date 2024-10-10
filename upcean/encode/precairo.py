@@ -22,7 +22,6 @@ import os
 import re
 
 import cairo
-
 import upcean.fonts
 
 try:

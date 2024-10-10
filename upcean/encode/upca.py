@@ -376,15 +376,18 @@ def create_upca_barcode(
                     imgoutfile = BytesIO()
             if (outfileext == "SVG"):
                 new_upc_preimg = cairo.SVGSurface(imgoutfile,
-                                                  ((113 * barwidth[0]) + addonsize) * int(resize),
+                                                  ((113 * barwidth[0]) +
+                                                   addonsize) * int(resize),
                                                   (barheightadd + (9 * barwidth[1])) * int(resize))
             elif (outfileext == "PDF"):
                 new_upc_preimg = cairo.PDFSurface(imgoutfile,
-                                                  ((113 * barwidth[0]) + addonsize) * int(resize),
+                                                  ((113 * barwidth[0]) +
+                                                   addonsize) * int(resize),
                                                   (barheightadd + (9 * barwidth[1])) * int(resize))
             elif (outfileext == "PS" or outfileext == "EPS"):
                 new_upc_preimg = cairo.PSSurface(imgoutfile,
-                                                 ((113 * barwidth[0]) + addonsize) * int(resize),
+                                                 ((113 * barwidth[0]) +
+                                                  addonsize) * int(resize),
                                                  (barheightadd + (9 * barwidth[1])) * int(resize))
                 if (outfileext == "EPS"):
                     new_upc_preimg.set_eps(True)
@@ -398,7 +401,8 @@ def create_upca_barcode(
                         9 * barwidth[1])) * int(resize))
         else:
             new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24,
-                                                ((113 * barwidth[0]) + addonsize) * int(resize),
+                                                ((113 * barwidth[0]) +
+                                                 addonsize) * int(resize),
                                                 (barheightadd + (9 * barwidth[1])) * int(resize))
         new_upc_img = cairo.Context(new_upc_preimg)
         new_upc_img.set_source(upc_imgpat)

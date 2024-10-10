@@ -22,13 +22,11 @@ import upcean.support
 
 pilsupport = upcean.support.check_for_pil()
 if (pilsupport):
-    from PIL import Image, ImageDraw, ImageFont
-
     import upcean.encode.prepil
+    from PIL import Image, ImageDraw, ImageFont
 cairosupport = upcean.support.check_for_cairo()
 if (cairosupport):
     import cairo
-
     import upcean.encode.precairo
 
 try:

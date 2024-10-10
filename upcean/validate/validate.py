@@ -293,7 +293,7 @@ def validate_itf14_checksum(upc, return_check=False):
     upc_matches2 = upc_matches[1:][::2]
     EvenSum = upc_matches2[0] + upc_matches2[1] + upc_matches2[2] + \
         upc_matches2[3] + upc_matches2[4] + upc_matches2[5]
-    OddSum = (upc_matches1[0] + upc_matches1[1] + upc_matches1[2] + \
+    OddSum = (upc_matches1[0] + upc_matches1[1] + upc_matches1[2] +
               upc_matches1[3] + upc_matches1[4] + upc_matches1[5] + upc_matches1[6]) * 3
     AllSum = OddSum + EvenSum
     CheckSum = AllSum % 10
@@ -654,10 +654,11 @@ def validate_usps_checksum(upc, return_check=False):
     upc_matches = [int(x) for x in upc_matches]
     upc_matches1 = upc_matches[0:][::2]
     upc_matches2 = upc_matches[1:][::2]
-    OddSum = (upc_matches1[0] + upc_matches1[1] + upc_matches1[2] + upc_matches1[3] + upc_matches1[4] + \
+    OddSum = (upc_matches1[0] + upc_matches1[1] + upc_matches1[2] + upc_matches1[3] + upc_matches1[4] +
               upc_matches1[5] + upc_matches1[6] + upc_matches1[7] + upc_matches1[8] + upc_matches1[9] + upc_matches1[10]) * 3
     EvenSum = upc_matches2[0] + upc_matches2[1] + upc_matches2[2] + upc_matches2[3] + upc_matches2[4] + \
-        upc_matches2[5] + upc_matches2[6] + upc_matches2[7] + upc_matches2[8] + upc_matches2[9]
+        upc_matches2[5] + upc_matches2[6] + \
+        upc_matches2[7] + upc_matches2[8] + upc_matches2[9]
     AllSum = OddSum + EvenSum
     CheckSum = AllSum % 10
     if (CheckSum > 0):

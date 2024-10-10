@@ -20,9 +20,8 @@ from __future__ import (absolute_import, division, print_function,
 import os
 import re
 
-from PIL import Image, ImageDraw, ImageFont
-
 import upcean.fonts
+from PIL import Image, ImageDraw, ImageFont
 
 try:
     import pkg_resources
