@@ -14,9 +14,7 @@
     $FileInfo: shortcuts.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
+from __future__ import absolute_import, division, print_function, unicode_literals
 import upcean.oopfuncs.oopfuncs
 import upcean.support
 
@@ -27,36 +25,36 @@ import upcean.support
 
 
 def barcode_encode(type=None, code=None):
-    if (type not in upcean.support.supported_barcodes("tuple")):
+    if(type not in upcean.support.supported_barcodes("tuple")):
         return False
     return upcean.oopfuncs.oopfuncs.encode(type, code)
 
 
 def encode_barcode(type=None, code=None):
-    if (type not in upcean.support.supported_barcodes("tuple")):
+    if(type not in upcean.support.supported_barcodes("tuple")):
         return False
     return upcean.oopfuncs.oopfuncs.encode(type, code)
 
 
 def barcode_class(type=None, code=None):
-    if (type not in upcean.support.supported_barcodes("tuple")):
+    if(type not in upcean.support.supported_barcodes("tuple")):
         return False
     return upcean.oopfuncs.oopfuncs.barcode(type, code)
 
 
 def class_barcode(type=None, code=None):
-    if (type not in upcean.support.supported_barcodes("tuple")):
+    if(type not in upcean.support.supported_barcodes("tuple")):
         return False
     return upcean.oopfuncs.oopfuncs.barcode(type, code)
 
 
 def barcode_decode(type=None, filename=None):
-    if (type not in upcean.support.supported_barcodes("tuple")):
+    if(type not in upcean.support.supported_barcodes("tuple")):
         return False
     return upcean.oopfuncs.oopfuncs.decode(type, filename)
 
 
 def decode_barcode(type=None, code=None):
-    if (type not in upcean.support.supported_barcodes("tuple")):
+    if(type not in upcean.support.supported_barcodes("tuple")):
         return False
     return upcean.oopfuncs.oopfuncs.decode(type, filename)

@@ -8,9 +8,7 @@
          $FileInfo: upc-test.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1  - Author: alisonken11 $
 '''
 
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
+from __future__ import absolute_import, division, print_function, unicode_literals
 import upcean
 
 # Below codes taken from http://www.barcodeisland.com examples
@@ -53,15 +51,8 @@ for i in a.keys():
     t1 = a[i]
     t2 = upcean.convert.convert_barcode("upca", "upce", t1)
     ip = str(i).zfill(2)
-    print(
-        'key ',
-        ip,
-        ':',
-        t1 + " ",
-        upcean.validate.validate_checksum(
-            "upca",
-            t1))
-    print('upce', ip, ':', t2 + "     ",
+    print('key ', ip, ':', t1+" ", upcean.validate.validate_checksum("upca", t1))
+    print('upce', ip, ':', t2+"     ",
           upcean.validate.validate_checksum("upce", t2))
 
 print
@@ -70,13 +61,6 @@ for i in e.keys():
     t1 = e[i]
     t2 = upcean.convert.convert_barcode("upce", "upca", t1)
     ip = str(i).zfill(2)
-    print('key ', ip, ':', t1 + "     ",
+    print('key ', ip, ':', t1+"     ",
           upcean.validate.validate_checksum("upce", t1))
-    print(
-        'upca',
-        ip,
-        ':',
-        t2 + " ",
-        upcean.validate.validate_checksum(
-            "upca",
-            t2))
+    print('upca', ip, ':', t2+" ", upcean.validate.validate_checksum("upca", t2))

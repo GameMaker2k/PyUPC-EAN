@@ -15,29 +15,27 @@
     $FileInfo: pydeb-gen.py - Last Update: 6/1/2016 Ver. 0.2.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
-import argparse
-import datetime
-import json
-import os
+from __future__ import absolute_import, division, print_function, unicode_literals
 import re
-import subprocess
+import os
 import sys
 import time
+import datetime
+import argparse
+import subprocess
+import json
 
 __version_info__ = (0, 2, 0, "rc1")
-if (__version_info__[3] is not None):
-    __version__ = str(__version_info__[0]) + "." + str(__version_info__[1]) + "." + str(
-        __version_info__[2]) + "+" + str(__version_info__[3])
-if (__version_info__[3] is None):
-    __version__ = str(__version_info__[
-        0]) + "." + str(__version_info__[1]) + "." + str(__version_info__[2])
+if(__version_info__[3] != None):
+    __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(
+        __version_info__[2])+"+"+str(__version_info__[3])
+if(__version_info__[3] == None):
+    __version__ = str(
+        __version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])
 
 proname = "pydeb-gen"
 prover = __version__
-profullname = proname + " " + prover
+profullname = proname+" "+prover
 buildsystem = "pybuild"
 
 
@@ -47,393 +45,36 @@ def which_exec(execfile):
             return path + "/" + execfile
 
 
-distupnametover = {
-    'Warty': "4.10",
-    'Hoary': "5.04",
-    'Breezy': "5.10",
-    'Dapper': "6.06",
-    'Edgy': "6.10",
-    'Feisty': "7.04",
-    'Gutsy': "7.10",
-    'Hardy': "8.04",
-    'Intrepid': "8.10",
-    'Jaunty': "9.04",
-    'Karmic': "9.10",
-    'Lucid': "10.04",
-    'Maverick': "10.10",
-    'Natty': "11.04",
-    'Oneiric': "11.10",
-    'Precise': "12.04",
-    'Quantal': "12.10",
-    'Raring': "13.04",
-    'Saucy': "13.10",
-    'Trusty': "14.04",
-    'Utopic': "14.10",
-    'Vivid': "15.04",
-    'Wily': "15.10",
-    'Xenial': "16.04",
-    'Yakkety': "16.10",
-    'Zesty': "17.04",
-    'Artful': "17.10",
-    'Bionic': "18.04",
-    'Cosmic': "18.10",
-    'Disco': "19.04",
-    'Eoan': "19.10",
-    'Focal': "20.04"}
-distnametover = {
-    'warty': "4.10",
-    'hoary': "5.04",
-    'breezy': "5.10",
-    'dapper': "6.06",
-    'edgy': "6.10",
-    'feisty': "7.04",
-    'gutsy': "7.10",
-    'hardy': "8.04",
-    'intrepid': "8.10",
-    'jaunty': "9.04",
-    'karmic': "9.10",
-    'lucid': "10.04",
-    'maverick': "10.10",
-    'natty': "11.04",
-    'oneiric': "11.10",
-    'precise': "12.04",
-    'quantal': "12.10",
-    'raring': "13.04",
-    'saucy': "13.10",
-    'trusty': "14.04",
-    'utopic': "14.10",
-    'vivid': "15.04",
-    'wily': "15.10",
-    'xenial': "16.04",
-    'yakkety': "16.10",
-    'zesty': "17.04",
-    'artful': "17.10",
-    'bionic': "18.04",
-    'cosmic': "18.10",
-    'disco': "19.04",
-    'eoan': "19.10",
-    'focal': "20.04"}
+distupnametover = {'Warty': "4.10", 'Hoary': "5.04", 'Breezy': "5.10", 'Dapper': "6.06", 'Edgy': "6.10", 'Feisty': "7.04", 'Gutsy': "7.10", 'Hardy': "8.04", 'Intrepid': "8.10", 'Jaunty': "9.04", 'Karmic': "9.10", 'Lucid': "10.04", 'Maverick': "10.10", 'Natty': "11.04", 'Oneiric': "11.10", 'Precise': "12.04",
+                   'Quantal': "12.10", 'Raring': "13.04", 'Saucy': "13.10", 'Trusty': "14.04", 'Utopic': "14.10", 'Vivid': "15.04", 'Wily': "15.10", 'Xenial': "16.04", 'Yakkety': "16.10", 'Zesty': "17.04", 'Artful': "17.10", 'Bionic': "18.04", 'Cosmic': "18.10", 'Disco': "19.04", 'Eoan': "19.10", 'Focal': "20.04"}
+distnametover = {'warty': "4.10", 'hoary': "5.04", 'breezy': "5.10", 'dapper': "6.06", 'edgy': "6.10", 'feisty': "7.04", 'gutsy': "7.10", 'hardy': "8.04", 'intrepid': "8.10", 'jaunty': "9.04", 'karmic': "9.10", 'lucid': "10.04", 'maverick': "10.10", 'natty': "11.04", 'oneiric': "11.10", 'precise': "12.04",
+                 'quantal': "12.10", 'raring': "13.04", 'saucy': "13.10", 'trusty': "14.04", 'utopic': "14.10", 'vivid': "15.04", 'wily': "15.10", 'xenial': "16.04", 'yakkety': "16.10", 'zesty': "17.04", 'artful': "17.10", 'bionic': "18.04", 'cosmic': "18.10", 'disco': "19.04", 'eoan': "19.10", 'focal': "20.04"}
 distnamelist = distnametover.keys()
-distvertoname = {
-    '4.10': "warty",
-    '5.04': "hoary",
-    '5.10': "breezy",
-    '6.06': "dapper",
-    '6.10': "edgy",
-    '7.04': "feisty",
-    '7.10': "gutsy",
-    '8.04': "hardy",
-    '8.10': "intrepid",
-    '9.04': "jaunty",
-    '9.10': "karmic",
-    '10.04': "lucid",
-    '10.10': "maverick",
-    '11.04': "natty",
-    '11.10': "oneiric",
-    '12.04': "precise",
-    '12.10': "quantal",
-    '13.04': "raring",
-    '13.10': "saucy",
-    '14.04': "trusty",
-    '14.10': "utopic",
-    '15.04': "vivid",
-    '15.10': "wily",
-    '16.04': "xenial",
-    '17.04': "zesty",
-    '17.10': "artful",
-    '18.04': "bionic",
-    '18.10': "cosmic",
-    '19.04': "disco",
-    '19.10': "eoan",
-    '20.04': "focal"}
-distvertoupname = {
-    '4.10': "Warty",
-    '5.04': "Hoary",
-    '5.10': "Breezy",
-    '6.06': "Dapper",
-    '6.10': "Edgy",
-    '7.04': "Feisty",
-    '7.10': "Gutsy",
-    '8.04': "Hardy",
-    '8.10': "Intrepid",
-    '9.04': "Jaunty",
-    '9.10': "Karmic",
-    '10.04': "Lucid",
-    '10.10': "Maverick",
-    '11.04': "Natty",
-    '11.10': "Oneiric",
-    '12.04': "Precise",
-    '12.10': "Quantal",
-    '13.04': "Raring",
-    '13.10': "Saucy",
-    '14.04': "Trusty",
-    '14.10': "Utopic",
-    '15.04': "Vivid",
-    '15.10': "Wily",
-    '16.04': "Xenial",
-    '17.04': "Zesty",
-    '17.10': "Artful",
-    '18.04': "Bionic",
-    '18.10': "Cosmic",
-    '19.04': "Disco",
-    '19.10': "Eoan",
-    '20.04': "Focal"}
+distvertoname = {'4.10': "warty", '5.04': "hoary", '5.10': "breezy", '6.06': "dapper", '6.10': "edgy", '7.04': "feisty", '7.10': "gutsy", '8.04': "hardy", '8.10': "intrepid", '9.04': "jaunty", '9.10': "karmic", '10.04': "lucid", '10.10': "maverick", '11.04': "natty", '11.10': "oneiric",
+                 '12.04': "precise", '12.10': "quantal", '13.04': "raring", '13.10': "saucy", '14.04': "trusty", '14.10': "utopic", '15.04': "vivid", '15.10': "wily", '16.04': "xenial", '17.04': "zesty", '17.10': "artful", '18.04': "bionic", '18.10': "cosmic", '19.04': "disco", '19.10': "eoan", '20.04': "focal"}
+distvertoupname = {'4.10': "Warty", '5.04': "Hoary", '5.10': "Breezy", '6.06': "Dapper", '6.10': "Edgy", '7.04': "Feisty", '7.10': "Gutsy", '8.04': "Hardy", '8.10': "Intrepid", '9.04': "Jaunty", '9.10': "Karmic", '10.04': "Lucid", '10.10': "Maverick", '11.04': "Natty", '11.10': "Oneiric",
+                   '12.04': "Precise", '12.10': "Quantal", '13.04': "Raring", '13.10': "Saucy", '14.04': "Trusty", '14.10': "Utopic", '15.04': "Vivid", '15.10': "Wily", '16.04': "Xenial", '17.04': "Zesty", '17.10': "Artful", '18.04': "Bionic", '18.10': "Cosmic", '19.04': "Disco", '19.10': "Eoan", '20.04': "Focal"}
 distnamelistalt = distvertoname.values()
 
-distnametoveralt = {
-    'Warty Warthog': "4.10",
-    'Hoary Hedgehog': "5.04",
-    'Breezy Badger': "5.10",
-    'Dapper Drake': "6.06",
-    'Edgy Eft': "6.10",
-    'Feisty Fawn': "7.04",
-    'Gutsy Gibbon': "7.10",
-    'Hardy Heron': "8.04",
-    'Intrepid Ibex': "8.10",
-    'Jaunty Jackalope': "9.04",
-    'Karmic Koala': "9.10",
-    'Lucid Lynx': "10.04",
-    'Maverick Meerkat': "10.10",
-    'Natty Narwhal': "11.04",
-    'Oneiric Ocelot': "11.10",
-    'Precise Pangolin': "12.04",
-    'Quantal Quetzal': "12.10",
-    'Raring Ringtail': "13.04",
-    'Saucy Salamander': "13.10",
-    'Trusty Tahr': "14.04",
-    'Utopic Unicorn': "14.10",
-    'Vivid Vervet': "15.04",
-    'Wily Werewolf': "15.10",
-    'Xenial Xerus': "16.04",
-    'Yakkety Yak': "16.10",
-    'Zesty Zapus': "17.04",
-    'Artful Aardvark': "17.10",
-    'Bionic Beaver': "18.04",
-    'Cosmic Cuttlefish': "18.10",
-    'Disco Dingo': "19.04",
-    'Eoan Ermine': "19.10",
-    'Focal Fossa': "20.04"}
-distvertonamealt = {
-    '4.10': "Warty Warthog",
-    '5.04': "Hoary Hedgehog",
-    '5.10': "Breezy Badger",
-    '6.06': "Dapper Drake",
-    '6.10': "Edgy Eft",
-    '7.04': "Feisty Fawn",
-    '7.10': "Gutsy Gibbon",
-    '8.04': "Hardy Heron",
-    '8.10': "Intrepid Ibex",
-    '9.04': "Jaunty Jackalope",
-    '9.10': "Karmic Koala",
-    '10.04': "Lucid Lynx",
-    '10.10': "Maverick Meerkat",
-    '11.04': "Natty Narwhal",
-    '11.10': "Oneiric Ocelot",
-    '12.04': "Precise Pangolin",
-    '12.10': "Quantal Quetzal",
-    '13.04': "Raring Ringtail",
-    '13.10': "Saucy Salamander",
-    '14.04': "Trusty Tahr",
-    '14.10': "Utopic Unicorn",
-    '15.04': "Vivid Vervet",
-    '15.10': "Wily Werewolf",
-    '16.04': "Xenial Xerus",
-    '16.10': "Yakkety Yak",
-    '17.04': "Zesty Zapus",
-    '17.10': "Artful Aardvark'",
-    '18.04': "Bionic Beaver",
-    '18.10': "Cosmic Cuttlefish",
-    '19.04': "Disco Dingo",
-    '19.10': "Eoan Ermine",
-    '20.04': "Focal Fossa"}
+distnametoveralt = {'Warty Warthog': "4.10", 'Hoary Hedgehog': "5.04", 'Breezy Badger': "5.10", 'Dapper Drake': "6.06", 'Edgy Eft': "6.10",
+                    'Feisty Fawn': "7.04", 'Gutsy Gibbon': "7.10", 'Hardy Heron': "8.04", 'Intrepid Ibex': "8.10", 'Jaunty Jackalope': "9.04", 'Karmic Koala': "9.10", 'Lucid Lynx': "10.04", 'Maverick Meerkat': "10.10", 'Natty Narwhal': "11.04", 'Oneiric Ocelot': "11.10", 'Precise Pangolin': "12.04", 'Quantal Quetzal': "12.10", 'Raring Ringtail': "13.04", 'Saucy Salamander': "13.10", 'Trusty Tahr': "14.04", 'Utopic Unicorn': "14.10", 'Vivid Vervet': "15.04", 'Wily Werewolf': "15.10", 'Xenial Xerus': "16.04", 'Yakkety Yak': "16.10", 'Zesty Zapus': "17.04", 'Artful Aardvark': "17.10", 'Bionic Beaver': "18.04", 'Cosmic Cuttlefish': "18.10", 'Disco Dingo': "19.04", 'Eoan Ermine': "19.10", 'Focal Fossa': "20.04"}
+distvertonamealt = {'4.10': "Warty Warthog", '5.04': "Hoary Hedgehog", '5.10': "Breezy Badger", '6.06': "Dapper Drake", '6.10': "Edgy Eft",
+                    '7.04': "Feisty Fawn", '7.10': "Gutsy Gibbon", '8.04': "Hardy Heron", '8.10': "Intrepid Ibex", '9.04': "Jaunty Jackalope", '9.10': "Karmic Koala", '10.04': "Lucid Lynx", '10.10': "Maverick Meerkat", '11.04': "Natty Narwhal", '11.10': "Oneiric Ocelot", '12.04': "Precise Pangolin", '12.10': "Quantal Quetzal", '13.04': "Raring Ringtail", '13.10': "Saucy Salamander", '14.04': "Trusty Tahr", '14.10': "Utopic Unicorn", '15.04': "Vivid Vervet", '15.10': "Wily Werewolf", '16.04': "Xenial Xerus", '16.10': "Yakkety Yak", '17.04': "Zesty Zapus", '17.10': "Artful Aardvark'", '18.04': "Bionic Beaver", '18.10': "Cosmic Cuttlefish", '19.04': "Disco Dingo", '19.10': "Eoan Ermine", '20.04': "Focal Fossa"}
 
-lmdistvertoname = {
-    '1.0': "ada",
-    '2.0': "barbara",
-    '2.1': "bea",
-    '2.2': "bianca",
-    '3.0': "cassandra",
-    '3.1': "celena",
-    '4.0': "daryna",
-    '5': "elyssa",
-    '6': "felicia",
-    '7': "gloria",
-    '8': "helena",
-    '9': "isadora",
-    '10': "julia",
-    '11': "katya",
-    '12': "lisa",
-    '13': "maya",
-    '14': "nadia",
-    '15': "olivia",
-    '16': "petra",
-    '17': "qiana",
-    '17.1': "rebecca",
-    '17.2': "rafaela",
-    '17.3': "rosa",
-    '18': "sarah",
-    '18.1': "serena",
-    '18.2': "sonya",
-    '18.3': "sylvia",
-    '19': "tara",
-    '19.1': "tessa",
-    '19.2': "tina"}
-lmdistvertonamealt = {
-    '1.0': "Ada",
-    '2.0': "Barbara",
-    '2.1': "Bea",
-    '2.2': "Bianca",
-    '3.0': "Cassandra",
-    '3.1': "Celena",
-    '4.0': "Daryna",
-    '5': "Elyssa",
-    '6': "Felicia",
-    '7': "Gloria",
-    '8': "Helena",
-    '9': "Isadora",
-    '10': "Julia",
-    '11': "Katya",
-    '12': "Lisa",
-    '13': "Maya",
-    '14': "Nadia",
-    '15': "Olivia",
-    '16': "Petra",
-    '17': "Qiana",
-    '17.1': "Rebecca",
-    '17.2': "Rafaela",
-    '17.3': "Rosa",
-    '18': "Sarah",
-    '18.1': "Serena",
-    '18.2': "Sonya",
-    '18.3': "Sylvia",
-    '19': "Tara",
-    '19.1': "Tessa",
-    '19.2': "Tina"}
+lmdistvertoname = {'1.0': "ada", '2.0': "barbara", '2.1': "bea", '2.2': "bianca", '3.0': "cassandra", '3.1': "celena", '4.0': "daryna", '5': "elyssa", '6': "felicia", '7': "gloria", '8': "helena", '9': "isadora", '10': "julia", '11': "katya", '12': "lisa",
+                   '13': "maya", '14': "nadia", '15': "olivia", '16': "petra", '17': "qiana", '17.1': "rebecca", '17.2': "rafaela", '17.3': "rosa", '18': "sarah", '18.1': "serena", '18.2': "sonya", '18.3': "sylvia", '19': "tara", '19.1': "tessa", '19.2': "tina"}
+lmdistvertonamealt = {'1.0': "Ada", '2.0': "Barbara", '2.1': "Bea", '2.2': "Bianca", '3.0': "Cassandra", '3.1': "Celena", '4.0': "Daryna", '5': "Elyssa", '6': "Felicia", '7': "Gloria", '8': "Helena", '9': "Isadora", '10': "Julia", '11': "Katya",
+                      '12': "Lisa", '13': "Maya", '14': "Nadia", '15': "Olivia", '16': "Petra", '17': "Qiana", '17.1': "Rebecca", '17.2': "Rafaela", '17.3': "Rosa", '18': "Sarah", '18.1': "Serena", '18.2': "Sonya", '18.3': "Sylvia", '19': "Tara", '19.1': "Tessa", '19.2': "Tina"}
 lmdistnamelistalt = lmdistvertoname.values()
-lmdistnametover = {
-    'ada': "1.0",
-    'barbara': "2.0",
-    'bea': "2.1",
-    'bianca': "2.2",
-    'cassandra': "3.0",
-    'celena': "3.1",
-    'daryna': "4.0",
-    'elyssa': "5",
-    'felicia': "6",
-    'gloria': "7",
-    'helena': "8",
-    'isadora': "9",
-    'julia': "10",
-    'katya': "11",
-    'lisa': "12",
-    'maya': "13",
-    'nadia': "14",
-    'olivia': "15",
-    'petra': "16",
-    'qiana': "17",
-    'rebecca': "17.1",
-    'rafaela': "17.2",
-    'rosa': "17.3",
-    'sarah': "18",
-    'serena': "18.1",
-    'sonya': "18.2",
-    'sylvia': "18.3",
-    'tara': "19",
-    'tessa': "19.1",
-    'tina': "19.2"}
-lmdistnametoveralt = {
-    'Ada': "1.0",
-    'Barbara': "2.0",
-    'Bea': "2.1",
-    'Bianca': "2.2",
-    'Cassandra': "3.0",
-    'Celena': "3.1",
-    'Daryna': "4.0",
-    'Elyssa': "5",
-    'Felicia': "6",
-    'Gloria': "7",
-    'Helena': "8",
-    'Isadora': "9",
-    'Julia': "10",
-    'Katya': "11",
-    'Lisa': "12",
-    'Maya': "13",
-    'Nadia': "14",
-    'Olivia': "15",
-    'Petra': "16",
-    'Qiana': "17",
-    'Rebecca': "17.1",
-    'Rafaela': "17.2",
-    'Rosa': "17.3",
-    'Sarah': "18",
-    'Serena': "18.1",
-    'Sonya': "18.2",
-    'Sylvia': "18.3",
-    'Tara': "19",
-    'Tessa': "19.1",
-    'Tina': "19.2"}
+lmdistnametover = {'ada': "1.0", 'barbara': "2.0", 'bea': "2.1", 'bianca': "2.2", 'cassandra': "3.0", 'celena': "3.1", 'daryna': "4.0", 'elyssa': "5", 'felicia': "6", 'gloria': "7", 'helena': "8", 'isadora': "9", 'julia': "10", 'katya': "11", 'lisa': "12",
+                   'maya': "13", 'nadia': "14", 'olivia': "15", 'petra': "16", 'qiana': "17", 'rebecca': "17.1", 'rafaela': "17.2", 'rosa': "17.3", 'sarah': "18", 'serena': "18.1", 'sonya': "18.2", 'sylvia': "18.3", 'tara': "19", 'tessa': "19.1", 'tina': "19.2"}
+lmdistnametoveralt = {'Ada': "1.0", 'Barbara': "2.0", 'Bea': "2.1", 'Bianca': "2.2", 'Cassandra': "3.0", 'Celena': "3.1", 'Daryna': "4.0", 'Elyssa': "5", 'Felicia': "6", 'Gloria': "7", 'Helena': "8", 'Isadora': "9", 'Julia': "10", 'Katya': "11",
+                      'Lisa': "12", 'Maya': "13", 'Nadia': "14", 'Olivia': "15", 'Petra': "16", 'Qiana': "17", 'Rebecca': "17.1", 'Rafaela': "17.2", 'Rosa': "17.3", 'Sarah': "18", 'Serena': "18.1", 'Sonya': "18.2", 'Sylvia': "18.3", 'Tara': "19", 'Tessa': "19.1", 'Tina': "19.2"}
 lmdistnamelist = lmdistnametover.keys()
-distlmnametouname = {
-    "ada": "dapper",
-    "barbara": "edgy",
-    "bea": "edgy",
-    "bianca": "edgy",
-    "cassandra": "feisty",
-    "celena": "feisty",
-    "daryna": "gutsy",
-    "elyssa": "hardy",
-    "felicia": "intrepid",
-    "gloria": "jaunty",
-    "helena": "karmic",
-    "isadora": "lucid",
-    "julia": "maverick",
-    "katya": "natty",
-    "lisa": "oneiric",
-    "maya": "precise",
-    "nadia": "quantal",
-    "olivia": "raring",
-    "petra": "saucy",
-    "qiana": "trusty",
-    "rebecca": "trusty",
-    "rafaela": "trusty",
-    "rosa": "trusty",
-    "sarah": "xenial",
-    "serena": "xenial",
-    "sonya": "xenial",
-    "sylvia": "xenial",
-    "tara": "bionic",
-    "tessa": "bionic",
-    "tina": "bionic"}
-distlmnametounamealt = {
-    "Ada": "Dapper",
-    "Barbara": "Edgy",
-    "Bea": "Edgy",
-    "Bianca": "Edgy",
-    "Cassandra": "Feisty",
-    "Celena": "Feisty",
-    "Daryna": "Gutsy",
-    "Elyssa": "Hardy",
-    "Felicia": "Intrepid",
-    "Gloria": "Jaunty",
-    "Helena": "Karmic",
-    "Isadora": "Lucid",
-    "Julia": "Maverick",
-    "Katya": "Natty",
-    "Lisa": "Oneiric",
-    "Maya": "Precise",
-    "Nadia": "Quantal",
-    "Olivia": "Raring",
-    "Petra": "Saucy",
-    "Qiana": "Trusty",
-    "Rebecca": "Trusty",
-    "Rafaela": "Trusty",
-    "Rosa": "Trusty",
-    "Sarah": "Xenial",
-    "Serena": "Xenial",
-    "Sylvia": "Xenial",
-    "Tara": "Bionic",
-    "Tessa": "Bionic",
-    "Tina": "Bionic"}
+distlmnametouname = {"ada": "dapper", "barbara": "edgy", "bea": "edgy", "bianca": "edgy", "cassandra": "feisty", "celena": "feisty", "daryna": "gutsy", "elyssa": "hardy", "felicia": "intrepid", "gloria": "jaunty", "helena": "karmic", "isadora": "lucid", "julia": "maverick", "katya": "natty",
+                     "lisa": "oneiric", "maya": "precise", "nadia": "quantal", "olivia": "raring", "petra": "saucy", "qiana": "trusty", "rebecca": "trusty", "rafaela": "trusty", "rosa": "trusty", "sarah": "xenial", "serena": "xenial", "sonya": "xenial", "sylvia": "xenial", "tara": "bionic", "tessa": "bionic", "tina": "bionic"}
+distlmnametounamealt = {"Ada": "Dapper", "Barbara": "Edgy", "Bea": "Edgy", "Bianca": "Edgy", "Cassandra": "Feisty", "Celena": "Feisty", "Daryna": "Gutsy", "Elyssa": "Hardy", "Felicia": "Intrepid", "Gloria": "Jaunty", "Helena": "Karmic", "Isadora": "Lucid", "Julia": "Maverick", "Katya": "Natty",
+                        "Lisa": "Oneiric", "Maya": "Precise", "Nadia": "Quantal", "Olivia": "Raring", "Petra": "Saucy", "Qiana": "Trusty", "Rebecca": "Trusty", "Rafaela": "Trusty", "Rosa": "Trusty", "Sarah": "Xenial", "Serena": "Xenial", "Sylvia": "Xenial", "Tara": "Bionic", "Tessa": "Bionic", "Tina": "Bionic"}
 
 ubuntu_oldstable = "disco"
 ubuntu_stable = "eoan"
@@ -459,27 +100,24 @@ parser.add_argument("-e", "--getpkgsource",
                     action="store_true", help="get pkg source")
 getargs = parser.parse_args()
 getargs.source = os.path.realpath(getargs.source)
-pkgsetuppy = os.path.realpath(getargs.source + os.path.sep + "setup.py")
+pkgsetuppy = os.path.realpath(getargs.source+os.path.sep+"setup.py")
 pyexecpath = os.path.realpath(sys.executable)
-if (not os.path.exists(getargs.source) or not os.path.isdir(getargs.source)):
+if(not os.path.exists(getargs.source) or not os.path.isdir(getargs.source)):
     raise Exception("Could not find directory.")
-if (not os.path.exists(pkgsetuppy) or not os.path.isfile(pkgsetuppy)):
+if(not os.path.exists(pkgsetuppy) or not os.path.isfile(pkgsetuppy)):
     raise Exception("Could not find setup.py in directory.")
 
 getargs.codename = distlmnametouname.get(getargs.codename, getargs.codename)
 getargs.codename = distlmnametounamealt.get(getargs.codename, getargs.codename)
 getargs.codename = getargs.codename.lower()
-if (getargs.codename not in distnamelist):
-    print("Could not build for ubuntu " + getargs.codename + " codename.")
+if(not getargs.codename in distnamelist):
+    print("Could not build for ubuntu "+getargs.codename+" codename.")
     sys.exit()
 
-pypkgenlistp = subprocess.Popen([pyexecpath,
-                                 pkgsetuppy,
-                                 "getversioninfo"],
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
+pypkgenlistp = subprocess.Popen(
+    [pyexecpath, pkgsetuppy, "getversioninfo"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 pypkgenout, pypkgenerr = pypkgenlistp.communicate()
-if (sys.version[0] == "3"):
+if(sys.version[0] == "3"):
     pypkgenout = pypkgenout.decode('utf-8')
 pymodule = json.loads(pypkgenout)
 setuppy_verinfo = pymodule['versionlist']
@@ -494,156 +132,142 @@ setuppy_url = pymodule['url']
 setuppy_downloadurl = pymodule['downloadurl']
 setuppy_longdescription = pymodule['longdescription']
 setuppy_platforms = pymodule['platforms']
-standverfilename = os.path.realpath(
-    os.path.sep +
-    "usr" +
-    os.path.sep +
-    "share" +
-    os.path.sep +
-    "lintian" +
-    os.path.sep +
-    "data" +
-    os.path.sep +
-    "standards-version" +
-    os.path.sep +
-    "release-dates")
-if (not os.path.exists(standverfilename)
-        or not os.path.isfile(standverfilename)):
+standverfilename = os.path.realpath(os.path.sep+"usr"+os.path.sep+"share"+os.path.sep +
+                                    "lintian"+os.path.sep+"data"+os.path.sep+"standards-version"+os.path.sep+"release-dates")
+if(not os.path.exists(standverfilename) or not os.path.isfile(standverfilename)):
     sys.exit("You need to install lintian package for this to work")
 standverfile = open(standverfilename, "r")
 standverdata = standverfile.read()
 standverfile.close()
-getstandver = re.findall("([0-9]\\.[0-9]\\.[0-9])\\s+([0-9]+)", standverdata)
+getstandver = re.findall("([0-9]\.[0-9]\.[0-9])\s+([0-9]+)", standverdata)
 getcurstandver = getstandver[0][0]
 dpkglocatout = which_exec("dpkg")
 pydpkglistp = subprocess.Popen(
     [dpkglocatout, "-s", "debhelper"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 pydpkgout, pydpkgerr = pydpkglistp.communicate()
-if (sys.version[0] == "3"):
+if(sys.version[0] == "3"):
     pydpkgout = pydpkgout.decode("utf-8")
-pydpkg_esc = re.escape("Version:") + '\\s+([0-9]+)' + re.escape(".")
+pydpkg_esc = re.escape("Version:")+'\s+([0-9]+)'+re.escape(".")
 pydpkg_val = re.findall(pydpkg_esc, pydpkgout.replace("ubuntu", "."))[0]
 
-if (sys.version[0] == "2"):
+if(sys.version[0] == "2"):
     pkgsource = "py2upc-ean"
-if (sys.version[0] == "3"):
+if(sys.version[0] == "3"):
     pkgsource = "py3upc-ean"
 pkgupstreamname = "PyUPC-EAN"
-pkgveralt = str(setuppy_verinfo[0]) + "." + \
-    str(setuppy_verinfo[1]) + "." + str(setuppy_verinfo[2])
-pkgver = str(pkgveralt) + "~rc" + str(setuppy_verinfo[4]) + "~" + getargs.codename + str(
+pkgveralt = str(setuppy_verinfo[0])+"." + \
+    str(setuppy_verinfo[1])+"."+str(setuppy_verinfo[2])
+pkgver = str(pkgveralt)+"~rc"+str(setuppy_verinfo[4])+"~"+getargs.codename+str(
     distnametover.get(getargs.codename, "1").replace(".", ""))
 pkgdistname = getargs.codename
 pkgurgency = "urgency=low"
 pkgauthorname = setuppy_author
 pkgauthoremail = setuppy_authoremail
-pkgauthor = pkgauthorname + " <" + pkgauthoremail + ">"
+pkgauthor = pkgauthorname+" <"+pkgauthoremail+">"
 pkgmaintainername = setuppy_maintainer
 pkgmaintaineremail = setuppy_maintaineremail
-pkgmaintainer = pkgmaintainername + " <" + pkgmaintaineremail + ">"
+pkgmaintainer = pkgmaintainername+" <"+pkgmaintaineremail+">"
 pkggiturl = "https://github.com/GameMaker2k/PyUPC-EAN.git"
 pkghomepage = setuppy_url
 pkgsection = "python"
 pkgpriority = "optional"
-if (sys.version[0] == "2"):
+if(sys.version[0] == "2"):
     pkgbuilddepends = "python-setuptools, python-all, python-pil, debhelper, dh-python, devscripts"
-if (sys.version[0] == "3"):
+if(sys.version[0] == "3"):
     pkgbuilddepends = "python3-setuptools, python3-all, python3-pil, debhelper, dh-python, devscripts"
-if (getargs.codename == "lucid" or getargs.codename == "precise"):
-    if (sys.version[0] == "2"):
+if(getargs.codename == "lucid" or getargs.codename == "precise"):
+    if(sys.version[0] == "2"):
         pkgbuilddepends = "python-setuptools, python-all, python-imaging, debhelper, dh-python, devscripts"
-    if (sys.version[0] == "3"):
+    if(sys.version[0] == "3"):
         pkgbuilddepends = "python3-setuptools, python3-all, python3-imaging, debhelper, dh-python, devscripts"
 pkgstandardsversion = getcurstandver
-if (sys.version[0] == "2"):
+if(sys.version[0] == "2"):
     pkgpackage = "python-pyupcean"
     pkgoldname = "python-upcean"
-if (sys.version[0] == "3"):
+if(sys.version[0] == "3"):
     pkgpackage = "python3-pyupcean"
     pkgoldname = "python3-upcean"
 pkgarchitecture = "all"
-if (sys.version[0] == "2"):
+if(sys.version[0] == "2"):
     pkgdepends = "${misc:Depends}, ${python:Depends}"
-if (sys.version[0] == "3"):
+if(sys.version[0] == "3"):
     pkgdepends = "${misc:Depends}, ${python3:Depends}"
-pkgdescription = setuppy_description + "\n " + setuppy_longdescription
+pkgdescription = setuppy_description+"\n "+setuppy_longdescription
 pkgtzstr = time.strftime("%a, %d %b %Y %H:%M:%S %z")
 
-if (getargs.getsource):
+if(getargs.getsource == True):
     print(getargs.source)
     sys.exit()
-if (getargs.getparent):
+if(getargs.getparent == True):
     print(os.path.realpath(os.path.dirname(getargs.source)))
     sys.exit()
-if (getargs.getdirname):
-    print(pkgsource + "_" + pkgveralt + ".orig")
+if(getargs.getdirname == True):
+    print(pkgsource+"_"+pkgveralt+".orig")
     sys.exit()
-if (getargs.gettarname):
-    print(pkgsource + "_" + pkgveralt + ".orig.tar.gz")
+if(getargs.gettarname == True):
+    print(pkgsource+"_"+pkgveralt+".orig.tar.gz")
     sys.exit()
-if (getargs.getpkgsource):
+if(getargs.getpkgsource == True):
     print(pkgsource)
     sys.exit()
 
 print("generating debian package build directory")
 
-debpkg_debian_dir = os.path.realpath(getargs.source + os.path.sep + "debian")
-print("creating directory " + debpkg_debian_dir)
-if (not os.path.exists(debpkg_debian_dir)):
+debpkg_debian_dir = os.path.realpath(getargs.source+os.path.sep+"debian")
+print("creating directory "+debpkg_debian_dir)
+if(not os.path.exists(debpkg_debian_dir)):
     os.makedirs(debpkg_debian_dir)
 os.chmod(debpkg_debian_dir, int("0755", 8))
 
 debpkg_changelog_file = os.path.realpath(
-    debpkg_debian_dir + os.path.sep + "changelog")
-print("generating file " + debpkg_changelog_file)
+    debpkg_debian_dir+os.path.sep+"changelog")
+print("generating file "+debpkg_changelog_file)
 debpkg_string_temp = pkgsource + \
-    " (" + pkgver + ") " + pkgdistname + "; " + pkgurgency + "\n\n"
-debpkg_string_temp += "  * source package automatically created by " + profullname + "\n\n"
-debpkg_string_temp += " -- " + pkgmaintainer + "  " + pkgtzstr + "\n"
+    " ("+pkgver+") "+pkgdistname+"; "+pkgurgency+"\n\n"
+debpkg_string_temp += "  * source package automatically created by "+profullname+"\n\n"
+debpkg_string_temp += " -- "+pkgmaintainer+"  "+pkgtzstr+"\n"
 debpkg_file_temp = open(debpkg_changelog_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_changelog_file, int("0644", 8))
 
-debpkg_compat_file = os.path.realpath(
-    debpkg_debian_dir + os.path.sep + "compat")
-print("generating file " + debpkg_compat_file)
-debpkg_string_temp = str(pydpkg_val) + "\n"
+debpkg_compat_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"compat")
+print("generating file "+debpkg_compat_file)
+debpkg_string_temp = str(pydpkg_val)+"\n"
 debpkg_file_temp = open(debpkg_compat_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_compat_file, int("0644", 8))
 
-debpkg_control_file = os.path.realpath(
-    debpkg_debian_dir + os.path.sep + "control")
-print("generating file " + debpkg_control_file)
-debpkg_string_temp = "Source: " + pkgsource + "\n"
-debpkg_string_temp += "Maintainer: " + pkgmaintainer + "\n"
-debpkg_string_temp += "Homepage: " + pkghomepage + "\n"
-debpkg_string_temp += "Vcs-Git: " + pkggiturl + "\n"
-debpkg_string_temp += "Vcs-Browser: " + pkghomepage + "\n"
-debpkg_string_temp += "Section: " + pkgsection + "\n"
-debpkg_string_temp += "Priority: " + pkgpriority + "\n"
-debpkg_string_temp += "Build-Depends: " + pkgbuilddepends + "\n"
-debpkg_string_temp += "Standards-Version: " + pkgstandardsversion + "\n\n"
-debpkg_string_temp += "Package: " + pkgpackage + "\n"
-debpkg_string_temp += "Architecture: " + pkgarchitecture + "\n"
-debpkg_string_temp += "Depends: " + pkgdepends + "\n"
-debpkg_string_temp += "Replaces: " + pkgoldname + "\n"
-debpkg_string_temp += "Description: " + pkgdescription + "\n"
+debpkg_control_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"control")
+print("generating file "+debpkg_control_file)
+debpkg_string_temp = "Source: "+pkgsource+"\n"
+debpkg_string_temp += "Maintainer: "+pkgmaintainer+"\n"
+debpkg_string_temp += "Homepage: "+pkghomepage+"\n"
+debpkg_string_temp += "Vcs-Git: "+pkggiturl+"\n"
+debpkg_string_temp += "Vcs-Browser: "+pkghomepage+"\n"
+debpkg_string_temp += "Section: "+pkgsection+"\n"
+debpkg_string_temp += "Priority: "+pkgpriority+"\n"
+debpkg_string_temp += "Build-Depends: "+pkgbuilddepends+"\n"
+debpkg_string_temp += "Standards-Version: "+pkgstandardsversion+"\n\n"
+debpkg_string_temp += "Package: "+pkgpackage+"\n"
+debpkg_string_temp += "Architecture: "+pkgarchitecture+"\n"
+debpkg_string_temp += "Depends: "+pkgdepends+"\n"
+debpkg_string_temp += "Replaces: "+pkgoldname+"\n"
+debpkg_string_temp += "Description: "+pkgdescription+"\n"
 debpkg_file_temp = open(debpkg_control_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_control_file, int("0644", 8))
 
 debpkg_copyright_file = os.path.realpath(
-    debpkg_debian_dir + os.path.sep + "copyright")
-print("generating file " + debpkg_copyright_file)
+    debpkg_debian_dir+os.path.sep+"copyright")
+print("generating file "+debpkg_copyright_file)
 debpkg_string_temp = "Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/\n"
-debpkg_string_temp += "Upstream-Name: " + pkgupstreamname + "\n"
-debpkg_string_temp += "Source: " + pkghomepage + "\n\n"
+debpkg_string_temp += "Upstream-Name: "+pkgupstreamname+"\n"
+debpkg_string_temp += "Source: "+pkghomepage+"\n\n"
 debpkg_string_temp += "Files: *\n"
-debpkg_string_temp += "Copyright: Copyright 2011-2016 " + pkgauthor + "\n"
+debpkg_string_temp += "Copyright: Copyright 2011-2016 "+pkgauthor+"\n"
 debpkg_string_temp += "License: BSD\n\n"
 debpkg_string_temp += "License: BSD\n"
 debpkg_string_temp += "		    Revised BSD License\n\n"
@@ -678,23 +302,19 @@ debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_copyright_file, int("0644", 8))
 
-debpkg_rules_file = os.path.realpath(debpkg_debian_dir + os.path.sep + "rules")
-print("generating file " + debpkg_rules_file)
-if (sys.version[0] == "2" and (buildsystem ==
-                               "python" or buildsystem == "python_distutils")):
+debpkg_rules_file = os.path.realpath(debpkg_debian_dir+os.path.sep+"rules")
+print("generating file "+debpkg_rules_file)
+if(sys.version[0] == "2" and (buildsystem == "python" or buildsystem == "python_distutils")):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by " + \
-        profullname + " at\n"
-    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
+    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
+    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --with python2 --buildsystem=python_distutils\n"
-if (sys.version[0] == "3" and (buildsystem ==
-                               "python" or buildsystem == "python_distutils")):
+if(sys.version[0] == "3" and (buildsystem == "python" or buildsystem == "python_distutils")):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by " + \
-        profullname + " at\n"
-    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
+    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
+    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --with python3\n"
@@ -705,36 +325,30 @@ if (sys.version[0] == "3" and (buildsystem ==
     debpkg_string_temp += "override_dh_auto_install:\n"
     debpkg_string_temp += "	python3 setup.py install \\\n"
     debpkg_string_temp += "        --force --root=$(CURDIR)/debian/" + \
-        pkgpackage + " \\\n"
+        pkgpackage+" \\\n"
     debpkg_string_temp += "        --no-compile -O0 --install-layout=deb\n\n"
     debpkg_string_temp += "override_dh_auto_clean:\n"
     debpkg_string_temp += "	python3 setup.py clean\n"
-if (sys.version[0] == "2" and (buildsystem ==
-                               "pybuild" or buildsystem == "python_build")):
+if(sys.version[0] == "2" and (buildsystem == "pybuild" or buildsystem == "python_build")):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by " + \
-        profullname + " at\n"
-    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
+    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
+    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n"
     debpkg_string_temp += "export PYBUILD_NAME=pyupcean\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --with python2 --buildsystem=pybuild\n"
-if (sys.version[0] == "3" and (buildsystem ==
-                               "pybuild" or buildsystem == "python_build")):
+if(sys.version[0] == "3" and (buildsystem == "pybuild" or buildsystem == "python_build")):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by " + \
-        profullname + " at\n"
-    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
+    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
+    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n"
     debpkg_string_temp += "export PYBUILD_NAME=pyupcean\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --with python3 --buildsystem=pybuild\n"
-if ((sys.version[0] == "2" or sys.version[0] == "3")
-        and buildsystem == "cmake"):
+if((sys.version[0] == "2" or sys.version[0] == "3") and buildsystem == "cmake"):
     debpkg_string_temp = "#!/usr/bin/make -f\n\n"
-    debpkg_string_temp += "# This file was automatically generated by " + \
-        profullname + " at\n"
-    debpkg_string_temp += "# " + pkgtzstr + "\n\n"
+    debpkg_string_temp += "# This file was automatically generated by "+profullname+" at\n"
+    debpkg_string_temp += "# "+pkgtzstr+"\n\n"
     debpkg_string_temp += "export DH_VERBOSE=1\n\n"
     debpkg_string_temp += "%:\n"
     debpkg_string_temp += "	dh $@ --buildsystem=cmake --parallel\n"
@@ -743,25 +357,22 @@ debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_rules_file, int("0755", 8))
 
-debpkg_source_dir = os.path.realpath(
-    debpkg_debian_dir + os.path.sep + "source")
-print("creating directory " + debpkg_source_dir)
-if (not os.path.exists(debpkg_source_dir)):
+debpkg_source_dir = os.path.realpath(debpkg_debian_dir+os.path.sep+"source")
+print("creating directory "+debpkg_source_dir)
+if(not os.path.exists(debpkg_source_dir)):
     os.makedirs(debpkg_source_dir)
 os.chmod(debpkg_source_dir, int("0755", 8))
 
-debpkg_format_file = os.path.realpath(
-    debpkg_source_dir + os.path.sep + "format")
-print("generating file " + debpkg_format_file)
+debpkg_format_file = os.path.realpath(debpkg_source_dir+os.path.sep+"format")
+print("generating file "+debpkg_format_file)
 debpkg_string_temp = "3.0 (native)\n"
 debpkg_file_temp = open(debpkg_format_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
 debpkg_file_temp.close()
 os.chmod(debpkg_format_file, int("0644", 8))
 
-debpkg_options_file = os.path.realpath(
-    debpkg_source_dir + os.path.sep + "options")
-print("generating file " + debpkg_options_file)
+debpkg_options_file = os.path.realpath(debpkg_source_dir+os.path.sep+"options")
+print("generating file "+debpkg_options_file)
 debpkg_string_temp = "extend-diff-ignore=\"\\.egg-info\"\n"
 debpkg_file_temp = open(debpkg_options_file, "w")
 debpkg_file_temp.write(debpkg_string_temp)
