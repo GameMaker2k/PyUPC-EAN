@@ -2,3 +2,4 @@
 *       text eol=lf
 *.ttf   binary
 *.otf   binary
+upcean/versioninfo.py ident
