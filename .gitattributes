@@ -1,4 +1,4 @@
-*.py	ident
-*	text  ol=lf	encoding=UTF-8
-*.ttf 	ol=auto encoding=binary
-*.otf 	ol=auto encoding=binary
+*.py    ident
+*       text eol=lf
+*.ttf   binary
+*.otf   binary
