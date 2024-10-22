@@ -14,7 +14,7 @@
     $FileInfo: __main__.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 from upcean.versioninfo import __author__, __copyright__, __credits__, __email__, __license__, __license_string__, __maintainer__, __project__, __project_url__, __revision__, __status__, __version__, __version_alt__, __version_date__, __version_date_alt__, __version_date_info__, __version_info__, version_date, version_info
 import upcean
 import sys

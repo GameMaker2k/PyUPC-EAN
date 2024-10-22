@@ -8,7 +8,7 @@
          $FileInfo: upc-test.py - Last Update: 8/18/2023 Ver. 2.10.0 RC 1  - Author: alisonken11 $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import upcean
 
 # Below codes taken from http://www.barcodeisland.com examples
