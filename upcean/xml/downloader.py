@@ -110,51 +110,14 @@ if(__use_http_lib__ == "requests" and havehttpx and not haverequests):
 if((__use_http_lib__ == "httpx" or __use_http_lib__ == "requests") and not havehttpx and not haverequests):
     __use_http_lib__ = "urllib"
 
-windowsNT4_ua_string = "Windows NT 4.0"
-windowsNT4_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                       'SEC-CH-UA-BITNESS': "32", 'SEC-CH-UA-PLATFORM': "4.0.0"}
-windows2k_ua_string = "Windows NT 5.0"
-windows2k_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                      'SEC-CH-UA-BITNESS': "32", 'SEC-CH-UA-PLATFORM': "5.0.0"}
-windowsXP_ua_string = "Windows NT 5.1"
-windowsXP_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                      'SEC-CH-UA-BITNESS': "32", 'SEC-CH-UA-PLATFORM': "5.1.0"}
-windowsXP64_ua_string = "Windows NT 5.2; Win64; x64"
-windowsXP64_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                        'SEC-CH-UA-BITNESS': "64", 'SEC-CH-UA-PLATFORM': "5.1.0"}
-windows7_ua_string = "Windows NT 6.1; Win64; x64"
-windows7_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                     'SEC-CH-UA-BITNESS': "64", 'SEC-CH-UA-PLATFORM': "6.1.0"}
-windows8_ua_string = "Windows NT 6.2; Win64; x64"
-windows8_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                     'SEC-CH-UA-BITNESS': "64", 'SEC-CH-UA-PLATFORM': "6.2.0"}
-windows81_ua_string = "Windows NT 6.3; Win64; x64"
-windows81_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                      'SEC-CH-UA-BITNESS': "64", 'SEC-CH-UA-PLATFORM': "6.3.0"}
-windows10_ua_string = "Windows NT 10.0; Win64; x64"
-windows10_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                      'SEC-CH-UA-BITNESS': "64", 'SEC-CH-UA-PLATFORM': "10.0.0"}
-windows11_ua_string = "Windows NT 11.0; Win64; x64"
-windows11_ua_addon = {'SEC-CH-UA-PLATFORM': "Windows", 'SEC-CH-UA-ARCH': "x86",
-                      'SEC-CH-UA-BITNESS': "64", 'SEC-CH-UA-PLATFORM': "11.0.0"}
-geturls_ua_firefox_windows7 = "Mozilla/5.0 ("+windows7_ua_string + \
-    "; rv:109.0) Gecko/20100101 Firefox/117.0"
-geturls_ua_seamonkey_windows7 = "Mozilla/5.0 ("+windows7_ua_string + \
-    "; rv:91.0) Gecko/20100101 Firefox/91.0 SeaMonkey/2.53.17"
-geturls_ua_chrome_windows7 = "Mozilla/5.0 ("+windows7_ua_string + \
-    ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
-geturls_ua_chromium_windows7 = "Mozilla/5.0 ("+windows7_ua_string + \
-    ") AppleWebKit/537.36 (KHTML, like Gecko) Chromium/117.0.0.0 Chrome/117.0.0.0 Safari/537.36"
-geturls_ua_palemoon_windows7 = "Mozilla/5.0 ("+windows7_ua_string + \
-    "; rv:102.0) Gecko/20100101 Goanna/6.3 Firefox/102.0 PaleMoon/32.4.0.1"
-geturls_ua_opera_windows7 = "Mozilla/5.0 ("+windows7_ua_string + \
-    ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 OPR/102.0.0.0"
-geturls_ua_vivaldi_windows7 = "Mozilla/5.0 ("+windows7_ua_string + \
-    ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Vivaldi/6.2.3105.48"
-geturls_ua_internet_explorer_windows7 = "Mozilla/5.0 (" + \
-    windows7_ua_string+"; Trident/7.0; rv:11.0) like Gecko"
-geturls_ua_microsoft_edge_windows7 = "Mozilla/5.0 ("+windows7_ua_string + \
-    ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.31"
+PyBitness = platform.architecture()
+if(PyBitness == "32bit" or PyBitness == "32"):
+    PyBitness = "32"
+elif(PyBitness == "64bit" or PyBitness == "64"):
+    PyBitness = "64"
+else:
+    PyBitness = "32"
+
 geturls_ua_upcean_python = "Mozilla/5.0 (compatible; {proname}/{prover}; +{prourl})".format(
     proname=__project__, prover=__version__, prourl=__project_url__)
 if(platform.python_implementation() != ""):
@@ -165,40 +128,14 @@ geturls_ua_upcean_python_alt = "Mozilla/5.0 ({osver}; {archtype}; +{prourl}) {py
 )+" "+platform.release(), archtype=platform.machine(), prourl=__project_url__, pyimp=py_implementation, pyver=platform.python_version(), proname=__project__, prover=__version__)
 geturls_ua_googlebot_google = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 geturls_ua_googlebot_google_old = "Googlebot/2.1 (+http://www.google.com/bot.html)"
-geturls_ua = geturls_ua_firefox_windows7
-geturls_headers_firefox_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_firefox_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6",
-                                    'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close"}
-geturls_headers_seamonkey_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_seamonkey_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6",
-                                      'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close"}
-geturls_headers_chrome_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_chrome_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6", 'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7",
-                                   'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close", 'SEC-CH-UA': "\"Google Chrome\";v=\"117\", \"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"117\"", 'SEC-CH-UA-FULL-VERSION': "117.0.5938.63"}
-geturls_headers_chrome_windows7.update(windows7_ua_addon)
-geturls_headers_chromium_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_chromium_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6",
-                                     'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close", 'SEC-CH-UA': "\"Chromium\";v=\"117\", \"Not;A=Brand\";v=\"24\"", 'SEC-CH-UA-FULL-VERSION': "117.0.5938.63"}
-geturls_headers_chromium_windows7.update(windows7_ua_addon)
-geturls_headers_palemoon_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_palemoon_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6",
-                                     'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close"}
-geturls_headers_opera_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_opera_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6", 'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7",
-                                  'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close", 'SEC-CH-UA': "\"Chromium\";v=\"116\", \"Not;A=Brand\";v=\"8\", \"Opera\";v=\"102\"", 'SEC-CH-UA-FULL-VERSION': "102.0.4880.56"}
-geturls_headers_opera_windows7.update(windows7_ua_addon)
-geturls_headers_vivaldi_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_vivaldi_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6", 'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7",
-                                    'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close", 'SEC-CH-UA': "\"Google Chrome\";v=\"117\", \"Not;A=Brand\";v=\"8\", \"Vivaldi\";v=\"6.2\"", 'SEC-CH-UA-FULL-VERSION': "6.2.3105.48"}
-geturls_headers_vivaldi_windows7.update(windows7_ua_addon)
-geturls_headers_internet_explorer_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_internet_explorer_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language':
-                                              "en-US,en;q=0.8,en-CA,en-GB;q=0.6", 'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close"}
-geturls_headers_microsoft_edge_windows7 = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_microsoft_edge_windows7, 'Accept-Encoding': compression_supported, 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6", 'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7",
-                                           'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close", 'SEC-CH-UA': "\"Microsoft Edge\";v=\"117\", \"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"117\"", 'SEC-CH-UA-FULL-VERSION': "117.0.2045.31"}
-geturls_headers_microsoft_edge_windows7.update(windows7_ua_addon)
 geturls_headers_upcean_python = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_upcean_python, 'Accept-Encoding': "none", 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6", 'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close",
-                                   'SEC-CH-UA': "\""+__project__+"\";v=\""+str(__version__)+"\", \"Not;A=Brand\";v=\"8\", \""+py_implementation+"\";v=\""+str(platform.release())+"\"", 'SEC-CH-UA-FULL-VERSION': str(__version__), 'SEC-CH-UA-PLATFORM': ""+py_implementation+"", 'SEC-CH-UA-ARCH': ""+platform.machine()+"", 'SEC-CH-UA-PLATFORM': str(__version__), 'SEC-CH-UA-BITNESS': str(PyBitness)}
+                                    'SEC-CH-UA': "\""+__project__+"\";v=\""+str(__version__)+"\", \"Not;A=Brand\";v=\"8\", \""+py_implementation+"\";v=\""+str(platform.release())+"\"", 'SEC-CH-UA-FULL-VERSION': str(__version__), 'SEC-CH-UA-PLATFORM': ""+py_implementation+"", 'SEC-CH-UA-ARCH': ""+platform.machine()+"", 'SEC-CH-UA-PLATFORM': str(__version__), 'SEC-CH-UA-BITNESS': str(PyBitness)}
 geturls_headers_upcean_python_alt = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_upcean_python_alt, 'Accept-Encoding': "none", 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6", 'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close",
-                                       'SEC-CH-UA': "\""+__project__+"\";v=\""+str(__version__)+"\", \"Not;A=Brand\";v=\"8\", \""+py_implementation+"\";v=\""+str(platform.release())+"\"", 'SEC-CH-UA-FULL-VERSION': str(__version__), 'SEC-CH-UA-PLATFORM': ""+py_implementation+"", 'SEC-CH-UA-ARCH': ""+platform.machine()+"", 'SEC-CH-UA-PLATFORM': str(__version__), 'SEC-CH-UA-BITNESS': str(PyBitness)}
+                                        'SEC-CH-UA': "\""+__project__+"\";v=\""+str(__version__)+"\", \"Not;A=Brand\";v=\"8\", \""+py_implementation+"\";v=\""+str(platform.release())+"\"", 'SEC-CH-UA-FULL-VERSION': str(__version__), 'SEC-CH-UA-PLATFORM': ""+py_implementation+"", 'SEC-CH-UA-ARCH': ""+platform.machine()+"", 'SEC-CH-UA-PLATFORM': str(__version__), 'SEC-CH-UA-BITNESS': str(PyBitness)}
 geturls_headers_googlebot_google = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_googlebot_google, 'Accept-Encoding': "none", 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6",
                                     'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close"}
 geturls_headers_googlebot_google_old = {'Referer': "http://google.com/", 'User-Agent': geturls_ua_googlebot_google_old, 'Accept-Encoding': "none", 'Accept-Language': "en-US,en;q=0.8,en-CA,en-GB;q=0.6",
                                         'Accept-Charset': "ISO-8859-1,ISO-8859-15,utf-8;q=0.7,*;q=0.7", 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 'Connection': "close"}
-geturls_headers = geturls_headers_firefox_windows7
-geturls_download_sleep = 0
 
 
 def download_file_from_ftp_file(url):
