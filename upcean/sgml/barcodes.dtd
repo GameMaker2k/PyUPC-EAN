@@ -1,0 +1,16 @@
+<!DOCTYPE barcodes [
+<!ELEMENT barcodes - - (python | barcode)*>
+<!ELEMENT barcode - O EMPTY>
+<!ATTLIST barcode
+    type    CDATA #REQUIRED
+    code    CDATA #REQUIRED
+    file    CDATA #IMPLIED
+    size    CDATA #IMPLIED
+    hideinfo CDATA #IMPLIED
+    height  CDATA #IMPLIED
+    width   CDATA #IMPLIED
+    textxy  CDATA #IMPLIED
+    color   CDATA #IMPLIED
+    imgoutlib CDATA #IMPLIED>
+<!ELEMENT python - - (#PCDATA)>
+]>

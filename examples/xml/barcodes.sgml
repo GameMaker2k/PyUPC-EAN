@@ -1,0 +1,26 @@
+<!DOCTYPE barcodes [
+<!ELEMENT barcodes - - (python | barcode)*>
+<!ELEMENT barcode - O EMPTY>
+<!ATTLIST barcode
+    type    CDATA #REQUIRED
+    code    CDATA #REQUIRED
+    file    CDATA #IMPLIED
+    size    CDATA #IMPLIED
+    hideinfo CDATA #IMPLIED
+    height  CDATA #IMPLIED
+    width   CDATA #IMPLIED
+    textxy  CDATA #IMPLIED
+    color   CDATA #IMPLIED
+    imgoutlib CDATA #IMPLIED>
+<!ELEMENT python - - (#PCDATA)>
+]>
+
+
+<barcodes>
+ <barcode type="upca" code="123456789012" file="/tmp/upca_1.png">
+ <barcode type="upca" code="987654321098" file="/tmp/upca_2.png">
+ <barcode type="ean13" code="0123456789012" file="/tmp/ean13_2.png">
+ <barcode type="ean13" code="0987654321098" file="/tmp/ean13_3.png">
+ <barcode type="upce" code="01234565" file="/tmp/upce_1.png">
+ <barcode type="upce" code="12345656" file="/tmp/upce_2.png">
+</barcodes>
