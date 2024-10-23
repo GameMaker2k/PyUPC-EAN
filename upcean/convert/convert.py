@@ -899,40 +899,56 @@ def optimize_encoding_code128(upc, reverse=False):
 
 
 
-def convert_text_to_hex_code128_with_checksum(upc, reverse=False, stopcode="6c"):
+def convert_text_to_hex_code128_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         upc = upc[::-1]
+        stopcode = "6b"
     code128out = convert_text_to_hex_code128(upc)
     if(not code128out):
         return False
-    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+stopcode
+    hidecschar = ""
+    if(hidecs):
+        hidecschar = "6d"
+    return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_auto_with_checksum(upc):
+def convert_text_to_hex_code128_auto_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         upc = upc[::-1]
+        stopcode = "6b"
     code128out = convert_text_to_hex_code128_auto(upc)
     if(not code128out):
         return False
-    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+stopcode
+    hidecschar = ""
+    if(hidecs):
+        hidecschar = "6d"
+    return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_optimize_with_checksum(upc, reverse=False, stopcode="6c"):
+def convert_text_to_hex_code128_optimize_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         upc = upc[::-1]
+        stopcode = "6b"
     code128out = optimize_encoding_code128(upc)
     if(not code128out):
         return False
-    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+stopcode
+    hidecschar = ""
+    if(hidecs):
+        hidecschar = "6d"
+    return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_manual_with_checksum(upc, reverse=False, stopcode="6c"):
+def convert_text_to_hex_code128_manual_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         upc = upc[::-1]
+        stopcode = "6b"
     code128out = convert_text_to_hex_code128_manual(upc)
     if(not code128out):
         return False
-    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+stopcode
+    hidecschar = ""
+    if(hidecs):
+        hidecschar = "6d"
+    return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
 '''
