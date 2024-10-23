@@ -413,10 +413,12 @@ def convert_barcode_from_itf14_to_ean8(upc):
 '''
 
 
-def convert_ascii_code128_to_hex_code128(upc):
+def convert_ascii_code128_to_hex_code128(upc, reverse=False):
     upc = str(upc)
     if(len(upc) < 4):
         return False
+    if(reverse):
+        upc = upc[::-1]
     hextoascii = {'00': " ", '01': "!", '02': "\"", '03': "#", '04': "$", '05': "%", '06': "&", '07': "'", '08': "(", '09': ")", '0a': "*", '0b': "+", '0c': ",", '0d': "-", '0e': ".", '0f': "/", '10': "0", '11': "1", '12': "2", '13': "3", '14': "4", '15': "5", '16': "6", '17': "7", '18': "8", '19': "9", '1a': ":", '1b': ";", '1c': "<", '1d': "=", '1e': ">", '1f': "?", '20': "@", '21': "A", '22': "B", '23': "C", '24': "D", '25': "E", '26': "F", '27': "G", '28': "H", '29': "I", '2a': "J", '2b': "K", '2c': "L", '2d': "M", '2e': "N", '2f': "O", '30': "P", '31': "Q", '32': "R", '33': "S", '34': "T", '35': "U", '36': "V",
                   '37': "W", '38': "X", '39': "Y", '3a': "Z", '3b': "[", '3c': "\\", '3d': "]", '3e': "^", '3f': "_", '40': "`", '41': "a", '42': "b", '43': "c", '44': "d", '45': "e", '46': "f", '47': "g", '48': "h", '49': "i", '4a': "j", '4b': "k", '4c': "l", '4d': "m", '4e': "n", '4f': "o", '50': "p", '51': "q", '52': "r", '53': "s", '54': "t", '55': "u", '56': "v", '57': "w", '58': "x", '59': "y", '5a': "z", '5b': "{", '5c': "|", '5d': "}", '5e': "~", '5f': "Ã", '60': "Ä", '61': "Å", '62': "Æ", '63': "Ç", '64': "È", '65': "É", '66': "Ê", '67': "Ë", '68': "Ì", '69': "Í", '6a': "Î", '6b': "Ï", '6c': "Ó", '6d': "Ò"}
     asciitohex = {' ': "00", '!': "01", '"': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e", 'O': "2f", 'P': "30", 'Q': "31", 'R': "32", 'S': "33", 'T': "34", 'U': "35", 'V': "36",
@@ -427,10 +429,12 @@ def convert_ascii_code128_to_hex_code128(upc):
     return barcodeout
 
 
-def convert_hex_code128_to_ascii_code128(upc):
+def convert_hex_code128_to_ascii_code128(upc, reverse=False):
     upc = str(upc)
     if(len(upc) < 8):
         return False
+    if(reverse):
+        upc = upc[::-1]
     hextoascii = {'00': " ", '01': "!", '02': "\"", '03': "#", '04': "$", '05': "%", '06': "&", '07': "'", '08': "(", '09': ")", '0a': "*", '0b': "+", '0c': ",", '0d': "-", '0e': ".", '0f': "/", '10': "0", '11': "1", '12': "2", '13': "3", '14': "4", '15': "5", '16': "6", '17': "7", '18': "8", '19': "9", '1a': ":", '1b': ";", '1c': "<", '1d': "=", '1e': ">", '1f': "?", '20': "@", '21': "A", '22': "B", '23': "C", '24': "D", '25': "E", '26': "F", '27': "G", '28': "H", '29': "I", '2a': "J", '2b': "K", '2c': "L", '2d': "M", '2e': "N", '2f': "O", '30': "P", '31': "Q", '32': "R", '33': "S", '34': "T", '35': "U", '36': "V",
                   '37': "W", '38': "X", '39': "Y", '3a': "Z", '3b': "[", '3c': "\\", '3d': "]", '3e': "^", '3f': "_", '40': "`", '41': "a", '42': "b", '43': "c", '44': "d", '45': "e", '46': "f", '47': "g", '48': "h", '49': "i", '4a': "j", '4b': "k", '4c': "l", '4d': "m", '4e': "n", '4f': "o", '50': "p", '51': "q", '52': "r", '53': "s", '54': "t", '55': "u", '56': "v", '57': "w", '58': "x", '59': "y", '5a': "z", '5b': "{", '5c': "|", '5d': "}", '5e': "~", '5f': "Ã", '60': "Ä", '61': "Å", '62': "Æ", '63': "Ç", '64': "È", '65': "É", '66': "Ê", '67': "Ë", '68': "Ì", '69': "Í", '6a': "Î", '6b': "Ï", '6c': "Ó", '6d': "Ò"}
     asciitohex = {' ': "00", '!': "01", '"': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e", 'O': "2f", 'P': "30", 'Q': "31", 'R': "32", 'S': "33", 'T': "34", 'U': "35", 'V': "36",
@@ -507,10 +511,12 @@ def should_use_code_c(segments, index):
         else:
             return False
 
-def convert_text_to_hex_code128(upc):
+def convert_text_to_hex_code128(upc, reverse=False):
     # Ensure upc is a string type (compatibility with Python 2 and 3)
     if not isinstance(upc, str):
         upc = str(upc)
+    if(reverse):
+        upc = upc[::-1]
 
     # Build the segments
     segments = []
@@ -612,7 +618,9 @@ def convert_text_to_hex_code128(upc):
     return ''.join(hex_codes)
 
 
-def convert_text_to_hex_code128_auto(upc):
+def convert_text_to_hex_code128_auto(upc, reverse=False):
+    if(reverse):
+        upc = upc[::-1]
     hextocharsetone = {' ': "00", '!': "01", '\\': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e", 'O': "2f", 'P': "30", 'Q': "31", 'R': "32", 'S': "33",
                        'T': "34", 'U': "35", 'V': "36", 'W': "37", 'X': "38", 'Y': "39", 'Z': "3a", '[': "3b", '\\': "3c", ']': "3d", '^': "3e", '_': "3f", '\x00': "40", '\x01': "41", '\x02': "42", '\x03': "43", '\x04': "44", '\x05': "45", '\x06': "46", '\x07': "47", '\x08': "48", '\x09': "49", '\x0a': "4a", '\x0b': "4b", '\x0c': "4c", '\x0d': "4d", '\x0e': "4e", '\x0f': "4f", '\x10': "50", '\x11': "51", '\x12': "52", '\x13': "53", '\x14': "54", '\x15': "55", '\x16': "56", '\x17': "57", '\x18': "58", '\x19': "59", '\x1a': "5a", '\x1b': "5b", '\x1c': "5c", '\x1d': "5d", '\x1e': "5e", '\x1f': "5f"}
     hextocharsettwo = {' ': "00", '!': "01", '\\': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e",
@@ -697,7 +705,9 @@ def convert_text_to_hex_code128_auto(upc):
     return str(''.join(textlist))
 
 
-def convert_text_to_hex_code128_manual(upc):
+def convert_text_to_hex_code128_manual(upc, reverse=False):
+    if(reverse):
+        upc = upc[::-1]
     hextocharsetone = {' ': "00", '!': "01", '\\': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e", 'O': "2f", 'P': "30", 'Q': "31", 'R': "32", 'S': "33",
                        'T': "34", 'U': "35", 'V': "36", 'W': "37", 'X': "38", 'Y': "39", 'Z': "3a", '[': "3b", '\\': "3c", ']': "3d", '^': "3e", '_': "3f", '\x00': "40", '\x01': "41", '\x02': "42", '\x03': "43", '\x04': "44", '\x05': "45", '\x06': "46", '\x07': "47", '\x08': "48", '\x09': "49", '\x0a': "4a", '\x0b': "4b", '\x0c': "4c", '\x0d': "4d", '\x0e': "4e", '\x0f': "4f", '\x10': "50", '\x11': "51", '\x12': "52", '\x13': "53", '\x14': "54", '\x15': "55", '\x16': "56", '\x17': "57", '\x18': "58", '\x19': "59", '\x1a': "5a", '\x1b': "5b", '\x1c': "5c", '\x1d': "5d", '\x1e': "5e", '\x1f': "5f"}
     hextocharsettwo = {' ': "00", '!': "01", '\\': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e",
@@ -768,7 +778,11 @@ START_CODES = {'A': 103, 'B': 104, 'C': 105}
 # Code set switch codes
 SWITCH_CODES = {'A': 101, 'B': 100, 'C': 99}
 
-def optimize_encoding_code128(input_string):
+def optimize_encoding_code128(upc, reverse=False):
+    if(reverse):
+        input_string = upc[::-1]
+    else:
+        input_string = str(upc)
     """
     Optimize the input string to produce the smallest EAN-128 encoding.
     """
@@ -885,32 +899,40 @@ def optimize_encoding_code128(input_string):
 
 
 
-def convert_text_to_hex_code128_with_checksum(upc):
+def convert_text_to_hex_code128_with_checksum(upc, reverse=False, stopcode="6c"):
+    if(reverse):
+        upc = upc[::-1]
     code128out = convert_text_to_hex_code128(upc)
     if(not code128out):
         return False
-    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+"6c"
+    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
 def convert_text_to_hex_code128_auto_with_checksum(upc):
+    if(reverse):
+        upc = upc[::-1]
     code128out = convert_text_to_hex_code128_auto(upc)
     if(not code128out):
         return False
-    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+"6c"
+    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_optimize_with_checksum(upc):
+def convert_text_to_hex_code128_optimize_with_checksum(upc, reverse=False, stopcode="6c"):
+    if(reverse):
+        upc = upc[::-1]
     code128out = optimize_encoding_code128(upc)
     if(not code128out):
         return False
-    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+"6c"
+    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_manual_with_checksum(upc):
+def convert_text_to_hex_code128_manual_with_checksum(upc, reverse=False, stopcode="6c"):
+    if(reverse):
+        upc = upc[::-1]
     code128out = convert_text_to_hex_code128_manual(upc)
     if(not code128out):
         return False
-    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+"6c"
+    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
 '''
