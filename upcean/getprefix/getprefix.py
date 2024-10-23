@@ -466,6 +466,10 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
         gw_item_type = "Furniture"
     elif(re.findall(r"^(4120120)", upc)):
         gw_item_type = "Books"
+    elif(re.findall(r"^(412)", upc)):
+        gw_item_type = "Books"
+    elif(re.findall(r"^(413)", upc)):
+        gw_item_type = "Media"
     elif(re.findall(r"^(4002000)", upc)):
         gw_item_type = "Mystery Dozen Deal"
     elif(re.findall(r"^(4010000)", upc)):
@@ -493,6 +497,24 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
         gw_item_type = "Mystery 1/2 Dozen Deal"
     elif(price_matches[0] == "999" and gw_item_type == "Mystery Dozen Deal"):
         gw_item_type = "Mystery Dozen Deal"
+    else:
+        gw_item_type = gw_item_type
+
+    if(price_matches[0] == "199" and gw_item_type == "Books"):
+        gw_item_type = "Softcover / Kids Books"
+    elif(price_matches[0] == "299" and gw_item_type == "Books"):
+        gw_item_type = "Hard Cover Books"
+    else:
+        gw_item_type = gw_item_type
+
+    if(price_matches[0] == "199" and gw_item_type == "Media"):
+        gw_item_type = "Albums / CDs / VHD"
+    elif(price_matches[0] == "299" and gw_item_type == "Media"):
+        gw_item_type = "DVD / Disney VHS"
+    elif(price_matches[0] == "399" and gw_item_type == "Media"):
+        gw_item_type = "Blu-Ray / New VHS"
+    elif(price_matches[0] == "499" and gw_item_type == "Media"):
+        gw_item_type = "Season DVD"
     else:
         gw_item_type = gw_item_type
     price_alt = str(price_matches[0].lstrip('0'))+price_matches[1]
