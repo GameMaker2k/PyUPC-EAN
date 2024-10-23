@@ -83,11 +83,11 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, hideinfo=(Fal
         return False
     if(barwidth[0] < 1):
         barwidth[0] = 1
-    if(not re.findall(r"^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
+    if(not re.findall("^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)):
         return False
-    if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
-    if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
+    if(not re.findall("^([0-9]*[\.]?[0-9])", str(barwidth[0])) or int(barwidth[0]) < 1):
         barwidth[0] = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:
@@ -140,9 +140,9 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, hideinfo=(Fal
         r"^([a-dA-DeEnN\*tT])([0-9\-\$\:\/\.\+]+)([a-dA-DeEnN\*tT])$", upc)
     pre_upc_matches = pre_upc_matches[0]
     upc_matches = list(pre_upc_matches[1])
-    bcsize9 = len(re.findall(r"([0-9\-\$])", "".join(upc_matches)))
-    bcsize10 = len(re.findall(r"([\:\/\.])", "".join(upc_matches)))
-    bcsize12 = len(re.findall(r"([\+])", "".join(upc_matches)))
+    bcsize9 = len(re.findall("([0-9\-\$])", "".join(upc_matches)))
+    bcsize10 = len(re.findall("([\:\/\.])", "".join(upc_matches)))
+    bcsize12 = len(re.findall("([\+])", "".join(upc_matches)))
     upc_size_add = ((bcsize9 * 9) + (bcsize10 * 10) +
                     (bcsize12 * 12) + len(upc_matches) - 1) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):

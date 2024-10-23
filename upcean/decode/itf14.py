@@ -178,8 +178,8 @@ def decode_itf14_barcode(infile="./itf14.png", resize=1, barheight=(48, 54), bar
 
     # Decode the binary list into digits
     def decode_barcode(pre_upc_whole_left, pre_upc_whole_right):
-        pre_upc_whole_left_re = re.findall(r"([01]{5})", pre_upc_whole_left)
-        pre_upc_whole_right_re = re.findall(r"([01]{5})", pre_upc_whole_right)
+        pre_upc_whole_left_re = re.findall("([01]{5})", pre_upc_whole_left)
+        pre_upc_whole_right_re = re.findall("([01]{5})", pre_upc_whole_right)
 
         barcode_list = []
 

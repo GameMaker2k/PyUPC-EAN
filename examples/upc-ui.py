@@ -62,9 +62,9 @@ rootwin.bind("<Escape>", exit_ui)
 
 
 def hex_color_to_tuple(color):
-    if(not re.findall(r"\#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$", color)):
+    if(not re.findall("\#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$", color)):
         return False
-    if(re.findall(r"\#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$", color)):
+    if(re.findall("\#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$", color)):
         pre_color = re.findall(
             r"\#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$", color)
         pre_color = pre_color[0]
@@ -227,12 +227,12 @@ def GenerateBarcode():
         magnify.insert(0, "1")
     upc_validate = entry1.get()
     if(listboxtxt1.get() == "UPC-A" or listboxtxt1.get() == "UPC-E" or listboxtxt1.get() == "EAN-13" or listboxtxt1.get() == "EAN-8"):
-        if(re.findall(r"([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
+        if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
             upc_pieces = re.findall(
                 r"([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())
             upc_pieces = upc_pieces[0]
             upc_validate = upc_pieces[0]
-        if(re.findall(r"([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get())):
+        if(re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get())):
             upc_pieces = re.findall(
                 r"([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get())
             upc_pieces = upc_pieces[0]
@@ -295,12 +295,12 @@ def SaveGeneratedBarcode():
     GenerateBarcode()
     upc_validate = entry1.get()
     if(listboxtxt1.get() == "UPC-A" or listboxtxt1.get() == "UPC-E" or listboxtxt1.get() == "EAN-13" or listboxtxt1.get() == "EAN-8"):
-        if(re.findall(r"([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
+        if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())):
             upc_pieces = re.findall(
                 r"([0-9]+)([ |\|]{1})([0-9]{2})$", entry1.get())
             upc_pieces = upc_pieces[0]
             upc_validate = upc_pieces[0]
-        if(re.findall(r"([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get())):
+        if(re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get())):
             upc_pieces = re.findall(
                 r"([0-9]+)([ |\|]){1}([0-9]{5})$", entry1.get())
             upc_pieces = upc_pieces[0]

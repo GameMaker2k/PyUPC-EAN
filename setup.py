@@ -61,7 +61,7 @@ with open(verinfofilename, "r", **open_kwargs) as verinfofile:
 
 # Define the regex pattern for extracting version info
 # We ensure the pattern works correctly in both Python 2 and 3 by escaping the strings properly
-version_pattern = "__version_info__ = \(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*['\"]([\w\s]+)['\"]\s*,\s*(\d+)\s*\)"
+version_pattern = "__version_info__ = \(\s*(\\d+)\s*,\s*(\\d+)\s*,\s*(\\d+)\s*,\s*['\"]([\w\s]+)['\"]\s*,\s*(\\d+)\s*\)"
 setuppy_verinfo = re.findall(version_pattern, verinfodata)[0]
 
 # If version info is found, process it; handle the case where no match is found
@@ -72,7 +72,7 @@ else:
     setuppy_verinfo_exp = None  # Handle missing version info gracefully
 
 # Define the regex pattern for extracting version date info
-date_pattern = "__version_date_info__ = \(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*['\"]([\w\s]+)['\"]\s*,\s*(\d+)\s*\)"
+date_pattern = "__version_date_info__ = \(\s*(\\d+)\s*,\s*(\\d+)\s*,\s*(\\d+)\s*,\s*['\"]([\w\s]+)['\"]\s*,\s*(\\d+)\s*\)"
 setuppy_dateinfo = re.findall(date_pattern, verinfodata)[0]
 
 # If date info is found, process it; handle the case where no match is found

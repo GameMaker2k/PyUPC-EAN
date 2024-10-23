@@ -83,9 +83,9 @@ def create_code128hex_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         return False
     if(len(upc) < 8):
         return False
-    if(not re.findall(r"([0-9a-f]+)", upc)):
+    if(not re.findall("([0-9a-f]+)", upc)):
         return False
-    if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:
@@ -135,13 +135,13 @@ def create_code128hex_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         pil_addon_fix = 0
         cairo_addon_fix = 0
     upc = upc.lower()
-    if(not re.findall(r"[0-9a-f]{2}", upc)):
+    if(not re.findall("[0-9a-f]{2}", upc)):
         return False
-    upc_matches = re.findall(r"[0-9a-f]{2}", upc)
+    upc_matches = re.findall("[0-9a-f]{2}", upc)
     upc_to_dec = list([int(x, 16) for x in upc_matches])
     subfromlist = upc_matches.count("6d")
     upc_size_add = (((len(upc_matches) - subfromlist) * 11) +
-                    (len(re.findall(r"6c", upc)) * 2)) * barwidth[0]
+                    (len(re.findall("6c", upc)) * 2)) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
             "RGB", ((29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1])))
@@ -812,9 +812,9 @@ def create_code128dec_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
                 imageoutlib = "cairo"
     if(len(upc) < 12):
         return False
-    if(not re.findall(r"[0-9]{3}", upc)):
+    if(not re.findall("[0-9]{3}", upc)):
         return False
-    upc_matches = re.findall(r"[0-9]{3}", upc)
+    upc_matches = re.findall("[0-9]{3}", upc)
     il = len(upc_matches)
     i = 0
     upcout = ""

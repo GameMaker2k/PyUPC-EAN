@@ -82,19 +82,19 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
                 imageoutlib = "cairo"
     upc_pieces = None
     supplement = None
-    if(re.findall(r"([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
-        upc_pieces = re.findall(r"([0-9]+)([ |\|]{1})([0-9]{2})$", upc)
+    if(re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\|]{1})([0-9]{2})$", upc)
         upc_pieces = upc_pieces[0]
         upc = upc_pieces[0]
         supplement = upc_pieces[2]
-    if(re.findall(r"([0-9]+)([ |\|]){1}([0-9]{5})$", upc)):
-        upc_pieces = re.findall(r"([0-9]+)([ |\|]){1}([0-9]{5})$", upc)
+    if(re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\|]){1}([0-9]{5})$", upc)
         upc_pieces = upc_pieces[0]
         upc = upc_pieces[0]
         supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 13):
         return False
-    if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:
@@ -143,7 +143,7 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
-    upc_matches = re.findall(r"(\d{1})(\d{6})(\d{6})", upc)
+    upc_matches = re.findall("(\\d{1})(\\d{6})(\\d{6})", upc)
     if(len(upc_matches) <= 0):
         return False
     upc_matches = upc_matches[0]

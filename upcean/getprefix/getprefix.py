@@ -24,15 +24,15 @@ def get_upca_barcode_info(upc, infotype=None):
     upc = str(upc)
     if(len(upc) == 8):
         upc = upcean.convert.convert_barcode_from_upce_to_upca(upc)
-    if(re.findall(r"^0(\d{13})", upc)):
-        upc_matches = re.findall(r"^0(\d{13})", upc)
+    if(re.findall("^0(\\d{13})", upc)):
+        upc_matches = re.findall("^0(\\d{13})", upc)
         upc = upc_matches[0]
-    if(re.findall(r"^0(\d{12})", upc)):
-        upc_matches = re.findall(r"^0(\d{12})", upc)
+    if(re.findall("^0(\\d{12})", upc)):
+        upc_matches = re.findall("^0(\\d{12})", upc)
         upc = upc_matches[0]
-    if(not re.findall(r"^(\d{12})", upc)):
+    if(not re.findall("^(\\d{12})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{1})(\d{5})(\d{5})(\d{1})", upc)
+    upc_matches = re.findall("^(\\d{1})(\\d{5})(\\d{5})(\\d{1})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {'packagecode': None,
                 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]}
@@ -80,85 +80,85 @@ def get_upca_barcode_info_from_upce(upc):
 
 def get_upce_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall(r"^0(\d{13})", upc)):
-        upc_matches = re.findall(r"^0(\d{13})", upc)
+    if(re.findall("^0(\\d{13})", upc)):
+        upc_matches = re.findall("^0(\\d{13})", upc)
         upc = upc_matches[0]
-    if(re.findall(r"^0(\d{12})", upc)):
-        upc_matches = re.findall(r"^0(\d{12})", upc)
+    if(re.findall("^0(\\d{12})", upc)):
+        upc_matches = re.findall("^0(\\d{12})", upc)
         upc = upc_matches[0]
     if(len(upc) == 12):
         upc = upcean.convert.convert_barcode_from_upca_to_upce(upc)
-    if(not re.findall(r"^(\d{8})", upc)):
+    if(not re.findall("^(\\d{8})", upc)):
         return False
     get_ns = None
     get_manufac = None
     get_product = None
     get_checksum = None
-    if(re.findall(r"(0|1)(\d{2})(\d{3})(0)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{2})(\d{3})(0)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{2})(\\d{3})(0)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{2})(\\d{3})(0)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]+upc_matches[3]
         get_checksum = upc_matches[4]
-    if(re.findall(r"(0|1)(\d{2})(\d{3})(1)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{2})(\d{3})(1)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{2})(\\d{3})(1)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{2})(\\d{3})(1)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]+upc_matches[3]
         get_checksum = upc_matches[4]
-    if(re.findall(r"(0|1)(\d{2})(\d{3})(2)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{2})(\d{3})(2)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{2})(\\d{3})(2)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{2})(\\d{3})(2)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]+upc_matches[3]
         get_checksum = upc_matches[4]
-    if(re.findall(r"(0|1)(\d{3})(\d{2})(3)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{3})(\d{2})(3)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{3})(\\d{2})(3)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{3})(\\d{2})(3)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]+upc_matches[3]
         get_checksum = upc_matches[4]
-    if(re.findall(r"(0|1)(\d{4})(\d{1})(4)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{4})(\d{1})(4)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{4})(\\d{1})(4)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{4})(\\d{1})(4)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]+upc_matches[3]
         get_checksum = upc_matches[4]
-    if(re.findall(r"(0|1)(\d{5})(5)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{5})(5)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{5})(5)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{5})(5)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]
         get_checksum = upc_matches[3]
-    if(re.findall(r"(0|1)(\d{5})(6)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{5})(6)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{5})(6)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{5})(6)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]
         get_checksum = upc_matches[3]
-    if(re.findall(r"(0|1)(\d{5})(7)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{5})(7)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{5})(7)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{5})(7)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]
         get_checksum = upc_matches[3]
-    if(re.findall(r"(0|1)(\d{5})(8)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{5})(8)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{5})(8)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{5})(8)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
         get_product = upc_matches[2]
         get_checksum = upc_matches[3]
-    if(re.findall(r"(0|1)(\d{5})(9)(\d{1})", upc)):
-        upc_matches = re.findall(r"(0|1)(\d{5})(9)(\d{1})", upc)
+    if(re.findall("(0|1)(\\d{5})(9)(\\d{1})", upc)):
+        upc_matches = re.findall("(0|1)(\\d{5})(9)(\\d{1})", upc)
         upc_matches = upc_matches[0]
         get_ns = upc_matches[0]
         get_manufac = upc_matches[1]
@@ -206,9 +206,9 @@ def get_upce_barcode_checkdigit(upc):
 
 def get_ean8_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall(r"^(\d{8})", upc)):
+    if(not re.findall("^(\\d{8})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{2})(\d{5})(\d{1})", upc)
+    upc_matches = re.findall("^(\\d{2})(\\d{5})(\\d{1})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {'packagecode': None,
                 'numbersystem': pre_upc_type[0], 'manufacturer': None, 'product': pre_upc_type[1], 'checkdigit': pre_upc_type[2]}
@@ -256,9 +256,9 @@ def get_ean13_barcode_info(upc, infotype=None):
         upc = upcean.convert.convert_barcode_from_upce_to_upca(upc)
     if(len(upc) == 12):
         upc = "0"+upc
-    if(not re.findall(r"^(\d{13})", upc)):
+    if(not re.findall("^(\\d{13})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{2})(\d{5})(\d{5})(\d{1})", upc)
+    upc_matches = re.findall("^(\\d{2})(\\d{5})(\\d{5})(\\d{1})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {'packagecode': None,
                 'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]}
@@ -306,9 +306,9 @@ def get_itf14_barcode_info(upc, infotype=None):
         upc = "00"+upc
     if(len(upc) == 13):
         upc = "0"+upc
-    if(not re.findall(r"^(\d{14})", upc)):
+    if(not re.findall("^(\\d{14})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{1})(\d{2})(\d{5})(\d{5})(\d{1})", upc)
+    upc_matches = re.findall("^(\\d{1})(\\d{2})(\\d{5})(\\d{5})(\\d{1})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {'packagecode': pre_upc_type[0], 'numbersystem': pre_upc_type[1],
                 'manufacturer': pre_upc_type[2], 'product': pre_upc_type[3], 'checkdigit': pre_upc_type[4]}
@@ -367,30 +367,30 @@ def get_itf14_barcode_checkdigit(upc):
 
 def get_upca_barcode_ns(upc):
     upc = str(upc)
-    if(re.findall(r"^0(\d{12})", upc)):
-        upc_matches = re.findall(r"^0(\d{12})", upc)
+    if(re.findall("^0(\\d{12})", upc)):
+        upc_matches = re.findall("^0(\\d{12})", upc)
         upc = upc_matches[0]
-    if(not re.findall(r"^(\d{12})", upc)):
+    if(not re.findall("^(\\d{12})", upc)):
         return False
-    if(re.findall(r"^(0)", upc)):
+    if(re.findall("^(0)", upc)):
         return "Regular UPC"
-    if(re.findall(r"^(1)", upc)):
+    if(re.findall("^(1)", upc)):
         return "Regular UPC"
-    if(re.findall(r"^(2)", upc)):
+    if(re.findall("^(2)", upc)):
         return "Variable Weight Items"
-    if(re.findall(r"^(3)", upc)):
+    if(re.findall("^(3)", upc)):
         return "DrugHealth Items"
-    if(re.findall(r"^(4)", upc)):
+    if(re.findall("^(4)", upc)):
         return "In-store use"
-    if(re.findall(r"^(5)", upc)):
+    if(re.findall("^(5)", upc)):
         return "Coupons"
-    if(re.findall(r"^(6)", upc)):
+    if(re.findall("^(6)", upc)):
         return "Regular UPC"
-    if(re.findall(r"^(7)", upc)):
+    if(re.findall("^(7)", upc)):
         return "Regular UPC"
-    if(re.findall(r"^(8)", upc)):
+    if(re.findall("^(8)", upc)):
         return "Regular UPC"
-    if(re.findall(r"^(9)", upc)):
+    if(re.findall("^(9)", upc)):
         return "Coupons"
     return False
 
@@ -404,27 +404,27 @@ def get_upca_barcode_ns(upc):
 
 def get_itf14_barcode_type(upc):
     upc = str(upc)
-    if(not re.findall(r"^(\d{14})", upc)):
+    if(not re.findall("^(\\d{14})", upc)):
         return False
-    if(re.findall(r"^(0)", upc)):
+    if(re.findall("^(0)", upc)):
         return "UPC code of contents differs from case code"
-    if(re.findall(r"^(1)", upc)):
+    if(re.findall("^(1)", upc)):
         return "More than each and below inner packs"
-    if(re.findall(r"^(2)", upc)):
+    if(re.findall("^(2)", upc)):
         return "More than each and below inner packs"
-    if(re.findall(r"^(3)", upc)):
+    if(re.findall("^(3)", upc)):
         return "Inner packs"
-    if(re.findall(r"^(4)", upc)):
+    if(re.findall("^(4)", upc)):
         return "Inner packs"
-    if(re.findall(r"^(5)", upc)):
+    if(re.findall("^(5)", upc)):
         return "Shipping containers (cartons)"
-    if(re.findall(r"^(6)", upc)):
+    if(re.findall("^(6)", upc)):
         return "Shipping containers (cartons)"
-    if(re.findall(r"^(7)", upc)):
+    if(re.findall("^(7)", upc)):
         return "Pallet"
-    if(re.findall(r"^(8)", upc)):
+    if(re.findall("^(8)", upc)):
         return "Reserved"
-    if(re.findall(r"^(9)", upc)):
+    if(re.findall("^(9)", upc)):
         return "Variable quantity content"
     return False
 
@@ -436,14 +436,14 @@ def get_itf14_barcode_type(upc):
 
 def get_goodwill_upca_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall(r"^0(\d{12})", upc)):
-        upc_matches = re.findall(r"^0(\d{12})", upc)
+    if(re.findall("^0(\\d{12})", upc)):
+        upc_matches = re.findall("^0(\\d{12})", upc)
         upc = upc_matches[0]
-    if(not re.findall(r"^(\d{12})", upc)):
+    if(not re.findall("^(\\d{12})", upc)):
         return False
-    if(not re.findall(r"^4(\d{11})", upc)):
+    if(not re.findall("^4(\\d{11})", upc)):
         return False
-    upc_matches = re.findall(r"^4(\d{5})(\d{5})(\d{1})", upc)
+    upc_matches = re.findall("^4(\\d{5})(\\d{5})(\\d{1})", upc)
     upc_matches = upc_matches[0]
     gw_item_type = None
     # 400310
@@ -452,44 +452,44 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
     # 400323
     # 400324
     # 400325
-    if(re.findall(r"^(4111)", upc)):
+    if(re.findall("^(4111)", upc)):
         gw_item_type = "Softlines"
-    elif(re.findall(r"^(4666)", upc)):
+    elif(re.findall("^(4666)", upc)):
         gw_item_type = "Hardlines"
-    elif(re.findall(r"^(4555)", upc)):
+    elif(re.findall("^(4555)", upc)):
         gw_item_type = "Shoes/Purses"
-    elif(re.findall(r"^(4190)", upc)):
+    elif(re.findall("^(4190)", upc)):
         gw_item_type = "Target"
-    elif(re.findall(r"^(4230)", upc)):
+    elif(re.findall("^(4230)", upc)):
         gw_item_type = "Jacobs"
-    elif(re.findall(r"^(4333330)", upc)):
+    elif(re.findall("^(4333330)", upc)):
         gw_item_type = "Furniture"
-    elif(re.findall(r"^(4120120)", upc)):
+    elif(re.findall("^(4120120)", upc)):
         gw_item_type = "Books"
-    elif(re.findall(r"^(412)", upc)):
+    elif(re.findall("^(412)", upc)):
         gw_item_type = "Books"
-    elif(re.findall(r"^(413)", upc)):
+    elif(re.findall("^(413)", upc)):
         gw_item_type = "Media"
-    elif(re.findall(r"^(4002000)", upc)):
+    elif(re.findall("^(4002000)", upc)):
         gw_item_type = "Mystery Dozen Deal"
-    elif(re.findall(r"^(4010000)", upc)):
+    elif(re.findall("^(4010000)", upc)):
         gw_item_type = "Bagged Hardlines"
     else:
         gw_item_type = None
     gw_item_color = None
-    if(re.findall(r"^(4)(\d{3})(22)", upc)):
+    if(re.findall("^(4)(\\d{3})(22)", upc)):
         gw_item_color = "Pink"
-    elif(re.findall(r"^(4)(\d{3})(33)", upc)):
+    elif(re.findall("^(4)(\\d{3})(33)", upc)):
         gw_item_color = "Yellow"
-    elif(re.findall(r"^(4)(\d{3})(44)", upc)):
+    elif(re.findall("^(4)(\\d{3})(44)", upc)):
         gw_item_color = "Green"
-    elif(re.findall(r"^(4)(\d{3})(55)", upc)):
+    elif(re.findall("^(4)(\\d{3})(55)", upc)):
         gw_item_color = "Blue"
-    elif(re.findall(r"^(4)(\d{3})(77)", upc)):
+    elif(re.findall("^(4)(\\d{3})(77)", upc)):
         gw_item_color = "Orange"
     else:
         gw_item_color = None
-    price_matches = re.findall(r"^(\d{3})(\d{2})", upc_matches[1])
+    price_matches = re.findall("^(\\d{3})(\\d{2})", upc_matches[1])
     price_matches = price_matches[0]
     if(price_matches[0] == "399" and gw_item_type == "Mystery Dozen Deal"):
         gw_item_type = "Mystery DVD Deal"
@@ -584,14 +584,14 @@ def get_goodwill_upca_barcode_checkdigit(upc):
 
 def get_upca_vw_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall(r"^0(\d{12})", upc)):
-        upc_matches = re.findall(r"^0(\d{12})", upc)
+    if(re.findall("^0(\\d{12})", upc)):
+        upc_matches = re.findall("^0(\\d{12})", upc)
         upc = upc_matches[0]
-    if(not re.findall(r"^(\d{12})", upc)):
+    if(not re.findall("^(\\d{12})", upc)):
         return False
-    if(not re.findall(r"^2(\d{11})", upc)):
+    if(not re.findall("^2(\\d{11})", upc)):
         return False
-    upc_matches = re.findall(r"^2(\d{5})(\d{1})(\d{4})(\d{1})", upc)
+    upc_matches = re.findall("^2(\\d{5})(\\d{1})(\\d{4})(\\d{1})", upc)
     upc_matches = upc_matches[0]
     product = {'numbersystem': str(
         2), 'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2], 'checkdigit': upc_matches[3]}
@@ -681,14 +681,14 @@ def get_vw_barcode_checksum(upc):
 
 def get_ean13_vw_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall(r"^0(\d{13})", upc)):
-        upc_matches = re.findall(r"^0(\d{13})", upc)
+    if(re.findall("^0(\\d{13})", upc)):
+        upc_matches = re.findall("^0(\\d{13})", upc)
         upc = upc_matches[0]
-    if(not re.findall(r"^(\d{13})", upc)):
+    if(not re.findall("^(\\d{13})", upc)):
         return False
-    if(not re.findall(r"^2(\d{12})", upc)):
+    if(not re.findall("^2(\\d{12})", upc)):
         return False
-    upc_matches = re.findall(r"^2(\d{1})(\d{5})(\d{5})(\d{1})", upc)
+    upc_matches = re.findall("^2(\\d{1})(\\d{5})(\\d{5})(\\d{1})", upc)
     upc_matches = upc_matches[0]
     product = {'numbersystem': str(
         2), 'subnumbersystem': upc_matches[0], 'code': upc_matches[1], 'price': upc_matches[2], 'checkdigit': upc_matches[3]}
@@ -750,14 +750,14 @@ def get_ean13_vw_barcode_checksum(upc):
 
 def get_upca_coupon_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall(r"^0(\d{12})", upc)):
-        upc_matches = re.findall(r"^0(\d{12})", upc)
+    if(re.findall("^0(\\d{12})", upc)):
+        upc_matches = re.findall("^0(\\d{12})", upc)
         upc = upc_matches[0]
-    if(not re.findall(r"^(\d{12})", upc)):
+    if(not re.findall("^(\\d{12})", upc)):
         return False
-    if(not re.findall(r"^(5|9)(\d{11})", upc)):
+    if(not re.findall("^(5|9)(\\d{11})", upc)):
         return False
-    upc_matches = re.findall(r"^(5|9)(\d{5})(\d{3})(\d{2})(\d{1})", upc)
+    upc_matches = re.findall("^(5|9)(\\d{5})(\\d{3})(\\d{2})(\\d{1})", upc)
     upc_matches = upc_matches[0]
     product = {'numbersystem': upc_matches[0], 'manufacturer': upc_matches[1],
                'family': upc_matches[2], 'value': upc_matches[3], 'checkdigit': upc_matches[4]}
@@ -809,205 +809,205 @@ def get_upca_coupon_barcode_checkdigit(upc):
 
 def get_upca_coupon_barcode_value_code(vcode):
     vcode = str(vcode)
-    if(re.findall(r"^(00)", vcode)):
+    if(re.findall("^(00)", vcode)):
         return "Manual Input Required"
-    if(re.findall(r"^(01)", vcode)):
+    if(re.findall("^(01)", vcode)):
         return "Free Item"
-    if(re.findall(r"^(02)", vcode)):
+    if(re.findall("^(02)", vcode)):
         return "Buy 4 Get 1 Free"
-    if(re.findall(r"^(03)", vcode)):
+    if(re.findall("^(03)", vcode)):
         return "$1.10"
-    if(re.findall(r"^(04)", vcode)):
+    if(re.findall("^(04)", vcode)):
         return "$1.35"
-    if(re.findall(r"^(05)", vcode)):
+    if(re.findall("^(05)", vcode)):
         return "$1.40"
-    if(re.findall(r"^(06)", vcode)):
+    if(re.findall("^(06)", vcode)):
         return "$1.60"
-    if(re.findall(r"^(07)", vcode)):
+    if(re.findall("^(07)", vcode)):
         return "Buy 3 For $1.50"
-    if(re.findall(r"^(08)", vcode)):
+    if(re.findall("^(08)", vcode)):
         return "Buy 2 For $3.00"
-    if(re.findall(r"^(09)", vcode)):
+    if(re.findall("^(09)", vcode)):
         return "Buy 3 For $2.00"
-    if(re.findall(r"^(10)", vcode)):
+    if(re.findall("^(10)", vcode)):
         return "$0.10"
-    if(re.findall(r"^(11)", vcode)):
+    if(re.findall("^(11)", vcode)):
         return "$1.85"
-    if(re.findall(r"^(12)", vcode)):
+    if(re.findall("^(12)", vcode)):
         return "$0.12"
-    if(re.findall(r"^(13)", vcode)):
+    if(re.findall("^(13)", vcode)):
         return "Buy 4 For $1.00"
-    if(re.findall(r"^(14)", vcode)):
+    if(re.findall("^(14)", vcode)):
         return "Buy 1 Get 1 Free"
-    if(re.findall(r"^(15)", vcode)):
+    if(re.findall("^(15)", vcode)):
         return "$0.15"
-    if(re.findall(r"^(16)", vcode)):
+    if(re.findall("^(16)", vcode)):
         return "Buy 2 Get 1 Free"
-    if(re.findall(r"^(17)", vcode)):
+    if(re.findall("^(17)", vcode)):
         return "Reserved for future use"
-    if(re.findall(r"^(18)", vcode)):
+    if(re.findall("^(18)", vcode)):
         return "$2.60"
-    if(re.findall(r"^(19)", vcode)):
+    if(re.findall("^(19)", vcode)):
         return "Buy 3 Get 1 Free"
-    if(re.findall(r"^(20)", vcode)):
+    if(re.findall("^(20)", vcode)):
         return "$0.20"
-    if(re.findall(r"^(21)", vcode)):
+    if(re.findall("^(21)", vcode)):
         return "Buy 2 For $0.35"
-    if(re.findall(r"^(22)", vcode)):
+    if(re.findall("^(22)", vcode)):
         return "Buy 2 For $0.40"
-    if(re.findall(r"^(23)", vcode)):
+    if(re.findall("^(23)", vcode)):
         return "Buy 2 For $0.45"
-    if(re.findall(r"^(24)", vcode)):
+    if(re.findall("^(24)", vcode)):
         return "Buy 2 For $0.50"
-    if(re.findall(r"^(25)", vcode)):
+    if(re.findall("^(25)", vcode)):
         return "$0.25"
-    if(re.findall(r"^(26)", vcode)):
+    if(re.findall("^(26)", vcode)):
         return "$2.85"
-    if(re.findall(r"^(27)", vcode)):
+    if(re.findall("^(27)", vcode)):
         return "Reserved for future use"
-    if(re.findall(r"^(28)", vcode)):
+    if(re.findall("^(28)", vcode)):
         return "Buy 2 For $0.55"
-    if(re.findall(r"^(29)", vcode)):
+    if(re.findall("^(29)", vcode)):
         return "$0.29"
-    if(re.findall(r"^(30)", vcode)):
+    if(re.findall("^(30)", vcode)):
         return "$0.30"
-    if(re.findall(r"^(31)", vcode)):
+    if(re.findall("^(31)", vcode)):
         return "Buy 2 For $0.60"
-    if(re.findall(r"^(32)", vcode)):
+    if(re.findall("^(32)", vcode)):
         return "Buy 2 For $0.75"
-    if(re.findall(r"^(33)", vcode)):
+    if(re.findall("^(33)", vcode)):
         return "Buy 2 For $1.00"
-    if(re.findall(r"^(34)", vcode)):
+    if(re.findall("^(34)", vcode)):
         return "Buy 2 For $1.25"
-    if(re.findall(r"^(35)", vcode)):
+    if(re.findall("^(35)", vcode)):
         return "$0.35"
-    if(re.findall(r"^(36)", vcode)):
+    if(re.findall("^(36)", vcode)):
         return "Buy 2 For $1.50"
-    if(re.findall(r"^(37)", vcode)):
+    if(re.findall("^(37)", vcode)):
         return "Buy 3 For $0.25"
-    if(re.findall(r"^(38)", vcode)):
+    if(re.findall("^(38)", vcode)):
         return "Buy 3 For $0.30"
-    if(re.findall(r"^(39)", vcode)):
+    if(re.findall("^(39)", vcode)):
         return "$0.39"
-    if(re.findall(r"^(40)", vcode)):
+    if(re.findall("^(40)", vcode)):
         return "$0.40"
-    if(re.findall(r"^(41)", vcode)):
+    if(re.findall("^(41)", vcode)):
         return "Buy 3 For $0.50"
-    if(re.findall(r"^(42)", vcode)):
+    if(re.findall("^(42)", vcode)):
         return "Buy 3 For $1.00"
-    if(re.findall(r"^(43)", vcode)):
+    if(re.findall("^(43)", vcode)):
         return "Buy 2 For $1.10"
-    if(re.findall(r"^(44)", vcode)):
+    if(re.findall("^(44)", vcode)):
         return "Buy 2 For $1.35"
-    if(re.findall(r"^(45)", vcode)):
+    if(re.findall("^(45)", vcode)):
         return "$0.45"
-    if(re.findall(r"^(46)", vcode)):
+    if(re.findall("^(46)", vcode)):
         return "Buy 2 For $1.60"
-    if(re.findall(r"^(47)", vcode)):
+    if(re.findall("^(47)", vcode)):
         return "Buy 2 For $1.75"
-    if(re.findall(r"^(48)", vcode)):
+    if(re.findall("^(48)", vcode)):
         return "Buy 2 For $1.85"
-    if(re.findall(r"^(49)", vcode)):
+    if(re.findall("^(49)", vcode)):
         return "$0.49"
-    if(re.findall(r"^(50)", vcode)):
+    if(re.findall("^(50)", vcode)):
         return "$0.50"
-    if(re.findall(r"^(51)", vcode)):
+    if(re.findall("^(51)", vcode)):
         return "Buy 2 For $2.00"
-    if(re.findall(r"^(52)", vcode)):
+    if(re.findall("^(52)", vcode)):
         return "Buy 3 For $0.55"
-    if(re.findall(r"^(53)", vcode)):
+    if(re.findall("^(53)", vcode)):
         return "Buy 2 For $0.10"
-    if(re.findall(r"^(54)", vcode)):
+    if(re.findall("^(54)", vcode)):
         return "Buy 2 For $0.15"
-    if(re.findall(r"^(55)", vcode)):
+    if(re.findall("^(55)", vcode)):
         return "$0.55"
-    if(re.findall(r"^(56)", vcode)):
+    if(re.findall("^(56)", vcode)):
         return "Buy 2 For $0.20"
-    if(re.findall(r"^(57)", vcode)):
+    if(re.findall("^(57)", vcode)):
         return "Buy 2 For $0.25"
-    if(re.findall(r"^(58)", vcode)):
+    if(re.findall("^(58)", vcode)):
         return "Buy 2 For $0.30"
-    if(re.findall(r"^(59)", vcode)):
+    if(re.findall("^(59)", vcode)):
         return "$0.59"
-    if(re.findall(r"^(60)", vcode)):
+    if(re.findall("^(60)", vcode)):
         return "$0.60"
-    if(re.findall(r"^(61)", vcode)):
+    if(re.findall("^(61)", vcode)):
         return "$10.00"
-    if(re.findall(r"^(62)", vcode)):
+    if(re.findall("^(62)", vcode)):
         return "$9.50"
-    if(re.findall(r"^(63)", vcode)):
+    if(re.findall("^(63)", vcode)):
         return "$9.00"
-    if(re.findall(r"^(64)", vcode)):
+    if(re.findall("^(64)", vcode)):
         return "$8.50"
-    if(re.findall(r"^(65)", vcode)):
+    if(re.findall("^(65)", vcode)):
         return "$0.65"
-    if(re.findall(r"^(66)", vcode)):
+    if(re.findall("^(66)", vcode)):
         return "$8.00"
-    if(re.findall(r"^(67)", vcode)):
+    if(re.findall("^(67)", vcode)):
         return "$7.50"
-    if(re.findall(r"^(68)", vcode)):
+    if(re.findall("^(68)", vcode)):
         return "$7.00"
-    if(re.findall(r"^(69)", vcode)):
+    if(re.findall("^(69)", vcode)):
         return "$0.69"
-    if(re.findall(r"^(70)", vcode)):
+    if(re.findall("^(70)", vcode)):
         return "$0.70"
-    if(re.findall(r"^(71)", vcode)):
+    if(re.findall("^(71)", vcode)):
         return "$6.50"
-    if(re.findall(r"^(72)", vcode)):
+    if(re.findall("^(72)", vcode)):
         return "$6.00"
-    if(re.findall(r"^(73)", vcode)):
+    if(re.findall("^(73)", vcode)):
         return "$5.50"
-    if(re.findall(r"^(74)", vcode)):
+    if(re.findall("^(74)", vcode)):
         return "$5.00"
-    if(re.findall(r"^(75)", vcode)):
+    if(re.findall("^(75)", vcode)):
         return "$0.75"
-    if(re.findall(r"^(76)", vcode)):
+    if(re.findall("^(76)", vcode)):
         return "$1.00"
-    if(re.findall(r"^(77)", vcode)):
+    if(re.findall("^(77)", vcode)):
         return "$1.25"
-    if(re.findall(r"^(78)", vcode)):
+    if(re.findall("^(78)", vcode)):
         return "$1.50"
-    if(re.findall(r"^(79)", vcode)):
+    if(re.findall("^(79)", vcode)):
         return "$0.79"
-    if(re.findall(r"^(80)", vcode)):
+    if(re.findall("^(80)", vcode)):
         return "$0.80"
-    if(re.findall(r"^(81)", vcode)):
+    if(re.findall("^(81)", vcode)):
         return "$1.75"
-    if(re.findall(r"^(82)", vcode)):
+    if(re.findall("^(82)", vcode)):
         return "$2.00"
-    if(re.findall(r"^(83)", vcode)):
+    if(re.findall("^(83)", vcode)):
         return "$2.25"
-    if(re.findall(r"^(84)", vcode)):
+    if(re.findall("^(84)", vcode)):
         return "$2.50"
-    if(re.findall(r"^(85)", vcode)):
+    if(re.findall("^(85)", vcode)):
         return "$0.85"
-    if(re.findall(r"^(86)", vcode)):
+    if(re.findall("^(86)", vcode)):
         return "$2.75"
-    if(re.findall(r"^(87)", vcode)):
+    if(re.findall("^(87)", vcode)):
         return "$3.00"
-    if(re.findall(r"^(88)", vcode)):
+    if(re.findall("^(88)", vcode)):
         return "$3.25"
-    if(re.findall(r"^(89)", vcode)):
+    if(re.findall("^(89)", vcode)):
         return "$0.89"
-    if(re.findall(r"^(90)", vcode)):
+    if(re.findall("^(90)", vcode)):
         return "$0.90"
-    if(re.findall(r"^(91)", vcode)):
+    if(re.findall("^(91)", vcode)):
         return "$3.50"
-    if(re.findall(r"^(92)", vcode)):
+    if(re.findall("^(92)", vcode)):
         return "$3.75"
-    if(re.findall(r"^(93)", vcode)):
+    if(re.findall("^(93)", vcode)):
         return "$4.00"
-    if(re.findall(r"^(94)", vcode)):
+    if(re.findall("^(94)", vcode)):
         return "Reserved for future use"
-    if(re.findall(r"^(95)", vcode)):
+    if(re.findall("^(95)", vcode)):
         return "$0.95"
-    if(re.findall(r"^(96)", vcode)):
+    if(re.findall("^(96)", vcode)):
         return "$4.50"
-    if(re.findall(r"^(97)", vcode)):
+    if(re.findall("^(97)", vcode)):
         return "Reserved for future use"
-    if(re.findall(r"^(98)", vcode)):
+    if(re.findall("^(98)", vcode)):
         return "Buy 2 For $0.65"
-    if(re.findall(r"^(99)", vcode)):
+    if(re.findall("^(99)", vcode)):
         return "$0.99"
     return False
 
@@ -1022,27 +1022,27 @@ def get_bcn_mii_prefix(upc):
     upc = str(upc)
     upc = upc.replace("-", "")
     upc = upc.replace(" ", "")
-    if(not re.findall(r"^(\d{16})", upc)):
+    if(not re.findall("^(\\d{16})", upc)):
         return False
-    if(re.findall(r"^(0)", upc)):
+    if(re.findall("^(0)", upc)):
         return "ISO/TC 68"
-    if(re.findall(r"^(1)", upc)):
+    if(re.findall("^(1)", upc)):
         return "Airlines"
-    if(re.findall(r"^(2)", upc)):
+    if(re.findall("^(2)", upc)):
         return "Airlines"
-    if(re.findall(r"^(3)", upc)):
+    if(re.findall("^(3)", upc)):
         return "Travel and Entertainment and Banking/Financial"
-    if(re.findall(r"^(4)", upc)):
+    if(re.findall("^(4)", upc)):
         return "Banking and Financial"
-    if(re.findall(r"^(5)", upc)):
+    if(re.findall("^(5)", upc)):
         return "Banking and Financial"
-    if(re.findall(r"^(6)", upc)):
+    if(re.findall("^(6)", upc)):
         return "Merchandising and Banking/Financial"
-    if(re.findall(r"^(7)", upc)):
+    if(re.findall("^(7)", upc)):
         return "Petroleum"
-    if(re.findall(r"^(8)", upc)):
+    if(re.findall("^(8)", upc)):
         return "Healthcare and Telecommunications"
-    if(re.findall(r"^(9)", upc)):
+    if(re.findall("^(9)", upc)):
         return "National Assignment"
     return False
 
@@ -1056,15 +1056,15 @@ def get_bcn_mii_prefix(upc):
 
 def get_ups_barcode_info(upc, infotype=None):
     upc = str(upc).upper()
-    if(not re.findall(r"^1Z", upc)):
+    if(not re.findall("^1Z", upc)):
         return False
-    if(re.findall(r"^1Z", upc)):
-        fix_matches = re.findall(r"^1Z(\w*)", upc)
+    if(re.findall("^1Z", upc)):
+        fix_matches = re.findall("^1Z(\w*)", upc)
         upc = fix_matches[0]
     if(len(upc) > 16):
-        fix_matches = re.findall(r"^(\w{16})", upc)
+        fix_matches = re.findall("^(\w{16})", upc)
         upc = fix_matches[0]
-    upc_matches = re.findall(r"^(\w{6})(\w{2})(\w{5})(\w{2})(\w{1})", upc)
+    upc_matches = re.findall("^(\w{6})(\w{2})(\w{5})(\w{2})(\w{1})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {'accountnumber': pre_upc_type[0], 'servicetype': pre_upc_type[1],
                 'invoicenumber': pre_upc_type[2], 'packagenumber': pre_upc_type[3], 'checkdigit': pre_upc_type[4]}
@@ -1093,11 +1093,11 @@ def get_ups_barcode_servicetype(upc):
 def get_ups_barcode_servicetype_info(upc):
     upc = str(upc)
     upc = get_ups_barcode_servicetype(upc)
-    if(re.findall(r"^(01)", upc)):
+    if(re.findall("^(01)", upc)):
         return "Next Day Air Shipment"
-    if(re.findall(r"^(02)", upc)):
+    if(re.findall("^(02)", upc)):
         return "Second Day Air Shipment"
-    if(re.findall(r"^(03)", upc)):
+    if(re.findall("^(03)", upc)):
         return "Ground Shipment"
     return False
 
@@ -1134,9 +1134,9 @@ def get_ups_barcode_checkdigit(upc):
 
 def get_new_imei_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall(r"^(\d{16})", upc)):
+    if(not re.findall("^(\\d{16})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{8})(\d{6})(\d{1})", upc)
+    upc_matches = re.findall("^(\\d{8})(\\d{6})(\\d{1})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {
         'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'checkdigit': pre_upc_type[2]}
@@ -1172,9 +1172,9 @@ def get_new_imei_barcode_checkdigit(upc):
 
 def get_old_imei_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall(r"^(\d{16})", upc)):
+    if(not re.findall("^(\\d{16})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{6})(\d{2})(\d{6})(\d{1})", upc)
+    upc_matches = re.findall("^(\\d{6})(\\d{2})(\\d{6})(\\d{1})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1],
                 'serialnumber': pre_upc_type[2], 'checkdigit': pre_upc_type[3]}
@@ -1224,9 +1224,9 @@ def get_old_imei_barcode_checkdigit(upc):
 
 def get_new_imeisv_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall(r"^(\d{16})", upc)):
+    if(not re.findall("^(\\d{16})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{8})(\d{6})(\d{2})", upc)
+    upc_matches = re.findall("^(\\d{8})(\\d{6})(\\d{2})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {
         'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'svn': pre_upc_type[2]}
@@ -1262,9 +1262,9 @@ def get_new_imeisv_barcode_svn(upc):
 
 def get_old_imeisv_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall(r"^(\d{16})", upc)):
+    if(not re.findall("^(\\d{16})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{6})(\d{2})(\d{6})(\d{2})", upc)
+    upc_matches = re.findall("^(\\d{6})(\\d{2})(\\d{6})(\\d{2})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1],
                 'serialnumber': pre_upc_type[2], 'svn': pre_upc_type[3]}
@@ -1314,9 +1314,9 @@ def get_old_imeisv_barcode_svn(upc):
 
 def get_bcn_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall(r"^(\d{16})", upc)):
+    if(not re.findall("^(\\d{16})", upc)):
         return False
-    upc_matches = re.findall(r"^(\d{1})(\d{5})(\d{12})(\d{1})", upc)
+    upc_matches = re.findall("^(\\d{1})(\\d{5})(\\d{12})(\\d{1})", upc)
     pre_upc_type = upc_matches[0]
     upc_type = {'mii': pre_upc_type[0], 'iin': pre_upc_type[0]+pre_upc_type[1],
                 'account': pre_upc_type[2], 'checkdigit': pre_upc_type[3]}
@@ -1367,14 +1367,14 @@ def get_bcn_checkdigit(upc):
 
 def get_upca_ndc_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall(r"^0(\d{12})", upc)):
-        upc_matches = re.findall(r"^0(\d{12})", upc)
+    if(re.findall("^0(\\d{12})", upc)):
+        upc_matches = re.findall("^0(\\d{12})", upc)
         upc = upc_matches[0]
-    if(not re.findall(r"^(\d{12})", upc)):
+    if(not re.findall("^(\\d{12})", upc)):
         return False
-    if(not re.findall(r"^3(\d{11})", upc)):
+    if(not re.findall("^3(\\d{11})", upc)):
         return False
-    upc_matches = re.findall(r"^3(\d{4})(\d{4})(\d{2})(\d{1})", upc)
+    upc_matches = re.findall("^3(\\d{4})(\\d{4})(\\d{2})(\\d{1})", upc)
     upc_matches = upc_matches[0]
     product = {'numbersystem': str(
         3), 'labeler': upc_matches[0], 'productcode': upc_matches[1], 'packagecode': upc_matches[2], 'checkdigit': upc_matches[3]}
@@ -1433,11 +1433,11 @@ def get_upca_ndc_barcode_checkdigit(upc):
 
 def get_ndc_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall(r"^(\d{10})", upc)):
+    if(not re.findall("^(\\d{10})", upc)):
         return False
-    if(not re.findall(r"^(\d{10})", upc)):
+    if(not re.findall("^(\\d{10})", upc)):
         return False
-    upc_matches = re.findall(r"(\d{4})(\d{4})(\d{2})", upc)
+    upc_matches = re.findall("(\\d{4})(\\d{4})(\\d{2})", upc)
     upc_matches = upc_matches[0]
     product = {
         'labeler': upc_matches[0], 'productcode': upc_matches[1], 'packagecode': upc_matches[2]}

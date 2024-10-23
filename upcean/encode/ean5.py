@@ -80,10 +80,10 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", resize=1, hidei
                 imageoutlib = "cairo"
     if(len(upc) > 5 or len(upc) < 5):
         return False
-    upc_matches = re.findall(r"(\d{5})", upc)
+    upc_matches = re.findall("(\\d{5})", upc)
     if(len(upc_matches) <= 0):
         return False
-    if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:
@@ -558,7 +558,7 @@ def encode_ean5sup_barcode(upc, resize=1, hideinfo=(False, False, False), barhei
 
 
 def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     upc_preimg = Image.new("RGB", (((56 * barwidth[0]) * int(resize)) + (
         8 * int(resize)), (barheightadd + (9 * barwidth[1])) * int(resize)))

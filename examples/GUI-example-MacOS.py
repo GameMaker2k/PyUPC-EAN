@@ -605,7 +605,7 @@ class MainWin(tk.Frame):
     def validate_ean13(self, upc, return_check=False):
         upc = str(upc)
         if(len(upc) > 13):
-            fix_matches = re.findall(r"^(\d{13})", upc)
+            fix_matches = re.findall("^(\\d{13})", upc)
             upc = fix_matches[0]
         if(len(upc) > 13 or len(upc) < 12):
             return False
@@ -634,7 +634,7 @@ class MainWin(tk.Frame):
     def validate_ean08(self, upc, return_check=False):
         upc = str(upc)
         if(len(upc) > 8):
-            fix_matches = re.findall(r"^(\d{8})", upc)
+            fix_matches = re.findall("^(\\d{8})", upc)
             upc = fix_matches[0]
         if(len(upc) > 8 or len(upc) < 7):
             return False
