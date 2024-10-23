@@ -506,7 +506,6 @@ def get_goodwill_upca_barcode_info(upc, infotype=None):
         gw_item_type = "Hard Cover Books"
     else:
         gw_item_type = gw_item_type
-
     if(price_matches[0] == "199" and gw_item_type == "Media"):
         gw_item_type = "Albums / CDs / VHD"
     elif(price_matches[0] == "299" and gw_item_type == "Media"):
