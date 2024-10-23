@@ -440,8 +440,179 @@ def convert_hex_code128_to_ascii_code128(upc):
         barcodeout = barcodeout + hextoascii.get(upcpart, '')
     return barcodeout
 
+# Build the mapping dictionaries
+char_to_code_set_a = {}
+for i in range(0, 96):
+    char = chr(i)
+    char_to_code_set_a[char] = i
+
+char_to_code_set_b = {}
+for i in range(32, 128):
+    char = chr(i)
+    char_to_code_set_b[char] = i - 32
+
+pair_to_code_set_c = {}
+for i in range(0, 100):
+    pair = '{:02d}'.format(i)
+    pair_to_code_set_c[pair] = i
+
+def can_use_code_b(text):
+    for c in text:
+        if c not in char_to_code_set_b:
+            return False
+    return True
+
+def can_use_code_a(text):
+    for c in text:
+        if c not in char_to_code_set_a:
+            return False
+    return True
+
+def should_use_code_c(segments, index):
+    segment = segments[index]
+    assert segment[0] == 'digits'
+    digits = segment[1]
+    length = len(digits)
+    num_segments = len(segments)
+
+    # Code set C requires even number of digits
+    if length % 2 != 0:
+        return False
+
+    # Check if the entire data is digits
+    if num_segments == 1 and segment[0] == 'digits':
+        if length == 2 or length >= 4:
+            return True
+        else:
+            return False
+
+    # Beginning of data
+    if index == 0:
+        if length >= 4:
+            return True
+        else:
+            return False
+
+    # End of data
+    if index == num_segments -1:
+        if length >= 4:
+            return True
+        else:
+            return False
+
+    # Middle of data
+    else:
+        if length >=6:
+            return True
+        else:
+            return False
 
 def convert_text_to_hex_code128(upc):
+    # Ensure upc is a string type (compatibility with Python 2 and 3)
+    if not isinstance(upc, str):
+        upc = str(upc)
+
+    # Build the segments
+    segments = []
+    i = 0
+    text_len = len(upc)
+    while i < text_len:
+        if upc[i].isdigit():
+            start = i
+            while i < text_len and upc[i].isdigit():
+                i += 1
+            digits = upc[start:i]
+            segments.append(('digits', digits))
+        else:
+            start = i
+            while i < text_len and not upc[i].isdigit():
+                i += 1
+            non_digits = upc[start:i]
+            segments.append(('other', non_digits))
+
+    # Initialize output sequence and current code set
+    output_sequence = []
+    current_code_set = None
+
+    # Process segments
+    for idx, segment in enumerate(segments):
+        seg_type, data = segment
+        if seg_type == 'digits':
+            # Decide whether to use code set C
+            use_code_c = should_use_code_c(segments, idx)
+            if use_code_c:
+                # Switch to code set C if necessary
+                if current_code_set != 'C':
+                    if not output_sequence:
+                        # At the beginning, use Start Code C (105)
+                        output_sequence.append(105)
+                    else:
+                        # Switch to Code Set C (99)
+                        output_sequence.append(99)
+                    current_code_set = 'C'
+                # Encode digits in pairs
+                for j in range(0, len(data), 2):
+                    pair = data[j:j+2]
+                    code_point = pair_to_code_set_c[pair]
+                    output_sequence.append(code_point)
+            else:
+                # Process digits as individual characters in code set A or B
+                # Handle as 'other' segment
+                if can_use_code_b(data):
+                    code_set_needed = 'B'
+                else:
+                    code_set_needed = 'A'
+                if current_code_set != code_set_needed:
+                    if not output_sequence:
+                        # At the beginning, use Start Code
+                        output_sequence.append(103 if code_set_needed == 'A' else 104)
+                    else:
+                        # Switch code set
+                        output_sequence.append(101 if code_set_needed == 'A' else 100)
+                    current_code_set = code_set_needed
+                # Encode each digit
+                for c in data:
+                    if current_code_set == 'A':
+                        code_point = char_to_code_set_a.get(c)
+                    else:
+                        code_point = char_to_code_set_b.get(c)
+                    if code_point is None:
+                        raise ValueError('Character {} not found in code set {}'.format(c, current_code_set))
+                    output_sequence.append(code_point)
+        elif seg_type == 'other':
+            # Decide whether to use code set B or A
+            if can_use_code_b(data):
+                code_set_needed = 'B'
+            else:
+                code_set_needed = 'A'
+            if current_code_set != code_set_needed:
+                if not output_sequence:
+                    # At the beginning, use Start Code
+                    output_sequence.append(103 if code_set_needed == 'A' else 104)
+                else:
+                    # Switch code set
+                    output_sequence.append(101 if code_set_needed == 'A' else 100)
+                current_code_set = code_set_needed
+            # Encode each character
+            for c in data:
+                if current_code_set == 'A':
+                    code_point = char_to_code_set_a.get(c)
+                else:
+                    code_point = char_to_code_set_b.get(c)
+                if code_point is None:
+                    raise ValueError('Character {} not found in code set {}'.format(c, current_code_set))
+                output_sequence.append(code_point)
+
+    # Now, convert the code points to hex codes
+    hex_codes = []
+    for code_point in output_sequence:
+        hex_code = '{:02x}'.format(code_point)
+        hex_codes.append(hex_code)
+
+    return ''.join(hex_codes)
+
+
+def convert_text_to_hex_code128_auto(upc):
     hextocharsetone = {' ': "00", '!': "01", '\\': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e", 'O': "2f", 'P': "30", 'Q': "31", 'R': "32", 'S': "33",
                        'T': "34", 'U': "35", 'V': "36", 'W': "37", 'X': "38", 'Y': "39", 'Z': "3a", '[': "3b", '\\': "3c", ']': "3d", '^': "3e", '_': "3f", '\x00': "40", '\x01': "41", '\x02': "42", '\x03': "43", '\x04': "44", '\x05': "45", '\x06': "46", '\x07': "47", '\x08': "48", '\x09': "49", '\x0a': "4a", '\x0b': "4b", '\x0c': "4c", '\x0d': "4d", '\x0e': "4e", '\x0f': "4f", '\x10': "50", '\x11': "51", '\x12': "52", '\x13': "53", '\x14': "54", '\x15': "55", '\x16': "56", '\x17': "57", '\x18': "58", '\x19': "59", '\x1a': "5a", '\x1b': "5b", '\x1c': "5c", '\x1d': "5d", '\x1e': "5e", '\x1f': "5f"}
     hextocharsettwo = {' ': "00", '!': "01", '\\': "02", '#': "03", '$': "04", '%': "05", '&': "06", '\'': "07", '(': "08", ')': "09", '*': "0a", '+': "0b", ',': "0c", '-': "0d", '.': "0e", '/': "0f", '0': "10", '1': "11", '2': "12", '3': "13", '4': "14", '5': "15", '6': "16", '7': "17", '8': "18", '9': "19", ':': "1a", ';': "1b", '<': "1c", '=': "1d", '>': "1e", '?': "1f", '@': "20", 'A': "21", 'B': "22", 'C': "23", 'D': "24", 'E': "25", 'F': "26", 'G': "27", 'H': "28", 'I': "29", 'J': "2a", 'K': "2b", 'L': "2c", 'M': "2d", 'N': "2e",
@@ -588,6 +759,13 @@ def convert_text_to_hex_code128_manual(upc):
 
 def convert_text_to_hex_code128_with_checksum(upc):
     code128out = convert_text_to_hex_code128(upc)
+    if(not code128out):
+        return False
+    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+"6c"
+
+
+def convert_text_to_hex_code128_auto_with_checksum(upc):
+    code128out = convert_text_to_hex_code128_auto(upc)
     if(not code128out):
         return False
     return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+"6c"
