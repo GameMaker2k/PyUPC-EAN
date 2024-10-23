@@ -757,6 +757,134 @@ def convert_text_to_hex_code128_manual(upc):
     return str(''.join(textlist))
 
 
+# Define the code set mappings
+CODE_SET_A = {chr(i): i for i in range(128)}
+CODE_SET_B = {chr(i): i - 32 for i in range(32, 128)}
+CODE_SET_C = {'{:02d}'.format(i): i for i in range(100)}
+
+# Start codes
+START_CODES = {'A': 103, 'B': 104, 'C': 105}
+
+# Code set switch codes
+SWITCH_CODES = {'A': 101, 'B': 100, 'C': 99}
+
+def optimize_encoding_code128(input_string):
+    """
+    Optimize the input string to produce the smallest EAN-128 encoding.
+    """
+    # Ensure input_string is a unicode string (for Python 2 compatibility)
+    if not isinstance(input_string, str):
+        input_string = str(input_string)
+
+    length = len(input_string)
+    # Dynamic programming table to store the minimal cost and action
+    cost = [{} for _ in range(length + 1)]  # cost[i][code_set] = (total_cost, action)
+    cost[length] = {'A': (0, None), 'B': (0, None), 'C': (0, None)}  # Base case
+
+    # Precompute which code sets can encode each character
+    can_encode = [{} for _ in range(length)]
+    for i in range(length):
+        c = input_string[i]
+        can_encode[i]['A'] = c in CODE_SET_A and ord(c) < 96  # Code Set A can encode ASCII 0-95
+        can_encode[i]['B'] = c in CODE_SET_B  # Code Set B can encode ASCII 32-127
+        if i + 1 < length and c.isdigit() and input_string[i+1].isdigit():
+            can_encode[i]['C'] = True  # Code Set C can encode pairs of digits
+        else:
+            can_encode[i]['C'] = False
+
+    # Dynamic programming to find the minimal cost encoding
+    for i in range(length -1, -1, -1):
+        for cs in ['A', 'B', 'C']:
+            min_total_cost = float('inf')
+            best_action = None
+
+            # Try to encode starting with code set cs
+            if cs == 'C' and can_encode[i]['C']:
+                # Try to encode as many digit pairs as possible
+                j = i
+                while j + 1 < length and input_string[j].isdigit() and input_string[j+1].isdigit():
+                    j += 2
+                num_pairs = (j - i) // 2
+                for next_cs in ['A', 'B', 'C']:
+                    switch_cost = 0 if cs == next_cs else 1  # Cost of switching code sets
+                    total_cost = num_pairs + switch_cost + cost[j][next_cs][0]
+                    if total_cost < min_total_cost:
+                        min_total_cost = total_cost
+                        best_action = ('encode_c', j, next_cs)
+                cost[i][cs] = (min_total_cost, best_action)
+            elif cs in ['A', 'B'] and can_encode[i][cs]:
+                # Encode one character
+                for next_cs in ['A', 'B', 'C']:
+                    switch_cost = 0 if cs == next_cs else 1  # Cost of switching code sets
+                    total_cost = 1 + switch_cost + cost[i+1][next_cs][0]
+                    if total_cost < min_total_cost:
+                        min_total_cost = total_cost
+                        best_action = ('encode_one', i+1, next_cs)
+                cost[i][cs] = (min_total_cost, best_action)
+            else:
+                # Cannot encode with this code set
+                cost[i][cs] = (float('inf'), None)
+
+    # Find the minimal total cost at position 0
+    min_total_cost = float('inf')
+    start_cs = None
+    for cs in ['A', 'B', 'C']:
+        total_cost = cost[0][cs][0]
+        if total_cost < min_total_cost:
+            min_total_cost = total_cost
+            start_cs = cs
+
+    # Reconstruct the path to get the encoding
+    i = 0
+    encoding = []
+    current_code_set = start_cs
+
+    # Add the start code
+    encoding.append(START_CODES[current_code_set])
+
+    while i < length:
+        action = cost[i][current_code_set][1]
+        if action is None:
+            raise ValueError("Cannot encode character at position {}".format(i))
+
+        if action[0] == 'encode_c':
+            # Encode pairs of digits
+            j = action[1]
+            while i < j:
+                pair = input_string[i:i+2]
+                code_point = CODE_SET_C[pair]
+                encoding.append(code_point)
+                i += 2
+            next_cs = action[2]
+            if next_cs != current_code_set:
+                # Switch code sets
+                encoding.append(SWITCH_CODES[next_cs])
+                current_code_set = next_cs
+        elif action[0] == 'encode_one':
+            # Encode single character
+            c = input_string[i]
+            if current_code_set == 'A':
+                code_point = ord(c)
+            elif current_code_set == 'B':
+                code_point = ord(c) - 32
+            encoding.append(code_point)
+            i += 1
+            next_cs = action[2]
+            if next_cs != current_code_set:
+                # Switch code sets
+                encoding.append(SWITCH_CODES[next_cs])
+                current_code_set = next_cs
+        else:
+            # Unknown action
+            raise ValueError("Unknown action '{}' at position {}".format(action[0], i))
+
+    # Convert code points to hex representation
+    hex_codes = ['{:02x}'.format(code_point) for code_point in encoding]
+
+    return ''.join(hex_codes)
+
+
+
 def convert_text_to_hex_code128_with_checksum(upc):
     code128out = convert_text_to_hex_code128(upc)
     if(not code128out):
@@ -766,6 +894,13 @@ def convert_text_to_hex_code128_with_checksum(upc):
 
 def convert_text_to_hex_code128_auto_with_checksum(upc):
     code128out = convert_text_to_hex_code128_auto(upc)
+    if(not code128out):
+        return False
+    return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+"6c"
+
+
+def convert_text_to_hex_code128_optimize_with_checksum(upc):
+    code128out = optimize_encoding_code128(upc)
     if(not code128out):
         return False
     return code128out+"6d"+upcean.validate.get_code128_checksum(code128out)+"6c"
