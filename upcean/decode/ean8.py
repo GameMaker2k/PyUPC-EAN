@@ -41,182 +41,152 @@ if(cairosupport):
     import cairo
 
 
-def decode_ean8_barcode(infile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), locatebarcode=False, imageoutlib="pillow"):
-    if(not re.findall(r"^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+def decode_ean8_barcode(infile, resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), locatebarcode=False, cairosupport=False):
+    # Validate resize value (should be a positive number greater than or equal to 1)
+    try:
+        resize = float(resize)
+        if resize < 1:
+            resize = 1
+    except ValueError:
         resize = 1
-    if(isinstance(infile, Image.Image)):
+
+    # Check if input is a Pillow Image, Cairo ImageSurface, or file path
+    if isinstance(infile, Image.Image):
         upc_img = infile.convert('RGB')
-    elif(cairosupport and isinstance(infile, cairo.ImageSurface)):
-        if(sys.version[0] == "2"):
-            stdoutfile = StringIO()
-        if(sys.version[0] >= "3"):
-            stdoutfile = BytesIO()
+    elif cairosupport and isinstance(infile, cairo.ImageSurface):
+        # Handle Cairo ImageSurface input
+        stdoutfile = BytesIO()
         infile.write_to_png(stdoutfile)
         stdoutfile.seek(0)
         upc_img = Image.open(stdoutfile).convert('RGB')
     else:
+        # Assume input is a file path or file-like object
         try:
-            infile.seek(0)
-            if(hasuie):
-                try:
-                    upc_img = Image.open(infile).convert('RGB')
-                except UnidentifiedImageError:
-                    return False
-                    '''upc_img = Image.frombytes("RGB", (((69 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
-            else:
-                try:
-                    upc_img = Image.open(infile).convert('RGB')
-                except IOError:
-                    return False
-                    '''upc_img = Image.frombytes("RGB", (((69 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), infile.read());'''
-        except AttributeError:
-            if(hasuie):
-                try:
-                    upc_img = Image.open(infile).convert('RGB')
-                except UnidentifiedImageError:
-                    return False
-                    '''prefile = open(infile, "rb");
-     upc_img = Image.frombytes("RGB", (((69 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
-     prefile.close();'''
-            else:
-                try:
-                    upc_img = Image.open(infile).convert('RGB')
-                except IOError:
-                    return False
-                    '''prefile = open(infile, "rb");
-     upc_img = Image.frombytes("RGB", (((69 * barwidth[0]) ) * int(resize), (barheight[1] + 9) * int(resize)), prefile.read());
-     prefile.close();'''
-    barsize = barwidth[0] * int(resize)
-    starty = (int(upc_img.size[1] / 2) - ((barwidth[1] - 1) * 9)) + shiftxy[1]
-    left_barcode_l_dict = {'0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3",
-                           '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", '0110111': "8", '0001011': "9"}
-    left_barcode_g_dict = {'0100111': "0", '0110011': "1", '0011011': "2", '0100001': "3",
-                           '0011101': "4", '0111001': "5", '0000101': "6", '0010001': "7", '0001001': "8", '0010111': "9"}
-    right_barcode_dict = {'1110010': "0", '1100110': "1", '1101100': "2", '1000010': "3",
-                          '1011100': "4", '1001110': "5", '1010000': "6", '1000100': "7", '1001000': "8", '1110100': "9"}
-    startx = 12
-    if(shiftcheck):
+            infile.seek(0)  # Reset file pointer if file-like object
+            upc_img = Image.open(infile).convert('RGB')
+        except (AttributeError, UnidentifiedImageError, IOError):
+            try:
+                upc_img = Image.open(infile).convert('RGB')  # File path case
+            except (UnidentifiedImageError, IOError):
+                return False
+
+    # Precompute common values
+    barsize = barwidth[0] * resize
+    starty = (upc_img.size[1] // 2) - ((barwidth[1] - 1) * 9) + shiftxy[1]
+    
+    left_barcode_l_dict = {
+        '0001101': "0", '0011001': "1", '0010011': "2", '0111101': "3",
+        '0100011': "4", '0110001': "5", '0101111': "6", '0111011': "7", 
+        '0110111': "8", '0001011': "9"
+    }
+    left_barcode_g_dict = {
+        '0100111': "0", '0110011': "1", '0011011': "2", '0100001': "3",
+        '0011101': "4", '0111001': "5", '0000101': "6", '0010001': "7", 
+        '0001001': "8", '0010111': "9"
+    }
+    right_barcode_dict = {
+        '1110010': "0", '1100110': "1", '1101100': "2", '1000010': "3",
+        '1011100': "4", '1001110': "5", '1010000': "6", '1000100': "7", 
+        '1001000': "8", '1110100': "9"
+    }
+
+    # Define start and end positions for scanning
+    startx = 12 * barsize + shiftxy[0]
+    jumpcode = 40 * barsize + shiftxy[0]
+    endx = (28 + 28) * barsize
+
+    # If shiftcheck is enabled, adjust startx dynamically by checking pixel values
+    if shiftcheck:
         prestartx = shiftxy[0]
-        startx = shiftxy[0]
-        gotvalue = False
-        prestartx = startx
-        while(prestartx < upc_img.size[0]):
-            inprestartx = prestartx
-            substartx = prestartx + (3 * (barwidth[0] * int(resize)))
-            curpixelist = []
-            if(upc_img.getpixel((inprestartx, starty)) == barcolor[0]):
-                if(inprestartx+(2 * (barwidth[0] * int(resize))) > upc_img.size[0]):
-                    return False
-                icount = 0
-                imaxc = 3
-                while(icount < imaxc):
-                    curpixelist.append(upc_img.getpixel(
-                        (inprestartx+(icount * (barwidth[0] * int(resize))), starty)))
-                    icount += 1
-                inprestartx += (3 + 28) * (barwidth[0] * int(resize))
-                jumpcode = inprestartx
-                if(inprestartx+(4 * (barwidth[0] * int(resize))) > upc_img.size[0]):
-                    return False
-                icount = 0
-                imaxc = 5
-                while(icount < imaxc):
-                    curpixelist.append(upc_img.getpixel(
-                        (inprestartx+(icount * (barwidth[0] * int(resize))), starty)))
-                    icount += 1
-                inprestartx += (5 + 28) * (barwidth[0] * int(resize))
-                if(inprestartx+(2 * (barwidth[0] * int(resize))) > upc_img.size[0]):
-                    return False
-                icount = 0
-                imaxc = 3
-                while(icount < imaxc):
-                    curpixelist.append(upc_img.getpixel(
-                        (inprestartx+(icount * (barwidth[0] * int(resize))), starty)))
-                    icount += 1
-                if((curpixelist[0] == barcolor[0] and curpixelist[1] == barcolor[2] and curpixelist[2] == barcolor[0]) and (curpixelist[3] == barcolor[2] and curpixelist[4] == barcolor[0] and curpixelist[5] == barcolor[2] and curpixelist[6] == barcolor[0] and curpixelist[7] == barcolor[2]) and (curpixelist[8] == barcolor[0] and curpixelist[9] == barcolor[2] and curpixelist[10] == barcolor[0])):
-                    startx = substartx
+        while prestartx < upc_img.size[0]:
+            curpixel = upc_img.getpixel((prestartx, starty))
+            if curpixel == barcolor[0]:  # Checking for a potential barcode start
+                substartx = prestartx + (3 * barsize)
+                pixel_list = [upc_img.getpixel((substartx + (i * barsize), starty)) for i in range(3)]
+                # Validate the sequence of pixels to ensure it's the start of the barcode
+                if pixel_list[0] == barcolor[0] and pixel_list[1] == barcolor[2] and pixel_list[2] == barcolor[0]:
+                    startx = substartx  # Found the start
                     break
             prestartx += 1
-        shiftxy = (0, shiftxy[1])
-    else:
-        startx = ((12 * (barwidth[0] * int(resize))) + shiftxy[0])
-        jumpcode = ((40 * (barwidth[0] * int(resize))) + shiftxy[0])
-    endx = (28 + 28) * (barwidth[0] * int(resize))
-    if(locatebarcode):
-        prestartx = startx - (3 * (barwidth[0] * int(resize)))
-        jumpcodeend = jumpcode + (4 * (barwidth[0] * int(resize)))
-        endx = startx + ((28 + 4 + 28) * (barwidth[0] * int(resize)))
-        postendx = endx + (3 * (barwidth[0] * int(resize)))
+
+    # Locate the barcode without decoding
+    if locatebarcode:
+        prestartx = startx - (3 * barsize)
+        jumpcodeend = jumpcode + (4 * barsize)
+        endx = startx + ((28 + 4 + 28) * barsize)
+        postendx = endx + (3 * barsize)
+
+        # Scan vertically to find the barcode height
         countyup = starty
-        while(countyup >= 0):
+        while countyup >= 0:
             curonepixel = upc_img.getpixel((prestartx, countyup))
-            curtwopixel = upc_img.getpixel(
-                (prestartx + (1 * (barwidth[0] * int(resize))), countyup))
-            if(curonepixel == barcolor[2] or curtwopixel == barcolor[0]):
+            curtwopixel = upc_img.getpixel((prestartx + barsize, countyup))
+            if curonepixel == barcolor[2] or curtwopixel == barcolor[0]:
                 break
-            countyup += 1
-        countyup -= 1
+            countyup -= 1
+
         countydown = starty
-        while(countydown <= upc_img.size[1]):
+        while countydown < upc_img.size[1]:
             curonepixel = upc_img.getpixel((prestartx, countydown))
-            curtwopixel = upc_img.getpixel(
-                (prestartx + (1 * (barwidth[0] * int(resize))), countydown))
-            if(curonepixel == barcolor[2] or curtwopixel == barcolor[0]):
+            curtwopixel = upc_img.getpixel((prestartx + barsize, countydown))
+            if curonepixel == barcolor[2] or curtwopixel == barcolor[0]:
                 break
-            countydown -= 1
-        countydown -= 1
+            countydown += 1
+
+        # Return barcode location information
         return ("ean8", prestartx, startx, jumpcode, jumpcodeend, endx, countyup, round(countyup / 2), round(countydown * 2), countydown, countyup, 8)
-    startxalt = 0
-    listcount = 0
-    pre_upc_whole = []
-    while(startxalt < endx):
-        listcount = 0
-        pre_upc_list = []
-        while(listcount < 7):
-            if(startx == jumpcode):
-                startx += 5 * (barwidth[0] * int(resize))
-            curpixel = upc_img.getpixel((startx, starty))
-            if(curpixel == barcolor[0]):
-                incount = 0
-                inbarwidth = barwidth[0] - 1
-                while(incount <= inbarwidth):
-                    incurpixel = upc_img.getpixel((startx + incount, starty))
-                    if(incurpixel != barcolor[0]):
-                        return False
-                    incount += 1
-                pre_upc_list.append("1")
-            if(curpixel == barcolor[2]):
-                incount = 0
-                inbarwidth = barwidth[0] - 1
-                while(incount <= inbarwidth):
-                    incurpixel = upc_img.getpixel((startx + incount, starty))
-                    if(incurpixel != barcolor[2]):
-                        return False
-                    incount += 1
-                pre_upc_list.append("0")
-            startx += 1 * (barwidth[0] * int(resize))
-            startxalt += 1 * (barwidth[0] * int(resize))
-            listcount += 1
-        pre_upc_whole.append("".join(pre_upc_list))
-    upc_img.close()
-    countlist = len(pre_upc_whole)
-    listcount = 0
-    barcode_list = []
-    while(listcount < countlist):
-        if(listcount < 4):
-            if(left_barcode_l_dict.get(pre_upc_whole[listcount], None) is not None):
-                barcode_list.append(left_barcode_l_dict.get(
-                    pre_upc_whole[listcount], "0"))
-            elif(left_barcode_g_dict.get(pre_upc_whole[listcount], None) is not None):
-                barcode_list.append(left_barcode_g_dict.get(
-                    pre_upc_whole[listcount], "0"))
-            else:
-                return False
-        if(listcount > 3):
-            barcode_list.append(right_barcode_dict.get(
-                pre_upc_whole[listcount], "0"))
-        listcount += 1
-        upc = "".join(barcode_list)
-    return upc
+
+    # Extract the binary pattern from the barcode image
+    def extract_barcode(startx):
+        binary_values = []
+        startxalt = 0
+        
+        while startxalt < endx:
+            pre_upc_list = []
+            for _ in range(7):
+                if startx == jumpcode:
+                    startx += 5 * barsize
+                
+                curpixel = upc_img.getpixel((startx, starty))
+                if curpixel == barcolor[0]:
+                    pre_upc_list.append("1")
+                elif curpixel == barcolor[2]:
+                    pre_upc_list.append("0")
+                else:
+                    return False
+                startx += barsize
+                startxalt += barsize
+            binary_values.append("".join(pre_upc_list))
+        
+        return binary_values
+
+    # Decode the binary list into digits
+    def decode_barcode(binary_list):
+        barcode = []
+        for i, binary in enumerate(binary_list):
+            if i < 4:  # Left side encoding
+                if left_barcode_l_dict.get(binary) is not None:
+                    barcode.append(left_barcode_l_dict[binary])
+                elif left_barcode_g_dict.get(binary) is not None:
+                    barcode.append(left_barcode_g_dict[binary])
+                else:
+                    return False
+            else:  # Right side encoding
+                decoded = right_barcode_dict.get(binary)
+                if decoded is None:
+                    return False
+                barcode.append(decoded)
+        return "".join(barcode)
+
+    # Extract the barcode binary data
+    binary_barcode = extract_barcode(startx)
+    
+    if not binary_barcode:
+        return False
+    
+    # Decode the binary values into a valid EAN-8 barcode
+    ean8 = decode_barcode(binary_barcode)
+    return ean8 if ean8 else False
 
 
 def get_ean8_barcode_location(infile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), shiftcheck=False, shiftxy=(0, 0), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
