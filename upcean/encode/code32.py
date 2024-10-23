@@ -80,9 +80,9 @@ def create_code32_barcode(upc, outfile="./code32.png", resize=1, hideinfo=(False
                 imageoutlib = "cairo"
     if(len(upc) < 1):
         return False
-    if(not re.findall("([0-9a-zB-DF-HJ-NP-Z\-\.\$\/\+% ]+)", upc)):
+    if(not re.findall("([0-9a-zB-DF-HJ-NP-Z\\-\\.\\$\\/\\+% ]+)", upc)):
         return False
-    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:

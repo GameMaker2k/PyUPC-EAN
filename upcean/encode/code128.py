@@ -85,7 +85,7 @@ def create_code128hex_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         return False
     if(not re.findall("([0-9a-f]+)", upc)):
         return False
-    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:

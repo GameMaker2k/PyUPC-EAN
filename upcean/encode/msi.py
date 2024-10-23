@@ -82,7 +82,7 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
         return False
     if(not re.findall("([0-9]+)", upc)):
         return False
-    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:

@@ -82,7 +82,7 @@ def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, hideinfo=(Fal
         return False
     if(not re.findall("([0-9a-fA-F]+)", upc)):
         return False
-    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:

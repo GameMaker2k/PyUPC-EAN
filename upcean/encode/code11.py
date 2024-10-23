@@ -80,9 +80,9 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, hideinfo=(False
                 imageoutlib = "cairo"
     if(len(upc) < 1):
         return False
-    if(not re.findall("([0-9\-]+)", upc)):
+    if(not re.findall("([0-9\\-]+)", upc)):
         return False
-    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:
@@ -136,7 +136,7 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, hideinfo=(False
     upc_print = upc_matches
     if(len(upc_matches) <= 0):
         return False
-    bcsize6 = len(re.findall("([09\-])", "".join(upc_matches)))
+    bcsize6 = len(re.findall("([09\\-])", "".join(upc_matches)))
     bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)))
     upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) +
                     len(upc_matches) - 1) * barwidth[0]
@@ -504,9 +504,9 @@ def create_code11alt_barcode(upc, outfile="./code11.png", resize=1, hideinfo=(Fa
                 imageoutlib = "cairo"
     if(len(upc) < 1):
         return False
-    if(not re.findall("([0-9\-]+)", upc)):
+    if(not re.findall("([0-9\\-]+)", upc)):
         return False
-    if(not re.findall("^([0-9]*[\.]?[0-9])", str(resize)) or int(resize) < 1):
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
         try:
@@ -590,7 +590,7 @@ def create_code11alt_barcode(upc, outfile="./code11.png", resize=1, hideinfo=(Fa
         UPC_Count += 1
         UPC_Weight += 1
     upc_matches.append(Code11Array[UPC_Sum % 11])
-    bcsize6 = len(re.findall("([09\-])", "".join(upc_matches)))
+    bcsize6 = len(re.findall("([09\\-])", "".join(upc_matches)))
     bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)))
     upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) +
                     len(upc_matches) - 1) * barwidth[0]

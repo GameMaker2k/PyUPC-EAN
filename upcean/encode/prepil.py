@@ -98,15 +98,15 @@ def get_save_filename(outfile):
         return False
     if(isinstance(oldoutfile, basestring)):
         if(outfile != "-" and outfile != "" and outfile != " "):
-            if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) > 0):
+            if(len(re.findall("^\\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) > 0):
                 outfileext = re.findall(
-                    r"^\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper()
-            if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile)) > 0):
-                tmpoutfile = re.findall("(.*)\:([a-zA-Z]+)", oldoutfile)
+                    r"^\\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper()
+            if(len(re.findall("^\\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall("(.*)\\:([a-zA-Z]+)", oldoutfile)) > 0):
+                tmpoutfile = re.findall("(.*)\\:([a-zA-Z]+)", oldoutfile)
                 del(outfile)
                 outfile = tmpoutfile[0][0]
                 outfileext = tmpoutfile[0][1].upper()
-            if(len(re.findall("^\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall("(.*)\:([a-zA-Z]+)", oldoutfile)) == 0):
+            if(len(re.findall("^\\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall("(.*)\\:([a-zA-Z]+)", oldoutfile)) == 0):
                 outfileext = "PNG"
         if(outfileext == "BYTES"):
             outfileext = "BYTES"

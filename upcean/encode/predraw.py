@@ -19,7 +19,18 @@ import upcean.fonts
 import upcean.support
 pilsupport = upcean.support.check_for_pil()
 if(pilsupport):
-    from PIL import Image, ImageDraw, ImageFont
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+        pilsupport = True
+        # Handle resampling filter compatibility for Pillow 10+ and older versions
+        try:
+            from PIL import Resampling  # Pillow 10+
+            NEAREST = Resampling.NEAREST
+        except ImportError:
+            NEAREST = Image.NEAREST  # Older versions of Pillow
+    except ImportError:
+        pilsupport = False
+        NEAREST = None  # If Pillow isn't available, NEAREST isn't needed
     import upcean.encode.prepil
 cairosupport = upcean.support.check_for_cairo()
 if(cairosupport):
