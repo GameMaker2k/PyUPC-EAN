@@ -58,3 +58,5 @@ else:
     fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf"
     fontpathocrbalt = os.path.dirname(__file__)+os.sep+"OCRB.ttf"
     fontpath = os.path.dirname(fontpathocrb)
+
+os.environ['FONTCONFIG_PATH'] = fontpath
