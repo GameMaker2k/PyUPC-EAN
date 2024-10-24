@@ -134,7 +134,7 @@ class GenerateIndexPage(object):
             upc
         except KeyError:
             upc = None
-        file_ext = upcean.getsfname.get_save_filename(tempfile.gettempdir(
+        file_ext = upcean.barcodes.getsfname.get_save_filename(tempfile.gettempdir(
         )+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+imgtype.lower())
         if(file_ext[1] == "PNG"):
             cherrypy.response.headers['Content-Type'] = "image/png"
@@ -192,7 +192,7 @@ class GenerateBarcodes(object):
             params['upc']
         except KeyError:
             params['upc'] = None
-        file_ext = upcean.getsfname.get_save_filename(tempfile.gettempdir(
+        file_ext = upcean.barcodes.getsfname.get_save_filename(tempfile.gettempdir(
         )+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+params['imgtype'].lower())
         if(file_ext[1] == "PNG"):
             cherrypy.response.headers['Content-Type'] = "image/png"
