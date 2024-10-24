@@ -898,6 +898,171 @@ def optimize_encoding_code128(upc, reverse=False):
     return ''.join(hex_codes)
 
 
+def optimize_encoding_code128_alt(upc, reverse=False):
+    if reverse:
+        input_string = upc[::-1]
+    else:
+        input_string = str(upc)
+    """
+    Optimize the input string to produce the smallest EAN-128 encoding.
+    """
+    # Ensure input_string is a string
+    if not isinstance(input_string, str):
+        input_string = str(input_string)
+
+    length = len(input_string)
+    # Dynamic programming table to store the minimal cost and action
+    cost = [{} for _ in range(length + 1)]  # cost[i][code_set] = (total_cost, action)
+    cost[length] = {'A': (0, None), 'B': (0, None), 'C': (0, None)}  # Base case
+
+    # Precompute which code sets can encode each character
+    can_encode = [{} for _ in range(length)]
+    for i in range(length):
+        c = input_string[i]
+        can_encode[i]['A'] = c in CODE_SET_A and ord(c) < 96  # Code Set A can encode ASCII 0-95
+        can_encode[i]['B'] = c in CODE_SET_B  # Code Set B can encode ASCII 32-127
+        if i + 1 < length and c.isdigit() and input_string[i+1].isdigit():
+            can_encode[i]['C'] = True  # Code Set C can encode pairs of digits
+        else:
+            can_encode[i]['C'] = False
+
+    # Dynamic programming to find the minimal cost encoding
+    for i in range(length -1, -1, -1):
+        for cs in ['A', 'B', 'C']:
+            min_total_cost = float('inf')
+            best_action = None
+
+            if cs == 'C' and can_encode[i]['C']:
+                # Try to encode as many digit pairs as possible
+                j = i
+                while j + 1 < length and input_string[j].isdigit() and input_string[j+1].isdigit():
+                    j += 2
+                num_pairs = (j - i) // 2
+                for next_cs in ['A', 'B', 'C']:
+                    switch_cost = 0 if cs == next_cs else 1  # Cost of switching code sets
+                    total_cost = num_pairs + switch_cost + cost[j][next_cs][0]
+                    if total_cost < min_total_cost:
+                        min_total_cost = total_cost
+                        best_action = ('encode_c', j, next_cs)
+                cost[i][cs] = (min_total_cost, best_action)
+            elif cs in ['A', 'B']:
+                c = input_string[i]
+                other_cs = 'B' if cs == 'A' else 'A'
+                options = []
+                # Option 1: Encode in current code set if possible
+                if can_encode[i][cs]:
+                    for next_cs in ['A', 'B', 'C']:
+                        switch_cost = 0 if cs == next_cs else 1  # Cost of switching code sets
+                        total_cost = 1 + switch_cost + cost[i+1][next_cs][0]
+                        action = ('encode_one', i+1, next_cs)
+                        options.append((total_cost, action))
+                # Option 2: Use Shift code if possible
+                if can_encode[i][other_cs]:
+                    # Shift code can be used
+                    total_cost = 2 + cost[i+1][cs][0]  # Shift code + encode char + continue in current cs
+                    action = ('shift', i+1)
+                    options.append((total_cost, action))
+                # Option 3: Switch to other code set
+                if can_encode[i][other_cs]:
+                    switch_cost = 1  # Cost of switching code sets
+                    total_cost = switch_cost + 1 + cost[i+1][other_cs][0]
+                    action = ('switch_and_encode', i+1, other_cs)
+                    options.append((total_cost, action))
+                # Choose the option with minimal total cost
+                if options:
+                    min_total_cost, best_action = min(options, key=lambda x: x[0])
+                    cost[i][cs] = (min_total_cost, best_action)
+                else:
+                    # Cannot encode character at position i
+                    cost[i][cs] = (float('inf'), None)
+            else:
+                # Cannot encode with this code set
+                cost[i][cs] = (float('inf'), None)
+
+    # Find the minimal total cost at position 0
+    min_total_cost = float('inf')
+    start_cs = None
+    for cs in ['A', 'B', 'C']:
+        total_cost = cost[0][cs][0]
+        if total_cost < min_total_cost:
+            min_total_cost = total_cost
+            start_cs = cs
+
+    # Reconstruct the path to get the encoding
+    i = 0
+    encoding = []
+    current_code_set = start_cs
+
+    # Add the start code
+    encoding.append(START_CODES[current_code_set])
+
+    while i < length:
+        action = cost[i][current_code_set][1]
+        if action is None:
+            raise ValueError("Cannot encode character at position {}".format(i))
+
+        if action[0] == 'encode_c':
+            # Encode pairs of digits
+            j = action[1]
+            while i < j:
+                pair = input_string[i:i+2]
+                code_point = CODE_SET_C[pair]
+                encoding.append(code_point)
+                i += 2
+            next_cs = action[2]
+            if next_cs != current_code_set:
+                # Switch code sets
+                encoding.append(SWITCH_CODES[next_cs])
+                current_code_set = next_cs
+        elif action[0] == 'encode_one':
+            # Encode single character
+            c = input_string[i]
+            if current_code_set == 'A':
+                code_point = ord(c)
+            elif current_code_set == 'B':
+                code_point = ord(c) - 32
+            encoding.append(code_point)
+            i += 1
+            next_cs = action[2]
+            if next_cs != current_code_set:
+                # Switch code sets
+                encoding.append(SWITCH_CODES[next_cs])
+                current_code_set = next_cs
+        elif action[0] == 'shift':
+            # Use shift code to encode one character in other code set
+            encoding.append(98)  # Shift code
+            c = input_string[i]
+            if current_code_set == 'A':
+                # Shift to B for one character
+                code_point = ord(c) - 32
+            elif current_code_set == 'B':
+                # Shift to A for one character
+                code_point = ord(c)
+            encoding.append(code_point)
+            i += 1
+            # Continue in current_code_set
+        elif action[0] == 'switch_and_encode':
+            # Switch code sets and encode character
+            next_cs = action[2]
+            encoding.append(SWITCH_CODES[next_cs])
+            current_code_set = next_cs
+            c = input_string[i]
+            if current_code_set == 'A':
+                code_point = ord(c)
+            elif current_code_set == 'B':
+                code_point = ord(c) - 32
+            encoding.append(code_point)
+            i += 1
+        else:
+            # Unknown action
+            raise ValueError("Unknown action '{}' at position {}".format(action[0], i))
+
+    # Convert code points to hex representation
+    hex_codes = ['{:02x}'.format(code_point) for code_point in encoding]
+
+    return ''.join(hex_codes)
+
+
 
 def convert_text_to_hex_code128_with_checksum(upc, hidecs=True, reverse=False, stopcode="6a"):
     if(reverse):
@@ -927,6 +1092,18 @@ def convert_text_to_hex_code128_optimize_with_checksum(upc, hidecs=True, reverse
     if(reverse):
         stopcode = "6b"
     code128out = optimize_encoding_code128(upc, reverse)
+    if(not code128out):
+        return False
+    hidecschar = ""
+    if(hidecs):
+        hidecschar = "6d"
+    return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
+
+
+def convert_text_to_hex_code128_optimize_alt_with_checksum(upc, hidecs=True, reverse=False, stopcode="6a"):
+    if(reverse):
+        stopcode = "6b"
+    code128out = optimize_encoding_code128_alt(upc, reverse)
     if(not code128out):
         return False
     hidecschar = ""
