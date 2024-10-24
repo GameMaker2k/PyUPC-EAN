@@ -974,6 +974,60 @@ def draw_code128_barcode(upc, resize=1, hideinfo=(False, False, False), barheigh
 def encode_code128_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
     return create_code128_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
+def create_code128_rev_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = str(upc)
+    hidesn = hideinfo[0]
+    hidecd = hideinfo[1]
+    hidetext = hideinfo[2]
+    imageoutlib = imageoutlib.lower()
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(not pilsupport and imageoutlib == "pillow"):
+        imageoutlib = "cairo"
+    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "pillow"
+    if(not cairosupport and imageoutlib == "cairosvg"):
+        imageoutlib = "pillow"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+        imageoutlib = "pillow"
+    if(not pilsupport and not cairosupport):
+        return False
+    if(outfile is None):
+        if(imageoutlib == "cairosvg"):
+            oldoutfile = None
+            outfile = None
+            outfileext = "SVG"
+        else:
+            oldoutfile = None
+            outfile = None
+            outfileext = None
+    else:
+        oldoutfile = upcean.encode.predraw.get_save_filename(
+            outfile, imageoutlib)
+        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+            del(outfile)
+            outfile = oldoutfile[0]
+            outfileext = oldoutfile[1]
+            if(cairosupport and imageoutlib == "cairo" and outfileext == "SVG"):
+                imageoutlib = "cairosvg"
+            if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
+                imageoutlib = "cairo"
+    if(len(upc) < 4):
+        return False
+    upc = convert_text_to_hex_code128_with_checksum(upc, hidecd, True, "6b")
+    return create_code128hex_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def draw_code128_rev_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_code128_rev_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def encode_code128_rev_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_code128_rev_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
 
 def create_code128auto_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
     upc = str(upc)
@@ -1029,6 +1083,60 @@ def draw_code128auto_barcode(upc, resize=1, hideinfo=(False, False, False), barh
 def encode_code128auto_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
     return create_code128auto_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
+def create_code128auto_rev_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = str(upc)
+    hidesn = hideinfo[0]
+    hidecd = hideinfo[1]
+    hidetext = hideinfo[2]
+    imageoutlib = imageoutlib.lower()
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(not pilsupport and imageoutlib == "pillow"):
+        imageoutlib = "cairo"
+    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "pillow"
+    if(not cairosupport and imageoutlib == "cairosvg"):
+        imageoutlib = "pillow"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+        imageoutlib = "pillow"
+    if(not pilsupport and not cairosupport):
+        return False
+    if(outfile is None):
+        if(imageoutlib == "cairosvg"):
+            oldoutfile = None
+            outfile = None
+            outfileext = "SVG"
+        else:
+            oldoutfile = None
+            outfile = None
+            outfileext = None
+    else:
+        oldoutfile = upcean.encode.predraw.get_save_filename(
+            outfile, imageoutlib)
+        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+            del(outfile)
+            outfile = oldoutfile[0]
+            outfileext = oldoutfile[1]
+            if(cairosupport and imageoutlib == "cairo" and outfileext == "SVG"):
+                imageoutlib = "cairosvg"
+            if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
+                imageoutlib = "cairo"
+    if(len(upc) < 4):
+        return False
+    upc = convert_text_to_hex_code128_auto_with_checksum(upc, hidecd, True, "6b")
+    return create_code128hex_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def draw_code128auto_rev_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_code128auto_rev_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def encode_code128auto_rev_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_code128auto_rev_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
 
 def create_code128optimize_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
     upc = str(upc)
@@ -1083,6 +1191,61 @@ def draw_code128optimize_barcode(upc, resize=1, hideinfo=(False, False, False), 
 
 def encode_code128optimize_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
     return create_code128optimize_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def create_code128optimize_rev_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    upc = str(upc)
+    hidesn = hideinfo[0]
+    hidecd = hideinfo[1]
+    hidetext = hideinfo[2]
+    imageoutlib = imageoutlib.lower()
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(not pilsupport and imageoutlib == "pillow"):
+        imageoutlib = "cairo"
+    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "pillow"
+    if(not cairosupport and imageoutlib == "cairosvg"):
+        imageoutlib = "pillow"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg"):
+        imageoutlib = "pillow"
+    if(not pilsupport and not cairosupport):
+        return False
+    if(outfile is None):
+        if(imageoutlib == "cairosvg"):
+            oldoutfile = None
+            outfile = None
+            outfileext = "SVG"
+        else:
+            oldoutfile = None
+            outfile = None
+            outfileext = None
+    else:
+        oldoutfile = upcean.encode.predraw.get_save_filename(
+            outfile, imageoutlib)
+        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+            del(outfile)
+            outfile = oldoutfile[0]
+            outfileext = oldoutfile[1]
+            if(cairosupport and imageoutlib == "cairo" and outfileext == "SVG"):
+                imageoutlib = "cairosvg"
+            if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
+                imageoutlib = "cairo"
+    if(len(upc) < 4):
+        return False
+    upc = convert_text_to_hex_code128_optimize_with_checksum(upc, hidecd, True, "6b")
+    return create_code128hex_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def draw_code128optimize_rev_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_code128optimize_rev_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def encode_code128optimize_rev_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_code128optimize_rev_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def create_code128man_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
