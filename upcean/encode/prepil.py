@@ -100,7 +100,7 @@ def get_save_filename(outfile):
         if(outfile != "-" and outfile != "" and outfile != " "):
             if(len(re.findall("^\\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) > 0):
                 outfileext = re.findall(
-                    r"^\\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper()
+                    "^\\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper()
             if(len(re.findall("^\\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall("(.*)\\:([a-zA-Z]+)", oldoutfile)) > 0):
                 tmpoutfile = re.findall("(.*)\\:([a-zA-Z]+)", oldoutfile)
                 del(outfile)

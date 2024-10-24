@@ -469,6 +469,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
         "69": "set_to_2",
         "6d": "set_to_3"
     }
+    barcode_is_rev = False;
     while NumZero < len(upc_matches):
         old_cur_set = cur_set
         if start_shift:
@@ -540,10 +541,13 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
                 left_barcolor = [1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0]
                 cur_set = 2
             elif upc_value == "6a":
+                barcode_is_rev = False;
                 left_barcolor = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0]
             elif upc_value == "6b":
+                barcode_is_rev = True;
                 left_barcolor = [1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0]
             elif upc_value == "6c":
+                barcode_is_rev = False;
                 left_barcolor = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1]
             elif upc_value == "6d":
                 left_barcolor = []
@@ -618,6 +622,8 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
     if(not hidetext):
         NumTxtZero = 0
         LineTxtStart = 16
+        if(barcode_is_rev):
+            upc_print.reverse();
         while (NumTxtZero < len(upc_print)):
             if(len(upc_print[NumTxtZero]) == 1):
                 drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
@@ -969,6 +975,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
     upc_print = []
     shift_cur_set = False
     start_shift = 0
+    barcode_is_rev = False;
     while (NumZero < len(upc_matches)):
         old_cur_set = cur_set
         if(start_shift == 1):
@@ -1212,10 +1219,13 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
             left_barcolor = [1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0]
             cur_set = 2
         if(upc_matches[NumZero] == "6a"):
+            barcode_is_rev = False;
             left_barcolor = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0]
         if(upc_matches[NumZero] == "6b"):
+            barcode_is_rev = True;
             left_barcolor = [1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0]
         if(upc_matches[NumZero] == "6c"):
+            barcode_is_rev = False;
             left_barcolor = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1]
         if(upc_matches[NumZero] == "6d"):
             left_barcolor = []
@@ -1292,6 +1302,8 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         new_upc_img.paint()
         upc_img = new_upc_img
     if(not hidetext):
+        if(barcode_is_rev):
+            upc_print.reverse();
         NumTxtZero = 0
         LineTxtStart = 16
         while (NumTxtZero < len(upc_print)):
