@@ -608,10 +608,10 @@ def create_code128hex_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
                     new_upc_preimg.set_eps(False)
             else:
                 new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(
-                    resize), (barheightadd + (9 * barwidth[1])) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                    resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         else:
             new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(
-                resize), (barheightadd + (9 * barwidth[1])) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         new_upc_img = cairo.Context(new_upc_preimg)
         new_upc_img.set_source(upc_imgpat)
         new_upc_img.paint()
