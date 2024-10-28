@@ -21,341 +21,238 @@ import upcean.convert
 
 
 def get_upca_barcode_info(upc, infotype=None):
-    upc = str(upc)
-    if(len(upc) == 8):
-        upc = upcean.convert.convert_barcode_from_upce_to_upca(upc)
-    if(re.findall("^0(\\d{13})", upc)):
-        upc_matches = re.findall("^0(\\d{13})", upc)
-        upc = upc_matches[0]
-    if(re.findall("^0(\\d{12})", upc)):
-        upc_matches = re.findall("^0(\\d{12})", upc)
-        upc = upc_matches[0]
-    if(not re.findall("^(\\d{12})", upc)):
+    # Convert to UPC-A if input is UPC-E
+    upc = upcean.convert.convert_barcode_from_upce_to_upca(str(upc)) if len(upc) == 8 else str(upc)
+    
+    # Remove leading zeroes from 13-digit EAN if present
+    upc = re.sub("^0(\\d{12})", "\\1", upc)
+    
+    # Verify format and extract components
+    match = re.match("^(\\d)(\\d{5})(\\d{5})(\\d)$", upc)
+    if not match:
         return False
-    upc_matches = re.findall("^(\\d{1})(\\d{5})(\\d{5})(\\d{1})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {'packagecode': None,
-                'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
-
+    
+    # Map components to dictionary
+    upc_type = {
+        'packagecode': None,
+        'numbersystem': match.group(1),
+        'manufacturer': match.group(2),
+        'product': match.group(3),
+        'checkdigit': match.group(4)
+    }
+    
+    # Return specific infotype if provided
+    return upc_type.get(infotype, upc_type)
 
 def get_upca_barcode_numbersystem(upc):
-    upc = str(upc)
-    product = get_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
-
+    # Retrieve and return the numbersystem
+    return get_upca_barcode_info(upc).get("numbersystem", False)
 
 def get_upca_barcode_manufacturer(upc):
-    upc = str(upc)
-    product = get_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("manufacturer", False)
-
+    # Retrieve and return the manufacturer
+    return get_upca_barcode_info(upc).get("manufacturer", False)
 
 def get_upca_barcode_product(upc):
-    upc = str(upc)
-    product = get_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("product", False)
-
+    # Retrieve and return the product
+    return get_upca_barcode_info(upc).get("product", False)
 
 def get_upca_barcode_checkdigit(upc):
-    upc = str(upc)
-    product = get_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
-
+    # Retrieve and return the checkdigit
+    return get_upca_barcode_info(upc).get("checkdigit", False)
 
 def get_upca_barcode_info_from_upce(upc):
+    # Retrieve UPC-A information for a UPC-E input
     return get_upca_barcode_info(upcean.convert.convert_barcode_from_upce_to_upca(upc))
 
 
 def get_upce_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall("^0(\\d{13})", upc)):
-        upc_matches = re.findall("^0(\\d{13})", upc)
-        upc = upc_matches[0]
-    if(re.findall("^0(\\d{12})", upc)):
-        upc_matches = re.findall("^0(\\d{12})", upc)
-        upc = upc_matches[0]
-    if(len(upc) == 12):
-        upc = upcean.convert.convert_barcode_from_upca_to_upce(upc)
-    if(not re.findall("^(\\d{8})", upc)):
+    
+    # Remove leading zero for 13-digit EAN if present
+    upc = re.sub(r"^0(\d{12})", "\\1", upc)
+    
+    # Convert UPC-A to UPC-E if 12 digits long
+    upc = upcean.convert.convert_barcode_from_upca_to_upce(upc) if len(upc) == 12 else upc
+    
+    # Validate UPC-E format
+    if not re.match(r"^\d{8}$", upc):
         return False
-    get_ns = None
-    get_manufac = None
-    get_product = None
-    get_checksum = None
-    if(re.findall("(0|1)(\\d{2})(\\d{3})(0)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{2})(\\d{3})(0)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]+upc_matches[3]
-        get_checksum = upc_matches[4]
-    if(re.findall("(0|1)(\\d{2})(\\d{3})(1)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{2})(\\d{3})(1)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]+upc_matches[3]
-        get_checksum = upc_matches[4]
-    if(re.findall("(0|1)(\\d{2})(\\d{3})(2)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{2})(\\d{3})(2)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]+upc_matches[3]
-        get_checksum = upc_matches[4]
-    if(re.findall("(0|1)(\\d{3})(\\d{2})(3)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{3})(\\d{2})(3)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]+upc_matches[3]
-        get_checksum = upc_matches[4]
-    if(re.findall("(0|1)(\\d{4})(\\d{1})(4)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{4})(\\d{1})(4)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]+upc_matches[3]
-        get_checksum = upc_matches[4]
-    if(re.findall("(0|1)(\\d{5})(5)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})(5)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]
-        get_checksum = upc_matches[3]
-    if(re.findall("(0|1)(\\d{5})(6)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})(6)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]
-        get_checksum = upc_matches[3]
-    if(re.findall("(0|1)(\\d{5})(7)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})(7)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]
-        get_checksum = upc_matches[3]
-    if(re.findall("(0|1)(\\d{5})(8)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})(8)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]
-        get_checksum = upc_matches[3]
-    if(re.findall("(0|1)(\\d{5})(9)(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})(9)(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        get_ns = upc_matches[0]
-        get_manufac = upc_matches[1]
-        get_product = upc_matches[2]
-        get_checksum = upc_matches[3]
-    upc_type = {'packagecode': None, 'numbersystem': get_ns,
-                'manufacturer': get_manufac, 'product': get_product, 'checkdigit': get_checksum}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    # Define regex patterns for matching each format in UPC-E
+    patterns = [
+        "(0|1)(\\d{2})(\\d{3})([0-2])(\\d)",
+        "(0|1)(\\d{3})(\\d{2})(3)(\\d)",
+        "(0|1)(\\d{4})(\\d)(4)(\\d)",
+        "(0|1)(\\d{5})([5-9])(\\d)"
+    ]
+
+    # Initialize barcode info variables
+    get_ns, get_manufac, get_product, get_checksum = None, None, None, None
+
+    # Match patterns to extract numbersystem, manufacturer, product, and checksum
+    for pattern in patterns:
+        match = re.match(pattern, upc)
+        if match:
+            get_ns = match.group(1)
+            get_manufac = match.group(2)
+            get_product = match.group(3) + (match.group(4) if match.group(4).isdigit() else "")
+            get_checksum = match.group(5)
+            break
+
+    # Construct UPC-E information dictionary
+    upc_type = {
+        'packagecode': None,
+        'numbersystem': get_ns,
+        'manufacturer': get_manufac,
+        'product': get_product,
+        'checkdigit': get_checksum
+    }
+
+    # Return the requested infotype or the full dictionary if infotype is None
+    return upc_type.get(infotype, upc_type)
 
 def get_upce_barcode_numbersystem(upc):
-    upc = str(upc)
-    product = get_upce_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
-
+    # Retrieve and return the numbersystem
+    return get_upce_barcode_info(upc).get("numbersystem", False)
 
 def get_upce_barcode_manufacturer(upc):
-    upc = str(upc)
-    product = get_upce_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("manufacturer", False)
-
+    # Retrieve and return the manufacturer
+    return get_upce_barcode_info(upc).get("manufacturer", False)
 
 def get_upce_barcode_product(upc):
-    upc = str(upc)
-    product = get_upce_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("product", False)
-
+    # Retrieve and return the product
+    return get_upce_barcode_info(upc).get("product", False)
 
 def get_upce_barcode_checkdigit(upc):
-    upc = str(upc)
-    product = get_upce_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    # Retrieve and return the checkdigit
+    return get_upce_barcode_info(upc).get("checkdigit", False)
 
 
 def get_ean8_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall("^(\\d{8})", upc)):
+    
+    # Validate EAN-8 format
+    match = re.match("^(\\d{2})(\\d{5})(\\d)$", upc)
+    if not match:
         return False
-    upc_matches = re.findall("^(\\d{2})(\\d{5})(\\d{1})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {'packagecode': None,
-                'numbersystem': pre_upc_type[0], 'manufacturer': None, 'product': pre_upc_type[1], 'checkdigit': pre_upc_type[2]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    # Extract EAN-8 components
+    upc_type = {
+        'packagecode': None,
+        'numbersystem': match.group(1),
+        'manufacturer': None,
+        'product': match.group(2),
+        'checkdigit': match.group(3)
+    }
+
+    # Return specific infotype if provided, otherwise full dictionary
+    return upc_type.get(infotype, upc_type)
 
 def get_ean8_barcode_numbersystem(upc):
-    upc = str(upc)
-    product = get_ean8_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
-
+    # Retrieve and return the numbersystem
+    return get_ean8_barcode_info(upc).get("numbersystem", False)
 
 def get_ean8_barcode_manufacturer(upc):
-    upc = str(upc)
-    product = get_ean8_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("manufacturer", False)
-
+    # Retrieve and return the manufacturer
+    return get_ean8_barcode_info(upc).get("manufacturer", False)
 
 def get_ean8_barcode_product(upc):
-    upc = str(upc)
-    product = get_ean8_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("product", False)
-
+    # Retrieve and return the product
+    return get_ean8_barcode_info(upc).get("product", False)
 
 def get_ean8_barcode_checkdigit(upc):
-    upc = str(upc)
-    product = get_ean8_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    # Retrieve and return the checkdigit
+    return get_ean8_barcode_info(upc).get("checkdigit", False)
 
 
 def get_ean13_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(len(upc) == 8):
+    
+    # Convert UPC-E or UPC-A to EAN-13 format if necessary
+    if len(upc) == 8:
         upc = upcean.convert.convert_barcode_from_upce_to_upca(upc)
-    if(len(upc) == 12):
-        upc = "0"+upc
-    if(not re.findall("^(\\d{13})", upc)):
+    if len(upc) == 12:
+        upc = "0" + upc
+    
+    # Validate EAN-13 format and extract components
+    match = re.match("^(\\d{2})(\\d{5})(\\d{5})(\\d)$", upc)
+    if not match:
         return False
-    upc_matches = re.findall("^(\\d{2})(\\d{5})(\\d{5})(\\d{1})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {'packagecode': None,
-                'numbersystem': pre_upc_type[0], 'manufacturer': pre_upc_type[1], 'product': pre_upc_type[2], 'checkdigit': pre_upc_type[3]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    # Map extracted components to dictionary
+    upc_type = {
+        'packagecode': None,
+        'numbersystem': match.group(1),
+        'manufacturer': match.group(2),
+        'product': match.group(3),
+        'checkdigit': match.group(4)
+    }
+    
+    # Return the requested infotype if provided, otherwise the full dictionary
+    return upc_type.get(infotype, upc_type)
 
 def get_ean13_barcode_numbersystem(upc):
-    upc = str(upc)
-    product = get_ean13_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
-
+    # Retrieve and return the numbersystem
+    return get_ean13_barcode_info(upc).get("numbersystem", False)
 
 def get_ean13_barcode_manufacturer(upc):
-    upc = str(upc)
-    product = get_ean13_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("manufacturer", False)
-
+    # Retrieve and return the manufacturer
+    return get_ean13_barcode_info(upc).get("manufacturer", False)
 
 def get_ean13_barcode_product(upc):
-    upc = str(upc)
-    product = get_ean13_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("product", False)
-
+    # Retrieve and return the product
+    return get_ean13_barcode_info(upc).get("product", False)
 
 def get_ean13_barcode_checkdigit(upc):
-    upc = str(upc)
-    product = get_ean13_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    # Retrieve and return the checkdigit
+    return get_ean13_barcode_info(upc).get("checkdigit", False)
 
 
 def get_itf14_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(len(upc) == 12):
-        upc = "00"+upc
-    if(len(upc) == 13):
-        upc = "0"+upc
-    if(not re.findall("^(\\d{14})", upc)):
-        return False
-    upc_matches = re.findall("^(\\d{1})(\\d{2})(\\d{5})(\\d{5})(\\d{1})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {'packagecode': pre_upc_type[0], 'numbersystem': pre_upc_type[1],
-                'manufacturer': pre_upc_type[2], 'product': pre_upc_type[3], 'checkdigit': pre_upc_type[4]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    # Pad ITF-14 to ensure it is 14 digits if provided in shorter forms
+    if len(upc) == 12:
+        upc = "00" + upc
+    elif len(upc) == 13:
+        upc = "0" + upc
+
+    # Validate ITF-14 format and extract components
+    match = re.match("^(\\d)(\\d{2})(\\d{5})(\\d{5})(\\d)$", upc)
+    if not match:
+        return False
+
+    # Map extracted components to dictionary
+    upc_type = {
+        'packagecode': match.group(1),
+        'numbersystem': match.group(2),
+        'manufacturer': match.group(3),
+        'product': match.group(4),
+        'checkdigit': match.group(5)
+    }
+
+    # Return the requested infotype if provided, otherwise the full dictionary
+    return upc_type.get(infotype, upc_type)
 
 def get_itf14_barcode_packagecode(upc):
-    upc = str(upc)
-    product = get_itf14_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("packagecode", False)
-
+    # Retrieve and return the packagecode
+    return get_itf14_barcode_info(upc).get("packagecode", False)
 
 def get_itf14_barcode_numbersystem(upc):
-    upc = str(upc)
-    product = get_itf14_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
-
+    # Retrieve and return the numbersystem
+    return get_itf14_barcode_info(upc).get("numbersystem", False)
 
 def get_itf14_barcode_manufacturer(upc):
-    upc = str(upc)
-    product = get_itf14_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("manufacturer", False)
-
+    # Retrieve and return the manufacturer
+    return get_itf14_barcode_info(upc).get("manufacturer", False)
 
 def get_itf14_barcode_product(upc):
-    upc = str(upc)
-    product = get_itf14_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("product", False)
-
+    # Retrieve and return the product
+    return get_itf14_barcode_info(upc).get("product", False)
 
 def get_itf14_barcode_checkdigit(upc):
-    upc = str(upc)
-    product = get_itf14_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    # Retrieve and return the checkdigit
+    return get_itf14_barcode_info(upc).get("checkdigit", False)
 
 
 '''
@@ -367,32 +264,31 @@ def get_itf14_barcode_checkdigit(upc):
 
 def get_upca_barcode_ns(upc):
     upc = str(upc)
-    if(re.findall("^0(\\d{12})", upc)):
-        upc_matches = re.findall("^0(\\d{12})", upc)
-        upc = upc_matches[0]
-    if(not re.findall("^(\\d{12})", upc)):
+    
+    # Remove leading zero if upc is in 13-digit EAN format
+    match = re.match("^0(\\d{12})$", upc)
+    if match:
+        upc = match.group(1)
+    
+    # Validate format as 12-digit UPC-A
+    if not re.match("^\\d{12}$", upc):
         return False
-    if(re.findall("^(0)", upc)):
-        return "Regular UPC"
-    if(re.findall("^(1)", upc)):
-        return "Regular UPC"
-    if(re.findall("^(2)", upc)):
-        return "Variable Weight Items"
-    if(re.findall("^(3)", upc)):
-        return "DrugHealth Items"
-    if(re.findall("^(4)", upc)):
-        return "In-store use"
-    if(re.findall("^(5)", upc)):
-        return "Coupons"
-    if(re.findall("^(6)", upc)):
-        return "Regular UPC"
-    if(re.findall("^(7)", upc)):
-        return "Regular UPC"
-    if(re.findall("^(8)", upc)):
-        return "Regular UPC"
-    if(re.findall("^(9)", upc)):
-        return "Coupons"
-    return False
+
+    # Determine the barcode type based on the first digit (number system)
+    ns_types = {
+        '0': "Regular UPC",
+        '1': "Regular UPC",
+        '2': "Variable Weight Items",
+        '3': "DrugHealth Items",
+        '4': "In-store use",
+        '5': "Coupons",
+        '6': "Regular UPC",
+        '7': "Regular UPC",
+        '8': "Regular UPC",
+        '9': "Coupons"
+    }
+    
+    return ns_types.get(upc[0], False)
 
 
 '''
@@ -404,29 +300,26 @@ def get_upca_barcode_ns(upc):
 
 def get_itf14_barcode_type(upc):
     upc = str(upc)
-    if(not re.findall("^(\\d{14})", upc)):
+    
+    # Validate that the input is a 14-digit ITF-14 barcode
+    if not re.match("^\\d{14}$", upc):
         return False
-    if(re.findall("^(0)", upc)):
-        return "UPC code of contents differs from case code"
-    if(re.findall("^(1)", upc)):
-        return "More than each and below inner packs"
-    if(re.findall("^(2)", upc)):
-        return "More than each and below inner packs"
-    if(re.findall("^(3)", upc)):
-        return "Inner packs"
-    if(re.findall("^(4)", upc)):
-        return "Inner packs"
-    if(re.findall("^(5)", upc)):
-        return "Shipping containers (cartons)"
-    if(re.findall("^(6)", upc)):
-        return "Shipping containers (cartons)"
-    if(re.findall("^(7)", upc)):
-        return "Pallet"
-    if(re.findall("^(8)", upc)):
-        return "Reserved"
-    if(re.findall("^(9)", upc)):
-        return "Variable quantity content"
-    return False
+
+    # Determine ITF-14 type based on the first digit
+    itf14_types = {
+        '0': "UPC code of contents differs from case code",
+        '1': "More than each and below inner packs",
+        '2': "More than each and below inner packs",
+        '3': "Inner packs",
+        '4': "Inner packs",
+        '5': "Shipping containers (cartons)",
+        '6': "Shipping containers (cartons)",
+        '7': "Pallet",
+        '8': "Reserved",
+        '9': "Variable quantity content"
+    }
+    
+    return itf14_types.get(upc[0], False)
 
 
 '''
@@ -436,143 +329,104 @@ def get_itf14_barcode_type(upc):
 
 def get_goodwill_upca_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall("^0(\\d{12})", upc)):
-        upc_matches = re.findall("^0(\\d{12})", upc)
-        upc = upc_matches[0]
-    if(not re.findall("^(\\d{12})", upc)):
+    
+    # Remove leading zero if upc is in 13-digit EAN format
+    match = re.match("^0(\\d{12})$", upc)
+    if match:
+        upc = match.group(1)
+    
+    # Validate that it's a 12-digit UPC-A barcode starting with '4'
+    if not re.match("^4\\d{11}$", upc):
         return False
-    if(not re.findall("^4(\\d{11})", upc)):
+    
+    # Parse main components
+    main_match = re.match("^4(\\d{5})(\\d{5})(\\d)$", upc)
+    if not main_match:
         return False
-    upc_matches = re.findall("^4(\\d{5})(\\d{5})(\\d{1})", upc)
-    upc_matches = upc_matches[0]
+    code, price, checkdigit = main_match.groups()
+    
+    # Determine item type
+    type_patterns = {
+        "4111": "Softlines",
+        "4666": "Hardlines",
+        "4555": "Shoes/Purses",
+        "4190": "Target",
+        "4230": "Jacobs",
+        "4333330": "Furniture",
+        "4120120": "Books",
+        "412": "Books",
+        "413": "Media",
+        "4002000": "Mystery Dozen Deal",
+        "4010000": "Bagged Hardlines"
+    }
     gw_item_type = None
-    # 400310
-    # 400321
-    # 400322
-    # 400323
-    # 400324
-    # 400325
-    if(re.findall("^(4111)", upc)):
-        gw_item_type = "Softlines"
-    elif(re.findall("^(4666)", upc)):
-        gw_item_type = "Hardlines"
-    elif(re.findall("^(4555)", upc)):
-        gw_item_type = "Shoes/Purses"
-    elif(re.findall("^(4190)", upc)):
-        gw_item_type = "Target"
-    elif(re.findall("^(4230)", upc)):
-        gw_item_type = "Jacobs"
-    elif(re.findall("^(4333330)", upc)):
-        gw_item_type = "Furniture"
-    elif(re.findall("^(4120120)", upc)):
-        gw_item_type = "Books"
-    elif(re.findall("^(412)", upc)):
-        gw_item_type = "Books"
-    elif(re.findall("^(413)", upc)):
-        gw_item_type = "Media"
-    elif(re.findall("^(4002000)", upc)):
-        gw_item_type = "Mystery Dozen Deal"
-    elif(re.findall("^(4010000)", upc)):
-        gw_item_type = "Bagged Hardlines"
-    else:
-        gw_item_type = None
-    gw_item_color = None
-    if(re.findall("^(4)(\\d{3})(22)", upc)):
-        gw_item_color = "Pink"
-    elif(re.findall("^(4)(\\d{3})(33)", upc)):
-        gw_item_color = "Yellow"
-    elif(re.findall("^(4)(\\d{3})(44)", upc)):
-        gw_item_color = "Green"
-    elif(re.findall("^(4)(\\d{3})(55)", upc)):
-        gw_item_color = "Blue"
-    elif(re.findall("^(4)(\\d{3})(77)", upc)):
-        gw_item_color = "Orange"
-    else:
-        gw_item_color = None
-    price_matches = re.findall("^(\\d{3})(\\d{2})", upc_matches[1])
-    price_matches = price_matches[0]
-    if(price_matches[0] == "399" and gw_item_type == "Mystery Dozen Deal"):
-        gw_item_type = "Mystery DVD Deal"
-    elif(price_matches[0] == "699" and gw_item_type == "Mystery Dozen Deal"):
-        gw_item_type = "Mystery 1/2 Dozen Deal"
-    elif(price_matches[0] == "999" and gw_item_type == "Mystery Dozen Deal"):
-        gw_item_type = "Mystery Dozen Deal"
-    else:
-        gw_item_type = gw_item_type
+    for k, v in type_patterns.items():
+        if re.match(r"^" + k, upc):
+            gw_item_type = v
+            break
+    
+    # Determine item color based on last two digits of the price
+    color_patterns = {
+        "22": "Pink",
+        "33": "Yellow",
+        "44": "Green",
+        "55": "Blue",
+        "77": "Orange"
+    }
+    gw_item_color = color_patterns.get(price[-2:], None)
 
-    if(price_matches[0] == "199" and gw_item_type == "Books"):
-        gw_item_type = "Softcover / Kids Books"
-    elif(price_matches[0] == "299" and gw_item_type == "Books"):
-        gw_item_type = "Hard Cover Books"
-    else:
-        gw_item_type = gw_item_type
-    if(price_matches[0] == "199" and gw_item_type == "Media"):
-        gw_item_type = "Albums / CDs / VHD"
-    elif(price_matches[0] == "299" and gw_item_type == "Media"):
-        gw_item_type = "DVD / Disney VHS"
-    elif(price_matches[0] == "399" and gw_item_type == "Media"):
-        gw_item_type = "Blu-Ray / New VHS"
-    elif(price_matches[0] == "499" and gw_item_type == "Media"):
-        gw_item_type = "Season DVD"
-    else:
-        gw_item_type = gw_item_type
-    price_alt = str(price_matches[0].lstrip('0'))+price_matches[1]
-    formated_price = price_matches[0]+"."+price_matches[1]
-    formated_price_alt = str(price_matches[0].lstrip('0'))+"."+price_matches[1]
-    product = {'numbersystem': str(4), 'code': upc_matches[0], 'price': upc_matches[1], 'pricendnz': price_alt, 'pricewdwz': formated_price,
-               'pricewdnz': formated_price_alt, 'type': gw_item_type, 'tagcolor': gw_item_color, 'checkdigit': upc_matches[2]}
-    if(infotype is None):
-        return product
-    if(infotype is not None):
-        return product.get(infotype, product)
+    # Further refine item type based on price ranges
+    price_adjustments = {
+        ("399", "Mystery Dozen Deal"): "Mystery DVD Deal",
+        ("699", "Mystery Dozen Deal"): "Mystery 1/2 Dozen Deal",
+        ("999", "Mystery Dozen Deal"): "Mystery Dozen Deal",
+        ("199", "Books"): "Softcover / Kids Books",
+        ("299", "Books"): "Hard Cover Books",
+        ("199", "Media"): "Albums / CDs / VHD",
+        ("299", "Media"): "DVD / Disney VHS",
+        ("399", "Media"): "Blu-Ray / New VHS",
+        ("499", "Media"): "Season DVD"
+    }
+    gw_item_type = price_adjustments.get((price[:3], gw_item_type), gw_item_type)
+    
+    # Format prices
+    price_alt = str(int(price[:3])) + price[3:]
+    formatted_price = "{}.{}".format(price[:3], price[3:])
+    formatted_price_alt = "{}.{}".format(int(price[:3]), price[3:])
 
+    # Compile product details into a dictionary
+    product = {
+        'numbersystem': "4",
+        'code': code,
+        'price': price,
+        'pricendnz': price_alt,
+        'pricewdwz': formatted_price,
+        'pricewdnz': formatted_price_alt,
+        'type': gw_item_type,
+        'tagcolor': gw_item_color,
+        'checkdigit': checkdigit
+    }
+    
+    # Return the requested info type if specified, otherwise full dictionary
+    return product.get(infotype, product)
 
 def get_goodwill_upca_barcode_numbersystem(upc):
-    upc = str(upc)
-    product = get_goodwill_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
-
+    return get_goodwill_upca_barcode_info(upc, "numbersystem")
 
 def get_goodwill_upca_barcode_code(upc):
-    upc = str(upc)
-    product = get_goodwill_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("code", False)
-
+    return get_goodwill_upca_barcode_info(upc, "code")
 
 def get_goodwill_upca_barcode_price(upc):
-    upc = str(upc)
-    product = get_goodwill_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("price", False)
-
+    return get_goodwill_upca_barcode_info(upc, "price")
 
 def get_goodwill_upca_barcode_type(upc):
-    upc = str(upc)
-    product = get_goodwill_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("type", False)
-
+    return get_goodwill_upca_barcode_info(upc, "type")
 
 def get_goodwill_upca_barcode_tagcolor(upc):
-    upc = str(upc)
-    product = get_goodwill_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("tagcolor", False)
-
+    return get_goodwill_upca_barcode_info(upc, "tagcolor")
 
 def get_goodwill_upca_barcode_checkdigit(upc):
-    upc = str(upc)
-    product = get_goodwill_upca_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    return get_goodwill_upca_barcode_info(upc, "checkdigit")
 
 
 '''
@@ -584,90 +438,73 @@ def get_goodwill_upca_barcode_checkdigit(upc):
 
 def get_upca_vw_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall("^0(\\d{12})", upc)):
-        upc_matches = re.findall("^0(\\d{12})", upc)
-        upc = upc_matches[0]
-    if(not re.findall("^(\\d{12})", upc)):
-        return False
-    if(not re.findall("^2(\\d{11})", upc)):
-        return False
-    upc_matches = re.findall("^2(\\d{5})(\\d{1})(\\d{4})(\\d{1})", upc)
-    upc_matches = upc_matches[0]
-    product = {'numbersystem': str(
-        2), 'code': upc_matches[0], 'pricecs': upc_matches[1], 'price': upc_matches[2], 'checkdigit': upc_matches[3]}
-    if(infotype is None):
-        return product
-    if(infotype is not None):
-        return product.get(infotype, product)
 
+    # Remove leading zero if upc is in 13-digit EAN format
+    match = re.match("^0(\\d{12})$", upc)
+    if match:
+        upc = match.group(1)
+
+    # Ensure it is a valid 12-digit UPC-A starting with '2'
+    if not re.match("^2\\d{11}$", upc):
+        return False
+
+    # Parse main components
+    match = re.match("^2(\\d{5})(\\d)(\\d{4})(\\d)$", upc)
+    if not match:
+        return False
+
+    code, pricecs, price, checkdigit = match.groups()
+    product = {
+        'numbersystem': "2",
+        'code': code,
+        'pricecs': pricecs,
+        'price': price,
+        'checkdigit': checkdigit
+    }
+
+    # Return the requested info type if specified, otherwise full dictionary
+    return product.get(infotype, product)
 
 def get_vw_barcode_info(upc, infotype=None):
     return get_upca_vw_barcode_info(upc, infotype)
 
-
 def get_upca_vw_barcode_numbersystem(upc):
-    upc = str(upc)
     product = get_upca_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
-
+    return product.get("numbersystem", False) if product else False
 
 def get_vw_barcode_numbersystem(upc):
     return get_upca_vw_barcode_numbersystem(upc)
 
-
 def get_upca_vw_barcode_code(upc):
-    upc = str(upc)
     product = get_upca_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("code", False)
-
+    return product.get("code", False) if product else False
 
 def get_vw_barcode_code(upc):
     return get_upca_vw_barcode_code(upc)
 
-
 def get_upca_vw_barcode_price(upc):
-    upc = str(upc)
     product = get_upca_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("price", False)
-
+    return product.get("price", False) if product else False
 
 def get_vw_barcode_price(upc):
     return get_upca_vw_barcode_price(upc)
 
-
 def get_upca_vw_barcode_pricecs(upc):
-    upc = str(upc)
     product = get_upca_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("pricecs", False)
-
+    return product.get("pricecs", False) if product else False
 
 def get_vw_barcode_pricecs(upc):
     return get_upca_vw_barcode_pricecs(upc)
 
-
 def get_upca_vw_barcode_checkdigit(upc):
-    upc = str(upc)
     product = get_upca_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
-
+    return product.get("checkdigit", False) if product else False
 
 def get_upca_vw_barcode_checksum(upc):
     return get_upca_vw_barcode_checkdigit(upc)
 
-
 def get_vw_barcode_checkdigit(upc):
     return get_upca_vw_barcode_checkdigit(upc)
-
 
 def get_vw_barcode_checksum(upc):
     return get_upca_vw_barcode_checkdigit(upc)
@@ -678,68 +515,94 @@ def get_vw_barcode_checksum(upc):
 // Source: https://softmatic.com/barcode-ean-13.html#ean-country
 '''
 
+def get_ean13_vw_barcode_info(ean, infotype=None):
+    ean = str(ean)
+    
+    # Ensure EAN-13 format and prefix
+    if not re.match("^(02|20|2[1-9])\\d{11}$", ean):
+        return False
 
-def get_ean13_vw_barcode_info(upc, infotype=None):
+    # Parse main components
+    match = re.match("^(02|20|2[1-9])(\\d{5})(\\d{4})(\\d)$", ean)
+    if not match:
+        return False
+
+    gs1_prefix, item_code, price, checkdigit = match.groups()
+    product_info = {
+        'gs1_prefix': gs1_prefix,
+        'item_code': item_code,
+        'price': price,
+        'checkdigit': checkdigit
+    }
+
+    # Return specific information if infotype is provided
+    return product_info.get(infotype, product_info)
+
+def get_ean13_vw_barcode_gs1_prefix(ean):
+    product = get_ean13_vw_barcode_info(ean)
+    return product.get("gs1_prefix", False) if product else False
+
+def get_ean13_vw_barcode_item_code(ean):
+    product = get_ean13_vw_barcode_info(ean)
+    return product.get("item_code", False) if product else False
+
+def get_ean13_vw_barcode_price(ean):
+    product = get_ean13_vw_barcode_info(ean)
+    return product.get("price", False) if product else False
+
+def get_ean13_vw_barcode_checkdigit(ean):
+    product = get_ean13_vw_barcode_info(ean)
+    return product.get("checkdigit", False) if product else False
+
+def get_ean13_vw_barcode_checksum(ean):
+    return get_ean13_vw_barcode_checkdigit(ean)
+
+def get_ean13_vw_from_ean13_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall("^0(\\d{13})", upc)):
-        upc_matches = re.findall("^0(\\d{13})", upc)
-        upc = upc_matches[0]
-    if(not re.findall("^(\\d{13})", upc)):
+    
+    # Ensure EAN-13 format and prefix
+    if not re.match("^2\\d{12}$", upc):
         return False
-    if(not re.findall("^2(\\d{12})", upc)):
+
+    # Parse main components
+    match = re.match("^2(\\d)(\\d{5})(\\d{5})(\\d)$", upc)
+    if not match:
         return False
-    upc_matches = re.findall("^2(\\d{1})(\\d{5})(\\d{5})(\\d{1})", upc)
-    upc_matches = upc_matches[0]
-    product = {'numbersystem': str(
-        2), 'subnumbersystem': upc_matches[0], 'code': upc_matches[1], 'price': upc_matches[2], 'checkdigit': upc_matches[3]}
-    if(infotype is None):
-        return product
-    if(infotype is not None):
-        return product.get(infotype, product)
 
+    numbersystem, subnumbersystem, code, price, checkdigit = match.groups()
+    product_info = {
+        'numbersystem': numbersystem,
+        'subnumbersystem': subnumbersystem,
+        'code': code,
+        'price': price,
+        'checkdigit': checkdigit
+    }
 
-def get_ean13_vw_barcode_numbersystem(upc):
-    upc = str(upc)
-    product = get_ean13_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
+    # Return specific information if infotype is provided
+    return product_info.get(infotype, product_info)
 
+def get_ean13_vw_from_ean13_barcode_numbersystem(upc):
+    product = get_ean13_vw_from_ean13_barcode_info(upc)
+    return product.get("numbersystem", False) if product else False
 
-def get_ean13_vw_barcode_subnumbersystem(upc):
-    upc = str(upc)
-    product = get_ean13_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("subnumbersystem", False)
+def get_ean13_vw_from_ean13_barcode_subnumbersystem(upc):
+    product = get_ean13_vw_from_ean13_barcode_info(upc)
+    return product.get("subnumbersystem", False) if product else False
 
+def get_ean13_vw_from_ean13_barcode_code(upc):
+    product = get_ean13_vw_from_ean13_barcode_info(upc)
+    return product.get("code", False) if product else False
 
-def get_ean13_vw_barcode_code(upc):
-    upc = str(upc)
-    product = get_ean13_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("code", False)
+def get_ean13_vw_from_ean13_barcode_price(upc):
+    product = get_ean13_vw_from_ean13_barcode_info(upc)
+    return product.get("price", False) if product else False
 
+def get_ean13_vw_from_ean13_barcode_checkdigit(upc):
+    product = get_ean13_vw_from_ean13_barcode_info(upc)
+    return product.get("checkdigit", False) if product else False
 
-def get_ean13_vw_barcode_price(upc):
-    upc = str(upc)
-    product = get_ean13_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("price", False)
-
-
-def get_ean13_vw_barcode_checkdigit(upc):
-    upc = str(upc)
-    product = get_ean13_vw_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
-
-
-def get_ean13_vw_barcode_checksum(upc):
-    return get_ean13_vw_barcode_checkdigit(upc)
+def get_ean13_vw_from_ean13_barcode_checksum(upc):
+    return get_ean13_vw_from_ean13_barcode_checkdigit(upc)
 
 
 '''
@@ -750,266 +613,88 @@ def get_ean13_vw_barcode_checksum(upc):
 
 def get_upca_coupon_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall("^0(\\d{12})", upc)):
-        upc_matches = re.findall("^0(\\d{12})", upc)
-        upc = upc_matches[0]
-    if(not re.findall("^(\\d{12})", upc)):
+    
+    # Ensure UPC-A format and prefix validity
+    if not re.match("^(5|9)\\d{11}$", upc):
         return False
-    if(not re.findall("^(5|9)(\\d{11})", upc)):
+
+    # Parse the components
+    match = re.match("^(5|9)(\\d{5})(\\d{3})(\\d{2})(\\d)$", upc)
+    if not match:
         return False
-    upc_matches = re.findall("^(5|9)(\\d{5})(\\d{3})(\\d{2})(\\d{1})", upc)
-    upc_matches = upc_matches[0]
-    product = {'numbersystem': upc_matches[0], 'manufacturer': upc_matches[1],
-               'family': upc_matches[2], 'value': upc_matches[3], 'checkdigit': upc_matches[4]}
-    if(infotype is None):
-        return product
-    if(infotype is not None):
-        return product.get(infotype, product)
+
+    numbersystem, manufacturer, family, value, checkdigit = match.groups()
+    product_info = {
+        'numbersystem': numbersystem,
+        'manufacturer': manufacturer,
+        'family': family,
+        'value': value,
+        'checkdigit': checkdigit
+    }
+
+    # Return specific information if infotype is provided
+    return product_info.get(infotype, product_info)
 
 
 def get_upca_coupon_barcode_numbersystem(upc):
-    upc = str(upc)
     product = get_upca_coupon_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
+    return product.get("numbersystem", False) if product else False
 
 
 def get_upca_coupon_barcode_manufacturer(upc):
-    upc = str(upc)
     product = get_upca_coupon_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("manufacturer", False)
+    return product.get("manufacturer", False) if product else False
 
 
 def get_upca_coupon_barcode_family(upc):
-    upc = str(upc)
     product = get_upca_coupon_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("family", False)
+    return product.get("family", False) if product else False
 
 
 def get_upca_coupon_barcode_value(upc):
-    upc = str(upc)
     product = get_upca_coupon_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("value", False)
+    return product.get("value", False) if product else False
 
 
 def get_upca_coupon_barcode_checkdigit(upc):
-    upc = str(upc)
     product = get_upca_coupon_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    return product.get("checkdigit", False) if product else False
 
 
 def get_upca_coupon_barcode_value_code(vcode):
-    vcode = str(vcode)
-    if(re.findall("^(00)", vcode)):
-        return "Manual Input Required"
-    if(re.findall("^(01)", vcode)):
-        return "Free Item"
-    if(re.findall("^(02)", vcode)):
-        return "Buy 4 Get 1 Free"
-    if(re.findall("^(03)", vcode)):
-        return "$1.10"
-    if(re.findall("^(04)", vcode)):
-        return "$1.35"
-    if(re.findall("^(05)", vcode)):
-        return "$1.40"
-    if(re.findall("^(06)", vcode)):
-        return "$1.60"
-    if(re.findall("^(07)", vcode)):
-        return "Buy 3 For $1.50"
-    if(re.findall("^(08)", vcode)):
-        return "Buy 2 For $3.00"
-    if(re.findall("^(09)", vcode)):
-        return "Buy 3 For $2.00"
-    if(re.findall("^(10)", vcode)):
-        return "$0.10"
-    if(re.findall("^(11)", vcode)):
-        return "$1.85"
-    if(re.findall("^(12)", vcode)):
-        return "$0.12"
-    if(re.findall("^(13)", vcode)):
-        return "Buy 4 For $1.00"
-    if(re.findall("^(14)", vcode)):
-        return "Buy 1 Get 1 Free"
-    if(re.findall("^(15)", vcode)):
-        return "$0.15"
-    if(re.findall("^(16)", vcode)):
-        return "Buy 2 Get 1 Free"
-    if(re.findall("^(17)", vcode)):
-        return "Reserved for future use"
-    if(re.findall("^(18)", vcode)):
-        return "$2.60"
-    if(re.findall("^(19)", vcode)):
-        return "Buy 3 Get 1 Free"
-    if(re.findall("^(20)", vcode)):
-        return "$0.20"
-    if(re.findall("^(21)", vcode)):
-        return "Buy 2 For $0.35"
-    if(re.findall("^(22)", vcode)):
-        return "Buy 2 For $0.40"
-    if(re.findall("^(23)", vcode)):
-        return "Buy 2 For $0.45"
-    if(re.findall("^(24)", vcode)):
-        return "Buy 2 For $0.50"
-    if(re.findall("^(25)", vcode)):
-        return "$0.25"
-    if(re.findall("^(26)", vcode)):
-        return "$2.85"
-    if(re.findall("^(27)", vcode)):
-        return "Reserved for future use"
-    if(re.findall("^(28)", vcode)):
-        return "Buy 2 For $0.55"
-    if(re.findall("^(29)", vcode)):
-        return "$0.29"
-    if(re.findall("^(30)", vcode)):
-        return "$0.30"
-    if(re.findall("^(31)", vcode)):
-        return "Buy 2 For $0.60"
-    if(re.findall("^(32)", vcode)):
-        return "Buy 2 For $0.75"
-    if(re.findall("^(33)", vcode)):
-        return "Buy 2 For $1.00"
-    if(re.findall("^(34)", vcode)):
-        return "Buy 2 For $1.25"
-    if(re.findall("^(35)", vcode)):
-        return "$0.35"
-    if(re.findall("^(36)", vcode)):
-        return "Buy 2 For $1.50"
-    if(re.findall("^(37)", vcode)):
-        return "Buy 3 For $0.25"
-    if(re.findall("^(38)", vcode)):
-        return "Buy 3 For $0.30"
-    if(re.findall("^(39)", vcode)):
-        return "$0.39"
-    if(re.findall("^(40)", vcode)):
-        return "$0.40"
-    if(re.findall("^(41)", vcode)):
-        return "Buy 3 For $0.50"
-    if(re.findall("^(42)", vcode)):
-        return "Buy 3 For $1.00"
-    if(re.findall("^(43)", vcode)):
-        return "Buy 2 For $1.10"
-    if(re.findall("^(44)", vcode)):
-        return "Buy 2 For $1.35"
-    if(re.findall("^(45)", vcode)):
-        return "$0.45"
-    if(re.findall("^(46)", vcode)):
-        return "Buy 2 For $1.60"
-    if(re.findall("^(47)", vcode)):
-        return "Buy 2 For $1.75"
-    if(re.findall("^(48)", vcode)):
-        return "Buy 2 For $1.85"
-    if(re.findall("^(49)", vcode)):
-        return "$0.49"
-    if(re.findall("^(50)", vcode)):
-        return "$0.50"
-    if(re.findall("^(51)", vcode)):
-        return "Buy 2 For $2.00"
-    if(re.findall("^(52)", vcode)):
-        return "Buy 3 For $0.55"
-    if(re.findall("^(53)", vcode)):
-        return "Buy 2 For $0.10"
-    if(re.findall("^(54)", vcode)):
-        return "Buy 2 For $0.15"
-    if(re.findall("^(55)", vcode)):
-        return "$0.55"
-    if(re.findall("^(56)", vcode)):
-        return "Buy 2 For $0.20"
-    if(re.findall("^(57)", vcode)):
-        return "Buy 2 For $0.25"
-    if(re.findall("^(58)", vcode)):
-        return "Buy 2 For $0.30"
-    if(re.findall("^(59)", vcode)):
-        return "$0.59"
-    if(re.findall("^(60)", vcode)):
-        return "$0.60"
-    if(re.findall("^(61)", vcode)):
-        return "$10.00"
-    if(re.findall("^(62)", vcode)):
-        return "$9.50"
-    if(re.findall("^(63)", vcode)):
-        return "$9.00"
-    if(re.findall("^(64)", vcode)):
-        return "$8.50"
-    if(re.findall("^(65)", vcode)):
-        return "$0.65"
-    if(re.findall("^(66)", vcode)):
-        return "$8.00"
-    if(re.findall("^(67)", vcode)):
-        return "$7.50"
-    if(re.findall("^(68)", vcode)):
-        return "$7.00"
-    if(re.findall("^(69)", vcode)):
-        return "$0.69"
-    if(re.findall("^(70)", vcode)):
-        return "$0.70"
-    if(re.findall("^(71)", vcode)):
-        return "$6.50"
-    if(re.findall("^(72)", vcode)):
-        return "$6.00"
-    if(re.findall("^(73)", vcode)):
-        return "$5.50"
-    if(re.findall("^(74)", vcode)):
-        return "$5.00"
-    if(re.findall("^(75)", vcode)):
-        return "$0.75"
-    if(re.findall("^(76)", vcode)):
-        return "$1.00"
-    if(re.findall("^(77)", vcode)):
-        return "$1.25"
-    if(re.findall("^(78)", vcode)):
-        return "$1.50"
-    if(re.findall("^(79)", vcode)):
-        return "$0.79"
-    if(re.findall("^(80)", vcode)):
-        return "$0.80"
-    if(re.findall("^(81)", vcode)):
-        return "$1.75"
-    if(re.findall("^(82)", vcode)):
-        return "$2.00"
-    if(re.findall("^(83)", vcode)):
-        return "$2.25"
-    if(re.findall("^(84)", vcode)):
-        return "$2.50"
-    if(re.findall("^(85)", vcode)):
-        return "$0.85"
-    if(re.findall("^(86)", vcode)):
-        return "$2.75"
-    if(re.findall("^(87)", vcode)):
-        return "$3.00"
-    if(re.findall("^(88)", vcode)):
-        return "$3.25"
-    if(re.findall("^(89)", vcode)):
-        return "$0.89"
-    if(re.findall("^(90)", vcode)):
-        return "$0.90"
-    if(re.findall("^(91)", vcode)):
-        return "$3.50"
-    if(re.findall("^(92)", vcode)):
-        return "$3.75"
-    if(re.findall("^(93)", vcode)):
-        return "$4.00"
-    if(re.findall("^(94)", vcode)):
-        return "Reserved for future use"
-    if(re.findall("^(95)", vcode)):
-        return "$0.95"
-    if(re.findall("^(96)", vcode)):
-        return "$4.50"
-    if(re.findall("^(97)", vcode)):
-        return "Reserved for future use"
-    if(re.findall("^(98)", vcode)):
-        return "Buy 2 For $0.65"
-    if(re.findall("^(99)", vcode)):
-        return "$0.99"
-    return False
+    # Define a dictionary for value codes
+    value_codes = {
+        "00": "Manual Input Required", "01": "Free Item", "02": "Buy 4 Get 1 Free",
+        "03": "$1.10", "04": "$1.35", "05": "$1.40", "06": "$1.60",
+        "07": "Buy 3 For $1.50", "08": "Buy 2 For $3.00", "09": "Buy 3 For $2.00",
+        "10": "$0.10", "11": "$1.85", "12": "$0.12", "13": "Buy 4 For $1.00",
+        "14": "Buy 1 Get 1 Free", "15": "$0.15", "16": "Buy 2 Get 1 Free",
+        "17": "Reserved for future use", "18": "$2.60", "19": "Buy 3 Get 1 Free",
+        "20": "$0.20", "21": "Buy 2 For $0.35", "22": "Buy 2 For $0.40",
+        "23": "Buy 2 For $0.45", "24": "Buy 2 For $0.50", "25": "$0.25",
+        "26": "$2.85", "27": "Reserved for future use", "28": "Buy 2 For $0.55",
+        "29": "$0.29", "30": "$0.30", "31": "Buy 2 For $0.60", "32": "Buy 2 For $0.75",
+        "33": "Buy 2 For $1.00", "34": "Buy 2 For $1.25", "35": "$0.35",
+        "36": "Buy 2 For $1.50", "37": "Buy 3 For $0.25", "38": "Buy 3 For $0.30",
+        "39": "$0.39", "40": "$0.40", "41": "Buy 3 For $0.50", "42": "Buy 3 For $1.00",
+        "43": "Buy 2 For $1.10", "44": "Buy 2 For $1.35", "45": "$0.45",
+        "46": "Buy 2 For $1.60", "47": "Buy 2 For $1.75", "48": "Buy 2 For $1.85",
+        "49": "$0.49", "50": "$0.50", "51": "Buy 2 For $2.00", "52": "Buy 3 For $0.55",
+        "53": "Buy 2 For $0.10", "54": "Buy 2 For $0.15", "55": "$0.55",
+        "56": "Buy 2 For $0.20", "57": "Buy 2 For $0.25", "58": "Buy 2 For $0.30",
+        "59": "$0.59", "60": "$0.60", "61": "$10.00", "62": "$9.50",
+        "63": "$9.00", "64": "$8.50", "65": "$0.65", "66": "$8.00",
+        "67": "$7.50", "68": "$7.00", "69": "$0.69", "70": "$0.70",
+        "71": "$6.50", "72": "$6.00", "73": "$5.50", "74": "$5.00",
+        "75": "$0.75", "76": "$1.00", "77": "$1.25", "78": "$1.50",
+        "79": "$0.79", "80": "$0.80", "81": "$1.75", "82": "$2.00",
+        "83": "$2.25", "84": "$2.50", "85": "$0.85", "86": "$2.75",
+        "87": "$3.00", "88": "$3.25", "89": "$0.89", "90": "$0.90",
+        "91": "$3.50", "92": "$3.75", "93": "$4.00", "94": "Reserved for future use",
+        "95": "$0.95", "96": "$4.50", "97": "Reserved for future use",
+        "98": "Buy 2 For $0.65", "99": "$0.99"
+    }
+    return value_codes.get(vcode, False)
 
 
 '''
@@ -1019,32 +704,28 @@ def get_upca_coupon_barcode_value_code(vcode):
 
 
 def get_bcn_mii_prefix(upc):
-    upc = str(upc)
-    upc = upc.replace("-", "")
-    upc = upc.replace(" ", "")
-    if(not re.findall("^(\\d{16})", upc)):
+    # Clean input and validate format
+    upc = str(upc).replace("-", "").replace(" ", "")
+    if not re.match("^\\d{16}$", upc):
         return False
-    if(re.findall("^(0)", upc)):
-        return "ISO/TC 68"
-    if(re.findall("^(1)", upc)):
-        return "Airlines"
-    if(re.findall("^(2)", upc)):
-        return "Airlines"
-    if(re.findall("^(3)", upc)):
-        return "Travel and Entertainment and Banking/Financial"
-    if(re.findall("^(4)", upc)):
-        return "Banking and Financial"
-    if(re.findall("^(5)", upc)):
-        return "Banking and Financial"
-    if(re.findall("^(6)", upc)):
-        return "Merchandising and Banking/Financial"
-    if(re.findall("^(7)", upc)):
-        return "Petroleum"
-    if(re.findall("^(8)", upc)):
-        return "Healthcare and Telecommunications"
-    if(re.findall("^(9)", upc)):
-        return "National Assignment"
-    return False
+
+    # Define MII prefix categories
+    mii_prefix_map = {
+        "0": "ISO/TC 68",
+        "1": "Airlines",
+        "2": "Airlines",
+        "3": "Travel and Entertainment and Banking/Financial",
+        "4": "Banking and Financial",
+        "5": "Banking and Financial",
+        "6": "Merchandising and Banking/Financial",
+        "7": "Petroleum",
+        "8": "Healthcare and Telecommunications",
+        "9": "National Assignment"
+    }
+
+    # Extract the first digit and return the corresponding category
+    mii_prefix = upc[0]
+    return mii_prefix_map.get(mii_prefix, False)
 
 
 '''
@@ -1055,75 +736,62 @@ def get_bcn_mii_prefix(upc):
 
 
 def get_ups_barcode_info(upc, infotype=None):
+    # Convert input to uppercase and validate it starts with '1Z'
     upc = str(upc).upper()
-    if(not re.findall("^1Z", upc)):
+    if not upc.startswith("1Z"):
         return False
-    if(re.findall("^1Z", upc)):
-        fix_matches = re.findall("^1Z(\w*)", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 16):
-        fix_matches = re.findall("^(\w{16})", upc)
-        upc = fix_matches[0]
-    upc_matches = re.findall("^(\w{6})(\w{2})(\w{5})(\w{2})(\w{1})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {'accountnumber': pre_upc_type[0], 'servicetype': pre_upc_type[1],
-                'invoicenumber': pre_upc_type[2], 'packagenumber': pre_upc_type[3], 'checkdigit': pre_upc_type[4]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
+    
+    # Remove '1Z' prefix and restrict length to 16 alphanumeric characters
+    upc = re.sub("^1Z", "", upc)
+    upc = upc[:16]
 
+    # Extract components of the barcode using regex pattern matching
+    upc_matches = re.match("^(\\w{6})(\\w{2})(\\w{5})(\\w{2})(\\w{1})$", upc)
+    if not upc_matches:
+        return False
+    
+    # Map extracted values to a dictionary
+    upc_type = {
+        'accountnumber': upc_matches.group(1),
+        'servicetype': upc_matches.group(2),
+        'invoicenumber': upc_matches.group(3),
+        'packagenumber': upc_matches.group(4),
+        'checkdigit': upc_matches.group(5)
+    }
+    
+    # Return the full dictionary or the specific info type requested
+    return upc_type if infotype is None else upc_type.get(infotype, upc_type)
 
 def get_ups_barcode_accountnumber(upc):
-    upc = str(upc).upper()
     product = get_ups_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("accountnumber", False)
-
+    return product.get("accountnumber", False) if product else False
 
 def get_ups_barcode_servicetype(upc):
-    upc = str(upc).upper()
     product = get_ups_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("servicetype", False)
-
+    return product.get("servicetype", False) if product else False
 
 def get_ups_barcode_servicetype_info(upc):
-    upc = str(upc)
-    upc = get_ups_barcode_servicetype(upc)
-    if(re.findall("^(01)", upc)):
+    servicetype = get_ups_barcode_servicetype(upc)
+    if servicetype == "01":
         return "Next Day Air Shipment"
-    if(re.findall("^(02)", upc)):
+    elif servicetype == "02":
         return "Second Day Air Shipment"
-    if(re.findall("^(03)", upc)):
+    elif servicetype == "03":
         return "Ground Shipment"
     return False
 
-
 def get_ups_barcode_invoicenumber(upc):
-    upc = str(upc).upper()
     product = get_ups_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("invoicenumber", False)
-
+    return product.get("invoicenumber", False) if product else False
 
 def get_ups_barcode_packagenumber(upc):
-    upc = str(upc).upper()
     product = get_ups_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("packagenumber", False)
-
+    return product.get("packagenumber", False) if product else False
 
 def get_ups_barcode_checkdigit(upc):
-    upc = str(upc).upper()
     product = get_ups_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    return product.get("checkdigit", False) if product else False
+
 
 
 '''
@@ -1134,86 +802,67 @@ def get_ups_barcode_checkdigit(upc):
 
 def get_new_imei_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall("^(\\d{16})", upc)):
+    if not re.match("^\\d{16}$", upc):
         return False
-    upc_matches = re.findall("^(\\d{8})(\\d{6})(\\d{1})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {
-        'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'checkdigit': pre_upc_type[2]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    upc_matches = re.match("^(\\d{8})(\\d{6})(\\d{1})$", upc)
+    if not upc_matches:
+        return False
+
+    upc_type = {
+        'tac': upc_matches.group(1),
+        'serialnumber': upc_matches.group(2),
+        'checkdigit': upc_matches.group(3)
+    }
+
+    return upc_type if infotype is None else upc_type.get(infotype, upc_type)
 
 def get_new_imei_barcode_tac(upc):
-    upc = str(upc)
     product = get_new_imei_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("tac", False)
-
+    return product.get("tac", False) if product else False
 
 def get_new_imei_barcode_serialnumber(upc):
-    upc = str(upc)
     product = get_new_imei_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("serialnumber", False)
-
+    return product.get("serialnumber", False) if product else False
 
 def get_new_imei_barcode_checkdigit(upc):
-    upc = str(upc)
     product = get_new_imei_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    return product.get("checkdigit", False) if product else False
 
 
 def get_old_imei_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall("^(\\d{16})", upc)):
+    if not re.match("^\\d{16}$", upc):
         return False
-    upc_matches = re.findall("^(\\d{6})(\\d{2})(\\d{6})(\\d{1})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1],
-                'serialnumber': pre_upc_type[2], 'checkdigit': pre_upc_type[3]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    upc_matches = re.match("^(\\d{6})(\\d{2})(\\d{6})(\\d{1})$", upc)
+    if not upc_matches:
+        return False
+
+    upc_type = {
+        'tac': upc_matches.group(1),
+        'fac': upc_matches.group(2),
+        'serialnumber': upc_matches.group(3),
+        'checkdigit': upc_matches.group(4)
+    }
+
+    return upc_type if infotype is None else upc_type.get(infotype, upc_type)
 
 def get_old_imei_barcode_tac(upc):
-    upc = str(upc)
     product = get_old_imei_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("tac", False)
-
+    return product.get("tac", False) if product else False
 
 def get_old_imei_barcode_fac(upc):
-    upc = str(upc)
     product = get_old_imei_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("fac", False)
-
+    return product.get("fac", False) if product else False
 
 def get_old_imei_barcode_serialnumber(upc):
-    upc = str(upc)
     product = get_old_imei_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("serialnumber", False)
-
+    return product.get("serialnumber", False) if product else False
 
 def get_old_imei_barcode_checkdigit(upc):
-    upc = str(upc)
     product = get_old_imei_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    return product.get("checkdigit", False) if product else False
 
 
 '''
@@ -1224,86 +873,67 @@ def get_old_imei_barcode_checkdigit(upc):
 
 def get_new_imeisv_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall("^(\\d{16})", upc)):
+    if not re.match("^\\d{16}$", upc):
         return False
-    upc_matches = re.findall("^(\\d{8})(\\d{6})(\\d{2})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {
-        'tac': pre_upc_type[0], 'serialnumber': pre_upc_type[1], 'svn': pre_upc_type[2]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    upc_matches = re.match("^(\\d{8})(\\d{6})(\\d{2})$", upc)
+    if not upc_matches:
+        return False
+
+    upc_type = {
+        'tac': upc_matches.group(1),
+        'serialnumber': upc_matches.group(2),
+        'svn': upc_matches.group(3)
+    }
+
+    return upc_type if infotype is None else upc_type.get(infotype, upc_type)
 
 def get_new_imeisv_barcode_tac(upc):
-    upc = str(upc)
     product = get_new_imeisv_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("tac", False)
-
+    return product.get("tac", False) if product else False
 
 def get_new_imeisv_barcode_serialnumber(upc):
-    upc = str(upc)
     product = get_new_imeisv_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("serialnumber", False)
-
+    return product.get("serialnumber", False) if product else False
 
 def get_new_imeisv_barcode_svn(upc):
-    upc = str(upc)
     product = get_new_imeisv_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("svn", False)
+    return product.get("svn", False) if product else False
 
 
 def get_old_imeisv_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall("^(\\d{16})", upc)):
+    if not re.match("^\\d{16}$", upc):
         return False
-    upc_matches = re.findall("^(\\d{6})(\\d{2})(\\d{6})(\\d{2})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {'tac': pre_upc_type[0], 'fac': pre_upc_type[1],
-                'serialnumber': pre_upc_type[2], 'svn': pre_upc_type[3]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    upc_matches = re.match("^(\\d{6})(\\d{2})(\\d{6})(\\d{2})$", upc)
+    if not upc_matches:
+        return False
+
+    upc_type = {
+        'tac': upc_matches.group(1),
+        'fac': upc_matches.group(2),
+        'serialnumber': upc_matches.group(3),
+        'svn': upc_matches.group(4)
+    }
+
+    return upc_type if infotype is None else upc_type.get(infotype, upc_type)
 
 def get_old_imeisv_barcode_tac(upc):
-    upc = str(upc)
     product = get_old_imeisv_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("tac", False)
-
+    return product.get("tac", False) if product else False
 
 def get_old_imeisv_barcode_fac(upc):
-    upc = str(upc)
     product = get_old_imeisv_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("fac", False)
-
+    return product.get("fac", False) if product else False
 
 def get_old_imeisv_barcode_serialnumber(upc):
-    upc = str(upc)
     product = get_old_imeisv_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("serialnumber", False)
-
+    return product.get("serialnumber", False) if product else False
 
 def get_old_imeisv_barcode_svn(upc):
-    upc = str(upc)
     product = get_old_imeisv_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("svn", False)
+    return product.get("svn", False) if product else False
 
 
 '''
@@ -1314,48 +944,37 @@ def get_old_imeisv_barcode_svn(upc):
 
 def get_bcn_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall("^(\\d{16})", upc)):
+    if not re.match("^\\d{16}$", upc):
         return False
-    upc_matches = re.findall("^(\\d{1})(\\d{5})(\\d{12})(\\d{1})", upc)
-    pre_upc_type = upc_matches[0]
-    upc_type = {'mii': pre_upc_type[0], 'iin': pre_upc_type[0]+pre_upc_type[1],
-                'account': pre_upc_type[2], 'checkdigit': pre_upc_type[3]}
-    if(infotype is None):
-        return upc_type
-    if(infotype is not None):
-        return upc_type.get(infotype, upc_type)
 
+    upc_matches = re.match("^(\\d{1})(\\d{5})(\\d{9})(\\d{1})$", upc)
+    if not upc_matches:
+        return False
+
+    upc_type = {
+        'mii': upc_matches.group(1),
+        'iin': upc_matches.group(1) + upc_matches.group(2),
+        'account': upc_matches.group(3),
+        'checkdigit': upc_matches.group(4)
+    }
+
+    return upc_type if infotype is None else upc_type.get(infotype, upc_type)
 
 def get_bcn_mii(upc):
-    upc = str(upc)
     product = get_bcn_info(upc)
-    if(not product):
-        return False
-    return product.get("mii", False)
-
+    return product.get("mii", False) if product else False
 
 def get_bcn_iin(upc):
-    upc = str(upc)
     product = get_bcn_info(upc)
-    if(not product):
-        return False
-    return product.get("iin", False)
-
+    return product.get("iin", False) if product else False
 
 def get_bcn_account(upc):
-    upc = str(upc)
     product = get_bcn_info(upc)
-    if(not product):
-        return False
-    return product.get("account", False)
-
+    return product.get("account", False) if product else False
 
 def get_bcn_checkdigit(upc):
-    upc = str(upc)
     product = get_bcn_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    return product.get("checkdigit", False) if product else False
 
 
 '''
@@ -1364,64 +983,46 @@ def get_bcn_checkdigit(upc):
 // Source: http://www.wikihow.com/Read-12-Digit-UPC-Barcodes
 '''
 
-
 def get_upca_ndc_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(re.findall("^0(\\d{12})", upc)):
-        upc_matches = re.findall("^0(\\d{12})", upc)
-        upc = upc_matches[0]
-    if(not re.findall("^(\\d{12})", upc)):
+    # Ensure proper 12-digit length and format for NDC
+    if re.match("^0(\\d{12})$", upc):
+        upc = upc[1:]  # Remove leading zero
+    if not re.match("^3\\d{11}$", upc):
         return False
-    if(not re.findall("^3(\\d{11})", upc)):
-        return False
-    upc_matches = re.findall("^3(\\d{4})(\\d{4})(\\d{2})(\\d{1})", upc)
-    upc_matches = upc_matches[0]
-    product = {'numbersystem': str(
-        3), 'labeler': upc_matches[0], 'productcode': upc_matches[1], 'packagecode': upc_matches[2], 'checkdigit': upc_matches[3]}
-    if(infotype is None):
-        return product
-    if(infotype is not None):
-        return product.get(infotype, product)
 
+    upc_matches = re.match("^3(\\d{4})(\\d{4})(\\d{2})(\\d{1})$", upc)
+    if not upc_matches:
+        return False
+
+    product = {
+        'numbersystem': '3',
+        'labeler': upc_matches.group(1),
+        'productcode': upc_matches.group(2),
+        'packagecode': upc_matches.group(3),
+        'checkdigit': upc_matches.group(4)
+    }
+    return product if infotype is None else product.get(infotype, product)
 
 def get_upca_ndc_barcode_numbersystem(upc):
-    upc = str(upc)
     product = get_upca_ndc_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("numbersystem", False)
-
+    return product.get("numbersystem", False) if product else False
 
 def get_upca_ndc_barcode_labeler(upc):
-    upc = str(upc)
     product = get_upca_ndc_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("labeler", False)
-
+    return product.get("labeler", False) if product else False
 
 def get_upca_ndc_barcode_productcode(upc):
-    upc = str(upc)
     product = get_upca_ndc_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("productcode", False)
-
+    return product.get("productcode", False) if product else False
 
 def get_upca_ndc_barcode_packagecode(upc):
-    upc = str(upc)
     product = get_upca_ndc_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("packagecode", False)
-
+    return product.get("packagecode", False) if product else False
 
 def get_upca_ndc_barcode_checkdigit(upc):
-    upc = str(upc)
     product = get_upca_ndc_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("checkdigit", False)
+    return product.get("checkdigit", False) if product else False
 
 
 '''
@@ -1433,39 +1034,30 @@ def get_upca_ndc_barcode_checkdigit(upc):
 
 def get_ndc_barcode_info(upc, infotype=None):
     upc = str(upc)
-    if(not re.findall("^(\\d{10})", upc)):
+    # Ensure the UPC is exactly 10 digits
+    if not re.match("^\\d{10}$", upc):
         return False
-    if(not re.findall("^(\\d{10})", upc)):
-        return False
-    upc_matches = re.findall("(\\d{4})(\\d{4})(\\d{2})", upc)
-    upc_matches = upc_matches[0]
-    product = {
-        'labeler': upc_matches[0], 'productcode': upc_matches[1], 'packagecode': upc_matches[2]}
-    if(infotype is None):
-        return product
-    if(infotype is not None):
-        return product.get(infotype, product)
 
+    upc_matches = re.match("(\\d{4})(\\d{4})(\\d{2})", upc)
+    if not upc_matches:
+        return False
+
+    product = {
+        'labeler': upc_matches.group(1),
+        'productcode': upc_matches.group(2),
+        'packagecode': upc_matches.group(3)
+    }
+    return product if infotype is None else product.get(infotype, product)
 
 def get_ndc_barcode_labeler(upc):
-    upc = str(upc)
     product = get_ndc_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("labeler", False)
-
+    return product.get("labeler", False) if product else False
 
 def get_ndc_barcode_productcode(upc):
-    upc = str(upc)
     product = get_ndc_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("productcode", False)
-
+    return product.get("productcode", False) if product else False
 
 def get_ndc_barcode_packagecode(upc):
-    upc = str(upc)
     product = get_ndc_barcode_info(upc)
-    if(not product):
-        return False
-    return product.get("packagecode", False)
+    return product.get("packagecode", False) if product else False
+
