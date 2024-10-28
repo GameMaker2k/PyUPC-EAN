@@ -48,36 +48,39 @@ def digital_root(number):
 // http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
 '''
 
-
-import re
-
 def validate_luhn_checksum(upc, upclen, return_check=False):
     upc = str(upc)
     upclen = int(upclen)
-    
+    upclendwn = upclen - 1
+
     # Trim the UPC to the specified length if it's too long
     if len(upc) > upclen:
-        upc = re.findall("^\\d{" + str(upclen) + r"}", upc)[0]
+        upc = re.findall("^\\d{" + str(upclen) + "}", upc)[0]
 
     # If UPC length is incorrect after trimming, return False
-    if len(upc) not in {upclen - 1, upclen}:
+    if len(upc) > upclen or len(upc) < upclendwn:
         return False
-    
-    # Convert to integers
+
+    # Convert UPC to a list of integers
     upc_digits = [int(digit) for digit in upc]
-    
+
     # Separate into odd and even positioned sums based on length
-    odd_sum = sum(upc_digits[-2::-2])  # Odd-positioned from the end
-    even_sum = sum(upc_digits[-1::-2])  # Even-positioned from the end
-    
-    # Calculate checksum according to standard (based on length parity)
-    total_sum = (odd_sum * 3 + even_sum) if upclen % 2 == 0 else (odd_sum + even_sum * 3)
-    checksum = (10 - (total_sum % 10)) % 10  # Calculated checksum digit
-    
+    odd_sum = sum(upc_digits[0::2])
+    even_sum = sum(upc_digits[1::2])
+
+    # Adjust sums based on parity of upclen
+    if upclen % 2 == 0:
+        total_sum = (odd_sum * 3) + even_sum
+    else:
+        total_sum = odd_sum + (even_sum * 3)
+
+    # Calculate checksum digit
+    checksum = (10 - (total_sum % 10)) % 10
+
     # Validate checksum or return it based on the `return_check` flag
     if return_check:
         return str(checksum)
-    
+
     # If the provided UPC length matches upclen, validate the checksum
     return checksum == upc_digits[-1] if len(upc) == upclen else str(checksum)
 
@@ -939,15 +942,6 @@ def get_code39_checksum(upc, getmod="43"):
 '''
 
 # Mapping for Code93 characters and values
-CODE93_VALUES = {str(i): i for i in range(10)}
-CODE93_VALUES.update({chr(65 + i): 10 + i for i in range(26)})  # A-Z
-CODE93_VALUES.update({"-": 36, ".": 37, " ": 38, "$": 39, "/": 40, "+": 41, "%": 42, "($)": 43, "(%)": 44, "(/)": 45, "(+)": 46})
-CODE93_ARRAY = {v: k for k, v in CODE93_VALUES.items()}
-
-
-import re
-
-# Mapping for Code93 characters and values (reuse CODE93_VALUES and CODE93_ARRAY from previous function)
 CODE93_VALUES = {str(i): i for i in range(10)}
 CODE93_VALUES.update({chr(65 + i): 10 + i for i in range(26)})  # A-Z
 CODE93_VALUES.update({"-": 36, ".": 37, " ": 38, "$": 39, "/": 40, "+": 41, "%": 42, "($)": 43, "(%)": 44, "(/)": 45, "(+)": 46})

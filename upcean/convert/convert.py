@@ -19,6 +19,39 @@ import re
 import upcean.validate
 
 
+def make_barcode_by_type(bctype, numbersystem=None, manufacturer=None, product=None):
+    bctype = bctype.lower()
+    
+    # Define lengths and specific checksum rules per barcode type
+    barcode_specs = {
+        "upca": {"ns_len": 1, "man_len": 5, "prod_len": 5, "upclen": 12, "checksum_func": upcean.validate.validate_luhn_checksum},
+        "upce": {"ns_len": 1, "man_len": 2, "prod_len": 3, "upclen": 8, "checksum_func": upcean.validate.validate_luhn_checksum},
+        "ean8": {"ns_len": 2, "man_len": 0, "prod_len": 5, "upclen": 8, "checksum_func": upcean.validate.validate_luhn_checksum},
+        "ean13": {"ns_len": 1, "man_len": 5, "prod_len": 5, "upclen": 13, "checksum_func": upcean.validate.validate_luhn_checksum},
+        "itf6": {"ns_len": 0, "man_len": 0, "prod_len": 5, "upclen": 6, "checksum_func": upcean.validate.validate_luhn_checksum},
+        "itf14": {"ns_len": 1, "man_len": 5, "prod_len": 6, "upclen": 14, "checksum_func": upcean.validate.validate_luhn_checksum}
+    }
+    
+    # Check if the specified barcode type is valid
+    if bctype not in barcode_specs:
+        return False
+    
+    # Retrieve the barcode specification for the given type
+    spec = barcode_specs[bctype]
+    
+    # Format each part of the barcode to the required length, padding with zeros if necessary
+    ns_len, man_len, prod_len, upclen = spec["ns_len"], spec["man_len"], spec["prod_len"], spec["upclen"]
+    numbersystem = re.match("\\d{{{}}}".format(ns_len), str(numbersystem).zfill(ns_len)).group(0) if ns_len > 0 else ""
+    manufacturer = re.match("\\d{{{}}}".format(man_len), str(manufacturer).zfill(man_len)).group(0) if man_len > 0 else ""
+    product = re.match("\\d{{{}}}".format(prod_len), str(product).zfill(prod_len)).group(0)
+    
+    # Concatenate to form the partial barcode without the checksum
+    upc = numbersystem + manufacturer + product
+    
+    # Calculate and append the checksum using the specified function
+    checksum = spec["checksum_func"](upc, upclen, return_check=True)
+    return upc + str(checksum)
+
 def make_upca_barcode(numbersystem, manufacturer, product):
     # Ensure inputs are strings and properly padded/truncated
     numbersystem = re.match("\\d{1}", str(numbersystem).zfill(1)).group(0)
