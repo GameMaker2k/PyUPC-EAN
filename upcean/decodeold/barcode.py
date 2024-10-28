@@ -15,44 +15,44 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-from upcean.decode.stf import *
-from upcean.decode.itf14 import *
-from upcean.decode.itf import *
-from upcean.decode.ean8 import *
-from upcean.decode.ean13 import *
-from upcean.decode.upce import *
-from upcean.decode.upca import *
+from upcean.decodeold.stf import *
+from upcean.decodeold.itf14 import *
+from upcean.decodeold.itf import *
+from upcean.decodeold.ean8 import *
+from upcean.decodeold.ean13 import *
+from upcean.decodeold.upce import *
+from upcean.decodeold.upca import *
 import upcean.support
 import upcean.getprefix.getprefix
 
 ''' // Code for decoding UPC-A by Kazuki Przyborowski '''
 try:
-    import upcean.decode.upca as gtin12
-    import upcean.decode.upca as ucc12
+    import upcean.decodeold.upca as gtin12
+    import upcean.decodeold.upca as ucc12
 except:
     pass
 ''' // Code for decoding UPC-E by Kazuki Przyborowski '''
 ''' // Code for decoding EAN-13 by Kazuki Przyborowski '''
 try:
-    import upcean.decode.ean13 as gtin13
-    import upcean.decode.ean13 as ucc13
+    import upcean.decodeold.ean13 as gtin13
+    import upcean.decodeold.ean13 as ucc13
 except:
     pass
 ''' // Code for decoding EAN-8 by Kazuki Przyborowski '''
 try:
-    import upcean.decode.ean8 as gtin8
-    import upcean.decode.ean8 as ucc8
+    import upcean.decodeold.ean8 as gtin8
+    import upcean.decodeold.ean8 as ucc8
 except:
     pass
 ''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
 ''' // Code for making ITF-14 by Kazuki Przyborowski '''
 try:
-    import upcean.decode.itf14 as itf6
+    import upcean.decodeold.itf14 as itf6
 except:
     pass
 ''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
 try:
-    import upcean.decode.stf as code25
+    import upcean.decodeold.stf as code25
 except:
     pass
 

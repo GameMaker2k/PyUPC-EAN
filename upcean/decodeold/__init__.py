@@ -15,8 +15,8 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-from upcean.decode.shortcuts import *
-from upcean.decode.barcode import *
+from upcean.decodeold.shortcuts import *
+from upcean.decodeold.barcode import *
 
 '''
 // UPC Resources and Info
