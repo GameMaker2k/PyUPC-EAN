@@ -20,335 +20,138 @@ import upcean.validate
 
 
 def make_upca_barcode(numbersystem, manufacturer, product):
-    numbersystem = str(numbersystem)
-    manufacturer = str(manufacturer)
-    product = str(product)
-    if(len(numbersystem) < 1 or len(manufacturer) < 5 or len(product) < 5):
-        return False
-    if(len(numbersystem) > 1):
-        fix_matches = re.findall("^(\\d{1})", numbersystem)
-        numbersystem = fix_matches[0]
-    if(len(manufacturer) > 5):
-        fix_matches = re.findall("^(\\d{5})", manufacturer)
-        manufacturer = fix_matches[0]
-    if(len(product) > 5):
-        fix_matches = re.findall("^(\\d{5})", product)
-        product = fix_matches[0]
-    upc = numbersystem+manufacturer+product
-    upc = upc+str(upcean.validate.validate_upca_checksum(upc, True))
-    return upc
-
+    # Ensure inputs are strings and properly padded/truncated
+    numbersystem = re.match("\\d{1}", str(numbersystem).zfill(1)).group(0)
+    manufacturer = re.match("\\d{5}", str(manufacturer).zfill(5)).group(0)
+    product = re.match("\\d{5}", str(product).zfill(5)).group(0)
+    
+    # Concatenate to form the UPC without the checksum
+    upc = numbersystem + manufacturer + product
+    
+    # Append the checksum
+    checksum = upcean.validate.validate_upca_checksum(upc, True)
+    return upc + str(checksum)
 
 def make_ean13_barcode(numbersystem, manufacturer, product):
-    numbersystem = str(numbersystem)
-    manufacturer = str(manufacturer)
-    product = str(product)
-    if(len(numbersystem) < 2 or len(manufacturer) < 5 or len(product) < 5):
-        return False
-    if(len(numbersystem) > 2):
-        fix_matches = re.findall("^(\\d{2})", numbersystem)
-        numbersystem = fix_matches[0]
-    if(len(manufacturer) > 5):
-        fix_matches = re.findall("^(\\d{5})", manufacturer)
-        manufacturer = fix_matches[0]
-    if(len(product) > 5):
-        fix_matches = re.findall("^(\\d{5})", product)
-        product = fix_matches[0]
-    upc = numbersystem+manufacturer+product
-    upc = upc+str(upcean.validate.validate_ean13_checksum(upc, True))
-    return upc
-
+    numbersystem = re.match("\\d{2}", str(numbersystem).zfill(2)).group(0)
+    manufacturer = re.match("\\d{5}", str(manufacturer).zfill(5)).group(0)
+    product = re.match("\\d{5}", str(product).zfill(5)).group(0)
+    
+    # Concatenate and calculate checksum
+    upc = numbersystem + manufacturer + product
+    checksum = upcean.validate.validate_ean13_checksum(upc, True)
+    return upc + str(checksum)
 
 def make_itf14_barcode(numbersystem, manufacturer, product):
-    numbersystem = str(numbersystem)
-    manufacturer = str(manufacturer)
-    product = str(product)
-    if(len(numbersystem) < 3 or len(manufacturer) < 5 or len(product) < 5):
-        return False
-    if(len(numbersystem) > 3):
-        fix_matches = re.findall("^(\\d{3})", numbersystem)
-        numbersystem = fix_matches[0]
-    if(len(manufacturer) > 5):
-        fix_matches = re.findall("^(\\d{5})", manufacturer)
-        manufacturer = fix_matches[0]
-    if(len(product) > 5):
-        fix_matches = re.findall("^(\\d{5})", product)
-        product = fix_matches[0]
-    upc = numbersystem+manufacturer+product
-    upc = upc+str(upcean.validate.validate_itf14_checksum(upc, True))
-    return upc
-
+    numbersystem = re.match("\\d{3}", str(numbersystem).zfill(3)).group(0)
+    manufacturer = re.match("\\d{5}", str(manufacturer).zfill(5)).group(0)
+    product = re.match("\\d{5}", str(product).zfill(5)).group(0)
+    
+    # Concatenate and calculate checksum
+    upc = numbersystem + manufacturer + product
+    checksum = upcean.validate.validate_itf14_checksum(upc, True)
+    return upc + str(checksum)
 
 def make_ean8_barcode(numbersystem, manufacturer, product):
-    numbersystem = str(numbersystem)
-    manufacturer = str(manufacturer)
-    product = str(product)
-    if(len(numbersystem) < 1 or len(manufacturer) < 3 or len(product) < 3):
-        return False
-    if(len(numbersystem) > 1):
-        fix_matches = re.findall("^(\\d{1})", numbersystem)
-        numbersystem = fix_matches[0]
-    if(len(manufacturer) > 3):
-        fix_matches = re.findall("^(\\d{3})", manufacturer)
-        manufacturer = fix_matches[0]
-    if(len(product) > 3):
-        fix_matches = re.findall("^(\\d{3})", product)
-        product = fix_matches[0]
-    upc = numbersystem+manufacturer+product
-    upc = upc+str(upcean.validate.validate_ean8_checksum(upc, True))
-    return upc
-
+    numbersystem = re.match("\\d{1}", str(numbersystem).zfill(1)).group(0)
+    manufacturer = re.match("\\d{3}", str(manufacturer).zfill(3)).group(0)
+    product = re.match("\\d{3}", str(product).zfill(3)).group(0)
+    
+    # Concatenate and calculate checksum
+    upc = numbersystem + manufacturer + product
+    checksum = upcean.validate.validate_ean8_checksum(upc, True)
+    return upc + str(checksum)
 
 def make_upce_barcode(numbersystem, manufacturer, product):
-    numbersystem = str(numbersystem)
-    manufacturer = str(manufacturer)
-    product = str(product)
-    if(len(numbersystem) < 1 or len(manufacturer) < 3 or len(product) < 3):
-        return False
-    if(len(numbersystem) > 1):
-        fix_matches = re.findall("^(\\d{1})", numbersystem)
-        numbersystem = fix_matches[0]
-    if(len(manufacturer) > 3):
-        fix_matches = re.findall("^(\\d{3})", manufacturer)
-        manufacturer = fix_matches[0]
-    if(len(product) > 3):
-        fix_matches = re.findall("^(\\d{3})", product)
-        product = fix_matches[0]
-    upc = numbersystem+manufacturer+product
-    upc = upc+str(upcean.validate.validate_upce_checksum(upc, True))
-    return upc
+    numbersystem = re.match("\\d{1}", str(numbersystem).zfill(1)).group(0)
+    manufacturer = re.match("\\d{3}", str(manufacturer).zfill(3)).group(0)
+    product = re.match("\\d{3}", str(product).zfill(3)).group(0)
+    
+    # Concatenate and calculate checksum
+    upc = numbersystem + manufacturer + product
+    checksum = upcean.validate.validate_upce_checksum(upc, True)
+    return upc + str(checksum)
 
 
 def convert_barcode_from_upce_to_upca(upc):
-    upc = str(upc)
-    if(len(upc) == 7):
-        upc = upc+str(upcean.validate.validate_upce_checksum(upc, True))
-    if(len(upc) > 8 or len(upc) < 8):
+    upc = str(upc).zfill(8)  # Zero-pad to 8 digits if needed
+    if len(upc) != 8 or not re.match(r"^[01]", upc):
         return False
-    if(not re.findall("^(0|1)", upc)):
+    if not upcean.validate.validate_upce_checksum(upc):
         return False
-    if(not upcean.validate.validate_upce_checksum(upc)):
-        return False
-    if(re.findall("(0|1)(\\d{5})([0-3])(\\d{1})", upc)):
-        upc_matches = re.findall(
-            r"(0|1)(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        if(int(upc_matches[6]) == 0):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[6] + \
-                "0000"+upc_matches[3]+upc_matches[4] + \
-                upc_matches[5]+upc_matches[7]
-        if(int(upc_matches[6]) == 1):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[6] + \
-                "0000"+upc_matches[3]+upc_matches[4] + \
-                upc_matches[5]+upc_matches[7]
-        if(int(upc_matches[6]) == 2):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[6] + \
-                "0000"+upc_matches[3]+upc_matches[4] + \
-                upc_matches[5]+upc_matches[7]
-        if(int(upc_matches[6]) == 3):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2] + \
-                upc_matches[3]+"00000"+upc_matches[4] + \
-                upc_matches[5]+upc_matches[7]
-    if(re.findall("(0|1)(\\d{5})([4-9])(\\d{1})", upc)):
-        upc_matches = re.findall(
-            r"(0|1)(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        if(int(upc_matches[6]) == 4):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2] + \
-                upc_matches[3]+upc_matches[4]+"00000" + \
-                upc_matches[5]+upc_matches[7]
-        if(int(upc_matches[6]) == 5):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3] + \
-                upc_matches[4]+upc_matches[5]+"0000" + \
-                upc_matches[6]+upc_matches[7]
-        if(int(upc_matches[6]) == 6):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3] + \
-                upc_matches[4]+upc_matches[5]+"0000" + \
-                upc_matches[6]+upc_matches[7]
-        if(int(upc_matches[6]) == 7):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3] + \
-                upc_matches[4]+upc_matches[5]+"0000" + \
-                upc_matches[6]+upc_matches[7]
-        if(int(upc_matches[6]) == 8):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3] + \
-                upc_matches[4]+upc_matches[5]+"0000" + \
-                upc_matches[6]+upc_matches[7]
-        if(int(upc_matches[6]) == 9):
-            upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+upc_matches[3] + \
-                upc_matches[4]+upc_matches[5]+"0000" + \
-                upc_matches[6]+upc_matches[7]
-    return upce
-
+    
+    upc_matches = re.match("(0|1)(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d)(\\d)", upc).groups()
+    base = upc_matches[0] + upc_matches[1] + upc_matches[2]
+    
+    if upc_matches[6] in "012":
+        upca = "{}0000{}{}".format(base, upc_matches[3], upc_matches[4])
+    elif upc_matches[6] == "3":
+        upca = "{}00000{}".format(base, upc_matches[4])
+    else:
+        upca = "{}0000{}".format(upc_matches[0] + upc_matches[1] + upc_matches[2] + upc_matches[3] + upc_matches[4], upc_matches[6])
+    
+    return upca + upc_matches[7]
 
 def convert_barcode_from_upca_to_ean13(upc):
-    upc = str(upc)
-    if(len(upc) == 11):
-        upc = upc+str(upcean.validate.validate_upca_checksum(upc, True))
-    if(len(upc) > 13 or len(upc) < 12):
+    upc = str(upc).zfill(12)
+    if len(upc) not in {12, 13} or not upcean.validate.validate_upca_checksum(upc):
         return False
-    if(not upcean.validate.validate_upca_checksum(upc)):
-        return False
-    if(len(upc) == 12):
-        ean13 = "0"+upc
-    if(len(upc) == 13):
-        ean13 = upc
-    return ean13
-
+    return "0" + upc if len(upc) == 12 else upc
 
 def convert_barcode_from_ean13_to_itf14(upc):
-    upc = str(upc)
-    if(len(upc) == 11):
-        upc = upc+str(upcean.validate.validate_upca_checksum(upc, True))
-    if(len(upc) == 12):
-        upc = "0"+upc
-    if(len(upc) > 14 or len(upc) < 13):
+    upc = str(upc).zfill(13)
+    if len(upc) not in {13, 14} or not upcean.validate.validate_ean13_checksum(upc):
         return False
-    if(not upcean.validate.validate_ean13_checksum(upc)):
-        return False
-    if(len(upc) == 13):
-        itf14 = "0"+upc
-    if(len(upc) == 14):
-        itf14 = upc
-    return itf14
-
+    return "0" + upc if len(upc) == 13 else upc
 
 def convert_barcode_from_upce_to_ean13(upc):
-    upc = str(upc)
     return convert_barcode_from_upca_to_ean13(convert_barcode_from_upce_to_upca(upc))
 
-
 def convert_barcode_from_upce_to_itf14(upc):
-    upc = str(upc)
     return convert_barcode_from_ean13_to_itf14(convert_barcode_from_upce_to_ean13(upc))
 
-
 def convert_barcode_from_upca_to_itf14(upc):
-    upc = str(upc)
     return convert_barcode_from_ean13_to_itf14(convert_barcode_from_upca_to_ean13(upc))
 
-
 def convert_barcode_from_ean13_to_upca(upc):
-    upc = str(upc)
-    if(len(upc) == 12):
-        upc = "0"+upc
-    if(len(upc) > 13 or len(upc) < 13):
+    upc = str(upc).zfill(13)
+    if len(upc) != 13 or not upcean.validate.validate_ean13_checksum(upc):
         return False
-    if(not upcean.validate.validate_ean13_checksum(upc)):
-        return False
-    if(not re.findall("^0(\\d{12})", upc)):
-        return False
-    if(re.findall("^0(\\d{12})", upc)):
-        upc_matches = re.findall("^0(\\d{12})", upc)
-        upca = upc_matches[0]
-    return upca
-
+    match = re.match(r"^0(\d{12})$", upc)
+    return match.group(1) if match else False
 
 def convert_barcode_from_itf14_to_ean13(upc):
-    upc = str(upc)
-    if(len(upc) == 13):
-        upc = "0"+upc
-    if(len(upc) > 14 or len(upc) < 14):
+    upc = str(upc).zfill(14)
+    if len(upc) != 14 or not upcean.validate.validate_itf14_checksum(upc):
         return False
-    if(not upcean.validate.validate_itf14_checksum(upc)):
-        return False
-    if(not re.findall("^(\\d{1})(\\d{12})(\\d{1})", upc)):
-        return False
-    if(re.findall("^(\\d{1})(\\d{12})(\\d{1})", upc)):
-        upc_matches = re.findall("^(\\d{1})(\\d{12})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        ean13 = upc_matches[1] + \
-            str(upcean.validate.validate_ean13_checksum(upc_matches[1], True))
-    return ean13
-
+    return upc[1:-1] + str(upcean.validate.validate_ean13_checksum(upc[1:-1], True))
 
 def convert_barcode_from_upca_to_upce(upc):
-    upc = str(upc)
-    if(len(upc) == 11):
-        upc = upc+str(upcean.validate.validate_upca_checksum(upc, True))
-    if(len(upc) > 12 or len(upc) < 12):
+    upc = str(upc).zfill(12)
+    if len(upc) != 12 or not upcean.validate.validate_upca_checksum(upc):
         return False
-    if(not upcean.validate.validate_upca_checksum(upc)):
-        return False
-    if(not re.findall("(0|1)(\\d{11})", upc)):
-        return False
-    upce = None
-    if(re.findall("(0|1)(\\d{2})00000(\\d{3})(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{2})00000(\\d{3})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"0"
-        upce = upce+upc_matches[3]
-        return upce
-    if(re.findall("(0|1)(\\d{2})10000(\\d{3})(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{2})10000(\\d{3})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"1"
-        upce = upce+upc_matches[3]
-        return upce
-    if(re.findall("(0|1)(\\d{2})20000(\\d{3})(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{2})20000(\\d{3})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"2"
-        upce = upce+upc_matches[3]
-        return upce
-    if(re.findall("(0|1)(\\d{3})00000(\\d{2})(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{3})00000(\\d{2})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"3"
-        upce = upce+upc_matches[3]
-        return upce
-    if(re.findall("(0|1)(\\d{4})00000(\\d{1})(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{4})00000(\\d{1})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+upc_matches[2]+"4"
-        upce = upce+upc_matches[3]
-        return upce
-    if(re.findall("(0|1)(\\d{5})00005(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})00005(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+"5"
-        upce = upce+upc_matches[2]
-        return upce
-    if(re.findall("(0|1)(\\d{5})00006(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})00006(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+"6"
-        upce = upce+upc_matches[2]
-        return upce
-    if(re.findall("(0|1)(\\d{5})00007(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})00007(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+"7"
-        upce = upce+upc_matches[2]
-        return upce
-    if(re.findall("(0|1)(\\d{5})00008(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})00008(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+"8"
-        upce = upce+upc_matches[2]
-        return upce
-    if(re.findall("(0|1)(\\d{5})00009(\\d{1})", upc)):
-        upc_matches = re.findall("(0|1)(\\d{5})00009(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upce = upc_matches[0]+upc_matches[1]+"9"
-        upce = upce+upc_matches[2]
-        return upce
-    if(upce is None):
-        return False
-    return upce
 
+    patterns = [
+        ("(0|1)(\\d{2})00000(\\d{3})(\\d{1})", "{}{}{}0{}"),
+        ("(0|1)(\\d{3})00000(\\d{2})(\\d{1})", "{}{}{}3{}"),
+        ("(0|1)(\\d{4})00000(\\d{1})(\\d{1})", "{}{}{}4{}"),
+        ("(0|1)(\\d{5})00005(\\d{1})", "{}{}5{}"),
+    ]
+    
+    for pattern, fmt in patterns:
+        match = re.match(pattern, upc)
+        if match:
+            return fmt.format(*match.groups())
+    
+    return False
 
 def convert_barcode_from_ean13_to_upce(upc):
-    upc = str(upc)
     return convert_barcode_from_upca_to_upce(convert_barcode_from_ean13_to_upca(upc))
 
-
 def convert_barcode_from_itf14_to_upca(upc):
-    upc = str(upc)
     return convert_barcode_from_ean13_to_upca(convert_barcode_from_itf14_to_ean13(upc))
 
-
 def convert_barcode_from_itf14_to_upce(upc):
-    upc = str(upc)
     return convert_barcode_from_upca_to_upce(convert_barcode_from_itf14_to_upca(upc))
 
 
@@ -359,51 +162,42 @@ def convert_barcode_from_itf14_to_upce(upc):
 
 
 def convert_barcode_from_ean8_to_upca(upc):
-    upc = str(upc)
-    if(len(upc) == 7):
-        upc = upc+str(upcean.validate.validate_ean8_checksum(upc, True))
-    if(len(upc) > 8 or len(upc) < 8):
+    # Pad and validate EAN-8 length and checksum
+    upc = str(upc).zfill(8)
+    if len(upc) != 8 or not upcean.validate.validate_ean8_checksum(upc):
         return False
-    if(not upcean.validate.validate_ean8_checksum(upc)):
-        return False
-    upca = "0000"+upc
-    return upca
-
+    # Convert EAN-8 to UPC-A by adding leading zeros
+    return "0000" + upc
 
 def convert_barcode_from_ean8_to_ean13(upc):
-    upc = str(upc)
-    return convert_barcode_from_upca_to_ean13(convert_barcode_from_ean8_to_upca(upc))
-
+    # Convert EAN-8 to UPC-A, then UPC-A to EAN-13
+    upca = convert_barcode_from_ean8_to_upca(upc)
+    return convert_barcode_from_upca_to_ean13(upca) if upca else False
 
 def convert_barcode_from_ean8_to_itf14(upc):
-    upc = str(upc)
-    return convert_barcode_from_ean13_to_itf14(convert_barcode_from_ean8_to_ean13(upc))
-
+    # Convert EAN-8 to EAN-13, then EAN-13 to ITF-14
+    ean13 = convert_barcode_from_ean8_to_ean13(upc)
+    return convert_barcode_from_ean13_to_itf14(ean13) if ean13 else False
 
 def convert_barcode_from_upca_to_ean8(upc):
-    upc = str(upc)
-    if(len(upc) == 11):
-        upc = upc+str(upcean.validate.validate_upca_checksum(upc, True))
-    if(len(upc) > 12 or len(upc) < 12):
+    # Pad and validate UPC-A length and checksum
+    upc = str(upc).zfill(12)
+    if len(upc) != 12 or not upcean.validate.validate_upca_checksum(upc):
         return False
-    if(not upcean.validate.validate_upca_checksum(upc)):
-        return False
-    if(not re.findall("^0000(\\d{8})", upc)):
-        return False
-    if(re.findall("^0000(\\d{8})", upc)):
-        upc_matches = re.findall("^0000(\\d{8})", upc)
-        ean8 = upc_matches[0]
-    return ean8
-
+    
+    # Check for and extract EAN-8 code pattern from UPC-A
+    match = re.match("^0000(\\d{8})$", upc)
+    return match.group(1) if match else False
 
 def convert_barcode_from_ean13_to_ean8(upc):
-    upc = str(upc)
-    return convert_barcode_from_upca_to_ean8(convert_barcode_from_ean13_to_upca(upc))
-
+    # Convert EAN-13 to UPC-A, then UPC-A to EAN-8
+    upca = convert_barcode_from_ean13_to_upca(upc)
+    return convert_barcode_from_upca_to_ean8(upca) if upca else False
 
 def convert_barcode_from_itf14_to_ean8(upc):
-    upc = str(upc)
-    return convert_barcode_from_ean13_to_ean8(convert_barcode_from_itf14_to_ean13(upc))
+    # Convert ITF-14 to EAN-13, then EAN-13 to EAN-8
+    ean13 = convert_barcode_from_itf14_to_ean13(upc)
+    return convert_barcode_from_ean13_to_ean8(ean13) if ean13 else False
 
 
 '''
@@ -1438,47 +1232,37 @@ def print_convert_barcode_from_ismn13_to_ismn10(upc):
 
 
 def make_upca_vw_to_upca_barcode(code, price):
-    code = str(code)
-    price = str(price)
-    if(len(code) > 5):
-        if(re.findall("^(\\d{5})", code)):
-            code_matches = re.findall("^(\\d{5})", code)
-            code = code_matches[0]
-    if(len(price) > 4):
-        if(re.findall("^(\\d{4})", price)):
-            price_matches = re.findall("^(\\d{4})", price)
-            price = price_matches[0]
-    pricecs = str(upcean.validate.get_vw_price_checksum(price))
-    vwupc = "2"+code+pricecs+price.zfill(4)
-    vwupc = vwupc+str(upcean.validate.validate_upca_checksum(vwupc, True))
-    return vwupc
-
+    # Trim and pad code and price to required lengths
+    code = re.match("\\d{5}", code.zfill(5)).group(0)
+    price = re.match("\\d{4}", price.zfill(4)).group(0)
+    
+    # Calculate price checksum and create the base variable-weight UPC-A barcode
+    price_checksum = str(upcean.validate.get_vw_price_checksum(price))
+    vwupc = "2{}{}{}".format(code, price_checksum, price)
+    
+    # Append the UPC-A checksum
+    return vwupc + str(upcean.validate.validate_upca_checksum(vwupc, True))
 
 def make_vw_to_upca_barcode(code, price):
+    # Alias for make_upca_vw_to_upca_barcode
     return make_upca_vw_to_upca_barcode(code, price)
 
-
 def make_upca_vw_to_ean13_barcode(code, price):
-    code = str(code)
-    price = str(price)
-    vwean13 = convert_barcode_from_upca_to_ean13(
-        make_upca_vw_to_upca_barcode(code, price))
-    return vwean13
-
+    # Convert UPC-A variable-weight barcode to EAN-13
+    upca_barcode = make_upca_vw_to_upca_barcode(code, price)
+    return convert_barcode_from_upca_to_ean13(upca_barcode)
 
 def make_vw_to_ean13_barcode(code, price):
+    # Alias for make_upca_vw_to_ean13_barcode
     return make_upca_vw_to_ean13_barcode(code, price)
 
-
 def make_upca_vw_to_itf14_barcode(code, price):
-    code = str(code)
-    price = str(price)
-    vwitf14 = convert_barcode_from_upca_to_itf14(
-        make_upca_vw_to_upca_barcode(code, price))
-    return vwitf14
-
+    # Convert UPC-A variable-weight barcode to ITF-14
+    upca_barcode = make_upca_vw_to_upca_barcode(code, price)
+    return convert_barcode_from_upca_to_itf14(upca_barcode)
 
 def make_vw_to_itf14_barcode(code, price):
+    # Alias for make_upca_vw_to_itf14_barcode
     return make_upca_vw_to_itf14_barcode(code, price)
 
 
@@ -1487,108 +1271,100 @@ def make_vw_to_itf14_barcode(code, price):
 // Source: https://softmatic.com/barcode-ean-13.html#ean-country
 '''
 
+# List of valid GS1 prefixes for variable-weight products
+VARYING_WEIGHT_PREFIXES = ["02", "20"] + ["2{}".format(i) for i in range(1, 10)]
+
+def make_ean13_vw_barcode(prefix, code, price):
+    # Ensure prefix is valid and padded to 2 digits
+    prefix = str(prefix).zfill(2)
+    if prefix not in VARYING_WEIGHT_PREFIXES:
+        return False  # Invalid GS1 prefix for variable-weight goods
+
+    # Pad and trim the code and price to required lengths
+    code = re.match("\\d{5}", str(code).zfill(5)).group(0)
+    price = re.match("\\d{4}", str(price).zfill(4)).group(0)
+    
+    # Calculate price checksum and create the base variable-weight EAN-13 barcode
+    price_checksum = str(upcean.validate.get_vw_price_checksum(price))
+    vw_ean13 = "{}{}{}{}".format(prefix, code, price_checksum, price)
+    
+    # Append the EAN-13 checksum
+    return vw_ean13 + str(upcean.validate.validate_ean13_checksum(vw_ean13, True))
+
+# Helper function to pad and trim code and price
+def pad_and_trim(value, length):
+    return re.match("\\d{{{}}}".format(length), str(value).zfill(length)).group(0)
+
+def make_vw_to_itf14_from_ean13(prefix, code, price):
+    # Convert EAN-13 variable-weight barcode to ITF-14
+    ean13_barcode = make_ean13_vw_barcode(prefix, code, price)
+    return convert_barcode_from_ean13_to_itf14(ean13_barcode) if ean13_barcode else False
 
 def make_ean13_vw_to_ean13_barcode(numbersystem, code, price):
-    code = str(code)
-    price = str(price)
-    numbersystem = str(numbersystem)
-    if(len(numbersystem) > 1):
-        if(re.findall("^(\\d{1})", numbersystem)):
-            ns_matches = re.findall("^(\\d{1})", numbersystem)
-            numbersystem = ns_matches[0]
-    if(len(code) > 5):
-        if(re.findall("^(\\d{5})", code)):
-            code_matches = re.findall("^(\\d{5})", code)
-            code = code_matches[0]
-    if(len(price) > 5):
-        if(re.findall("^(\\d{5})", price)):
-            price_matches = re.findall("^(\\d{5})", price)
-            price = price_matches[0]
-    vwupc = "2"+numbersystem+code+price.zfill(5)
-    vwupc = vwupc+str(upcean.validate.validate_ean13_checksum(vwupc, True))
-    return vwupc
+    # Ensure inputs are strings and trimmed/padded as necessary
+    numbersystem = pad_and_trim(numbersystem, 1)
+    code = pad_and_trim(code, 5)
+    price = pad_and_trim(price, 5)
+
+    # Construct base EAN-13 variable-weight barcode
+    vwupc = "2{}{}{}".format(numbersystem, code, price)
+    
+    # Append the EAN-13 checksum
+    return vwupc + str(upcean.validate.validate_ean13_checksum(vwupc, True))
 
 
 def make_ean13_vw_to_itf14_barcode(numbersystem, code, price):
-    code = str(code)
-    price = str(price)
-    vwitf14 = convert_barcode_from_upca_to_itf14(
-        make_ean13_vw_to_upca_barcode(numbersystem, code, price))
-    return vwitf14
+    # Generate the EAN-13 barcode with variable weight
+    ean13_barcode = make_ean13_vw_to_ean13_barcode(numbersystem, code, price)
+    
+    # Convert EAN-13 variable-weight barcode to ITF-14
+    return convert_barcode_from_ean13_to_itf14(ean13_barcode) if ean13_barcode else False
 
 
 def make_goodwill_to_upca_barcode(code, price):
-    code = str(code)
-    price = str(price)
-    if(len(code) > 5):
-        if(re.findall("^(\\d{5})", code)):
-            code_matches = re.findall("^(\\d{5})", code)
-            code = code_matches[0]
-    if(len(price) > 5):
-        if(re.findall("^(\\d{5})", price)):
-            price_matches = re.findall("^(\\d{5})", price)
-            price = price_matches[0]
-    vwupc = "4"+code+price.zfill(5)
-    vwupc = vwupc+str(upcean.validate.validate_upca_checksum(vwupc, True))
-    return vwupc
+    # Pad and trim code and price to required lengths
+    code = pad_and_trim(code, 5)
+    price = pad_and_trim(price, 5)
 
+    # Construct the UPC-A barcode for Goodwill with a "4" prefix
+    vwupc = "4{}{}".format(code, price)
+    
+    # Append the UPC-A checksum
+    return vwupc + str(upcean.validate.validate_upca_checksum(vwupc, True))
 
 def make_goodwill_to_ean13_barcode(code, price):
-    code = str(code)
-    price = str(price)
-    vwean13 = convert_barcode_from_upca_to_ean13(
-        make_goodwill_to_upca_barcode(code, price))
-    return vwean13
-
+    # Generate UPC-A barcode and convert it to EAN-13
+    upca_barcode = make_goodwill_to_upca_barcode(code, price)
+    return convert_barcode_from_upca_to_ean13(upca_barcode)
 
 def make_goodwill_to_itf14_barcode(code, price):
-    code = str(code)
-    price = str(price)
-    vwitf14 = convert_barcode_from_upca_to_itf14(
-        make_goodwill_to_upca_barcode(code, price))
-    return vwitf14
+    # Generate UPC-A barcode and convert it to ITF-14
+    upca_barcode = make_goodwill_to_upca_barcode(code, price)
+    return convert_barcode_from_upca_to_itf14(upca_barcode)
 
 
 def make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value):
-    numbersystem = str(numbersystem)
-    manufacturer = str(manufacturer)
-    family = str(family)
-    value = str(value)
-    if(int(numbersystem) != 5 and int(numbersystem) != 9):
-        numbersystem = "5"
-    if(len(manufacturer) > 5):
-        fix_matches = re.findall("^(\\d{5})", manufacturer)
-        upc = fix_matches[0]
-    if(len(family) > 3):
-        fix_matches = re.findall("^(\\d{3})", family)
-        upc = fix_matches[0]
-    if(len(value) > 2):
-        fix_matches = re.findall("^(\\d{2})", value)
-        upc = fix_matches[0]
-    couponupca = numbersystem+manufacturer+family+value
-    couponupca = couponupca + \
-        str(upcean.validate.validate_upca_checksum(couponupca, True))
-    return couponupca
-
+    # Ensure numbersystem is either "5" or "9"
+    numbersystem = "5" if str(numbersystem) not in {"5", "9"} else str(numbersystem)
+    
+    # Pad and trim manufacturer, family, and value fields
+    manufacturer = pad_and_trim(manufacturer, 5)
+    family = pad_and_trim(family, 3)
+    value = pad_and_trim(value, 2)
+    
+    # Construct UPC-A coupon barcode with the calculated checksum
+    coupon_upca = "{}{}{}{}".format(numbersystem, manufacturer, family, value)
+    return coupon_upca + str(upcean.validate.validate_upca_checksum(coupon_upca, True))
 
 def make_coupon_to_ean13_barcode(numbersystem, manufacturer, family, value):
-    numbersystem = str(numbersystem)
-    manufacturer = str(manufacturer)
-    family = str(family)
-    value = str(value)
-    couponean13 = convert_barcode_from_upca_to_ean13(
-        make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value))
-    return couponean13
-
+    # Convert UPC-A coupon barcode to EAN-13
+    upca_barcode = make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value)
+    return convert_barcode_from_upca_to_ean13(upca_barcode)
 
 def make_coupon_to_itf14_barcode(numbersystem, manufacturer, family, value):
-    numbersystem = str(numbersystem)
-    manufacturer = str(manufacturer)
-    family = str(family)
-    value = str(value)
-    couponitf14 = convert_barcode_from_upca_to_itf14(
-        make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value))
-    return couponitf14
+    # Convert UPC-A coupon barcode to ITF-14
+    upca_barcode = make_coupon_to_upca_barcode(numbersystem, manufacturer, family, value)
+    return convert_barcode_from_upca_to_itf14(upca_barcode)
 
 
 '''
@@ -1599,99 +1375,49 @@ def make_coupon_to_itf14_barcode(numbersystem, manufacturer, family, value):
 
 
 def make_ndc_to_upca_barcode(labeler, product, package):
-    labeler = str(labeler)
-    product = str(product)
-    package = str(package)
-    if(len(labeler) > 4):
-        if(re.findall("^(\\d{4})", labeler)):
-            labeler_matches = re.findall("^(\\d{4})", labeler)
-            labeler = labeler_matches[0]
-    if(len(product) > 4):
-        if(re.findall("^(\\d{4})", product)):
-            product_matches = re.findall("^(\\d{4})", product)
-            product = product_matches[0]
-    if(len(package) > 2):
-        if(re.findall("^(\\d{2})", package)):
-            package_matches = re.findall("^(\\d{2})", package)
-            package = package_matches[0]
-    ndcupc = "3"+labeler+product+package
-    ndcupc = ndcupc+str(upcean.validate.validate_upca_checksum(ndcupc, True))
-    return ndcupc
-
+    # Pad and trim labeler, product, and package to required lengths
+    labeler = pad_and_trim(labeler, 4)
+    product = pad_and_trim(product, 4)
+    package = pad_and_trim(package, 2)
+    
+    # Construct UPC-A NDC barcode with the calculated checksum
+    ndc_upca = "3{}{}{}".format(labeler, product, package)
+    return ndc_upca + str(upcean.validate.validate_upca_checksum(ndc_upca, True))
 
 def make_ndc_to_ean13_barcode(labeler, product, package):
-    labeler = str(labeler)
-    product = str(product)
-    package = str(package)
-    ndcean13 = convert_barcode_from_upca_to_ean13(
-        make_ndc_to_upca_barcode(labeler, product, package))
-    return ndcean13
-
+    # Generate UPC-A NDC barcode and convert it to EAN-13
+    upca_barcode = make_ndc_to_upca_barcode(labeler, product, package)
+    return convert_barcode_from_upca_to_ean13(upca_barcode)
 
 def make_ndc_to_itf14_barcode(labeler, product, package):
-    labeler = str(labeler)
-    product = str(product)
-    package = str(package)
-    ndcitf14 = convert_barcode_from_upca_to_itf14(
-        make_ndc_to_upca_barcode(labeler, product, package))
-    return ndcitf14
-
+    # Generate UPC-A NDC barcode and convert it to ITF-14
+    upca_barcode = make_ndc_to_upca_barcode(labeler, product, package)
+    return convert_barcode_from_upca_to_itf14(upca_barcode)
 
 def convert_barcode_from_ndc_to_upca(upc):
-    upc = str(upc)
-    upc = upc.replace("-", "")
-    if(len(upc) > 10):
-        fix_matches = re.findall("^(\\d{10})", upc)
-        upc = fix_matches[0]
-    ndcupca = "3"+upc + \
-        str(upcean.validate.validate_upca_checksum("3"+upc, True))
-    return ndcupca
+    # Strip non-numeric characters and pad/trim to 10 digits
+    upc = re.sub("\\D", "", str(upc))
+    upc = pad_and_trim(upc, 10)
 
+    # Construct UPC-A NDC barcode with "3" prefix and calculate checksum
+    ndc_upca = "3" + upc
+    return ndc_upca + str(upcean.validate.validate_upca_checksum(ndc_upca, True))
 
 def convert_barcode_from_upca_to_ndc(upc):
-    upc = str(upc)
-    upc = upc.replace("-", "")
-    if(not upcean.validate.validate_upca_checksum(upc)):
+    # Ensure upc is a valid UPC-A with an "NDC" prefix (starts with "3")
+    upc = re.sub("\\D", "", str(upc))
+    if not upcean.validate.validate_upca_checksum(upc) or not re.match("^3\\d{10}$", upc):
         return False
-    if(not re.findall("^3(\\d{10})", upc)):
-        return False
-    if(re.findall("^3(\\d{10})", upc)):
-        upc_matches = re.findall("^3(\\d{10})", upc)
-        ndc = upc_matches[0]
-    return ndc
 
+    # Extract NDC from the UPC-A
+    return upc[1:11]  # Skip the "3" prefix
 
 def convert_barcode_from_ndc_to_ean13(upc):
-    upc = str(upc)
-    ndcean13 = convert_barcode_from_upca_to_ean13(
-        convert_barcode_from_ndc_to_upca(upc))
-    return ndcean13
-
+    # Convert NDC to UPC-A and then to EAN-13
+    upca_barcode = convert_barcode_from_ndc_to_upca(upc)
+    return convert_barcode_from_upca_to_ean13(upca_barcode)
 
 def convert_barcode_from_ndc_to_itf14(upc):
-    upc = str(upc)
-    ndcitf14 = convert_barcode_from_upca_to_itf14(
-        convert_barcode_from_ndc_to_upca(upc))
-    return ndcitf14
-
-
-def print_ndc_barcode(upc):
-    upc = str(upc)
-    upc = upc.replace("-", "")
-    if(len(upc) > 10):
-        fix_matches = re.findall("^(\\d{10})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 10 or len(upc) < 10):
-        return False
-    if(not re.findall("^(\\d{4})(\\d{4})(\\d{2})", upc)):
-        return False
-    ndc_matches = re.findall("^(\\d{4})(\\d{4})(\\d{2})", upc)
-    ndc_matches = ndc_matches[0]
-    ndc = ndc_matches[0]+"-"+ndc_matches[1]+"-"+ndc_matches[2]
-    return ndc
-
-
-def print_convert_barcode_from_upca_to_ndc(upc):
-    upc = str(upc)
-    ndc = print_ndc_barcode(convert_barcode_from_upca_to_ndc(upc))
-    return ndc
+    # Convert NDC to UPC-A and then to ITF-14
+    upca_barcode = convert_barcode_from_ndc_to_upca(upc)
+    return convert_barcode_from_upca_to_itf14(upca_barcode)

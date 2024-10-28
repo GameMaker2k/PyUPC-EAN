@@ -35,57 +35,51 @@ def get_digital_root(number):
     return int(number)
 
 
+def digital_root(number):
+    # Special case for when number is 0, as 0 % 9 would also be 0
+    if number == 0:
+        return 0
+    else:
+        return number % 9 if number % 9 != 0 else 9
+
+
 '''
 // Luhn Algorithm ( Luhn Formula )
 // http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
 '''
 
 
+import re
+
 def validate_luhn_checksum(upc, upclen, return_check=False):
     upc = str(upc)
     upclen = int(upclen)
-    upclendwn = upclen - 1
-    if(len(upc) > upclen):
-        fix_matches = re.findall("^(\\d{"+str(upclen)+"})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > upclen or len(upc) < upclendwn):
+    
+    # Trim the UPC to the specified length if it's too long
+    if len(upc) > upclen:
+        upc = re.findall("^\\d{" + str(upclen) + r"}", upc)[0]
+
+    # If UPC length is incorrect after trimming, return False
+    if len(upc) not in {upclen - 1, upclen}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_count1 = 0
-    upc_len1 = len(upc_matches1)
-    if(len(upc) == upclen and upclen % 2 == 1):
-        upc_len1 = len(upc_matches1) - 1
-    OddSum = 0
-    while(upc_count1 < upc_len1):
-        OddSum = OddSum + upc_matches1[upc_count1]
-        upc_count1 = upc_count1 + 1
-    upc_matches2 = upc_matches[1:][::2]
-    upc_count2 = 0
-    upc_len2 = len(upc_matches2)
-    if(len(upc) == upclen and upclen % 2 == 0):
-        upc_len2 = len(upc_matches2) - 1
-    EvenSum = 0
-    while(upc_count2 < upc_len2):
-        EvenSum = EvenSum + upc_matches2[upc_count2]
-        upc_count2 = upc_count2 + 1
-    if(upclen % 2) == 0:
-        AllSum = (OddSum * 3) + EvenSum
-    else:
-        AllSum = OddSum + (EvenSum * 3)
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    if(not return_check and len(upc) == upclen):
-        if(CheckSum != upc_matches[-1]):
-            return False
-        if(CheckSum == upc_matches[-1]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == upclendwn):
-        return str(CheckSum)
+    
+    # Convert to integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Separate into odd and even positioned sums based on length
+    odd_sum = sum(upc_digits[-2::-2])  # Odd-positioned from the end
+    even_sum = sum(upc_digits[-1::-2])  # Even-positioned from the end
+    
+    # Calculate checksum according to standard (based on length parity)
+    total_sum = (odd_sum * 3 + even_sum) if upclen % 2 == 0 else (odd_sum + even_sum * 3)
+    checksum = (10 - (total_sum % 10)) % 10  # Calculated checksum digit
+    
+    # Validate checksum or return it based on the `return_check` flag
+    if return_check:
+        return str(checksum)
+    
+    # If the provided UPC length matches upclen, validate the checksum
+    return checksum == upc_digits[-1] if len(upc) == upclen else str(checksum)
 
 
 def get_luhn_checksum(upc, upclen):
@@ -105,32 +99,32 @@ def fix_luhn_checksum(upc, upclen):
 
 def validate_upca_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 12):
-        fix_matches = re.findall("^(\\d{12})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 12 or len(upc) < 11):
+    
+    # Trim UPC to 12 digits if it's too long
+    if len(upc) > 12:
+        upc = re.findall("^\\d{12}", upc)[0]
+    
+    # Check for valid length (should be 11 or 12)
+    if len(upc) not in {11, 12}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    OddSum = (upc_matches1[0] + upc_matches1[1] + upc_matches1[2] +
-              upc_matches1[3] + upc_matches1[4] + upc_matches1[5]) * 3
-    EvenSum = upc_matches2[0] + upc_matches2[1] + \
-        upc_matches2[2] + upc_matches2[3] + upc_matches2[4]
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    if(not return_check and len(upc) == 12):
-        if(CheckSum != upc_matches2[5]):
-            return False
-        if(CheckSum == upc_matches2[5]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 11):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate the sum of odd and even positions
+    odd_sum = sum(upc_digits[0::2]) * 3
+    even_sum = sum(upc_digits[1::2][:-1] if len(upc) == 12 else upc_digits[1::2])
+    
+    # Calculate the checksum digit
+    total_sum = odd_sum + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # If UPC is 12 digits, verify checksum
+    return checksum == upc_digits[-1] if len(upc) == 12 else str(checksum)
 
 
 def get_upca_checksum(upc):
@@ -166,32 +160,32 @@ def fix_upca_alt_checksum(upc):
 
 def validate_ean13_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 13):
-        fix_matches = re.findall("^(\\d{13})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 13 or len(upc) < 12):
+    
+    # Trim UPC to 13 digits if it's too long
+    if len(upc) > 13:
+        upc = re.findall("^\\d{13}", upc)[0]
+    
+    # Check for valid length (should be 12 or 13)
+    if len(upc) not in {12, 13}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    EvenSum = (upc_matches2[0] + upc_matches2[1] + upc_matches2[2] +
-               upc_matches2[3] + upc_matches2[4] + upc_matches2[5]) * 3
-    OddSum = upc_matches1[0] + upc_matches1[1] + upc_matches1[2] + \
-        upc_matches1[3] + upc_matches1[4] + upc_matches1[5]
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    if(not return_check and len(upc) == 13):
-        if(CheckSum != upc_matches1[6]):
-            return False
-        if(CheckSum == upc_matches1[6]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 12):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate the sum of even and odd positions
+    odd_sum = sum(upc_digits[0::2])
+    even_sum = sum(upc_digits[1::2]) * 3
+    
+    # Calculate the checksum digit
+    total_sum = odd_sum + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # If UPC is 13 digits, verify checksum
+    return checksum == upc_digits[-1] if len(upc) == 13 else str(checksum)
 
 
 def get_ean13_checksum(upc):
@@ -227,24 +221,29 @@ def fix_ean13_alt_checksum(upc):
 
 def validate_itf6_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 6):
-        fix_matches = re.findall("^(\\d{6})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 6 or len(upc) < 5):
+    
+    # Trim UPC to 6 digits if it's too long
+    if len(upc) > 6:
+        upc = re.findall("^\\d{6}", upc)[0]
+    
+    # Check for valid length (should be 5 or 6)
+    if len(upc) not in {5, 6}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    CheckSum = 10 - ((3 * upc_matches[0] + upc_matches[1] + 3 *
-                     upc_matches[2] + upc_matches[3] + 3 * upc_matches[4]) % 10)
-    if(not return_check and len(upc) == 6):
-        if(CheckSum != upc_matches[5]):
-            return False
-        if(CheckSum == upc_matches[5]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 5):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate the checksum digit
+    total_sum = (3 * upc_digits[0] + upc_digits[1] + 3 * upc_digits[2] + 
+                 upc_digits[3] + 3 * upc_digits[4])
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # If UPC is 6 digits, verify checksum
+    return checksum == upc_digits[-1] if len(upc) == 6 else str(checksum)
 
 
 def get_itf6_checksum(upc):
@@ -280,32 +279,32 @@ def fix_itf6_alt_checksum(upc):
 
 def validate_itf14_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 14):
-        fix_matches = re.findall("^(\\d{14})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 14 or len(upc) < 13):
+    
+    # Trim UPC to 14 digits if it's too long
+    if len(upc) > 14:
+        upc = re.findall("^\\d{14}", upc)[0]
+    
+    # Check for valid length (should be 13 or 14)
+    if len(upc) not in {13, 14}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    EvenSum = upc_matches2[0] + upc_matches2[1] + upc_matches2[2] + \
-        upc_matches2[3] + upc_matches2[4] + upc_matches2[5]
-    OddSum = (upc_matches1[0] + upc_matches1[1] + upc_matches1[2] +
-              upc_matches1[3] + upc_matches1[4] + upc_matches1[5] + upc_matches1[6]) * 3
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    if(not return_check and len(upc) == 14):
-        if(CheckSum != upc_matches2[6]):
-            return False
-        if(CheckSum == upc_matches2[6]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 13):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate the sum of odd and even positioned digits
+    odd_sum = sum(upc_digits[0::2]) * 3
+    even_sum = sum(upc_digits[1::2])
+    
+    # Calculate the checksum digit
+    total_sum = odd_sum + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # If UPC is 14 digits, verify checksum
+    return checksum == upc_digits[-1] if len(upc) == 14 else str(checksum)
 
 
 def get_itf14_checksum(upc):
@@ -341,32 +340,28 @@ def fix_itf14_alt_checksum(upc):
 
 def validate_itf_checksum(upc):
     upc = str(upc)
-    if(len(upc) > 14):
-        fix_matches = re.findall("^(\\d{14})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 14 or len(upc) < 13):
+    
+    # Trim UPC to 14 digits if it's too long
+    if len(upc) > 14:
+        upc = re.findall("^\\d{14}", upc)[0]
+    
+    # Check for valid length (should be 13 or 14)
+    if len(upc) not in {13, 14}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    EvenSum = 0
-    EvenNum = 0
-    EvenNumX = len(upc_matches2)
-    while(EvenNum < EvenNumX):
-        EvenSum += upc_matches2[EvenNum]
-        EvenNum += 1
-    OddSum = 0
-    OddNum = 0
-    OddNumX = len(upc_matches1)
-    while(OddNum < OddNumX):
-        OddSum += (upc_matches1[EvenNum] * 3)
-        OddNum += 1
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate the sum of odd and even positioned digits
+    odd_sum = sum(upc_digits[0::2]) * 3
+    even_sum = sum(upc_digits[1::2])
+    
+    # Calculate the checksum digit
+    total_sum = odd_sum + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum as a string
+    return str(checksum)
 
 
 def get_itf_checksum(upc):
@@ -417,31 +412,32 @@ def fix_stf_checksum(upc):
 
 def validate_ean8_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 8):
-        fix_matches = re.findall("^(\\d{8})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 8 or len(upc) < 7):
+    
+    # Trim UPC to 8 digits if it's too long
+    if len(upc) > 8:
+        upc = re.findall("^\\d{8}", upc)[0]
+    
+    # Check for valid length (should be 7 or 8)
+    if len(upc) not in {7, 8}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    EvenSum = (upc_matches1[0] + upc_matches1[1] +
-               upc_matches1[2] + upc_matches1[3]) * 3
-    OddSum = upc_matches2[0] + upc_matches2[1] + upc_matches2[2]
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    if(not return_check and len(upc) == 8):
-        if(CheckSum != upc_matches2[3]):
-            return False
-        if(CheckSum == upc_matches2[3]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 7):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate the sum of odd and even positioned digits
+    odd_sum = sum(upc_digits[0::2]) * 3
+    even_sum = sum(upc_digits[1::2][:-1] if len(upc) == 8 else upc_digits[1::2])
+    
+    # Calculate the checksum digit
+    total_sum = odd_sum + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # If UPC is 8 digits, verify checksum
+    return checksum == upc_digits[-1] if len(upc) == 8 else str(checksum)
 
 
 def get_ean8_checksum(upc):
@@ -459,81 +455,50 @@ def fix_ean8_checksum(upc):
 
 def validate_upce_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 8):
-        fix_matches = re.findall("/^(\\d{8})/", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 8 or len(upc) < 7):
+    
+    # Trim UPC to 8 digits if it's too long
+    if len(upc) > 8:
+        upc = re.findall("^\d{8}", upc)[0]
+    
+    # Validate length and check for number system 0 or 1
+    if len(upc) not in {7, 8} or not re.match("^[01]", upc):
         return False
-    if(not re.findall("^(0|1)", upc)):
-        return False
-    CheckDigit = None
-    if(len(upc) == 8 and re.findall("^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)):
-        upc_matches = re.findall("^(\\d{7})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upc_matches = [int(x) for x in upc_matches]
-        CheckDigit = upc_matches[1]
-    if(re.findall("^(\\d{1})(\\d{5})([0-3])", upc)):
-        upc_matches = re.findall(
-            r"^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upc_matches = [int(x) for x in upc_matches]
-        if(int(upc_matches[6]) == 0):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[3] + upc_matches[5]) * 3
-            EvenSum = upc_matches[1] + upc_matches[4]
-        if(int(upc_matches[6]) == 1):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[3] + upc_matches[5]) * 3
-            EvenSum = upc_matches[1] + 1 + upc_matches[4]
-        if(int(upc_matches[6]) == 2):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[3] + upc_matches[5]) * 3
-            EvenSum = upc_matches[1] + 2 + upc_matches[4]
-        if(int(upc_matches[6]) == 3):
-            OddSum = (upc_matches[0] + upc_matches[2] + upc_matches[5]) * 3
-            EvenSum = upc_matches[1] + upc_matches[3] + upc_matches[4]
-    if(re.findall("^(\\d{1})(\\d{5})([4-9])", upc)):
-        upc_matches = re.findall(
-            r"^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upc_matches = [int(x) for x in upc_matches]
-        if(int(upc_matches[6]) == 4):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[4] + upc_matches[5]) * 3
-            EvenSum = upc_matches[1] + upc_matches[3]
-        if(int(upc_matches[6]) == 5):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[4] + upc_matches[6]) * 3
-            EvenSum = upc_matches[1] + upc_matches[3] + upc_matches[5]
-        if(int(upc_matches[6]) == 6):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[4] + upc_matches[6]) * 3
-            EvenSum = upc_matches[1] + upc_matches[3] + upc_matches[5]
-        if(int(upc_matches[6]) == 7):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[4] + upc_matches[6]) * 3
-            EvenSum = upc_matches[1] + upc_matches[3] + upc_matches[5]
-        if(int(upc_matches[6]) == 8):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[4] + upc_matches[6]) * 3
-            EvenSum = upc_matches[1] + upc_matches[3] + upc_matches[5]
-        if(int(upc_matches[6]) == 9):
-            OddSum = (upc_matches[0] + upc_matches[2] +
-                      upc_matches[4] + upc_matches[6]) * 3
-            EvenSum = upc_matches[1] + upc_matches[3] + upc_matches[5]
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    if(not return_check and len(upc) == 8):
-        if(CheckSum != CheckDigit):
-            return False
-        if(CheckSum == CheckDigit):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 7):
-        return str(CheckSum)
+
+    # Extract CheckDigit if upc is 8 digits
+    check_digit = int(upc[-1]) if len(upc) == 8 else None
+    upc_digits = [int(digit) for digit in upc[:7]]
+    
+    # Calculate OddSum and EvenSum based on last digit (upc_digits[6])
+    last_digit = upc_digits[6]
+    if last_digit == 0:
+        odd_sum = sum(upc_digits[i] for i in [0, 2, 3, 5]) * 3
+        even_sum = upc_digits[1] + upc_digits[4]
+    elif last_digit == 1:
+        odd_sum = sum(upc_digits[i] for i in [0, 2, 3, 5]) * 3
+        even_sum = upc_digits[1] + 1 + upc_digits[4]
+    elif last_digit == 2:
+        odd_sum = sum(upc_digits[i] for i in [0, 2, 3, 5]) * 3
+        even_sum = upc_digits[1] + 2 + upc_digits[4]
+    elif last_digit == 3:
+        odd_sum = sum(upc_digits[i] for i in [0, 2, 5]) * 3
+        even_sum = upc_digits[1] + upc_digits[3] + upc_digits[4]
+    elif last_digit == 4:
+        odd_sum = sum(upc_digits[i] for i in [0, 2, 4, 5]) * 3
+        even_sum = upc_digits[1] + upc_digits[3]
+    elif last_digit in {5, 6, 7, 8, 9}:
+        odd_sum = sum(upc_digits[i] for i in [0, 2, 4, 6]) * 3
+        even_sum = upc_digits[1] + upc_digits[3] + upc_digits[5]
+    
+    # Calculate CheckSum
+    total_sum = odd_sum + even_sum
+    calculated_checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the calculated checksum if requested
+    if return_check:
+        return str(calculated_checksum)
+    
+    # Validate the checksum if upc is 8 digits
+    return calculated_checksum == check_digit if len(upc) == 8 else str(calculated_checksum)
 
 
 def get_upce_checksum(upc):
@@ -551,30 +516,27 @@ def fix_upce_checksum(upc):
 
 def validate_ean2_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 3):
-        fix_matches = re.findall("^(\\d{3})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 3 or len(upc) < 2):
+    
+    # Trim UPC to 2 or 3 digits if it's too long
+    if len(upc) > 3:
+        upc = re.findall("^\\d{3}", upc)[0]
+    
+    # Check for valid length (should be 2 or 3)
+    if len(upc) not in {2, 3}:
         return False
-    if(len(upc) == 2):
-        upc_matches = re.findall("^(\\d{2})", upc)
-        upc_matches = [int(x) for x in upc_matches]
-    if(len(upc) == 3):
-        upc_matches = re.findall("^(\\d{2})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-        upc_matches = [int(x) for x in upc_matches]
-    if(len(upc_matches) <= 0):
-        return False
-    CheckSum = upc_matches[0] % 4
-    if(not return_check and len(upc) == 3):
-        if(CheckSum != upc_matches[1]):
-            return False
-        if(CheckSum == upc_matches[1]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 2):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc[:2]]
+    
+    # Calculate the checksum as the first digit modulo 4
+    checksum = upc_digits[0] % 4
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # If UPC is 3 digits, validate the checksum
+    return checksum == int(upc[2]) if len(upc) == 3 else str(checksum)
 
 
 def get_ean2_checksum(upc):
@@ -592,33 +554,27 @@ def fix_ean2_checksum(upc):
 
 def validate_ean5_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 6):
-        fix_matches = re.findall("^(\\d{6})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 6 or len(upc) < 5):
+    
+    # Trim UPC to 6 digits if it's too long
+    if len(upc) > 6:
+        upc = re.findall("^\\d{6}", upc)[0]
+    
+    # Check for valid length (should be 5 or 6)
+    if len(upc) not in {5, 6}:
         return False
-    if(len(upc) == 5):
-        upc_matches = re.findall("^(\\d{5})", upc)
-    if(len(upc) == 6):
-        upc_matches = re.findall("^(\\d{5})(\\d{1})", upc)
-        upc_matches = upc_matches[0]
-    if(len(upc_matches) <= 0):
-        return False
-    LeftDigit = list(upc_matches[0])
-    LeftDigit = [int(x) for x in LeftDigit]
-    CheckSum = (LeftDigit[0] * 3) + (LeftDigit[1] * 9) + \
-        (LeftDigit[2] * 3) + (LeftDigit[3] * 9) + (LeftDigit[4] * 3)
-    CheckSum = CheckSum % 10
-    upc_matches = [int(x) for x in upc_matches]
-    if(not return_check and len(upc) == 6):
-        if(CheckSum != upc_matches[1]):
-            return False
-        if(CheckSum == upc_matches[1]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 5):
-        return str(CheckSum)
+
+    # Extract digits and calculate checksum
+    upc_digits = [int(digit) for digit in upc[:5]]
+    checksum = (upc_digits[0] * 3 + upc_digits[1] * 9 + 
+                upc_digits[2] * 3 + upc_digits[3] * 9 + 
+                upc_digits[4] * 3) % 10
+
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # If UPC is 6 digits, validate checksum
+    return checksum == int(upc[5]) if len(upc) == 6 else str(checksum)
 
 
 def get_ean5_checksum(upc):
@@ -642,33 +598,32 @@ def fix_ean5_checksum(upc):
 
 def validate_usps_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 22):
-        fix_matches = re.findall("^(\\d{22})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 22 or len(upc) < 21):
+    
+    # Trim UPC to 22 digits if it's too long
+    if len(upc) > 22:
+        upc = re.findall("^\\d{22}", upc)[0]
+    
+    # Check for valid length (should be 21 or 22)
+    if len(upc) not in {21, 22}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    OddSum = (upc_matches1[0] + upc_matches1[1] + upc_matches1[2] + upc_matches1[3] + upc_matches1[4] +
-              upc_matches1[5] + upc_matches1[6] + upc_matches1[7] + upc_matches1[8] + upc_matches1[9] + upc_matches1[10]) * 3
-    EvenSum = upc_matches2[0] + upc_matches2[1] + upc_matches2[2] + upc_matches2[3] + upc_matches2[4] + \
-        upc_matches2[5] + upc_matches2[6] + \
-        upc_matches2[7] + upc_matches2[8] + upc_matches2[9]
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    if(not return_check and len(upc) == 22):
-        if(CheckSum != upc_matches2[10]):
-            return False
-        if(CheckSum == upc_matches2[10]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 21):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate OddSum and EvenSum
+    odd_sum = sum(upc_digits[0::2]) * 3
+    even_sum = sum(upc_digits[1::2][:-1] if len(upc) == 22 else upc_digits[1::2])
+    
+    # Calculate the checksum digit
+    total_sum = odd_sum + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # If UPC is 22 digits, validate checksum
+    return checksum == upc_digits[-1] if len(upc) == 22 else str(checksum)
 
 
 def get_usps_checksum(upc):
@@ -693,54 +648,34 @@ def fix_usps_checksum(upc):
 
 def validate_ups_checksum(upc, return_check=False):
     upc = str(upc).upper()
-    if(not re.findall("^1Z", upc)):
+    
+    # Check for "1Z" prefix and extract remaining 16 characters if present
+    if not upc.startswith("1Z"):
         return False
-    if(re.findall("^1Z", upc)):
-        fix_matches = re.findall("^1Z(\w*)", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 16):
-        fix_matches = re.findall("^(\w{16})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 16 or len(upc) < 15):
+    upc = upc[2:]
+    
+    # Trim UPC to 16 characters if too long
+    if len(upc) > 16:
+        upc = re.findall("^\\w{16}", upc)[0]
+    
+    # Check valid length (should be 15 or 16 after prefix removal)
+    if len(upc) not in {15, 16}:
         return False
-    if(len(upc) > 16):
-        fix_matches = re.findall("^(\w{16})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 16 or len(upc) < 15):
-        return False
-    upc_matches = list(upc)
-    upc_matches1 = upc_matches[0:][::2]
-    upc_count1 = 0
-    OddSum = 0
-    while(upc_count1 < 8):
-        if(upc_matches1[upc_count1].isdigit()):
-            OddSum = OddSum + int(upc_matches1[upc_count1])
-        if(not upc_matches1[upc_count1].isdigit()):
-            OddSum = OddSum + ((ord(upc_matches1[upc_count1]) - 63) % 10)
-        upc_count1 = upc_count1 + 1
-    upc_matches2 = upc_matches[1:][::2]
-    upc_count2 = 0
-    EvenSum = 0
-    while(upc_count2 < 7):
-        if(upc_matches2[upc_count2].isdigit()):
-            EvenSum = EvenSum + (int(upc_matches2[upc_count2]) * 2)
-        if(not upc_matches2[upc_count2].isdigit()):
-            EvenSum = EvenSum + \
-                (((ord(upc_matches2[upc_count2]) - 63) % 10) * 2)
-        upc_count2 = upc_count2 + 1
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 10
-    if(CheckSum > 0):
-        CheckSum = 10 - CheckSum
-    if(not return_check and len(upc) == 16):
-        if(CheckSum != int(upc_matches2[7])):
-            return False
-        if(CheckSum == int(upc_matches2[7])):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 15):
-        return str(CheckSum)
+
+    # Calculate OddSum and EvenSum based on character positions
+    odd_sum = sum((int(ch) if ch.isdigit() else (ord(ch) - 63) % 10) for ch in upc[::2])
+    even_sum = sum((int(ch) * 2 if ch.isdigit() else ((ord(ch) - 63) % 10) * 2) for ch in upc[1::2][:7])
+
+    # Calculate CheckSum
+    total_sum = odd_sum + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # Validate checksum if UPC length is 16
+    return checksum == int(upc[-1]) if len(upc) == 16 else str(checksum)
 
 
 def get_ups_checksum(upc):
@@ -764,30 +699,32 @@ def fix_ups_checksum(upc):
 
 def validate_fedex_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 12):
-        fix_matches = re.findall("^(\\d{12})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 12 or len(upc) < 11):
+    
+    # Trim UPC to 12 digits if it's too long
+    if len(upc) > 12:
+        upc = re.findall("^\\d{12}", upc)[0]
+    
+    # Check valid length (should be 11 or 12)
+    if len(upc) not in {11, 12}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    OddSum = (upc_matches1[0] * 3) + (upc_matches1[1] * 7) + (upc_matches1[2] * 1) + (
-        upc_matches1[3] * 3) + (upc_matches1[4] * 7) + (upc_matches1[5] * 1)
-    EvenSum = (upc_matches2[0] * 1) + (upc_matches2[1] * 3) + \
-        (upc_matches2[2] * 7) + (upc_matches2[3] * 1) + (upc_matches2[4] * 3)
-    AllSum = OddSum + EvenSum
-    CheckSum = AllSum % 11
-    if(not return_check and len(upc) == 12):
-        if(CheckSum != upc_matches2[5]):
-            return False
-        if(CheckSum == upc_matches2[5]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 11):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate OddSum and EvenSum using specific weight pattern
+    odd_sum = sum(upc_digits[i] * weight for i, weight in zip(range(0, 11, 2), [3, 7, 1, 3, 7, 1]))
+    even_sum = sum(upc_digits[i] * weight for i, weight in zip(range(1, 10, 2), [1, 3, 7, 1, 3]))
+    
+    # Calculate the checksum digit using modulo 11
+    total_sum = odd_sum + even_sum
+    checksum = total_sum % 11
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # Validate checksum if UPC length is 12
+    return checksum == upc_digits[-1] if len(upc) == 12 else str(checksum)
 
 
 def get_fedex_checksum(upc):
@@ -811,30 +748,30 @@ def fix_fedex_checksum(upc):
 
 def validate_imei_checksum(upc, return_check=False):
     upc = str(upc)
-    if(len(upc) > 15):
-        fix_matches = re.findall("^(\\d{15})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 15 or len(upc) < 14):
+    
+    # Trim UPC to 15 digits if it's too long
+    if len(upc) > 15:
+        upc = re.findall("^\\d{15}", upc)[0]
+    
+    # Check valid length (should be 14 or 15)
+    if len(upc) not in {14, 15}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    UPC_Sum = upc_matches1[0] + get_digital_root(upc_matches2[0] * 2) + upc_matches1[1] + get_digital_root(upc_matches2[1] * 2) + upc_matches1[2] + get_digital_root(upc_matches2[2] * 2) + upc_matches1[3] + get_digital_root(
-        upc_matches2[3] * 2) + upc_matches1[4] + get_digital_root(upc_matches2[4] * 2) + upc_matches1[5] + get_digital_root(upc_matches2[5] * 2) + upc_matches1[6] + get_digital_root(upc_matches2[6] * 2)
-    PreCheckSum = 0
-    while((UPC_Sum + PreCheckSum) % 10 != 0):
-        PreCheckSum += 1
-    CheckSum = PreCheckSum
-    if(not return_check and len(upc) == 15):
-        if(CheckSum != upc_matches1[7]):
-            return False
-        if(CheckSum == upc_matches1[7]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 14):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate UPC sum for Luhn algorithm with alternating digit root calculation
+    total_sum = sum(upc_digits[i] if i % 2 == 0 else get_digital_root(upc_digits[i] * 2) for i in range(14))
+    
+    # Calculate the checksum digit to make the total sum a multiple of 10
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # Validate checksum if UPC length is 15
+    return checksum == upc_digits[-1] if len(upc) == 15 else str(checksum)
 
 
 def get_imei_checksum(upc):
@@ -857,34 +794,34 @@ def fix_imei_checksum(upc):
 '''
 
 
+
 def validate_bcn_checksum(upc, return_check=False):
-    upc = str(upc)
-    upc = upc.replace("-", "")
-    upc = upc.replace(" ", "")
-    if(len(upc) > 16):
-        fix_matches = re.findall("^(\\d{16})", upc)
-        upc = fix_matches[0]
-    if(len(upc) > 16 or len(upc) < 15):
+    # Remove hyphens and spaces
+    upc = re.sub("[-\\s]", "", str(upc))
+    
+    # Trim UPC to 16 digits if it's too long
+    if len(upc) > 16:
+        upc = re.findall(r"^\\d{16}", upc)[0]
+    
+    # Check valid length (should be 15 or 16)
+    if len(upc) not in {15, 16}:
         return False
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    upc_matches1 = upc_matches[0:][::2]
-    upc_matches2 = upc_matches[1:][::2]
-    UPC_Sum = upc_matches2[0] + get_digital_root(upc_matches1[0] * 2) + upc_matches2[1] + get_digital_root(upc_matches1[1] * 2) + upc_matches2[2] + get_digital_root(upc_matches1[2] * 2) + upc_matches2[3] + get_digital_root(
-        upc_matches1[3] * 2) + upc_matches2[4] + get_digital_root(upc_matches1[4] * 2) + upc_matches2[5] + get_digital_root(upc_matches1[5] * 2) + upc_matches2[6] + get_digital_root(upc_matches1[6] * 2) + get_digital_root(upc_matches1[7] * 2)
-    PreCheckSum = 0
-    while((UPC_Sum + PreCheckSum) % 10 != 0):
-        PreCheckSum += 1
-    CheckSum = PreCheckSum
-    if(not return_check and len(upc) == 16):
-        if(CheckSum != upc_matches2[7]):
-            return False
-        if(CheckSum == upc_matches2[7]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 15):
-        return str(CheckSum)
+
+    # Convert UPC string to a list of integers
+    upc_digits = [int(digit) for digit in upc]
+    
+    # Calculate UPC sum with alternating digital root for Luhn algorithm
+    total_sum = sum(get_digital_root(upc_digits[i] * 2) if i % 2 == 0 else upc_digits[i] for i in range(15))
+    
+    # Calculate the checksum digit to make the total sum a multiple of 10
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+    
+    # Validate checksum if UPC length is 16
+    return checksum == upc_digits[-1] if len(upc) == 16 else str(checksum)
 
 
 def get_bcn_checksum(upc):
@@ -912,43 +849,27 @@ def fix_bcn_checksum(upc):
 
 
 def get_code11_alt_checksum(upc):
-    if(len(upc) < 1):
+    # Validate input
+    if len(upc) < 1 or not re.match("^[0-9\\-]+$", upc):
         return False
-    if(not re.findall("([0-9\-]+)", upc)):
-        return False
-    upc = upc.upper()
-    upc_matches = list(upc)
-    if(len(upc_matches) <= 0):
-        return False
-    Code11Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4",
-                   5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "-"}
-    Code11Values = dict(zip(Code11Array.values(), Code11Array))
-    upc_reverse = list(upc_matches)
-    upc_reverse.reverse()
-    upc_print = list(upc_matches)
-    UPC_Count = 0
-    UPC_Weight = 1
-    UPC_Sum = 0
-    while (UPC_Count < len(upc_reverse)):
-        if(UPC_Weight > 10):
-            UPC_Weight = 1
-        UPC_Sum += (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])])
-        UPC_Count += 1
-        UPC_Weight += 1
-    CheckSum = str(Code11Array[UPC_Sum % 11])
-    upc_reverse = list(upc_matches)
-    upc_reverse.reverse()
-    UPC_Count = 0
-    UPC_Weight = 1
-    UPC_Sum = 0
-    while (UPC_Count < len(upc_reverse)):
-        if(UPC_Weight > 9):
-            UPC_Weight = 1
-        UPC_Sum += (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])])
-        UPC_Count += 1
-        UPC_Weight += 1
-    CheckSum = str(CheckSum)+str(Code11Array[UPC_Sum % 11])
-    return str(CheckSum)
+
+    # Code11 mapping for values and characters
+    code11_array = {str(i): i for i in range(10)}
+    code11_array["-"] = 10
+
+    def calculate_weighted_sum(upc_reversed, max_weight):
+        """Calculate the weighted sum with a max weight limit."""
+        return sum(((i % max_weight) + 1) * code11_array[char] for i, char in enumerate(upc_reversed))
+
+    # First checksum calculation with max weight of 10
+    upc_reversed = upc[::-1]
+    checksum1 = list(code11_array.keys())[calculate_weighted_sum(upc_reversed, 10) % 11]
+
+    # Second checksum calculation with max weight of 9
+    checksum2 = list(code11_array.keys())[calculate_weighted_sum(upc_reversed, 9) % 11]
+
+    # Return concatenated checksums
+    return checksum1 + checksum2
 
 
 '''
@@ -959,31 +880,21 @@ def get_code11_alt_checksum(upc):
 
 
 def get_code11_checksum(upc):
-    if(len(upc) < 1):
+    # Validate input
+    if len(upc) < 1 or not re.match("^[0-9\\-]+$", upc):
         return False
-    if(not re.findall("([0-9\-]+)", upc)):
-        return False
-    upc = upc.upper()
-    upc_matches = list(upc)
-    if(len(upc_matches) <= 0):
-        return False
-    Code11Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4",
-                   5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "-"}
-    Code11Values = dict(zip(Code11Array.values(), Code11Array))
-    upc_reverse = list(upc_matches)
-    upc_reverse.reverse()
-    upc_print = list(upc_matches)
-    UPC_Count = 0
-    UPC_Weight = 1
-    UPC_Sum = 0
-    while (UPC_Count < len(upc_reverse)):
-        if(UPC_Weight > 10):
-            UPC_Weight = 1
-        UPC_Sum += (UPC_Weight * Code11Values[str(upc_reverse[UPC_Count])])
-        UPC_Count += 1
-        UPC_Weight += 1
-    CheckSum = str(Code11Array[UPC_Sum % 11])
-    return str(CheckSum)
+
+    # Code11 mapping for values and characters
+    code11_array = {str(i): i for i in range(10)}
+    code11_array["-"] = 10
+
+    # Reverse the UPC and calculate the weighted sum
+    upc_reversed = upc[::-1]
+    upc_sum = sum((i % 10 + 1) * code11_array[char] for i, char in enumerate(upc_reversed))
+
+    # Calculate and return the checksum
+    checksum = list(code11_array.keys())[upc_sum % 11]
+    return str(checksum)
 
 
 '''
@@ -993,59 +904,32 @@ def get_code11_checksum(upc):
 '''
 
 
-def get_code39_checksum_mod10(upc):
-    if(len(upc) < 1):
-        return False
-    if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-        return False
-    upc = upc.upper()
-    upc_matches = list(upc)
-    if(len(upc_matches) <= 0):
-        return False
-    Code39Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K",
-                   21: "L", 22: "M", 23: "N", 24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%"}
-    Code39Values = dict(zip(Code39Array.values(), Code39Array))
-    upc_print = list(upc_matches)
-    UPC_Count = 0
-    UPC_Sum = 0
-    while (UPC_Count < len(upc_matches)):
-        UPC_Sum += Code39Values[str(upc_matches[UPC_Count])]
-        UPC_Count += 1
-    CheckSum = str(Code39Array[UPC_Sum % 10])
-    return str(CheckSum)
+# Mapping for Code39 characters
+CODE39_VALUES = {str(i): i for i in range(10)}
+CODE39_VALUES.update({chr(65 + i): 10 + i for i in range(26)})  # A-Z
+CODE39_VALUES.update({"-": 36, ".": 37, " ": 38, "$": 39, "/": 40, "+": 41, "%": 42})
+CODE39_ARRAY = {v: k for k, v in CODE39_VALUES.items()}
 
+def calculate_code39_checksum(upc, mod_value):
+    # Validate input
+    if len(upc) < 1 or not re.match("^[0-9A-Z\\-.\$\\/\\+% ]+$", upc, re.IGNORECASE):
+        return False
+
+    # Calculate checksum based on mod_value
+    upc_sum = sum(CODE39_VALUES[char] for char in upc.upper())
+    checksum = CODE39_ARRAY[upc_sum % mod_value]
+    return checksum
+
+def get_code39_checksum_mod10(upc):
+    return calculate_code39_checksum(upc, 10)
 
 def get_code39_checksum_mod43(upc):
-    if(len(upc) < 1):
-        return False
-    if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-        return False
-    upc = upc.upper()
-    upc_matches = list(upc)
-    if(len(upc_matches) <= 0):
-        return False
-    Code39Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K",
-                   21: "L", 22: "M", 23: "N", 24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%"}
-    Code39Values = dict(zip(Code39Array.values(), Code39Array))
-    upc_print = list(upc_matches)
-    UPC_Count = 0
-    UPC_Sum = 0
-    while (UPC_Count < len(upc_matches)):
-        UPC_Sum += Code39Values[str(upc_matches[UPC_Count])]
-        UPC_Count += 1
-    CheckSum = str(Code39Array[UPC_Sum % 43])
-    return str(CheckSum)
-
+    return calculate_code39_checksum(upc, 43)
 
 def get_code39_checksum(upc, getmod="43"):
-    getmod = str(getmod)
-    if(getmod != "10" and getmod != "43"):
-        getmod = "43"
-    if(getmod == "10"):
-        return get_code39_checksum_mod10(upc)
-    if(getmod == "43"):
-        return get_code39_checksum_mod43(upc)
-    return False
+    # Determine modulus based on getmod argument
+    mod_value = 10 if getmod == "10" else 43
+    return calculate_code39_checksum(upc, mod_value)
 
 
 '''
@@ -1054,45 +938,39 @@ def get_code39_checksum(upc, getmod="43"):
 // Source: http://en.wikipedia.org/wiki/Code_93
 '''
 
+# Mapping for Code93 characters and values
+CODE93_VALUES = {str(i): i for i in range(10)}
+CODE93_VALUES.update({chr(65 + i): 10 + i for i in range(26)})  # A-Z
+CODE93_VALUES.update({"-": 36, ".": 37, " ": 38, "$": 39, "/": 40, "+": 41, "%": 42, "($)": 43, "(%)": 44, "(/)": 45, "(+)": 46})
+CODE93_ARRAY = {v: k for k, v in CODE93_VALUES.items()}
+
+
+import re
+
+# Mapping for Code93 characters and values (reuse CODE93_VALUES and CODE93_ARRAY from previous function)
+CODE93_VALUES = {str(i): i for i in range(10)}
+CODE93_VALUES.update({chr(65 + i): 10 + i for i in range(26)})  # A-Z
+CODE93_VALUES.update({"-": 36, ".": 37, " ": 38, "$": 39, "/": 40, "+": 41, "%": 42, "($)": 43, "(%)": 44, "(/)": 45, "(+)": 46})
+CODE93_ARRAY = {v: k for k, v in CODE93_VALUES.items()}
 
 def get_code93_alt_checksum(upc):
-    if(len(upc) < 1):
+    # Validate input
+    if len(upc) < 1 or not re.match("^[0-9A-Z\\-\\.\\$\\/\\+% ]+$", upc, re.IGNORECASE):
         return False
-    if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-        return False
-    upc = upc.upper()
-    upc_matches = list(upc)
-    if(len(upc_matches) <= 0):
-        return False
-    Code93Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K", 21: "L", 22: "M", 23: "N",
-                   24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%", 43: "($)", 44: "(%)", 45: "(/)", 46: "(+)"}
-    Code93Values = dict(zip(Code93Array.values(), Code93Array))
-    upc_reverse = list(upc_matches)
-    upc_reverse.reverse()
-    upc_print = list(upc_matches)
-    UPC_Count = 0
-    UPC_Weight = 1
-    UPC_Sum = 0
-    while (UPC_Count < len(upc_reverse)):
-        if(UPC_Weight > 20):
-            UPC_Weight = 1
-        UPC_Sum += (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])])
-        UPC_Count += 1
-        UPC_Weight += 1
-    CheckSum = str(Code93Array[UPC_Sum % 47])
-    upc_reverse = list(upc_matches)
-    upc_reverse.reverse()
-    UPC_Count = 0
-    UPC_Weight = 1
-    UPC_Sum = 0
-    while (UPC_Count < len(upc_reverse)):
-        if(UPC_Weight > 15):
-            UPC_Weight = 1
-        UPC_Sum += (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])])
-        UPC_Count += 1
-        UPC_Weight += 1
-    CheckSum = str(CheckSum)+str(Code93Array[UPC_Sum % 47])
-    return str(CheckSum)
+
+    # Helper function to calculate weighted sum with specified max weight
+    def calculate_weighted_sum(upc_reversed, max_weight):
+        return sum(((i % max_weight) + 1) * CODE93_VALUES[char] for i, char in enumerate(upc_reversed))
+
+    # Calculate first checksum with max weight of 20
+    upc_reversed = upc[::-1].upper()
+    checksum1 = CODE93_ARRAY[calculate_weighted_sum(upc_reversed, 20) % 47]
+
+    # Calculate second checksum with max weight of 15
+    checksum2 = CODE93_ARRAY[calculate_weighted_sum(upc_reversed, 15) % 47]
+
+    # Return concatenated checksums
+    return checksum1 + checksum2
 
 
 '''
@@ -1103,31 +981,17 @@ def get_code93_alt_checksum(upc):
 
 
 def get_code93_checksum(upc):
-    if(len(upc) < 1):
+    # Validate input
+    if len(upc) < 1 or not re.match(r"^[0-9A-Z\\-\\.\\$\\/\\+% ]+$", upc, re.IGNORECASE):
         return False
-    if(not re.findall("([0-9a-zA-Z\-\.\$\/\+% ]+)", upc)):
-        return False
-    upc = upc.upper()
-    upc_matches = list(upc)
-    if(len(upc_matches) <= 0):
-        return False
-    Code93Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K", 21: "L", 22: "M", 23: "N",
-                   24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%", 43: "($)", 44: "(%)", 45: "(/)", 46: "(+)"}
-    Code93Values = dict(zip(Code93Array.values(), Code93Array))
-    upc_reverse = list(upc_matches)
-    upc_reverse.reverse()
-    upc_print = list(upc_matches)
-    UPC_Count = 0
-    UPC_Weight = 1
-    UPC_Sum = 0
-    while (UPC_Count < len(upc_reverse)):
-        if(UPC_Weight > 20):
-            UPC_Weight = 1
-        UPC_Sum += (UPC_Weight * Code93Values[str(upc_reverse[UPC_Count])])
-        UPC_Count += 1
-        UPC_Weight += 1
-    CheckSum = str(Code93Array[UPC_Sum % 47])
-    return str(CheckSum)
+
+    # Calculate the weighted sum with a maximum weight of 20
+    upc_reversed = upc[::-1].upper()
+    total_sum = sum(((i % 20) + 1) * CODE93_VALUES[char] for i, char in enumerate(upc_reversed))
+    
+    # Calculate the checksum character based on modulus 47
+    checksum = CODE93_ARRAY[total_sum % 47]
+    return checksum
 
 
 '''
@@ -1138,65 +1002,36 @@ def get_code93_checksum(upc):
 
 
 def get_code128_checksum(upc):
-    if(len(upc) % 2):
+    # Validate input: hexadecimal string with even length and at least 6 characters
+    if len(upc) < 6 or len(upc) % 2 != 0 or not re.match("^[0-9a-f]+$", upc, re.IGNORECASE):
         return False
-    if(len(upc) < 6):
-        return False
-    if(not re.findall("([0-9a-f]+)", upc)):
-        return False
-    upc = upc.lower()
-    if(not re.findall("[0-9a-f]{2}", upc)):
-        return False
-    upc_matches = re.findall("[0-9a-f]{2}", upc)
-    upc_to_dec = list([int(x, 16) for x in upc_matches])
-    icount = 1
-    icountadd = 1
-    checksum = 0
-    if(upc_to_dec[0] > 102 and upc_to_dec[0] < 106):
-        checksum = checksum + upc_to_dec[0]
-        icount = 1
-    else:
-        checksum = 0
-        icount = 0
-    upc_less_count = len(upc_to_dec) - 1
-    while(icount < len(upc_to_dec)):
-        if(icount == upc_less_count and (upc_to_dec[icount] > 105 and upc_to_dec[icount] < 108)):
-            checksum = checksum
-        else:
-            checksum = checksum + (upc_to_dec[icount] * icountadd)
-        icount = icount + 1
-        icountadd = icountadd + 1
-    checksum = str(format(checksum % 103, 'x')).zfill(2)
-    return checksum
+    
+    # Convert to lowercase and split into two-character hexadecimal parts
+    upc_matches = re.findall("[0-9a-f]{2}", upc.lower())
+    upc_to_dec = [int(x, 16) for x in upc_matches]
+    
+    # Calculate checksum with weighted sum
+    checksum = upc_to_dec[0] if 102 < upc_to_dec[0] < 106 else 0
+    for i, val in enumerate(upc_to_dec[1:], start=1):
+        if not (i == len(upc_to_dec) - 1 and 105 < val < 108):  # Ignore last character if special code
+            checksum += val * i
 
+    # Return checksum as 2-digit hexadecimal string
+    return format(checksum % 103, '02x')
 
 def get_code128alt_checksum(upc):
-    upc = str(upc)
-    if(len(upc) < 4):
-        return False
-    upc = convert_ascii_code128_to_hex_code128(upc)
-    return get_code128_checksum(upc)
-
+    # Convert ASCII to hexadecimal and calculate checksum
+    hex_upc = convert_ascii_code128_to_hex_code128(str(upc))
+    return get_code128_checksum(hex_upc)
 
 def get_code128dec_checksum(upc):
-    upc = str(upc)
-    if(len(upc) < 12):
+    # Validate input for decimal Code128 representation
+    if len(upc) < 12 or not re.match("^\\d{3}+$", upc):
         return False
-    if(not re.findall("[0-9]{3}", upc)):
-        return False
-    upc_matches = re.findall("[0-9]{3}", upc)
-    il = len(upc_matches)
-    i = 0
-    upcout = ""
-    while(i < il):
-        dectohex = format(int(upc_matches[i]), 'x')
-        dectohexzero = str(dectohex).zfill(2)
-        if(len(dectohexzero) > 2):
-            return False
-        upcout = upcout+str(dectohexzero)
-        i = i + 1
-    upc = upcout
-    return get_code128_checksum(upc)
+    
+    # Convert each 3-digit decimal segment to 2-digit hexadecimal
+    upc_hex = ''.join(format(int(upc[i:i+3]), '02x') for i in range(0, len(upc), 3))
+    return get_code128_checksum(upc_hex)
 
 
 '''
@@ -1207,77 +1042,51 @@ def get_code128dec_checksum(upc):
 
 
 def get_msi_checksum_mod10(upc):
-    upc = str(upc)
-    upc = upc.upper()
-    upc_matches = list(upc)
-    upc_matches = [int(x) for x in upc_matches]
-    if(len(upc) % 2 == 0):
-        upc_matches1 = "".join([str(i) for i in upc_matches[1:][::2]])
-        upc_matches1 = list(str(int(upc_matches1) * 2))
-        upc_matches1 = [int(x) for x in upc_matches1]
-        upc_matches2 = upc_matches[0:][::2]
-    else:
-        upc_matches1 = "".join([str(i) for i in upc_matches[0:][::2]])
-        upc_matches1 = list(str(int(upc_matches1) * 2))
-        upc_matches1 = [int(x) for x in upc_matches1]
-        upc_matches2 = upc_matches[1:][::2]
-    PreCount = 0
-    UPC_Sum = 0
-    while (PreCount <= len(upc_matches1)-1):
-        UPC_Sum += upc_matches1[PreCount]
-        PreCount += 1
-    PreCount = 0
-    while (PreCount <= len(upc_matches2)-1):
-        UPC_Sum += upc_matches2[PreCount]
-        PreCount += 1
-    CheckSum = 10 - (UPC_Sum % 10)
-    return str(CheckSum)
-
+    upc_digits = [int(digit) for digit in str(upc)]
+    
+    # Split digits into odd and even indexed lists based on length
+    odd_index_digits = upc_digits[1::2] if len(upc_digits) % 2 == 0 else upc_digits[::2]
+    even_index_digits = upc_digits[::2] if len(upc_digits) % 2 == 0 else upc_digits[1::2]
+    
+    # Double odd indexed digits, split and sum
+    odd_sum = sum(int(digit) for digit in ''.join(str(int(num) * 2) for num in odd_index_digits))
+    even_sum = sum(even_index_digits)
+    
+    # Calculate and return the checksum
+    total_sum = odd_sum + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+    return str(checksum)
 
 def get_msi_checksum_mod11(upc, modtype="ibm"):
-    if(modtype == "ibm"):
-        countup = (2, 3, 4, 5, 6, 7)
-    elif(modtype == "ncr"):
-        countup = (2, 3, 4, 5, 6, 7, 8, 9)
-    else:
-        countup = (2, 3, 4, 5, 6, 7)
-    upc_reverse = list(upc)
-    upc_reverse.reverse()
-    startcount = 0
-    seccount = countup[0]
-    endcount = len(upc_reverse)
-    UPC_Sum = 0
-    while(startcount < endcount):
-        if(seccount > countup[-1]):
-            seccount = countup[0]
-        UPC_Sum += int(upc_reverse[startcount]) * seccount
-        seccount += 1
-        startcount += 1
-    CheckSum = ((11 - (UPC_Sum % 11)) % 11) % 11
-    return str(CheckSum)
-
+    # Set weight sequence based on modtype
+    weights = (2, 3, 4, 5, 6, 7, 8, 9) if modtype.lower() == "ncr" else (2, 3, 4, 5, 6, 7)
+    
+    # Reverse UPC and calculate weighted sum
+    upc_reversed = list(map(int, str(upc)[::-1]))
+    weighted_sum = sum(num * weights[i % len(weights)] for i, num in enumerate(upc_reversed))
+    
+    # Calculate and return the checksum
+    checksum = (11 - (weighted_sum % 11)) % 11
+    return str(checksum)
 
 def get_msi_checksum_mod1010(upc):
-    CheckSum = get_msi_checksum_mod10(get_msi_checksum_mod10(upc))
-    return str(CheckSum)
-
+    # Apply mod 10 twice
+    return get_msi_checksum_mod10(get_msi_checksum_mod10(upc))
 
 def get_msi_checksum_mod1110(upc, modtype="ibm"):
-    CheckSum = get_msi_checksum_mod10(get_msi_checksum_mod11(upc, modtype))
-    return str(CheckSum)
-
+    # Apply mod 11 then mod 10
+    return get_msi_checksum_mod10(get_msi_checksum_mod11(upc, modtype))
 
 def get_msi_checksum(upc, getmod="10", modtype="ibm"):
+    # Select appropriate checksum calculation based on getmod value
     getmod = str(getmod)
-    if(getmod != "10" and getmod != "11" and getmod != "1010" and getmod != "1110"):
-        getmod = "10"
-    if(getmod == "10"):
+    if getmod == "10":
         return get_msi_checksum_mod10(upc)
-    if(getmod == "11"):
+    elif getmod == "11":
         return get_msi_checksum_mod11(upc, modtype)
-    if(getmod == "1010"):
+    elif getmod == "1010":
         return get_msi_checksum_mod1010(upc)
-    if(getmod == "1110"):
+    elif getmod == "1110":
         return get_msi_checksum_mod1110(upc, modtype)
     return False
 
@@ -1289,37 +1098,28 @@ def get_msi_checksum(upc, getmod="10", modtype="ibm"):
 
 
 def validate_issn8_checksum(upc, return_check=False):
-    upc = str(upc)
-    upc = upc.replace("-", "")
-    upc = upc.replace(" ", "")
-    if(len(upc) > 8):
-        fix_matches = re.findall("^(\\d{8})", upc)
-        fix_matches = fix_matches[0]
-        upc = fix_matches[0]+fix_matches[1]
-    if(len(upc) > 8 or len(upc) < 7):
+    # Remove hyphens and spaces
+    upc = re.sub("[-\\s]", "", str(upc))
+    
+    # Validate length
+    if len(upc) not in {7, 8}:
         return False
-    if(len(upc) == 7):
-        upc_matches = re.findall(
-            r"^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-    if(len(upc) == 8):
-        upc_matches = re.findall(
-            r"^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-    upc_matches = upc_matches[0]
-    upc_matches = [int(x) for x in upc_matches]
-    AllSum = (upc_matches[0] * 8) + (upc_matches[1] * 7) + (upc_matches[2] * 6) + (
-        upc_matches[3] * 5) + (upc_matches[4] * 4) + (upc_matches[5] * 3) + (upc_matches[6] * 2)
-    CheckSum = AllSum % 11
-    if(CheckSum > 0):
-        CheckSum = 11 - CheckSum
-    if(not return_check and len(upc) == 8):
-        if(CheckSum != upc_matches[7]):
-            return False
-        if(CheckSum == upc_matches[7]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 7):
-        return str(CheckSum)
+
+    # Convert ISSN to a list of integers
+    upc_digits = [int(digit) for digit in upc[:7]]
+    
+    # Calculate weighted sum based on ISSN-8 rules
+    total_sum = sum(upc_digits[i] * (8 - i) for i in range(7))
+    
+    # Calculate the checksum digit
+    checksum = (11 - (total_sum % 11)) % 11
+    
+    # Return the checksum digit if requested
+    if return_check:
+        return str(checksum)
+
+    # If ISSN is 8 digits, validate checksum
+    return checksum == int(upc[7]) if len(upc) == 8 else str(checksum)
 
 
 def get_issn8_checksum(upc):
@@ -1367,39 +1167,27 @@ def fix_issn13_checksum(upc):
 
 
 def validate_isbn10_checksum(upc, return_check=False):
-    upc = str(upc)
-    upc = upc.replace("-", "")
-    upc = upc.replace(" ", "")
-    if(len(upc) > 10):
-        fix_matches = re.findall("^(\\d{9})(\\d{1}|X{1})", upc)
-        fix_matches = fix_matches[0]
-        upc = fix_matches[0]+fix_matches[1]
-    if(len(upc) > 10 or len(upc) < 9):
+    # Remove hyphens and spaces
+    upc = re.sub("[-\\s]", "", str(upc))
+    
+    # Validate length
+    if len(upc) not in {9, 10}:
         return False
-    if(len(upc) == 9):
-        upc_matches = re.findall(
-            r"^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-    if(len(upc) == 10):
-        upc_matches = re.findall(
-            r"^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1}|X{1})", upc)
-    upc_matches = upc_matches[0]
-    upc_matches = [int(x) for x in upc_matches]
-    AllSum = (upc_matches[0] * 10) + (upc_matches[1] * 9) + (upc_matches[2] * 8) + (upc_matches[3] * 7) + (
-        upc_matches[4] * 6) + (upc_matches[5] * 5) + (upc_matches[6] * 4) + (upc_matches[7] * 3) + (upc_matches[8] * 2)
-    CheckSum = 0
-    while((AllSum + (CheckSum * 1)) % 11):
-        CheckSum += 1
-    if(CheckSum == 10):
-        CheckSum = "X"
-    if(not return_check and len(upc) == 10):
-        if(str(CheckSum) != upc_matches[9]):
-            return False
-        if(str(CheckSum) == upc_matches[9]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 9):
-        return str(CheckSum)
+
+    # Calculate weighted sum for the first 9 digits
+    upc_digits = [int(digit) for digit in upc[:9]]
+    total_sum = sum(upc_digits[i] * (10 - i) for i in range(9))
+    
+    # Calculate checksum
+    checksum = (11 - (total_sum % 11)) % 11
+    checksum_char = "X" if checksum == 10 else str(checksum)
+    
+    # Return the checksum if requested
+    if return_check:
+        return checksum_char
+
+    # If ISBN is 10 digits, validate checksum
+    return checksum_char == upc[-1] if len(upc) == 10 else checksum_char
 
 
 def get_isbn10_checksum(upc):
@@ -1449,38 +1237,28 @@ def fix_isbn13_checksum(upc):
 
 
 def validate_ismn10_checksum(upc, return_check=False):
-    upc = str(upc)
-    upc = upc.replace("M", "")
-    upc = upc.replace("-", "")
-    upc = upc.replace(" ", "")
-    if(len(upc) > 9):
-        fix_matches = re.findall("^(\\d{8})(\\d{1})", upc)
-        fix_matches = fix_matches[0]
-        upc = fix_matches[0]+fix_matches[1]
-    if(len(upc) > 9 or len(upc) < 8):
+    # Remove "M" prefix, hyphens, and spaces
+    upc = re.sub("[M-\\s]", "", str(upc))
+    
+    # Validate length (should be 8 or 9 digits after cleaning)
+    if len(upc) not in {8, 9}:
         return False
-    if(len(upc) == 8):
-        upc_matches = re.findall(
-            r"^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-    if(len(upc) == 9):
-        upc_matches = re.findall(
-            r"^(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})", upc)
-    upc_matches = upc_matches[0]
-    upc_matches = [int(x) for x in upc_matches]
-    AllSum = (3 * 3) + (upc_matches[0] * 1) + (upc_matches[1] * 3) + (upc_matches[2] * 1) + (upc_matches[3] * 3) + (
-        upc_matches[4] * 1) + (upc_matches[5] * 3) + (upc_matches[6] * 1) + (upc_matches[7] * 3)
-    CheckSum = 1
-    while((AllSum + (CheckSum * 1)) % 10):
-        CheckSum += 1
-    if(not return_check and len(upc) == 9):
-        if(CheckSum != upc_matches[8]):
-            return False
-        if(CheckSum == upc_matches[8]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(upc) == 8):
-        return str(CheckSum)
+
+    # Convert ISMN to a list of integers
+    upc_digits = [int(digit) for digit in upc[:8]]
+    
+    # Calculate weighted sum with alternating weights 1 and 3, starting with 3 for 'M'
+    total_sum = 3 + sum(upc_digits[i] * (3 if i % 2 == 1 else 1) for i in range(8))
+    
+    # Calculate checksum
+    checksum = (10 - (total_sum % 10)) % 10
+    
+    # Return the checksum if requested
+    if return_check:
+        return str(checksum)
+
+    # If ISMN is 9 digits, validate checksum
+    return checksum == int(upc[8]) if len(upc) == 9 else str(checksum)
 
 
 def get_ismn10_checksum(upc):
@@ -1531,74 +1309,92 @@ def fix_ismn13_checksum(upc):
 '''
 
 
+# Predefined number replacement tables
+NUM_REP1 = [0, 2, 4, 6, 8, 9, 1, 3, 5, 7]
+NUM_REP2 = [0, 3, 6, 9, 2, 5, 8, 1, 4, 7]
+NUM_REP3 = [0, 5, 9, 4, 8, 3, 7, 2, 6, 1]
+
 def validate_vw_price_checksum(price, return_check=False):
-    price = str(price)
-    if(len(price) == 1):
-        price = "000"+price
-    if(len(price) == 2):
-        price = "00"+price
-    if(len(price) == 3):
-        price = "0"+price
-    if(len(price) > 5):
-        if(re.findall("^(\\d{5})", price)):
-            price_matches = re.findall("^(\\d{5})", price)
-            price = price_matches[0]
-    price_split = list(price)
-    price_split = [int(x) for x in price_split]
-    numrep1 = [0, 2, 4, 6, 8, 9, 1, 3, 5, 7]
-    numrep2 = [0, 3, 6, 9, 2, 5, 8, 1, 4, 7]
-    numrep3 = [0, 5, 9, 4, 8, 3, 7, 2, 6, 1]
-    if(len(price) == 4):
-        price_split[0] = numrep1[price_split[0]]
-        price_split[1] = numrep1[price_split[1]]
-        price_split[2] = numrep2[price_split[2]]
-        price_split[3] = numrep3[price_split[3]]
-        price_add = (price_split[0] + price_split[1] +
-                     price_split[2] + price_split[3]) * 3
-    if(len(price) == 5):
-        price_split[1] = numrep1[price_split[1]]
-        price_split[2] = numrep1[price_split[2]]
-        price_split[3] = numrep2[price_split[3]]
-        price_split[4] = numrep3[price_split[4]]
-        price_add = (price_split[1] + price_split[2] +
-                     price_split[3] + price_split[4]) * 3
-    CheckSum = price_add % 10
-    if(not return_check and len(price) == 5):
-        if(CheckSum != price_split[0]):
-            return False
-        if(CheckSum == price_split[0]):
-            return True
-    if(return_check):
-        return str(CheckSum)
-    if(len(price) == 4):
-        return str(CheckSum)
-    return str(CheckSum)
+    # Zero-pad the price to ensure it is at least 4 digits
+    price = price.zfill(4)
+    
+    # Validate and extract 4 or 5 digits
+    if len(price) > 5:
+        price = re.match("^\\d{5}", price).group(0)
+    elif len(price) not in {4, 5}:
+        return False
+    
+    # Convert to list of integers
+    price_digits = [int(digit) for digit in price]
 
+    # Calculate the checksum using predefined tables
+    if len(price) == 4:
+        price_digits[0] = NUM_REP1[price_digits[0]]
+        price_digits[1] = NUM_REP1[price_digits[1]]
+        price_digits[2] = NUM_REP2[price_digits[2]]
+        price_digits[3] = NUM_REP3[price_digits[3]]
+        price_sum = sum(price_digits) * 3
+    elif len(price) == 5:
+        price_digits[1] = NUM_REP1[price_digits[1]]
+        price_digits[2] = NUM_REP1[price_digits[2]]
+        price_digits[3] = NUM_REP2[price_digits[3]]
+        price_digits[4] = NUM_REP3[price_digits[4]]
+        price_sum = sum(price_digits[1:]) * 3
 
-def get_vw_price_checksum(price, return_check=False):
-    price = str(price)
-    if(len(price) == 1):
-        price = "000"+price
-    if(len(price) == 2):
-        price = "00"+price
-    if(len(price) == 3):
-        price = "0"+price
-    return validate_vw_price_checksum(price, True)
+    # Calculate the checksum digit
+    checksum = price_sum % 10
+    
+    # Return the checksum if requested
+    if return_check:
+        return str(checksum)
+    
+    # Validate checksum for a 5-digit price
+    return checksum == price_digits[0] if len(price) == 5 else str(checksum)
 
+def get_vw_price_checksum(price):
+    # Calculate the checksum for a given price
+    return validate_vw_price_checksum(price.zfill(4), return_check=True)
 
 def fix_vw_price_checksum(price):
-    price = str(price)
-    if(len(price) == 1):
-        price = "000"+price
-    if(len(price) == 2):
-        price = "00"+price
-    if(len(price) == 3):
-        price = "0"+price
-    if(len(price) == 5):
-        fix_matches = re.findall("^(\\d{1})(\\d{4})", price)
-        fix_matches = fix_matches[0]
-        price = fix_matches[1]
-    if(len(price) > 4):
-        fix_matches = re.findall("^(\\d{4})", price)
-        price = fix_matches[0]
-    return str(get_vw_price_checksum(price, True))+price
+    # Zero-pad and validate the price length
+    price = price.zfill(4)
+    if len(price) > 4:
+        price = re.match("^\\d{4}", price).group(0)
+    # Return the correct price with checksum prepended
+    return str(get_vw_price_checksum(price)) + price
+
+# Define a list of allowed prefixes for varying weight codes
+VARYING_WEIGHT_PREFIXES = ["02"] + ["2{}".format(i) for i in range(1, 10)]
+
+def validate_ean13_varying_weight_checksum(ean_code, return_check=False):
+    # Remove any non-digit characters
+    ean_code = re.sub("\\D", "", str(ean_code))
+    
+    # Check if the length is 13 and starts with a valid varying weight prefix
+    if len(ean_code) != 13 or ean_code[:2] not in VARYING_WEIGHT_PREFIXES:
+        return False
+
+    # Convert code to a list of integers
+    digits = [int(d) for d in ean_code[:12]]  # Exclude the checksum digit for calculation
+    
+    # Calculate the weighted sum for checksum (odd positions * 1, even positions * 3)
+    total_sum = sum(d * (3 if i % 2 else 1) for i, d in enumerate(digits))
+    checksum = (10 - (total_sum % 10)) % 10  # Calculate checksum digit
+    
+    # Return the checksum if requested
+    if return_check:
+        return str(checksum)
+    
+    # Validate the checksum digit
+    return checksum == int(ean_code[-1])
+
+def get_ean13_varying_weight_checksum(ean_code):
+    # Returns the calculated checksum for an EAN-13 code with varying weight prefix
+    return validate_ean13_varying_weight_checksum(ean_code, return_check=True)
+
+def fix_ean13_varying_weight_checksum(ean_code):
+    # Remove non-digit characters and ensure it is a 12-digit code
+    ean_code = re.sub("\\D", "", str(ean_code)).zfill(12)
+    
+    # Return the complete code with the correct checksum appended
+    return ean_code + get_ean13_varying_weight_checksum(ean_code)
