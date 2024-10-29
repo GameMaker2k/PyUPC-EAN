@@ -58,7 +58,26 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
         imageoutlib = "pillow"
     if(not pilsupport and not cairosupport):
         return False
-    if(outfile is None):
+    # Check if input is a Pillow Image, Cairo ImageSurface, or file path
+    if pilsupport and imageoutlib == "pillow" and not isinstance(outfile[1], Image.Image):
+        upc_img = outfile.convert('RGB')
+    elif pilsupport and imageoutlib == "pillow" and isinstance(outfile[1], Image.Image):
+        upc_preimg = outfile[1]
+        upc_img = outfile[0]
+        oldoutfile = None
+        outfile = None
+    elif cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (not isinstance(outfile[1], cairo.ImageSurface) and not isinstance(outfile[1], cairo.SVGSurface) and isinstance(outfile[1], cairo.PDFSurface) and not isinstance(outfile[1], cairo.PSSurface)):
+        # Handle Cairo ImageSurface input
+        stdoutfile = BytesIO()
+        outfile.write_to_png(stdoutfile)
+        stdoutfile.seek(0)
+        upc_img = Image.open(stdoutfile).convert('RGB')
+    elif cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (isinstance(outfile[1], cairo.ImageSurface) or isinstance(outfile[1], cairo.SVGSurface) or isinstance(outfile[1], cairo.PDFSurface) or isinstance(outfile[1], cairo.PSSurface)):
+        upc_preimg = outfile[1]
+        upc_img = outfile[0]
+        oldoutfile = None
+        outfile = None
+    elif(outfile is None):
         if(imageoutlib == "cairosvg"):
             oldoutfile = None
             outfile = None
@@ -67,15 +86,6 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
             oldoutfile = None
             outfile = None
             outfileext = None
-    # Check if input is a Pillow Image, Cairo ImageSurface, or file path
-    elif pilsupport and isinstance(outfile, Image.Image):
-        upc_img = outfile.convert('RGB')
-    elif cairosupport and isinstance(outfile, cairo.ImageSurface):
-        # Handle Cairo ImageSurface input
-        stdoutfile = BytesIO()
-        outfile.write_to_png(stdoutfile)
-        stdoutfile.seek(0)
-        upc_img = Image.open(stdoutfile).convert('RGB')
     else:
         oldoutfile = upcean.encode.predraw.get_save_filename(
             outfile, imageoutlib)
@@ -151,7 +161,7 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
         upc_img = ImageDraw.Draw(upc_preimg)
         upc_img.rectangle(
             [(0, 0), ((56 * barwidth[0]), (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and not isinstance(outfile, cairo.ImageSurface)):
+    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (not isinstance(outfile, cairo.ImageSurface) and not isinstance(outfile, cairo.SVGSurface) and isinstance(outfile, cairo.PDFSurface) and not isinstance(outfile, cairo.PSSurface))):
         if(outfileext == "SVG"):
             if(outfile is None):
                 imgoutfile = None
@@ -369,9 +379,9 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return [upc_img, upc_preimg]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return [upc_img, upc_preimg]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -502,8 +512,8 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
                 else:
                     upc_preimg.save(outfile, outfileext, **exargdict)
             elif(isinstance(outfile, Image.Image)):
-                return upc_preimg;
-            if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and not isinstance(outfile, cairo.ImageSurface)):
+                [upc_img, upc_preimg]
+            if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (not isinstance(outfile, cairo.ImageSurface) and not isinstance(outfile, cairo.SVGSurface) and isinstance(outfile, cairo.PDFSurface) and not isinstance(outfile, cairo.PSSurface))):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
                         f.write(upc_preimg.get_data().tobytes())
@@ -519,8 +529,8 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
                 else:
                     upc_preimg.write_to_png(outfile)
                     return True
-            elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and isinstance(outfile, cairo.ImageSurface)):
-                return upc_preimg;
+            elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (isinstance(outfile, cairo.ImageSurface) or isinstance(outfile, cairo.SVGSurface) or isinstance(outfile, cairo.PDFSurface) or isinstance(outfile, cairo.PSSurface))):
+                return [upc_img, upc_preimg]
         except:
             return False
     return True
