@@ -951,6 +951,105 @@ def convert_text_to_hex_code128_manual_with_checksum(upc, hidecs=True, reverse=F
     return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
+def convert_text_to_code39ext(upc):
+    code39_char_to_encoding = {
+        # Digits
+        '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+        '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+        # Uppercase letters
+        'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D', 'E': 'E',
+        'F': 'F', 'G': 'G', 'H': 'H', 'I': 'I', 'J': 'J',
+        'K': 'K', 'L': 'L', 'M': 'M', 'N': 'N', 'O': 'O',
+        'P': 'P', 'Q': 'Q', 'R': 'R', 'S': 'S', 'T': 'T',
+        'U': 'U', 'V': 'V', 'W': 'W', 'X': 'X', 'Y': 'Y',
+        'Z': 'Z', '-': '-', '.': '.', ' ': ' ', '$': '$',
+        '/': '/', '+': '+', '%': '%'
+    }
+
+    # Map punctuation and special characters
+    code39_char_to_encoding.update({
+        '!': '/A', '"': '/B', '#': '/C', '$': '/D', '%': '/E',
+        '&': '/F', "'": '/G', '(': '/H', ')': '/I', '*': '/J',
+        '+': '/K', ',': '/L', '-': '-', '.': '.', '/': '/O',
+        ':': '/Z', ';': '%F', '<': '%G', '=': '%H', '>': '%I',
+        '?': '%J', '@': '%V', '[': '%K', '\\': '%L', ']': '%M',
+        '^': '%N', '_': '%O', '`': '%W', '{': '%P', '|': '%Q',
+        '}': '%R', '~': '%S'
+    })
+
+    # Map lowercase letters
+    for c in range(ord('a'), ord('z') + 1):
+        code39_char_to_encoding[chr(c)] = '+' + chr(c - 32)  # '+A' to '+Z'
+
+    # Map non-printable ASCII characters (0-31)
+    for i in range(0, 32):
+        if i < 27:
+            code39_char_to_encoding[chr(i)] = '$' + chr(i + 64)  # $A - $Z
+        else:
+            code39_char_to_encoding[chr(i)] = '%' + chr(i + 38)  # %A - %F
+
+    # Map DEL character (ASCII 127) to '%T'
+    code39_char_to_encoding[chr(127)] = '%T'
+
+    encoded = ''
+    for char in upc:
+        if char in code39_char_to_encoding:
+            encoded += code39_char_to_encoding[char]
+        else:
+            # Characters not in encoding map are replaced with space
+            encoded += ' '
+    return encoded
+
+def convert_text_to_code93ext(upc):
+    code93_char_to_encoding = {}
+
+    # Map non-printable ASCII characters (0-26)
+    for i in range(0, 27):
+        code93_char_to_encoding[chr(i)] = '$' + chr(i + 64)  # $A - $Z
+
+    # Map ASCII 27-31
+    special_chars = {27: '%A', 28: '%B', 29: '%C', 30: '%D', 31: '%E'}
+    for i in range(27, 32):
+        code93_char_to_encoding[chr(i)] = special_chars[i]
+
+    # Map printable ASCII characters
+    for i in range(32, 127):
+        char = chr(i)
+        if char.isalnum() or char in '-. $/+%':
+            code93_char_to_encoding[char] = char
+        elif 33 <= i <= 44:
+            code93_char_to_encoding[char] = '/' + chr(i + 32)  # /A - /O
+        elif 45 <= i <= 57:
+            code93_char_to_encoding[char] = char  # 0-9, -, .
+        elif 58 <= i <= 63:
+            code93_char_to_encoding[char] = '%' + chr(i + 11)  # %F - %J
+        elif 64 == i:
+            code93_char_to_encoding[char] = '%V'  # @
+        elif 91 <= i <= 95:
+            code93_char_to_encoding[char] = '%' + chr(i - 27)  # %K - %O
+        elif 96 == i:
+            code93_char_to_encoding[char] = '%W'  # `
+        elif 97 <= i <= 122:
+            code93_char_to_encoding[char] = '+' + chr(i - 32)  # +A - +Z
+        elif 123 <= i <= 126:
+            code93_char_to_encoding[char] = '%' + chr(i - 80)  # %P - %S
+        else:
+            # Characters not in encoding map are replaced with space
+            code93_char_to_encoding[char] = ' '
+
+    # Map DEL character (ASCII 127) to '%T'
+    code93_char_to_encoding[chr(127)] = '%T'
+
+    encoded = ''
+    for char in upc:
+        if char in code93_char_to_encoding:
+            encoded += code93_char_to_encoding[char]
+        else:
+            # Characters not in encoding map are replaced with space
+            encoded += ' '
+    return encoded
+
+
 '''
 // ISSN (International Standard Serial Number)
 // Source: http://en.wikipedia.org/wiki/International_Standard_Serial_Number

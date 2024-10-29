@@ -786,8 +786,6 @@ def create_code39extended_barcode(upc, outfile="./code39extended.png", resize=1,
         end_bc_num += 1
         LineStart += barwidth[0]
         BarNum += 1
-    code39extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '/D': "$", '/E': "%", '/F': "&", '/G': "'",
-                      '/H': "(", '/I': ")", '/J': "*", '/K': "+", '/L': ",", '-': "-", '.': ".", '/O': "/", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?", '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
     if(pilsupport and imageoutlib == "pillow"):
         new_upc_img = upc_preimg.resize((((50 * barwidth[0]) + upc_size_add) * int(
             resize), (barheightadd + (9 * barwidth[1])) * int(resize)), Image.NEAREST)  # use nearest neighbour
@@ -831,6 +829,8 @@ def create_code39extended_barcode(upc, outfile="./code39extended.png", resize=1,
         new_upc_img.set_source(upc_imgpat)
         new_upc_img.paint()
         upc_img = new_upc_img
+    code39extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '/D': "$", '/E': "%", '/F': "&", '/G': "'",
+                          '/H': "(", '/I': ")", '/J': "*", '/K': "+", '/L': ",", '/M': "-", '/N': ".", '/O': "/", '-': "-", '.': ".", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?", '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
     if(not hidetext):
         drawColorText(upc_img, 10 * int(resize * barwidth[1]), (14 * int(resize)) * barwidth[0], cairo_addon_fix + (barheight[0] + (
             barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), "*", barcolor[1], "ocrb", imageoutlib)
@@ -838,14 +838,14 @@ def create_code39extended_barcode(upc, outfile="./code39extended.png", resize=1,
         LineTxtStart = 30 * int(resize)
         while (NumTxtZero < len(upc_matches)):
             NumTxtZeroNext = NumTxtZero + 1
-            if(NumTxtZeroNext < len(upc_matches) and code39extended.get(str(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext]), False)):
+            if(NumTxtZeroNext < len(upc_matches) and code39extended.get(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext], False)):
                 LineTxtStart += 16 * int(resize)
                 drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (int(resize) - 1)) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(
-                    resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), code39extended.get(str(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext]), False), barcolor[1], "ocrb", imageoutlib)
+                    resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), code39extended.get(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext], " "), barcolor[1], "ocrb", imageoutlib)
                 NumTxtZero += 1
             else:
                 drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (int(resize) - 1)) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), code39extended.get(upc_matches[NumTxtZero], upc_matches[NumTxtZero]), barcolor[1], "ocrb", imageoutlib)
             LineTxtStart += 16 * int(resize)
             NumTxtZero += 1
     if(not hidetext):
