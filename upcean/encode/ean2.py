@@ -59,19 +59,11 @@ def create_ean2sup_barcode(upc, outfile="./ean2_supplement.png", startx=0, resiz
     if(not pilsupport and not cairosupport):
         return False
     # Check if input is a Pillow Image, Cairo ImageSurface, or file path
-    if pilsupport and imageoutlib == "pillow" and not isinstance(outfile[1], Image.Image):
-        upc_img = outfile.convert('RGB')
     elif pilsupport and imageoutlib == "pillow" and isinstance(outfile[1], Image.Image):
         upc_preimg = outfile[1]
         upc_img = outfile[0]
         oldoutfile = None
         outfile = None
-    elif cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (not isinstance(outfile[1], cairo.ImageSurface) and not isinstance(outfile[1], cairo.SVGSurface) and isinstance(outfile[1], cairo.PDFSurface) and not isinstance(outfile[1], cairo.PSSurface)):
-        # Handle Cairo ImageSurface input
-        stdoutfile = BytesIO()
-        outfile.write_to_png(stdoutfile)
-        stdoutfile.seek(0)
-        upc_img = Image.open(stdoutfile).convert('RGB')
     elif cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (isinstance(outfile[1], cairo.ImageSurface) or isinstance(outfile[1], cairo.SVGSurface) or isinstance(outfile[1], cairo.PDFSurface) or isinstance(outfile[1], cairo.PSSurface)):
         upc_preimg = outfile[1]
         upc_img = outfile[0]
