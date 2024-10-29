@@ -446,21 +446,12 @@ def create_upce_barcode(upc, outfile="./upce.png", resize=1, hideinfo=(False, Fa
         if(hidecd is not None and not hidecd):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), (61 + (61 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
                 barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), upc_matches[2], barcolor[1], "ocrb", imageoutlib)
-    if(pilsupport and imageoutlib == "pillow"):
-        if(supplement is not None and len(supplement) == 2):
-            upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
-            if(upc_sup_img):
-                upc_img.paste(
-                    upc_sup_img, ((69 * barwidth[0]) * int(resize), 0))
-                del(upc_sup_img)
-        if(supplement is not None and len(supplement) == 5):
-            upc_sup_img = upcean.encode.ean5.draw_ean5sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
-            if(upc_sup_img):
-                upc_img.paste(
-                    upc_sup_img, ((69 * barwidth[0]) * int(resize), 0))
-                del(upc_sup_img)
+    if(supplement is not None and len(supplement) == 2):
+        upcean.encode.ean2.create_ean2sup_barcode(
+            supplement, upc_img, (69 * barwidth[0]) * int(resize), resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    if(supplement is not None and len(supplement) == 5):
+        upcean.encode.ean5.create_ean5sup_barcode(
+            supplement, upc_img, (69 * barwidth[0]) * int(resize), resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(supplement != None and len(supplement) == 2):
             upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
