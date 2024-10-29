@@ -890,6 +890,162 @@ def optimize_encoding_code128_alt(upc, reverse=False):
     return ''.join(hex_codes)
 
 
+# Define the code point to hex mapping at the module level
+code_point_to_hex = {
+    0: '00', 1: '01', 2: '02', 3: '03', 4: '04', 5: '05', 6: '06', 7: '07',
+    8: '08', 9: '09', 10: '0a', 11: '0b', 12: '0c', 13: '0d', 14: '0e', 15: '0f',
+    16: '10', 17: '11', 18: '12', 19: '13', 20: '14', 21: '15', 22: '16', 23: '17',
+    24: '18', 25: '19', 26: '1a', 27: '1b', 28: '1c', 29: '1d', 30: '1e', 31: '1f',
+    32: '20', 33: '21', 34: '22', 35: '23', 36: '24', 37: '25', 38: '26', 39: '27',
+    40: '28', 41: '29', 42: '2a', 43: '2b', 44: '2c', 45: '2d', 46: '2e', 47: '2f',
+    48: '30', 49: '31', 50: '32', 51: '33', 52: '34', 53: '35', 54: '36', 55: '37',
+    56: '38', 57: '39', 58: '3a', 59: '3b', 60: '3c', 61: '3d', 62: '3e', 63: '3f',
+    64: '40', 65: '41', 66: '42', 67: '43', 68: '44', 69: '45', 70: '46', 71: '47',
+    72: '48', 73: '49', 74: '4a', 75: '4b', 76: '4c', 77: '4d', 78: '4e', 79: '4f',
+    80: '50', 81: '51', 82: '52', 83: '53', 84: '54', 85: '55', 86: '56', 87: '57',
+    88: '58', 89: '59', 90: '5a', 91: '5b', 92: '5c', 93: '5d', 94: '5e', 95: '5f',
+    96: '60', 97: '61', 98: '62', 99: '63', 100: '64', 101: '65', 102: '66',
+    103: '67', 104: '68', 105: '69', 106: '6a', 107: '6b', 108: '6c', 109: '6d'
+}
+
+# Also define the inverse mapping for hex to code point
+hex_to_code_point = {v: k for k, v in code_point_to_hex.items()}
+
+def convert_text_to_hex_gs1_128(data, reverse=False):
+    # Ensure data is a string
+    if not isinstance(data, str):
+        data = str(data)
+    if reverse:
+        data = data[::-1]
+
+    # Build the segments (digits and non-digits)
+    segments = []
+    i = 0
+    text_len = len(data)
+    while i < text_len:
+        if data[i].isdigit():
+            start = i
+            while i < text_len and data[i].isdigit():
+                i += 1
+            digits = data[start:i]
+            segments.append(('digits', digits))
+        else:
+            start = i
+            while i < text_len and not data[i].isdigit():
+                i += 1
+            non_digits = data[start:i]
+            segments.append(('other', non_digits))
+
+    # Initialize output sequence and current code set
+    output_sequence = []
+    current_code_set = None
+
+    # Include FNC1
+    fnc1_code_point = 102  # FNC1
+
+    # Process segments
+    for idx, segment in enumerate(segments):
+        seg_type, segment_data = segment
+        if seg_type == 'digits':
+            # Decide whether to use Code Set C (digits, even length)
+            use_code_c = len(segment_data) >= 4 and len(segment_data) % 2 == 0
+            if use_code_c:
+                # Switch to Code Set C if necessary
+                if current_code_set != 'C':
+                    if not output_sequence:
+                        # At the beginning, use Start Code C
+                        output_sequence.append(105)
+                        # Append FNC1 for GS1-128
+                        output_sequence.append(fnc1_code_point)
+                    else:
+                        # Switch to Code Set C (99)
+                        output_sequence.append(99)
+                    current_code_set = 'C'
+                # Encode digits in pairs
+                for j in range(0, len(segment_data), 2):
+                    pair = segment_data[j:j+2]
+                    code_point = int(pair)
+                    output_sequence.append(code_point)
+            else:
+                # Process digits as individual characters in Code Set B
+                seg_type = 'other'
+                segment_data = segment_data
+        if seg_type == 'other':
+            # Use Code Set B for other characters
+            code_set_needed = 'B'
+            # Switch code set if necessary
+            if current_code_set != code_set_needed:
+                if not output_sequence:
+                    # At the beginning, use Start Code B
+                    output_sequence.append(104)
+                    # Append FNC1 for GS1-128
+                    output_sequence.append(fnc1_code_point)
+                else:
+                    # Switch to Code Set B (100)
+                    output_sequence.append(100)
+                current_code_set = code_set_needed
+            # Encode each character
+            for c in segment_data:
+                code_point = ord(c) - 32
+                if 0 <= code_point <= 95:
+                    output_sequence.append(code_point)
+                else:
+                    raise ValueError("Character '{}' not valid in Code Set B.".format(c))
+
+    # Convert the code points to hex codes using the mapping
+    hex_codes = []
+    for code_point in output_sequence:
+        hex_code = code_point_to_hex.get(code_point)
+        if hex_code is None:
+            raise ValueError("No hex code mapping for code point {}".format(code_point))
+        hex_codes.append(hex_code)
+
+    # Return the hex code sequence as a string
+    return ''.join(hex_codes)
+
+
+def convert_text_to_hex_gs1_128_with_checksum(data, hidecs=True, reverse=False, stopcode='6a'):
+    if reverse:
+        stopcode = '6b'
+    code128_hex = convert_text_to_hex_gs1_128(data, reverse)
+    if not code128_hex:
+        return False
+
+    # Reconstruct the code point sequence from the hex codes to compute checksum
+    code_points = []
+    hex_codes = [code128_hex[i:i+2] for i in range(0, len(code128_hex), 2)]
+    i = 0
+    while i < len(hex_codes):
+        hex_code = hex_codes[i]
+        if hex_code == '6d':
+            # Skip hide checksum indicator
+            i += 1
+            continue
+        code_point = hex_to_code_point.get(hex_code)
+        if code_point is None:
+            raise ValueError("No code point mapping for hex code {}".format(hex_code))
+        code_points.append(code_point)
+        i += 1
+
+    # Calculate the checksum
+    checksum = code_points[0]  # Start code
+    for idx, code_point in enumerate(code_points[1:], start=1):
+        checksum += code_point * idx
+    checksum %= 103
+
+    # Convert checksum code point to hex code using the mapping
+    checksum_hex = code_point_to_hex.get(checksum)
+    if checksum_hex is None:
+        raise ValueError("No hex code mapping for checksum code point {}".format(checksum))
+
+    # Include hide checksum indicator if required
+    hidecschar = ''
+    if hidecs:
+        hidecschar = '6d'
+
+    # Return the full hex code sequence with checksum and stop code
+    return code128_hex + hidecschar + checksum_hex + stopcode
+
 
 def convert_text_to_hex_code128_with_checksum(upc, hidecs=True, reverse=False, stopcode="6a"):
     if(reverse):
