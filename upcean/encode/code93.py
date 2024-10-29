@@ -127,7 +127,7 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, hideinfo=(False
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize)))
+        cairo_addon_fix = 8
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -324,6 +324,15 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, hideinfo=(False
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     exargdict = {}
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg
@@ -479,7 +488,7 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, hideinfo=(False
     return True
 
 
-def create_code93extended_barcode(upc, outfile="./code93extended.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def create_code93alt_barcode(upc, outfile="./code93extended.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -569,7 +578,7 @@ def create_code93extended_barcode(upc, outfile="./code93extended.png", resize=1,
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize)))
+        cairo_addon_fix = 8
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -795,6 +804,15 @@ def create_code93extended_barcode(upc, outfile="./code93extended.png", resize=1,
     code93extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '$': "$", '%': "%", '/F': "&", '/G': "'", '/H': "(", '/I': "", '/J': "*", '+': "+", '/L': ",", '-': "-", '.': ".", '/': "/", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?",
                       '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
     exargdict = {}
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_img
@@ -1040,7 +1058,7 @@ def create_code93extended_barcode(upc, outfile="./code93.png", resize=1, hideinf
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize)))
+        cairo_addon_fix = 8
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -1265,6 +1283,15 @@ def create_code93extended_barcode(upc, outfile="./code93.png", resize=1, hideinf
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     exargdict = {}
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg
@@ -1428,12 +1455,12 @@ def encode_code93_barcode(upc, resize=1, hideinfo=(False, False, False), barheig
     return create_code93_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
-def draw_code93extended_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_code93extended_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_code93alt_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_code93alt_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
-def encode_code93extended_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_code93extended_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_code93alt_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_code93altbarcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def draw_code93extended_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):

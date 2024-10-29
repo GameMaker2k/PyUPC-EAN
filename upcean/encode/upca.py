@@ -139,7 +139,7 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, hideinfo=(False, Fa
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize)))
+        cairo_addon_fix = 8
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -365,6 +365,15 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, hideinfo=(False, Fa
         upcean.encode.ean5.create_ean5sup_barcode(
             supplement, upc_img, (113 * barwidth[0]) * int(resize), resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
     exargdict = {}
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg
@@ -515,8 +524,8 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, hideinfo=(False, Fa
                 else:
                     upc_preimg.write_to_png(outfile)
                     return True
-        except:
-            return False
+        except Exception as e:
+            print(e);return False
     return True
 
 

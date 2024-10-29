@@ -124,7 +124,7 @@ def create_stf_barcode(upc, outfile="./stf.png", resize=1, hideinfo=(False, Fals
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize)))
+        cairo_addon_fix = 8
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -257,6 +257,15 @@ def create_stf_barcode(upc, outfile="./stf.png", resize=1, hideinfo=(False, Fals
         LineStart += barwidth[0]
         BarNum += 1
     exargdict = {}
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg

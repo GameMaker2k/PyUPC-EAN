@@ -129,7 +129,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize)))
+        cairo_addon_fix = 8
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -577,6 +577,15 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     exargdict = {}
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg
@@ -832,7 +841,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize)))
+        cairo_addon_fix = 8
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -1197,6 +1206,15 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     exargdict = {}
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg
