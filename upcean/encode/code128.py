@@ -149,8 +149,15 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
                           (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                None, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                imgoutfile, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, (29 * barwidth[0]) + addonsize, (barheightadd + (9 * barwidth[1])) * int(resize))
@@ -577,15 +584,6 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     exargdict = {}
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg
@@ -861,8 +859,15 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
                           barheightadd + (9 * barwidth[1]))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                None, ((34 * barwidth[0]) + upc_size_add) * int(resize), barheightadd + (9 * barwidth[1]))
+                imgoutfile, ((34 * barwidth[0]) + upc_size_add) * int(resize), barheightadd + (9 * barwidth[1]))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, (29 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
@@ -1206,15 +1211,6 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     exargdict = {}
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg

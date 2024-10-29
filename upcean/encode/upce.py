@@ -167,8 +167,15 @@ def create_upce_barcode(upc, outfile="./upce.png", resize=1, hideinfo=(False, Fa
                           (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                None, ((69 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                imgoutfile, ((69 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, ((69 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
@@ -468,15 +475,6 @@ def create_upce_barcode(upc, outfile="./upce.png", resize=1, hideinfo=(False, Fa
         upc_img.paint()
         del(upc_sup_img)
     exargdict = {}
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg

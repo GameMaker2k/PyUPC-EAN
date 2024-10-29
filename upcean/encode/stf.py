@@ -143,8 +143,15 @@ def create_stf_barcode(upc, outfile="./stf.png", resize=1, hideinfo=(False, Fals
                           (barheightadd + (15 * barwidth[0])) * int(resize))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                None, (((46 * barwidth[0]) + upc_size_add) * int(resize)) * int(resize), (barheightadd + (15 * barwidth[0])) * int(resize))
+                imgoutfile, (((46 * barwidth[0]) + upc_size_add) * int(resize)) * int(resize), (barheightadd + (15 * barwidth[0])) * int(resize))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, (46 * barwidth[0]) + addonsize, barheightadd + (15 * barwidth[1]))
@@ -257,15 +264,6 @@ def create_stf_barcode(upc, outfile="./stf.png", resize=1, hideinfo=(False, Fals
         LineStart += barwidth[0]
         BarNum += 1
     exargdict = {}
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg

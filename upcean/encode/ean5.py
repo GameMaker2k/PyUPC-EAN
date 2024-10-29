@@ -153,8 +153,15 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
             [(0, 0), ((56 * barwidth[0]), (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and not isinstance(outfile, cairo.ImageSurface)):
         if(outfileext == "SVG"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                None, (56 * barwidth[0]), (barheightadd + (9 * barwidth[1])) * int(resize))
+                imgoutfile, (56 * barwidth[0]), (barheightadd + (9 * barwidth[1])) * int(resize))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, (56 * barwidth[0]) + addonsize, (barheightadd + (9 * barwidth[1])) * int(resize))
@@ -360,15 +367,6 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
         drawColorText(upc_img, 10 * int(resize * barwidth[1]), (40 + (40 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
             barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[4], barcolor[1], "ocrb", imageoutlib)
     exargdict = {}
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_preimg
@@ -549,15 +547,6 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, hideinfo=(False, Fa
     if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
         return False
     exargdict = {}
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return upc_img
