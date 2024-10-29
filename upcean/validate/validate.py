@@ -16,6 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import re
+import string
 
 '''
 // Digital Root
@@ -98,6 +99,197 @@ def fix_luhn_checksum(upc, upclen):
         fix_matches = re.findall("^(\\d{"+str(upclen)+"})", upc)
         upc = fix_matches[0]
     return upc+str(get_luhn_checksum(upc, upclen))
+
+
+# Define a custom character set for mod N (e.g., alphanumeric)
+# Here we use base 36 (0-9, A-Z) as an example.
+CHARSET = string.digits + string.ascii_uppercase
+BASE = len(CHARSET)
+
+# Mapping character to index for quick lookup
+CHAR_TO_INDEX = {ch: idx for idx, ch in enumerate(CHARSET)}
+
+def validate_luhn_mod_n_checksum(code, length, return_check=False):
+    code = str(code).upper()  # Convert to uppercase to match CHARSET
+    length = int(length)
+    len_minus_one = length - 1
+
+    # Trim the code to the specified length if it's too long
+    if len(code) > length:
+        code = re.findall("^[" + CHARSET + "]{" + str(length) + "}", code)[0]
+
+    # If code length is incorrect after trimming, return False
+    if len(code) > length or len(code) < len_minus_one:
+        return False
+
+    # Convert code to a list of indices in CHARSET
+    code_indices = [CHAR_TO_INDEX[char] for char in code]
+
+    # Separate into odd and even positioned sums based on length
+    odd_sum = sum(code_indices[0::2])
+    even_sum = sum(code_indices[1::2])
+
+    # Adjust sums based on parity of length
+    if length % 2 == 0:
+        total_sum = (odd_sum * 2) + even_sum
+    else:
+        total_sum = odd_sum + (even_sum * 2)
+
+    # Calculate checksum index
+    checksum_index = (BASE - (total_sum % BASE)) % BASE
+    checksum_char = CHARSET[checksum_index]
+
+    # Validate checksum or return it based on the `return_check` flag
+    if return_check:
+        return checksum_char
+
+    # If the provided code length matches length, validate the checksum
+    return checksum_char == code[-1] if len(code) == length else checksum_char
+
+
+def get_luhn_mod_n_checksum(code, length):
+    return validate_luhn_mod_n_checksum(code, length, True)
+
+
+def fix_luhn_mod_n_checksum(code, length):
+    code = str(code).upper()  # Ensure uppercase to match CHARSET
+    length = int(length)
+
+    # Trim or pad the code to be one less than the specified length
+    if len(code) >= length:
+        code = code[:length - 1]
+    elif len(code) < length - 1:
+        code = code.zfill(length - 1)
+
+    # Calculate and append the correct checksum character
+    return code + get_luhn_mod_n_checksum(code, length)
+
+
+
+# Tables needed for Verhoeff algorithm
+d_table = [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
+    [2, 3, 4, 0, 1, 7, 8, 9, 5, 6],
+    [3, 4, 0, 1, 2, 8, 9, 5, 6, 7],
+    [4, 0, 1, 2, 3, 9, 5, 6, 7, 8],
+    [5, 9, 8, 7, 6, 0, 4, 3, 2, 1],
+    [6, 5, 9, 8, 7, 1, 0, 4, 3, 2],
+    [7, 6, 5, 9, 8, 2, 1, 0, 4, 3],
+    [8, 7, 6, 5, 9, 3, 2, 1, 0, 4],
+    [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+]
+
+p_table = [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [1, 5, 7, 6, 2, 8, 3, 0, 9, 4],
+    [5, 8, 0, 3, 7, 9, 6, 1, 4, 2],
+    [8, 9, 1, 6, 0, 4, 3, 5, 2, 7],
+    [9, 4, 5, 3, 1, 2, 6, 8, 7, 0],
+    [4, 2, 8, 6, 5, 7, 3, 9, 0, 1],
+    [2, 7, 9, 3, 8, 0, 6, 4, 1, 5],
+    [7, 0, 4, 6, 9, 1, 3, 2, 5, 8]
+]
+
+inv_table = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# https://en.wikipedia.org/wiki/Verhoeff_algorithm
+
+def validate_verhoeff_checksum(number, length, return_check=False):
+    number = str(number)
+    length = int(length)
+
+    # Trim the number to the specified length if it's too long
+    if len(number) > length:
+        number = re.findall("^\\d{" + str(length) + "}", number)[0]
+
+    # If number length is incorrect after trimming, return False
+    if len(number) != length:
+        return False
+
+    # Calculate Verhoeff checksum
+    c = 0
+    for i, digit in enumerate(reversed(number)):
+        c = d_table[c][p_table[i % 8][int(digit)]]
+
+    checksum = inv_table[c]
+
+    if return_check:
+        return str(checksum)
+
+    # Validate checksum by checking if last digit matches
+    return checksum == int(number[-1])
+
+def get_verhoeff_checksum(number, length):
+    return validate_verhoeff_checksum(number, length, True)
+
+def fix_verhoeff_checksum(number, length):
+    number = str(number)
+    length = int(length)
+
+    # Ensure number is of length-1 and get checksum to append
+    if len(number) >= length:
+        number = number[:length - 1]
+    elif len(number) < length - 1:
+        number = number.zfill(length - 1)
+
+    return number + get_verhoeff_checksum(number, length)
+
+# https://en.wikipedia.org/wiki/Damm_algorithm
+
+# Damm algorithm table (quasigroup)
+damm_table = [
+    [0, 3, 1, 7, 5, 9, 8, 6, 4, 2],
+    [7, 0, 9, 2, 1, 5, 4, 8, 6, 3],
+    [4, 2, 0, 6, 8, 7, 1, 3, 5, 9],
+    [1, 7, 5, 0, 9, 8, 3, 4, 2, 6],
+    [6, 1, 2, 3, 0, 4, 5, 9, 7, 8],
+    [3, 6, 7, 4, 2, 0, 9, 5, 8, 1],
+    [5, 8, 6, 9, 7, 2, 0, 1, 3, 4],
+    [8, 9, 4, 5, 3, 6, 2, 0, 1, 7],
+    [9, 4, 3, 8, 6, 1, 7, 2, 0, 5],
+    [2, 5, 8, 1, 4, 3, 6, 7, 9, 0]
+]
+
+def validate_damm_checksum(number, length, return_check=False):
+    number = str(number)
+    length = int(length)
+
+    # Trim the number to the specified length if it's too long
+    if len(number) > length:
+        number = re.findall("^\\d{" + str(length) + "}", number)[0]
+
+    # If number length is incorrect after trimming, return False
+    if len(number) != length:
+        return False
+
+    # Calculate Damm checksum
+    interim = 0
+    for digit in number[:-1]:
+        interim = damm_table[interim][int(digit)]
+
+    checksum = damm_table[interim][int(number[-1])]
+
+    if return_check:
+        return str(interim)
+
+    # Validate by checking if the checksum result is 0
+    return checksum == 0
+
+def get_damm_checksum(number, length):
+    return validate_damm_checksum(number, length, True)
+
+def fix_damm_checksum(number, length):
+    number = str(number)
+    length = int(length)
+
+    # Ensure number is of length-1 and get checksum to append
+    if len(number) >= length:
+        number = number[:length - 1]
+    elif len(number) < length - 1:
+        number = number.zfill(length - 1)
+
+    return number + get_damm_checksum(number, length)
 
 
 def validate_upca_checksum(upc, return_check=False):
@@ -461,7 +653,7 @@ def validate_upce_checksum(upc, return_check=False):
     
     # Trim UPC to 8 digits if it's too long
     if len(upc) > 8:
-        upc = re.findall("^\d{8}", upc)[0]
+        upc = re.findall("^\\d{8}", upc)[0]
     
     # Validate length and check for number system 0 or 1
     if len(upc) not in {7, 8} or not re.match("^[01]", upc):
@@ -689,7 +881,7 @@ def get_ups_checksum(upc):
 def fix_ups_checksum(upc):
     upc = str(upc)
     if(len(upc) > 17):
-        fix_matches = re.findall("^(\w{17})", upc)
+        fix_matches = re.findall("^(\\w{17})", upc)
         upc = fix_matches[0]
     return upc+str(get_ups_checksum(upc))
 
@@ -915,7 +1107,7 @@ CODE39_ARRAY = {v: k for k, v in CODE39_VALUES.items()}
 
 def calculate_code39_checksum(upc, mod_value):
     # Validate input
-    if len(upc) < 1 or not re.match("^[0-9A-Z\\-.\$\\/\\+% ]+$", upc, re.IGNORECASE):
+    if len(upc) < 1 or not re.match("^[0-9A-Z\\-.\\$\\/\\+% ]+$", upc, re.IGNORECASE):
         return False
 
     # Calculate checksum based on mod_value
