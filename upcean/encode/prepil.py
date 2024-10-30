@@ -45,20 +45,45 @@ def snapCoords(ctx, x, y):
     return (round(x) + 0.5, round(y) + 0.5)
 
 
-def drawColorRectangle(ctx, x1, y1, x2, y2, color):
-    ctx.rectangle([(x1, y1), (x2, y2)], fill=color)
-    return True
+def drawColorRectangle(draw, x1, y1, x2, y2, color):
+    """
+    Draws a filled rectangle from (x1, y1) to (x2, y2) with the specified color.
+    
+    Parameters:
+    - draw: ImageDraw.Draw object.
+    - x1, y1: Top-left corner coordinates.
+    - x2, y2: Bottom-right corner coordinates.
+    - color: Tuple representing (R, G, B).
+    """
+    # Calculate width and height
+    width_rect = x2 - x1
+    height_rect = y2 - y1
+    
+    # Draw the rectangle
+    draw.rectangle([x1, y1, x2, y2], fill=color)
+    
+    return True  # Optional, based on your use case
 
 
-def drawColorLine(ctx, x1, y1, x2, y2, width, color):
-    if(width < 1):
-        width = 1
-    width -= 1
-    if(width < 1):
-        ctx.line((x1, y1, x2, y2), fill=color)
-    else:
-        ctx.rectangle([(x1, y1), (x2 + width, y2)], fill=color)
-    return True
+def drawColorLine(draw, x1, y1, x2, y2, width, color):
+    """
+    Draws a line from (x1, y1) to (x2, y2) with the specified width and color.
+    
+    Parameters:
+    - draw: ImageDraw.Draw object.
+    - x1, y1: Starting coordinates.
+    - x2, y2: Ending coordinates.
+    - width: Line width (integer >= 1).
+    - color: Tuple representing (R, G, B).
+    """
+    # Ensure width is at least 1
+    width = max(1, int(width))
+    
+    # Draw the line with the specified width
+    draw.line([(x1, y1), (x2, y2)], fill=color, width=width)
+    
+    return True  # Optional, based on your use case
+
 
 
 def drawColorText(ctx, size, x, y, text, color, ftype="ocrb"):
