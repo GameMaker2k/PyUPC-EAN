@@ -136,7 +136,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize)))
+        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0

@@ -127,7 +127,7 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, hideinfo=(False
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = 8
+        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -576,7 +576,7 @@ def create_code93alt_barcode(upc, outfile="./code93extended.png", resize=1, hide
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = 8
+        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0

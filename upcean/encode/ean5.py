@@ -139,7 +139,7 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = 8
+        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
