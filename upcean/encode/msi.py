@@ -153,14 +153,21 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
     upc_size_add = (len(upc_matches) * 12) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", ((34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1])))
+            "RGB", (((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1])))
         upc_img = ImageDraw.Draw(upc_preimg)
-        upc_img.rectangle([(0, 0), ((34 * barwidth[0]) + upc_size_add,
+        upc_img.rectangle([(0, 0), (((34 * barwidth[0]) + addonsize) * int(resize),
                           barheightadd + (9 * barwidth[1]))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                None, (34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
+                imgoutfile, ((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1]))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, (34 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
@@ -173,11 +180,11 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
                 upc_preimg.set_eps(False)
         else:
             upc_preimg = cairo.ImageSurface(
-                cairo.FORMAT_RGB24, (34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
+                cairo.FORMAT_RGB24, ((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1]))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
         upc_img.rectangle(
-            0, 0, (34 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
+            0, 0, ((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1]))
         upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
         upc_img.fill()
     upc_array = {'upc': upc, 'code': []}
@@ -245,64 +252,12 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
         end_bc_num += 1
         LineStart += barwidth[0]
         BarNum += 1
-    if(pilsupport and imageoutlib == "pillow"):
-        new_upc_img = upc_preimg.resize((((34 * barwidth[0]) + upc_size_add) * int(
-            resize), (barheightadd + (9 * barwidth[1])) * int(resize)), Image.NEAREST)  # use nearest neighbour
-        del(upc_img)
-        del(upc_preimg)
-        upc_img = ImageDraw.Draw(new_upc_img)
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        upc_imgpat = cairo.SurfacePattern(upc_preimg)
-        scaler = cairo.Matrix()
-        scaler.scale(1/int(resize), 1/int(resize))
-        upc_imgpat.set_matrix(scaler)
-        upc_imgpat.set_filter(cairo.FILTER_NEAREST)
-        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
-            if(outfileext == "SVG"):
-                new_upc_preimg = cairo.SVGSurface(imgoutfile, ((
-                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-            elif(outfileext == "PDF"):
-                new_upc_preimg = cairo.PDFSurface(imgoutfile, ((
-                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-            elif(outfileext == "PS" or outfileext == "EPS"):
-                new_upc_preimg = cairo.PSSurface(imgoutfile, ((
-                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-                if(outfileext == "EPS"):
-                    new_upc_preimg.set_eps(True)
-                else:
-                    new_upc_preimg.set_eps(False)
-            else:
-                new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((
-                    34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-        else:
-            new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, ((
-                34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-        new_upc_img = cairo.Context(new_upc_preimg)
-        new_upc_img.set_source(upc_imgpat)
-        new_upc_img.paint()
-        upc_img = new_upc_img
-    if(not hidetext):
-        NumTxtZero = 0
-        LineTxtStart = 16
-        while (NumTxtZero < len(upc_print)):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
-            LineTxtStart += 12 * int(resize)
-            NumTxtZero += 1
-    del(upc_img)
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return new_upc_img
+            return upc_preimg
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return new_upc_preimg
+            return upc_preimg
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -319,31 +274,31 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(new_upc_img.tobytes())
+                        stdoutfile.write(upc_preimg.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            new_upc_img.convert(mode="1").tobitmap())
+                            upc_preimg.convert(mode="1").tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        new_upc_img.convert(mode="P").save(
+                        upc_preimg.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
+                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
+                        stdoutfile.write(upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        new_upc_preimg.flush()
-                        new_upc_preimg.finish()
+                        upc_preimg.flush()
+                        upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -351,7 +306,7 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        new_upc_preimg.write_to_png(stdoutfile)
+                        upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -372,31 +327,31 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(new_upc_img.tobytes())
+                        stdoutfile.write(upc_preimg.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            new_upc_img.convert(mode='1').tobitmap())
+                            upc_preimg.convert(mode='1').tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        new_upc_img.convert(mode="P").save(
+                        upc_preimg.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
+                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
+                        stdoutfile.write(upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        new_upc_preimg.flush()
-                        new_upc_preimg.finish()
+                        upc_preimg.flush()
+                        upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -404,7 +359,7 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        new_upc_preimg.write_to_png(stdoutfile)
+                        upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -423,30 +378,30 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
             if(pilsupport and imageoutlib == "pillow"):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(new_upc_img.tobytes())
+                        f.write(upc_preimg.tobytes())
                 elif(outfileext == "XBM"):
                     with open(outfile, 'wb+') as f:
-                        f.write(new_upc_preimg.get_data().tobytes())
+                        f.write(upc_preimg.get_data().tobytes())
                 elif(outfileext == "XPM"):
-                    new_upc_img.convert(mode="P").save(
+                    upc_preimg.convert(mode="P").save(
                         outfile, outfileext, **exargdict)
                 else:
-                    new_upc_img.save(outfile, outfileext, **exargdict)
+                    upc_preimg.save(outfile, outfileext, **exargdict)
             if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(new_upc_preimg.get_data().tobytes())
+                        f.write(upc_preimg.get_data().tobytes())
                     return True
                 elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    new_upc_preimg.flush()
-                    new_upc_preimg.finish()
+                    upc_preimg.flush()
+                    upc_preimg.finish()
                     imgoutfile.seek(0)
                     svgouttext = imgoutfile.read()
                     with open(outfile, 'wb+') as f:
                         f.write(svgouttext)
                     return True
                 else:
-                    new_upc_preimg.write_to_png(outfile)
+                    upc_preimg.write_to_png(outfile)
                     return True
         except:
             return False
