@@ -49,54 +49,96 @@ http://stevehanov.ca/blog/index.php?id=28
 '''
 
 
-def snapCoords(ctx, x, y):
-    (xd, yd) = ctx.user_to_device(x, y)
+def snapCoords(x, y):
+    """
+    Snaps the coordinates to the nearest half-pixel for crisp rendering.
+    
+    Parameters:
+    - x, y: Original coordinates.
+    
+    Returns:
+    - Tuple of snapped coordinates.
+    """
     return (round(x) + 0.5, round(y) + 0.5)
 
-
-def drawLine(ctx, x1, y1, x2, y2):
-    point1 = snapCoords(ctx, x1, y1)
-    point2 = snapCoords(ctx, x2, y2)
-    ctx.move_to(point1[0], point1[1])
-    ctx.line_to(point2[0], point2[1])
-    ctx.set_line_width(1.0)
-    ctx.stroke()
-    return True
-
-
-def drawRectangle(ctx, x1, y1, x2, y2):
-    point1 = snapCoords(ctx, x1, y1)
-    point2 = snapCoords(ctx, x2, y2)
-    ctx.move_to(point1[0], point1[1])
-    ctx.rectangle(point1[0], point1[1], point2[0], point2[1])
-    ctx.set_line_width(1.0)
-    ctx.stroke()
-    return True
-
-
 def drawColorRectangle(ctx, x1, y1, x2, y2, color):
-    ctx.set_source_rgb(color[0], color[1], color[2])
-    drawRectangle(ctx, x1, y1, x2, y2)
-    ctx.close_path()
-    return True
-
+    """
+    Draws a filled rectangle from (x1, y1) to (x2, y2) with the specified color.
+    
+    Parameters:
+    - ctx: Cairo context.
+    - x1, y1: Coordinates of the top-left corner.
+    - x2, y2: Coordinates of the bottom-right corner.
+    - color: Tuple of (R, G, B) with values in [0, 1].
+    """
+    # Set the fill color
+    ctx.set_source_rgb(*color)
+    
+    # Calculate width and height
+    width_rect = x2 - x1
+    height_rect = y2 - y1
+    
+    # Create the rectangle path
+    ctx.rectangle(x1, y1, width_rect, height_rect)
+    
+    # Fill the rectangle
+    ctx.fill()
+    
+    # Start a new path to avoid unintended connections
+    ctx.new_path()
 
 def drawColorLine(ctx, x1, y1, x2, y2, width, color):
-    ctx.set_source_rgb(color[0], color[1], color[2])
-    if(width < 1):
-        width = 1
-    width -= 1
-    if(width < 1):
-        drawLine(ctx, x1, y1, x2, y2)
+    """
+    Draws a colored line from (x1, y1) to (x2, y2) with specified width.
+    Uses rectangles to simulate thick vertical and horizontal lines.
+    
+    Parameters:
+    - ctx: Cairo context.
+    - x1, y1: Starting coordinates.
+    - x2, y2: Ending coordinates.
+    - width: Line width (integer >= 1).
+    - color: Tuple of (R, G, B) with values in [0, 1].
+    """
+    # Ensure width is at least 1
+    width = max(1, int(width))
+    
+    # Set the fill color
+    ctx.set_source_rgb(*color)
+    
+    # Snap coordinates for crisp lines
+    x1, y1 = snapCoords(x1, y1)
+    x2, y2 = snapCoords(x2, y2)
+    
+    if x1 == x2:
+        # Vertical line: draw a rectangle with specified width
+        rect_x = x1 - width / 2
+        rect_y = min(y1, y2)
+        rect_width = width
+        rect_height = abs(y2 - y1)
+        ctx.rectangle(rect_x, rect_y, rect_width, rect_height)
+        ctx.fill()
+    elif y1 == y2:
+        # Horizontal line: draw a rectangle with specified width
+        rect_x = min(x1, x2)
+        rect_y = y1 - width / 2
+        rect_width = abs(x2 - x1)
+        rect_height = width
+        ctx.rectangle(rect_x, rect_y, rect_width, rect_height)
+        ctx.fill()
     else:
-        drawRectangle(ctx, x1, y1, x2 + width, y2)
-    ctx.close_path()
-    return True
+        # If not purely vertical or horizontal, use Cairo's line with set_line_width
+        ctx.set_line_width(width)
+        ctx.move_to(x1, y1)
+        ctx.line_to(x2, y2)
+        ctx.stroke()
+    
+    # Start a new path to avoid unintended connections
+    ctx.new_path()
 
 
 def drawText(ctx, size, x, y, text, ftype="ocrb"):
     text = str(text)
-    point1 = snapCoords(ctx, x, y)
+    point1 = snapCoords(x, y)
     ctx.select_font_face("Monospace")
     ctx.set_font_size(size)
     fo = cairo.FontOptions()
