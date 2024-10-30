@@ -129,7 +129,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
+        cairo_addon_fix = (8 * (int(resize)))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -139,46 +139,39 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
     upc_matches = re.findall("[0-9a-f]{2}", upc)
     upc_to_dec = list([int(x, 16) for x in upc_matches])
     subfromlist = upc_matches.count("6d")
-    addonsize = (((len(upc_matches) - subfromlist) * 11) +
+    upc_size_add = (((len(upc_matches) - subfromlist) * 11) +
                     (len(re.findall("6c", upc)) * 2)) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", (((34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
+            "RGB", ((29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1])))
         upc_img = ImageDraw.Draw(upc_preimg)
-        upc_img.rectangle([(0, 0), (((34 * barwidth[0]) + addonsize) * int(resize),
-                          (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
+        upc_img.rectangle([(0, 0), ((29 * barwidth[0]) + upc_size_add,
+                          barheightadd + (9 * barwidth[1]))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                imgoutfile, ((34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                None, (29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
-                None, (29 * barwidth[0]) + addonsize, (barheightadd + (9 * barwidth[1])) * int(resize))
+                None, (29 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
         elif(outfileext == "PS" or outfileext == "EPS"):
             upc_preimg = cairo.PSSurface(
-                None, (29 * barwidth[0]) + addonsize, (barheightadd + (9 * barwidth[1])) * int(resize))
+                None, (29 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
             if(outfileext == "EPS"):
                 upc_preimg.set_eps(True)
             else:
                 upc_preimg.set_eps(False)
         else:
             upc_preimg = cairo.ImageSurface(
-                cairo.FORMAT_RGB24, ((34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                cairo.FORMAT_RGB24, (29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
         upc_img.rectangle(
-            0, 0, ((34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            0, 0, (29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
         upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
         upc_img.fill()
     upc_array = {'upc': upc, 'code': []}
-    LineSize = barheight[1] * int(resize) if hidetext else barheight[0]
+    LineSize = barheight[1] if hidetext else barheight[0]
     start_barcode = [0] * 14
     LineStart = 0
     BarNum = 0
@@ -186,10 +179,10 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
     start_barcode = [0] * 14
     for bar in start_barcode:
         if bar == 1:
-            drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
+            drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib)
         else:
-            drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        LineStart += barwidth[0] * int(resize)
+            drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib)
+        LineStart += barwidth[0]
         BarNum += 1
     # Optimized Mappings
     hextocharsetone = {
@@ -562,10 +555,10 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
         # Draw the bar colors
         for color in left_barcolor:
             if color == 1:
-                drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
+                drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib)
             else:
-                drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-            LineStart += barwidth[0] * int(resize)
+                drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib)
+            LineStart += barwidth[0]
             BarNum += 1
         # Reset cur_set if shift was applied
         if start_shift:
@@ -578,17 +571,79 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
     end_barcode = [0] * 15
     for bar in end_barcode:
         if bar == 1:
-            drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
+            drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[0], imageoutlib)
         else:
-            drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        LineStart += barwidth[0] * int(resize)
+            drawColorLine(upc_img, LineStart, 4, LineStart, LineSize, barwidth[0], barcolor[2], imageoutlib)
+        LineStart += barwidth[0]
         BarNum += 1
+    if(pilsupport and imageoutlib == "pillow"):
+        new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheightadd + (
+            9 * barwidth[1])) * int(resize)), Image.NEAREST)  # use nearest neighbour
+        del(upc_img)
+        del(upc_preimg)
+        upc_img = ImageDraw.Draw(new_upc_img)
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        upc_imgpat = cairo.SurfacePattern(upc_preimg)
+        scaler = cairo.Matrix()
+        scaler.scale(1/int(resize), 1/int(resize))
+        upc_imgpat.set_matrix(scaler)
+        upc_imgpat.set_filter(cairo.FILTER_NEAREST)
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
+            if(outfileext == "SVG"):
+                new_upc_preimg = cairo.SVGSurface(imgoutfile, ((
+                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            elif(outfileext == "PDF"):
+                new_upc_preimg = cairo.PDFSurface(imgoutfile, ((
+                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            elif(outfileext == "PS" or outfileext == "EPS"):
+                new_upc_preimg = cairo.PSSurface(imgoutfile, ((
+                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                if(outfileext == "EPS"):
+                    new_upc_preimg.set_eps(True)
+                else:
+                    new_upc_preimg.set_eps(False)
+            else:
+                new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(
+                    resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+        else:
+            new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(
+                resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+        new_upc_img = cairo.Context(new_upc_preimg)
+        new_upc_img.set_source(upc_imgpat)
+        new_upc_img.paint()
+        upc_img = new_upc_img
+    if(not hidetext):
+        NumTxtZero = 0
+        LineTxtStart = 16
+        if(barcode_is_rev):
+            upc_print.reverse();
+        while (NumTxtZero < len(upc_print)):
+            if(len(upc_print[NumTxtZero]) == 1):
+                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
+                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+                LineTxtStart += 11 * int(resize)
+            if(len(upc_print[NumTxtZero]) == 2):
+                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
+                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero][0], barcolor[1], "ocrb", imageoutlib)
+                LineTxtStart += 6 * int(resize)
+                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
+                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero][1], barcolor[1], "ocrb", imageoutlib)
+                LineTxtStart += 5 * int(resize)
+            NumTxtZero += 1
+    del(upc_img)
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return new_upc_img
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return new_upc_preimg
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -605,31 +660,31 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.tobytes())
+                        stdoutfile.write(new_upc_img.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            upc_preimg.convert(mode="1").tobitmap())
+                            new_upc_img.convert(mode="1").tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        upc_preimg.convert(mode="P").save(
+                        new_upc_img.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
+                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.get_data().tobytes())
+                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        upc_preimg.flush()
-                        upc_preimg.finish()
+                        new_upc_preimg.flush()
+                        new_upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -637,7 +692,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.write_to_png(stdoutfile)
+                        new_upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -658,31 +713,31 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.tobytes())
+                        stdoutfile.write(new_upc_img.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            upc_preimg.convert(mode='1').tobitmap())
+                            new_upc_img.convert(mode='1').tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        upc_preimg.convert(mode="P").save(
+                        new_upc_img.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
+                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.get_data().tobytes())
+                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        upc_preimg.flush()
-                        upc_preimg.finish()
+                        new_upc_preimg.flush()
+                        new_upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -690,7 +745,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.write_to_png(stdoutfile)
+                        new_upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -709,30 +764,30 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(Fal
             if(pilsupport and imageoutlib == "pillow"):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.tobytes())
+                        f.write(new_upc_img.tobytes())
                 elif(outfileext == "XBM"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
+                        f.write(new_upc_preimg.get_data().tobytes())
                 elif(outfileext == "XPM"):
-                    upc_preimg.convert(mode="P").save(
+                    new_upc_img.convert(mode="P").save(
                         outfile, outfileext, **exargdict)
                 else:
-                    upc_preimg.save(outfile, outfileext, **exargdict)
+                    new_upc_img.save(outfile, outfileext, **exargdict)
             if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
+                        f.write(new_upc_preimg.get_data().tobytes())
                     return True
                 elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    upc_preimg.flush()
-                    upc_preimg.finish()
+                    new_upc_preimg.flush()
+                    new_upc_preimg.finish()
                     imgoutfile.seek(0)
                     svgouttext = imgoutfile.read()
                     with open(outfile, 'wb+') as f:
                         f.write(svgouttext)
                     return True
                 else:
-                    upc_preimg.write_to_png(outfile)
+                    new_upc_preimg.write_to_png(outfile)
                     return True
         except:
             return False
@@ -839,7 +894,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
+        cairo_addon_fix = (8 * (int(resize)))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -849,25 +904,18 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
     upc_matches = re.findall(r"[0-9a-f]{2}", upc)
     upc_to_dec = list([int(x, 16) for x in upc_matches])
     subfromlist = upc_matches.count("6d")
-    addonsize = (((len(upc_matches) - subfromlist) * 11) +
+    upc_size_add = (((len(upc_matches) - subfromlist) * 11) +
                     (len(re.findall(r"6c", upc)) * 2)) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", (((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1])))
+            "RGB", ((29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1])))
         upc_img = ImageDraw.Draw(upc_preimg)
-        upc_img.rectangle([(0, 0), (((34 * barwidth[0]) + addonsize) * int(resize),
+        upc_img.rectangle([(0, 0), ((29 * barwidth[0]) + upc_size_add,
                           barheightadd + (9 * barwidth[1]))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                imgoutfile, ((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1]))
+                None, (29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, (29 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
@@ -880,29 +928,29 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
                 upc_preimg.set_eps(False)
         else:
             upc_preimg = cairo.ImageSurface(
-                cairo.FORMAT_RGB24, ((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1]))
+                cairo.FORMAT_RGB24, (29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
         upc_img.rectangle(
-            0, 0, ((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1]))
+            0, 0, (29 * barwidth[0]) + upc_size_add, barheightadd + (9 * barwidth[1]))
         upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
         upc_img.fill()
     upc_array = {'upc': upc, 'code': []}
-    LineSize = barheight[0] * int(resize)
+    LineSize = barheight[0]
     if(hidetext):
-        LineSize = barheight[1] * int(resize)
+        LineSize = barheight[1]
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     LineStart = 0
     BarNum = 0
     start_bc_num_end = len(start_barcode)
     while(BarNum < start_bc_num_end):
         if(start_barcode[BarNum] == 1):
-            drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart,
-                          LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
+            drawColorLine(upc_img, LineStart, 4, LineStart,
+                          LineSize, barwidth[0], barcolor[0], imageoutlib)
         if(start_barcode[BarNum] == 0):
-            drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart,
-                          LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        LineStart += barwidth[0] * int(resize)
+            drawColorLine(upc_img, LineStart, 4, LineStart,
+                          LineSize, barwidth[0], barcolor[2], imageoutlib)
+        LineStart += barwidth[0]
         BarNum += 1
     NumZero = 0
     cur_set = 0
@@ -1188,12 +1236,12 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
         InnerUPCNum = 0
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
-                drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart,
-                              LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
+                drawColorLine(upc_img, LineStart, 4, LineStart,
+                              LineSize, barwidth[0], barcolor[0], imageoutlib)
             if(left_barcolor[InnerUPCNum] == 0):
-                drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart,
-                              LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-            LineStart += barwidth[0] * int(resize)
+                drawColorLine(upc_img, LineStart, 4, LineStart,
+                              LineSize, barwidth[0], barcolor[2], imageoutlib)
+            LineStart += barwidth[0]
             BarNum += 1
             InnerUPCNum += 1
         NumZero += 1
@@ -1202,20 +1250,82 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
     end_bc_num_end = len(end_barcode)
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
-            drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart,
-                          LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
+            drawColorLine(upc_img, LineStart, 4, LineStart,
+                          LineSize, barwidth[0], barcolor[0], imageoutlib)
         if(end_barcode[end_bc_num] == 0):
-            drawColorLine(upc_img, LineStart, 4 * int(resize), LineStart,
-                          LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+            drawColorLine(upc_img, LineStart, 4, LineStart,
+                          LineSize, barwidth[0], barcolor[2], imageoutlib)
         end_bc_num += 1
-        LineStart += barwidth[0] * int(resize)
+        LineStart += barwidth[0]
         BarNum += 1
+    if(pilsupport and imageoutlib == "pillow"):
+        new_upc_img = upc_preimg.resize(((34 + upc_size_add) * int(resize), (barheightadd + (
+            9 * barwidth[1])) * int(resize)), Image.NEAREST)  # use nearest neighbour
+        del(upc_img)
+        del(upc_preimg)
+        upc_img = ImageDraw.Draw(new_upc_img)
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        upc_imgpat = cairo.SurfacePattern(upc_preimg)
+        scaler = cairo.Matrix()
+        scaler.scale(1/int(resize), 1/int(resize))
+        upc_imgpat.set_matrix(scaler)
+        upc_imgpat.set_filter(cairo.FILTER_NEAREST)
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
+            if(outfileext == "SVG"):
+                new_upc_preimg = cairo.SVGSurface(imgoutfile, ((
+                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            elif(outfileext == "PDF"):
+                new_upc_preimg = cairo.PDFSurface(imgoutfile, ((
+                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            elif(outfileext == "PS" or outfileext == "EPS"):
+                new_upc_preimg = cairo.PSSurface(imgoutfile, ((
+                    34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                if(outfileext == "EPS"):
+                    new_upc_preimg.set_eps(True)
+                else:
+                    new_upc_preimg.set_eps(False)
+            else:
+                new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(
+                    resize), (barheightadd + (9 * barwidth[1])) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+        else:
+            new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (34 + upc_size_add) * int(
+                resize), (barheightadd + (9 * barwidth[1])) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+        new_upc_img = cairo.Context(new_upc_preimg)
+        new_upc_img.set_source(upc_imgpat)
+        new_upc_img.paint()
+        upc_img = new_upc_img
+    if(not hidetext):
+        if(barcode_is_rev):
+            upc_print.reverse();
+        NumTxtZero = 0
+        LineTxtStart = 16
+        while (NumTxtZero < len(upc_print)):
+            if(len(upc_print[NumTxtZero]) == 1):
+                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
+                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+                LineTxtStart += 11 * int(resize)
+            if(len(upc_print[NumTxtZero]) == 2):
+                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
+                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero][0], barcolor[1], "ocrb", imageoutlib)
+                LineTxtStart += 6 * int(resize)
+                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
+                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), upc_print[NumTxtZero][1], barcolor[1], "ocrb", imageoutlib)
+                LineTxtStart += 5 * int(resize)
+            NumTxtZero += 1
+    del(upc_img)
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return new_upc_img
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return new_upc_preimg
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -1232,31 +1342,31 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.tobytes())
+                        stdoutfile.write(new_upc_img.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            upc_preimg.convert(mode="1").tobitmap())
+                            new_upc_img.convert(mode="1").tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        upc_preimg.convert(mode="P").save(
+                        new_upc_img.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
+                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.get_data().tobytes())
+                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        upc_preimg.flush()
-                        upc_preimg.finish()
+                        new_upc_preimg.flush()
+                        new_upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -1264,7 +1374,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.write_to_png(stdoutfile)
+                        new_upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -1285,31 +1395,31 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.tobytes())
+                        stdoutfile.write(new_upc_img.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            upc_preimg.convert(mode='1').tobitmap())
+                            new_upc_img.convert(mode='1').tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        upc_preimg.convert(mode="P").save(
+                        new_upc_img.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
+                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.get_data().tobytes())
+                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        upc_preimg.flush()
-                        upc_preimg.finish()
+                        new_upc_preimg.flush()
+                        new_upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -1317,7 +1427,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.write_to_png(stdoutfile)
+                        new_upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -1336,30 +1446,30 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, hideinfo=(
             if(pilsupport and imageoutlib == "pillow"):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.tobytes())
+                        f.write(new_upc_img.tobytes())
                 elif(outfileext == "XBM"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
+                        f.write(new_upc_preimg.get_data().tobytes())
                 elif(outfileext == "XPM"):
-                    upc_preimg.convert(mode="P").save(
+                    new_upc_img.convert(mode="P").save(
                         outfile, outfileext, **exargdict)
                 else:
-                    upc_preimg.save(outfile, outfileext, **exargdict)
+                    new_upc_img.save(outfile, outfileext, **exargdict)
             if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
+                        f.write(new_upc_preimg.get_data().tobytes())
                     return True
                 elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    upc_preimg.flush()
-                    upc_preimg.finish()
+                    new_upc_preimg.flush()
+                    new_upc_preimg.finish()
                     imgoutfile.seek(0)
                     svgouttext = imgoutfile.read()
                     with open(outfile, 'wb+') as f:
                         f.write(svgouttext)
                     return True
                 else:
-                    upc_preimg.write_to_png(outfile)
+                    new_upc_preimg.write_to_png(outfile)
                     return True
         except:
             return False

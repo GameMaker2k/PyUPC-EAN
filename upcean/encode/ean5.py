@@ -37,7 +37,7 @@ if(cairosupport):
     import upcean.encode.precairo
 
 
-def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -58,18 +58,7 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
         imageoutlib = "pillow"
     if(not pilsupport and not cairosupport):
         return False
-    # Check if input is a Pillow Image, Cairo ImageSurface, or file path
-    elif pilsupport and imageoutlib == "pillow" and isinstance(outfile[1], Image.Image):
-        upc_preimg = outfile[1]
-        upc_img = outfile[0]
-        oldoutfile = None
-        outfile = None
-    elif cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (isinstance(outfile[1], cairo.ImageSurface) or isinstance(outfile[1], cairo.SVGSurface) or isinstance(outfile[1], cairo.PDFSurface) or isinstance(outfile[1], cairo.PSSurface)):
-        upc_preimg = outfile[1]
-        upc_img = outfile[0]
-        oldoutfile = None
-        outfile = None
-    elif(outfile is None):
+    if(outfile is None):
         if(imageoutlib == "cairosvg"):
             oldoutfile = None
             outfile = None
@@ -139,7 +128,7 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
+        cairo_addon_fix = (8 * (int(resize)))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -147,58 +136,51 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
     CheckSum = (int(LeftDigit[0]) * 3) + (int(LeftDigit[1]) * 9) + (
         int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3)
     CheckSum = CheckSum % 10
-    if(pilsupport and imageoutlib == "pillow" and not isinstance(outfile, Image.Image)):
+    if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", ((56 * barwidth[0]), (barheightadd + (9 * barwidth[1])) * int(resize)))
+            "RGB", ((56 * barwidth[0]), barheightadd + (9 * barwidth[1])))
         upc_img = ImageDraw.Draw(upc_preimg)
         upc_img.rectangle(
-            [(0, 0), ((56 * barwidth[0]), (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (not isinstance(outfile, cairo.ImageSurface) and not isinstance(outfile, cairo.SVGSurface) and isinstance(outfile, cairo.PDFSurface) and not isinstance(outfile, cairo.PSSurface))):
+            [(0, 0), ((56 * barwidth[0]), barheightadd + (9 * barwidth[1]))], fill=barcolor[2])
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
-            if(outfile is None):
-                imgoutfile = None
-            else:
-                if(sys.version[0] == "2"):
-                    imgoutfile = StringIO()
-                if(sys.version[0] >= "3"):
-                    imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                imgoutfile, (56 * barwidth[0]), (barheightadd + (9 * barwidth[1])) * int(resize))
+                None, (56 * barwidth[0]), barheightadd + (9 * barwidth[1]))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
-                None, (56 * barwidth[0]) + addonsize, (barheightadd + (9 * barwidth[1])) * int(resize))
+                None, (56 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
         elif(outfileext == "PS" or outfileext == "EPS"):
             upc_preimg = cairo.PSSurface(
-                None, (56 * barwidth[0]) + addonsize, (barheightadd + (9 * barwidth[1])) * int(resize))
+                None, (56 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
             if(outfileext == "EPS"):
                 upc_preimg.set_eps(True)
             else:
                 upc_preimg.set_eps(False)
         else:
             upc_preimg = cairo.ImageSurface(
-                cairo.FORMAT_RGB24, (56 * barwidth[0]), (barheightadd + (9 * barwidth[1])) * int(resize))
+                cairo.FORMAT_RGB24, (56 * barwidth[0]), barheightadd + (9 * barwidth[1]))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-        upc_img.rectangle(0, 0, 83, (barheightadd + (9 * barwidth[1])) * int(resize))
+        upc_img.rectangle(0, 0, 83, barheightadd + (9 * barwidth[1]))
         upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
         upc_img.fill()
     upc_array = {'upc': upc, 'code': []}
-    LineSize = barheight[0] * int(resize)
+    LineSize = barheight[0]
     if(hidetext):
-        LineSize = barheight[1] * int(resize)
+        LineSize = barheight[1]
     upc_array['code'].append([0, 1, 0, 1, 1])
     start_barcode = [0, 1, 0, 1, 1]
-    LineStart = startx
+    LineStart = 0
     BarNum = 0
     start_bc_num_end = len(start_barcode)
     while(BarNum < start_bc_num_end):
         if(start_barcode[BarNum] == 1):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
-                          LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
+            drawColorLine(upc_img, LineStart, 10, LineStart,
+                          LineSize, barwidth[0], barcolor[0], imageoutlib)
         if(start_barcode[BarNum] == 0):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
-                          LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        LineStart += barwidth[0] * int(resize)
+            drawColorLine(upc_img, LineStart, 10, LineStart,
+                          LineSize, barwidth[0], barcolor[2], imageoutlib)
+        LineStart += barwidth[0]
         BarNum += 1
     NumZero = 0
     while (NumZero < len(LeftDigit)):
@@ -339,24 +321,67 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
         InnerUPCNum = 0
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
-                              LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
+                drawColorLine(upc_img, LineStart, 10, LineStart,
+                              LineSize, barwidth[0], barcolor[0], imageoutlib)
             if(left_barcolor[InnerUPCNum] == 0):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
-                              LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-            LineStart += barwidth[0] * int(resize)
+                drawColorLine(upc_img, LineStart, 10, LineStart,
+                              LineSize, barwidth[0], barcolor[2], imageoutlib)
+            LineStart += barwidth[0]
             BarNum += 1
             InnerUPCNum += 1
         if(NumZero < 4):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
-                          LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-            LineStart += barwidth[0] * int(resize)
+            drawColorLine(upc_img, LineStart, 10, LineStart,
+                          LineSize, barwidth[0], barcolor[2], imageoutlib)
+            LineStart += barwidth[0]
             BarNum += 1
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
-                          LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
-            LineStart += barwidth[0] * int(resize)
+            drawColorLine(upc_img, LineStart, 10, LineStart,
+                          LineSize, barwidth[0], barcolor[0], imageoutlib)
+            LineStart += barwidth[0]
             BarNum += 1
         NumZero += 1
+    if(pilsupport and imageoutlib == "pillow"):
+        new_upc_img = upc_preimg.resize(
+            ((56 * barwidth[0]) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)), Image.NEAREST)
+        del(upc_img)
+        del(upc_preimg)
+        upc_img = ImageDraw.Draw(new_upc_img)
+    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        upc_imgpat = cairo.SurfacePattern(upc_preimg)
+        scaler = cairo.Matrix()
+        scaler.scale(1/int(resize), 1/int(resize))
+        upc_imgpat.set_matrix(scaler)
+        upc_imgpat.set_filter(cairo.FILTER_NEAREST)
+        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
+            if(outfile is None):
+                imgoutfile = None
+            else:
+                if(sys.version[0] == "2"):
+                    imgoutfile = StringIO()
+                if(sys.version[0] >= "3"):
+                    imgoutfile = BytesIO()
+            if(outfileext == "SVG"):
+                new_upc_preimg = cairo.SVGSurface(imgoutfile, ((
+                    56 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            elif(outfileext == "PDF"):
+                new_upc_preimg = cairo.PDFSurface(imgoutfile, ((
+                    56 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            elif(outfileext == "PS" or outfileext == "EPS"):
+                new_upc_preimg = cairo.PSSurface(imgoutfile, ((
+                    56 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                if(outfileext == "EPS"):
+                    new_upc_preimg.set_eps(True)
+                else:
+                    new_upc_preimg.set_eps(False)
+            else:
+                new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * barwidth[0]) * int(
+                    resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+        else:
+            new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (56 * barwidth[0]) * int(
+                resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+        new_upc_img = cairo.Context(new_upc_preimg)
+        new_upc_img.set_source(upc_imgpat)
+        new_upc_img.paint()
+        upc_img = new_upc_img
     if(not hidetext):
         drawColorText(upc_img, 10 * int(resize * barwidth[1]), (7 + (7 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
             barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), LeftDigit[0], barcolor[1], "ocrb", imageoutlib)
@@ -371,9 +396,9 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return [upc_img, upc_preimg]
+            return new_upc_img
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return [upc_img, upc_preimg]
+            return new_upc_preimg
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -390,31 +415,31 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.tobytes())
+                        stdoutfile.write(new_upc_img.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            upc_preimg.convert(mode="1").tobitmap())
+                            new_upc_img.convert(mode="1").tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        upc_preimg.convert(mode="P").save(
+                        new_upc_img.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
+                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.get_data().tobytes())
+                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        upc_preimg.flush()
-                        upc_preimg.finish()
+                        new_upc_preimg.flush()
+                        new_upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -422,7 +447,7 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.write_to_png(stdoutfile)
+                        new_upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -443,31 +468,31 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.tobytes())
+                        stdoutfile.write(new_upc_img.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            upc_preimg.convert(mode='1').tobitmap())
+                            new_upc_img.convert(mode='1').tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        upc_preimg.convert(mode="P").save(
+                        new_upc_img.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
+                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.get_data().tobytes())
+                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        upc_preimg.flush()
-                        upc_preimg.finish()
+                        new_upc_preimg.flush()
+                        new_upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -475,187 +500,7 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", startx=0, resiz
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        upc_preimg.write_to_png(stdoutfile)
-                        stdoutfile.seek(0)
-                        return stdoutfile
-            except:
-                return False
-    if(outfile != "-" and outfile != "" and outfile != " "):
-        if(outfileext == "WEBP"):
-            exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
-        elif(outfileext == "JPEG"):
-            exargdict.update(
-                {'quality': 95, 'optimize': True, 'progressive': True})
-        elif(outfileext == "PNG"):
-            exargdict.update({'optimize': True, 'compress_level': 9})
-        else:
-            exargdict = {}
-        try:
-            if(pilsupport and imageoutlib == "pillow" and not isinstance(outfile, Image.Image)):
-                if(outfileext == "BYTES"):
-                    with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.tobytes())
-                elif(outfileext == "XBM"):
-                    with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
-                elif(outfileext == "XPM"):
-                    upc_preimg.convert(mode="P").save(
-                        outfile, outfileext, **exargdict)
-                else:
-                    upc_preimg.save(outfile, outfileext, **exargdict)
-            elif(isinstance(outfile, Image.Image)):
-                [upc_img, upc_preimg]
-            if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (not isinstance(outfile, cairo.ImageSurface) and not isinstance(outfile, cairo.SVGSurface) and isinstance(outfile, cairo.PDFSurface) and not isinstance(outfile, cairo.PSSurface))):
-                if(outfileext == "BYTES"):
-                    with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
-                    return True
-                elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    upc_preimg.flush()
-                    upc_preimg.finish()
-                    imgoutfile.seek(0)
-                    svgouttext = imgoutfile.read()
-                    with open(outfile, 'wb+') as f:
-                        f.write(svgouttext)
-                    return True
-                else:
-                    upc_preimg.write_to_png(outfile)
-                    return True
-            elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg") and (isinstance(outfile, cairo.ImageSurface) or isinstance(outfile, cairo.SVGSurface) or isinstance(outfile, cairo.PDFSurface) or isinstance(outfile, cairo.PSSurface))):
-                return [upc_img, upc_preimg]
-        except:
-            return False
-    return True
-
-
-def draw_ean5sup_barcode(upc, startx=0, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean5sup_barcode(upc, None, startx, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
-
-
-def encode_ean5sup_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean5sup_barcode(upc, None, startx, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
-
-
-def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
-        resize = 1
-    upc_preimg = Image.new("RGB", (((56 * barwidth[0]) * int(resize)) + (
-        8 * int(resize)), (barheightadd + (9 * barwidth[1])) * int(resize)))
-    upc_img = ImageDraw.Draw(upc_preimg)
-    upc_img.rectangle([(0, 0), (((56 * barwidth[0]) * int(resize)) + (8 * int(resize)),
-                      (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
-    upc_sup_img = create_ean5sup_barcode(
-        upc, None, 0, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
-    if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
-        return False
-    exargdict = {}
-    if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        if(pilsupport and imageoutlib == "pillow"):
-            return upc_img
-        if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
-    if(sys.version[0] == "2"):
-        if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
-            stdoutfile = StringIO()
-            if(outfileext == "WEBP"):
-                exargdict.update(
-                    {'lossless': True, 'quality': 100, 'method': 6})
-            elif(outfileext == "JPEG"):
-                exargdict.update(
-                    {'quality': 95, 'optimize': True, 'progressive': True})
-            elif(outfileext == "PNG"):
-                exargdict.update({'optimize': True, 'compress_level': 9})
-            else:
-                exargdict = {}
-            try:
-                if(pilsupport and imageoutlib == "pillow"):
-                    if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_img.tobytes())
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    elif(outfileext == "XBM"):
-                        stdoutfile.write(
-                            upc_img.convert(mode="1").tobitmap())
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    elif(outfileext == "XPM"):
-                        upc_img.convert(mode="P").save(
-                            stdoutfile, outfileext, **exargdict)
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    else:
-                        upc_img.save(stdoutfile, outfileext, **exargdict)
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-                    if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.get_data().tobytes())
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        upc_preimg.flush()
-                        upc_preimg.finish()
-                        imgoutfile.seek(0)
-                        svgouttext = imgoutfile.read()
-                        stdoutfile.write(svgouttext)
-                        imgoutfile.close()
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    else:
-                        upc_preimg.write_to_png(stdoutfile)
-                        stdoutfile.seek(0)
-                        return stdoutfile
-            except:
-                return False
-    if(sys.version[0] >= "3"):
-        stdoutfile = BytesIO()
-        if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
-            if(outfileext == "WEBP"):
-                exargdict.update(
-                    {'lossless': True, 'quality': 100, 'method': 6})
-            elif(outfileext == "JPEG"):
-                exargdict.update(
-                    {'quality': 95, 'optimize': True, 'progressive': True})
-            elif(outfileext == "PNG"):
-                exargdict.update({'optimize': True, 'compress_level': 9})
-            else:
-                exargdict = {}
-            try:
-                if(pilsupport and imageoutlib == "pillow"):
-                    if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_img.tobytes())
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    elif(outfileext == "XBM"):
-                        stdoutfile.write(
-                            upc_img.convert(mode='1').tobitmap())
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    elif(outfileext == "XPM"):
-                        upc_img.convert(mode="P").save(
-                            stdoutfile, outfileext, **exargdict)
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    else:
-                        upc_img.save(stdoutfile, outfileext, **exargdict)
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-                    if(outfileext == "BYTES"):
-                        stdoutfile.write(upc_preimg.get_data().tobytes())
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        upc_preimg.flush()
-                        upc_preimg.finish()
-                        imgoutfile.seek(0)
-                        svgouttext = imgoutfile.read()
-                        stdoutfile.write(svgouttext)
-                        imgoutfile.close()
-                        stdoutfile.seek(0)
-                        return stdoutfile
-                    else:
-                        upc_preimg.write_to_png(stdoutfile)
+                        new_upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -674,30 +519,208 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, hideinfo=(False, Fa
             if(pilsupport and imageoutlib == "pillow"):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_img.tobytes())
+                        f.write(new_upc_img.tobytes())
                 elif(outfileext == "XBM"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
+                        f.write(new_upc_preimg.get_data().tobytes())
                 elif(outfileext == "XPM"):
-                    upc_img.convert(mode="P").save(
+                    new_upc_img.convert(mode="P").save(
                         outfile, outfileext, **exargdict)
                 else:
-                    upc_img.save(outfile, outfileext, **exargdict)
+                    new_upc_img.save(outfile, outfileext, **exargdict)
             if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
+                        f.write(new_upc_preimg.get_data().tobytes())
                     return True
                 elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    upc_preimg.flush()
-                    upc_preimg.finish()
+                    new_upc_preimg.flush()
+                    new_upc_preimg.finish()
                     imgoutfile.seek(0)
                     svgouttext = imgoutfile.read()
                     with open(outfile, 'wb+') as f:
                         f.write(svgouttext)
                     return True
                 else:
-                    upc_preimg.write_to_png(outfile)
+                    new_upc_preimg.write_to_png(outfile)
+                    return True
+        except:
+            return False
+    return True
+
+
+def draw_ean5sup_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_ean5sup_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def encode_ean5sup_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_ean5sup_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+
+
+def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
+        resize = 1
+    upc_preimg = Image.new("RGB", (((56 * barwidth[0]) * int(resize)) + (
+        8 * int(resize)), (barheightadd + (9 * barwidth[1])) * int(resize)))
+    upc_img = ImageDraw.Draw(upc_preimg)
+    upc_img.rectangle([(0, 0), (((56 * barwidth[0]) * int(resize)) + (8 * int(resize)),
+                      (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
+    upc_sup_img = create_ean5sup_barcode(
+        upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    if(upc_sup_img is None or isinstance(upc_sup_img, bool)):
+        return False
+    upc_preimg.paste(upc_sup_img, (8 * int(resize), 0))
+    del(upc_sup_img)
+    exargdict = {}
+    if(oldoutfile is None or isinstance(oldoutfile, bool)):
+        if(pilsupport and imageoutlib == "pillow"):
+            return new_upc_img
+        if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+            return new_upc_preimg
+    if(sys.version[0] == "2"):
+        if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
+            stdoutfile = StringIO()
+            if(outfileext == "WEBP"):
+                exargdict.update(
+                    {'lossless': True, 'quality': 100, 'method': 6})
+            elif(outfileext == "JPEG"):
+                exargdict.update(
+                    {'quality': 95, 'optimize': True, 'progressive': True})
+            elif(outfileext == "PNG"):
+                exargdict.update({'optimize': True, 'compress_level': 9})
+            else:
+                exargdict = {}
+            try:
+                if(pilsupport and imageoutlib == "pillow"):
+                    if(outfileext == "BYTES"):
+                        stdoutfile.write(new_upc_img.tobytes())
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    elif(outfileext == "XBM"):
+                        stdoutfile.write(
+                            new_upc_img.convert(mode="1").tobitmap())
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    elif(outfileext == "XPM"):
+                        new_upc_img.convert(mode="P").save(
+                            stdoutfile, outfileext, **exargdict)
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    else:
+                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+                    if(outfileext == "BYTES"):
+                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
+                        new_upc_preimg.flush()
+                        new_upc_preimg.finish()
+                        imgoutfile.seek(0)
+                        svgouttext = imgoutfile.read()
+                        stdoutfile.write(svgouttext)
+                        imgoutfile.close()
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    else:
+                        new_upc_preimg.write_to_png(stdoutfile)
+                        stdoutfile.seek(0)
+                        return stdoutfile
+            except:
+                return False
+    if(sys.version[0] >= "3"):
+        stdoutfile = BytesIO()
+        if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
+            if(outfileext == "WEBP"):
+                exargdict.update(
+                    {'lossless': True, 'quality': 100, 'method': 6})
+            elif(outfileext == "JPEG"):
+                exargdict.update(
+                    {'quality': 95, 'optimize': True, 'progressive': True})
+            elif(outfileext == "PNG"):
+                exargdict.update({'optimize': True, 'compress_level': 9})
+            else:
+                exargdict = {}
+            try:
+                if(pilsupport and imageoutlib == "pillow"):
+                    if(outfileext == "BYTES"):
+                        stdoutfile.write(new_upc_img.tobytes())
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    elif(outfileext == "XBM"):
+                        stdoutfile.write(
+                            new_upc_img.convert(mode='1').tobitmap())
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    elif(outfileext == "XPM"):
+                        new_upc_img.convert(mode="P").save(
+                            stdoutfile, outfileext, **exargdict)
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    else:
+                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+                    if(outfileext == "BYTES"):
+                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
+                        new_upc_preimg.flush()
+                        new_upc_preimg.finish()
+                        imgoutfile.seek(0)
+                        svgouttext = imgoutfile.read()
+                        stdoutfile.write(svgouttext)
+                        imgoutfile.close()
+                        stdoutfile.seek(0)
+                        return stdoutfile
+                    else:
+                        new_upc_preimg.write_to_png(stdoutfile)
+                        stdoutfile.seek(0)
+                        return stdoutfile
+            except:
+                return False
+    if(outfile != "-" and outfile != "" and outfile != " "):
+        if(outfileext == "WEBP"):
+            exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
+        elif(outfileext == "JPEG"):
+            exargdict.update(
+                {'quality': 95, 'optimize': True, 'progressive': True})
+        elif(outfileext == "PNG"):
+            exargdict.update({'optimize': True, 'compress_level': 9})
+        else:
+            exargdict = {}
+        try:
+            if(pilsupport and imageoutlib == "pillow"):
+                if(outfileext == "BYTES"):
+                    with open(outfile, 'wb+') as f:
+                        f.write(new_upc_img.tobytes())
+                elif(outfileext == "XBM"):
+                    with open(outfile, 'wb+') as f:
+                        f.write(new_upc_preimg.get_data().tobytes())
+                elif(outfileext == "XPM"):
+                    new_upc_img.convert(mode="P").save(
+                        outfile, outfileext, **exargdict)
+                else:
+                    new_upc_img.save(outfile, outfileext, **exargdict)
+            if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+                if(outfileext == "BYTES"):
+                    with open(outfile, 'wb+') as f:
+                        f.write(new_upc_preimg.get_data().tobytes())
+                    return True
+                elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
+                    new_upc_preimg.flush()
+                    new_upc_preimg.finish()
+                    imgoutfile.seek(0)
+                    svgouttext = imgoutfile.read()
+                    with open(outfile, 'wb+') as f:
+                        f.write(svgouttext)
+                    return True
+                else:
+                    new_upc_preimg.write_to_png(outfile)
                     return True
         except:
             return False
