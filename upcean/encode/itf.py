@@ -134,9 +134,9 @@ def create_itf_barcode(upc, outfile="./itf.png", resize=1, hideinfo=(False, Fals
         cairo_addon_fix = 0
     upc_matches = re.findall("([0-9]{2})", upc)
     if(threewidebar):
-        upc_size_add = (len(upc_matches) * 18) * barwidth[0]
+        addonsize = (len(upc_matches) * 18) * barwidth[0]
     else:
-        upc_size_add = (len(upc_matches) * 14) * barwidth[0]
+        addonsize = (len(upc_matches) * 14) * barwidth[0]
     if(len(upc_matches) <= 0):
         return False
     if(pilsupport and imageoutlib == "pillow"):

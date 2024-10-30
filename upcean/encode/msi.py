@@ -150,7 +150,7 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, hideinfo=(False, Fals
         UPC_Sum = UPC_Sum + int(PreChck2[PreCount])
         PreCount += 1
     upc_matches.append(str(10 - (UPC_Sum % 10)))
-    upc_size_add = (len(upc_matches) * 12) * barwidth[0]
+    addonsize = (len(upc_matches) * 12) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
             "RGB", (((34 * barwidth[0]) + addonsize) * int(resize), barheightadd + (9 * barwidth[1])))

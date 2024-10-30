@@ -133,7 +133,7 @@ def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, hideinfo=(Fal
         cairo_addon_fix = 0
     upc = upc.upper()
     upc_matches = list(upc)
-    upc_size_add = ((len(upc_matches) * 16) +
+    addonsize = ((len(upc_matches) * 16) +
                     (len(upc_matches) + 1)) * barwidth[0]
     if(len(upc_matches) <= 0):
         return False

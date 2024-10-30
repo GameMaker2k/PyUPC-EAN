@@ -138,13 +138,13 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, hideinfo=(False
         return False
     bcsize6 = len(re.findall("([09\\-])", "".join(upc_matches)))
     bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)))
-    upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) +
+    addonsize = ((bcsize6 * 6) + (bcsize7 * 7) +
                     len(upc_matches) - 1) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", (((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
+            "RGB", (((34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_img = ImageDraw.Draw(upc_preimg)
-        upc_img.rectangle([(0, 0), (((34 * barwidth[0]) + upc_size_add) * int(resize),
+        upc_img.rectangle([(0, 0), (((34 * barwidth[0]) + addonsize) * int(resize),
                           (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
@@ -156,7 +156,7 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, hideinfo=(False
                 if(sys.version[0] >= "3"):
                     imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                imgoutfile, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                imgoutfile, ((34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, (34 * barwidth[0]) + addonsize, (barheightadd + (9 * barwidth[1])) * int(resize))
@@ -169,11 +169,11 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, hideinfo=(False
                 upc_preimg.set_eps(False)
         else:
             upc_preimg = cairo.ImageSurface(
-                cairo.FORMAT_RGB24, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                cairo.FORMAT_RGB24, ((34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
         upc_img.rectangle(
-            0, 0, ((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            0, 0, ((34 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
         upc_img.fill()
     upc_array = {'upc': upc, 'code': []}
@@ -547,7 +547,7 @@ def create_code11extended_barcode(upc, outfile="./code11.png", resize=1, hideinf
     upc_matches.append(Code11Array[UPC_Sum % 11])
     bcsize6 = len(re.findall("([09\\-])", "".join(upc_matches)))
     bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)))
-    upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) +
+    addonsize = ((bcsize6 * 6) + (bcsize7 * 7) +
                     len(upc_matches) - 1) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(

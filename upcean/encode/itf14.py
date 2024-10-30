@@ -134,9 +134,9 @@ def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, hideinfo=(False, 
         cairo_addon_fix = 0
     upc_matches = re.findall("([0-9]{2})", upc)
     if(threewidebar):
-        upc_size_add = (len(upc_matches) * 18) * barwidth[0]
+        addonsize = (len(upc_matches) * 18) * barwidth[0]
     else:
-        upc_size_add = (len(upc_matches) * 14) * barwidth[0]
+        addonsize = (len(upc_matches) * 14) * barwidth[0]
     if(len(upc_matches) <= 0):
         return False
     if(pilsupport and imageoutlib == "pillow"):
@@ -298,13 +298,13 @@ def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, hideinfo=(False, 
         LineStart += barwidth[0]
         BarNum += 1
     drawColorRectangleAlt(upc_img, 0, 0, ((
-        44 * barwidth[0]) + upc_size_add) - 1, ((barheight[0] + (15 * barwidth[0])) - 11), barcolor[0])
+        44 * barwidth[0]) + addonsize) - 1, ((barheight[0] + (15 * barwidth[0])) - 11), barcolor[0])
     drawColorRectangleAlt(upc_img, 1, 1, ((
-        44 * barwidth[0]) + upc_size_add) - 2, ((barheight[0] + (15 * barwidth[0])) - 12), barcolor[0])
+        44 * barwidth[0]) + addonsize) - 2, ((barheight[0] + (15 * barwidth[0])) - 12), barcolor[0])
     drawColorRectangleAlt(upc_img, 2, 2, ((
-        44 * barwidth[0]) + upc_size_add) - 3, ((barheight[0] + (15 * barwidth[0])) - 13), barcolor[0])
+        44 * barwidth[0]) + addonsize) - 3, ((barheight[0] + (15 * barwidth[0])) - 13), barcolor[0])
     drawColorRectangleAlt(upc_img, 3, 3, ((
-        44 * barwidth[0]) + upc_size_add) - 4, ((barheight[0] + (15 * barwidth[0])) - 14), barcolor[0])
+        44 * barwidth[0]) + addonsize) - 4, ((barheight[0] + (15 * barwidth[0])) - 14), barcolor[0])
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):

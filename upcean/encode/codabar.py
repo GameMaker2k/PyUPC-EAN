@@ -143,7 +143,7 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, hideinfo=(Fal
     bcsize9 = len(re.findall("([0-9\\-\\$])", "".join(upc_matches)))
     bcsize10 = len(re.findall("([\\:\\/\\.])", "".join(upc_matches)))
     bcsize12 = len(re.findall("([\\+])", "".join(upc_matches)))
-    upc_size_add = ((bcsize9 * 9) + (bcsize10 * 10) +
+    addonsize = ((bcsize9 * 9) + (bcsize10 * 10) +
                     (bcsize12 * 12) + len(upc_matches) - 1) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(

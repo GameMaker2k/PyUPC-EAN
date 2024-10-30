@@ -133,15 +133,15 @@ def create_code32_barcode(upc, outfile="./code32.png", resize=1, hideinfo=(False
         cairo_addon_fix = 0
     upc = upc.upper()
     upc_matches = list(upc)
-    upc_size_add = ((len(upc_matches) * 15) +
+    addonsize = ((len(upc_matches) * 15) +
                     (len(upc_matches) + 1)) * barwidth[0]
     if(len(upc_matches) <= 0):
         return False
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", (((50 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
+            "RGB", (((50 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_img = ImageDraw.Draw(upc_preimg)
-        upc_img.rectangle([(0, 0), (((50 * barwidth[0]) + upc_size_add) * int(resize),
+        upc_img.rectangle([(0, 0), (((50 * barwidth[0]) + addonsize) * int(resize),
                           (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
@@ -153,7 +153,7 @@ def create_code32_barcode(upc, outfile="./code32.png", resize=1, hideinfo=(False
                 if(sys.version[0] >= "3"):
                     imgoutfile = BytesIO()
             upc_preimg = cairo.SVGSurface(
-                imgoutfile, ((50 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                imgoutfile, ((50 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         elif(outfileext == "PDF"):
             upc_preimg = cairo.PDFSurface(
                 None, (50 * barwidth[0]) + addonsize, (barheightadd + (9 * barwidth[1])) * int(resize))
@@ -166,11 +166,11 @@ def create_code32_barcode(upc, outfile="./code32.png", resize=1, hideinfo=(False
                 upc_preimg.set_eps(False)
         else:
             upc_preimg = cairo.ImageSurface(
-                cairo.FORMAT_RGB24, ((50 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                cairo.FORMAT_RGB24, ((50 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
         upc_img.rectangle(
-            0, 0, ((50 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            0, 0, ((50 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
         upc_img.fill()
     upc_array = {'upc': upc, 'code': []}
