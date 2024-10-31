@@ -165,53 +165,19 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
     LeftDigit = list(str(upc_matches[0])+str(upc_matches[1]))
     RightDigit = list(str(upc_matches[2])+str(upc_matches[3]))
     CheckDigit = upc_matches[3]
-    addonsize = 0
+    upc_size_add = 0
     if(supplement is not None and len(supplement) == 2):
-        addonsize = 29
+        upc_size_add = 29
     if(supplement is not None and len(supplement) == 5):
-        addonsize = 56
+        upc_size_add = 56
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", (113 + addonsize, barheight[1] + (45 * barwidth[0])))
+            "RGB", (113 + upc_size_add, barheight[1] + (45 * barwidth[0])))
         upc_img = ImageDraw.Draw(upc_preimg)
         upc_img.rectangle(
-            [(0, 0), (113 + addonsize, barheight[1] + (45 * barwidth[0]))], fill=barcolor[2])
+            [(0, 0), (113 + upc_size_add, barheight[1] + (45 * barwidth[0]))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(outfileext == "SVG"):
-            upc_preimg = cairo.SVGSurface(
-                None, (113 + addonsize, barheight[1] + (45 * barwidth[0])))
-        elif(outfileext == "PDF"):
-            upc_preimg = cairo.PDFSurface(
-                None, (113 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
-        elif(outfileext == "PS" or outfileext == "EPS"):
-            upc_preimg = cairo.PSSurface(
-                None, (113 * barwidth[0]) + addonsize, barheightadd + (9 * barwidth[1]))
-            if(outfileext == "EPS"):
-                upc_preimg.set_eps(True)
-            else:
-                upc_preimg.set_eps(False)
-        else:
-            upc_preimg = cairo.ImageSurface(
-                cairo.FORMAT_RGB24, (113 + addonsize, barheight[1] + (45 * barwidth[0])))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-        upc_img.rectangle(0, 0, 113 + addonsize,
-                          barheight[1] + (45 * barwidth[0]))
-        upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
-        upc_img.fill()
-    if(pilsupport and imageoutlib == "pillow"):
-        new_upc_img = upc_preimg.resize(
-            ((113 + addonsize) * int(resize), (barheight[1] + (45 * barwidth[0])) * int(resize)), Image.NEAREST)
-        del(upc_img)
-        del(upc_preimg)
-        upc_img = ImageDraw.Draw(new_upc_img)
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        upc_imgpat = cairo.SurfacePattern(upc_preimg)
-        scaler = cairo.Matrix()
-        scaler.scale(1/int(resize), 1/int(resize))
-        upc_imgpat.set_matrix(scaler)
-        upc_imgpat.set_filter(cairo.FILTER_NEAREST)
-        if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS"):
             if(outfile is None):
                 imgoutfile = None
             else:
@@ -219,52 +185,38 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
                     imgoutfile = StringIO()
                 if(sys.version[0] >= "3"):
                     imgoutfile = BytesIO()
-            if(outfileext == "SVG"):
-                new_upc_preimg = cairo.SVGSurface(imgoutfile, ((
-                    113 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-            elif(outfileext == "PDF"):
-                new_upc_preimg = cairo.PDFSurface(imgoutfile, ((
-                    113 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-            elif(outfileext == "PS" or outfileext == "EPS"):
-                new_upc_preimg = cairo.PSSurface(imgoutfile, ((
-                    113 * barwidth[0]) + addonsize) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-                if(outfileext == "EPS"):
-                    new_upc_preimg.set_eps(True)
-                else:
-                    new_upc_preimg.set_eps(False)
+            upc_preimg = cairo.SVGSurface(
+                imgoutfile, (113 + upc_size_add, barheight[1] + (45 * barwidth[0])))
+        elif(outfileext == "PDF"):
+            upc_preimg = cairo.PDFSurface(
+                None, ((113 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+        elif(outfileext == "PS" or outfileext == "EPS"):
+            upc_preimg = cairo.PSSurface(
+                None, ((113 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+            if(outfileext == "EPS"):
+                upc_preimg.set_eps(True)
             else:
-                new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(
-                    resize), (barheight[1] + (45 * barwidth[0])) * int(resize))
+                upc_preimg.set_eps(False)
         else:
-            new_upc_preimg = cairo.ImageSurface(cairo.FORMAT_RGB24, (113 + addonsize) * int(
-                resize), (barheight[1] + (45 * barwidth[0])) * int(resize))
-        new_upc_img = cairo.Context(new_upc_preimg)
-        new_upc_img.set_source(upc_imgpat)
-        new_upc_img.paint()
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_barcode_img = draw_upca_barcode(
-            upc, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
-        new_upc_img.paste(upc_barcode_img, (0, 15 * resize))
-        del(upc_barcode_img)
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        upc_barcode_img = draw_upca_barcode(
-            upc, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
-        new_upc_img.set_source_surface(upc_barcode_img, 0, 15 * resize)
-        new_upc_img.paint()
-        upc_img = new_upc_img
-        del(upc_barcode_img)
+            upc_preimg = cairo.ImageSurface(
+                cairo.FORMAT_RGB24, (113 + upc_size_add, barheight[1] + (45 * barwidth[0])))
+        upc_img = cairo.Context(upc_preimg)
+        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
+        upc_img.rectangle(0, 0, 113 + upc_size_add,
+                          barheight[1] + (45 * barwidth[0]))
+        upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
+        upc_img.fill()
     drawColorText(upc_img, 12 * int(resize * barwidth[0]), 30 + (23 * (int(resize) - 1)) - (4 * (int(
         resize * barwidth[0]) - 1)), (4 * int(resize * barwidth[0])), "Goodwill", barcolor[1], "ocrb", imageoutlib)
     if(len(goodwillinfo['pricewdnz']) < 4):
         goodwillinfo['pricewdnz'] = "0"+goodwillinfo['pricewdnz']
-    addonsize = 0
+    upc_size_add = 0
     if(len(goodwillinfo['pricewdnz']) == 5):
-        addonsize = -14
+        upc_size_add = -14
     if(len(goodwillinfo['pricewdnz']) == 6):
-        addonsize = -30
-    drawColorText(upc_img, 16 * int(resize * barwidth[0]), 36 + addonsize + (23 * (int(resize) - 1)) - (4 * (int(
+        upc_size_add = -30
+    drawColorText(upc_img, 16 * int(resize * barwidth[0]), 36 + upc_size_add + (23 * (int(resize) - 1)) - (4 * (int(
         resize * barwidth[0]) - 1)), (75 * int(resize * barwidth[0])), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib)
-    del(upc_img)
     if(pilsupport and imageoutlib == "pillow"):
         if(supplement is not None and len(supplement) == 2):
             upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
@@ -294,9 +246,9 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return new_upc_img
+            return upc_preimg
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return new_upc_preimg
+            return upc_preimg
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -313,31 +265,31 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(new_upc_img.tobytes())
+                        stdoutfile.write(upc_preimg.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            new_upc_img.convert(mode="1").tobitmap())
+                            upc_preimg.convert(mode="1").tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        new_upc_img.convert(mode="P").save(
+                        upc_preimg.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
+                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
+                        stdoutfile.write(upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        new_upc_preimg.flush()
-                        new_upc_preimg.finish()
+                        upc_preimg.flush()
+                        upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -345,7 +297,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        new_upc_preimg.write_to_png(stdoutfile)
+                        upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -366,31 +318,31 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(new_upc_img.tobytes())
+                        stdoutfile.write(upc_preimg.tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XBM"):
                         stdoutfile.write(
-                            new_upc_img.convert(mode='1').tobitmap())
+                            upc_preimg.convert(mode='1').tobitmap())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "XPM"):
-                        new_upc_img.convert(mode="P").save(
+                        upc_preimg.convert(mode="P").save(
                             stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        new_upc_img.save(stdoutfile, outfileext, **exargdict)
+                        upc_preimg.save(stdoutfile, outfileext, **exargdict)
                         stdoutfile.seek(0)
                         return stdoutfile
                 if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                     if(outfileext == "BYTES"):
-                        stdoutfile.write(new_upc_preimg.get_data().tobytes())
+                        stdoutfile.write(upc_preimg.get_data().tobytes())
                         stdoutfile.seek(0)
                         return stdoutfile
                     elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                        new_upc_preimg.flush()
-                        new_upc_preimg.finish()
+                        upc_preimg.flush()
+                        upc_preimg.finish()
                         imgoutfile.seek(0)
                         svgouttext = imgoutfile.read()
                         stdoutfile.write(svgouttext)
@@ -398,7 +350,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
                         stdoutfile.seek(0)
                         return stdoutfile
                     else:
-                        new_upc_preimg.write_to_png(stdoutfile)
+                        upc_preimg.write_to_png(stdoutfile)
                         stdoutfile.seek(0)
                         return stdoutfile
             except:
@@ -417,33 +369,33 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
             if(pilsupport and imageoutlib == "pillow"):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(new_upc_img.tobytes())
+                        f.write(upc_preimg.tobytes())
                 elif(outfileext == "XBM"):
                     with open(outfile, 'wb+') as f:
-                        f.write(new_upc_preimg.get_data().tobytes())
+                        f.write(upc_preimg.get_data().tobytes())
                 elif(outfileext == "XPM"):
-                    new_upc_img.convert(mode="P").save(
+                    upc_preimg.convert(mode="P").save(
                         outfile, outfileext, **exargdict)
                 else:
-                    new_upc_img.save(outfile, outfileext, **exargdict)
+                    upc_preimg.save(outfile, outfileext, **exargdict)
             if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
-                        f.write(new_upc_preimg.get_data().tobytes())
+                        f.write(upc_preimg.get_data().tobytes())
                     return True
                 elif(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    new_upc_preimg.flush()
-                    new_upc_preimg.finish()
+                    upc_preimg.flush()
+                    upc_preimg.finish()
                     imgoutfile.seek(0)
                     svgouttext = imgoutfile.read()
                     with open(outfile, 'wb+') as f:
                         f.write(svgouttext)
                     return True
                 else:
-                    new_upc_preimg.write_to_png(outfile)
+                    upc_preimg.write_to_png(outfile)
                     return True
-        except:
-            return False
+        except Exception as e:
+            print(e);return False
     return True
 
 
