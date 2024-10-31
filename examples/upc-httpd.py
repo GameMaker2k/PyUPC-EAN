@@ -155,10 +155,10 @@ class GenerateIndexPage(object):
         if(upc is not None and (int(bcrotate) == 0 or bcrotate is None)):
             if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
                 upcean.encode.validate_draw_barcode(
-                    bctype.lower(), upc, int(bcsize)).save(imgdata, file_ext[1])
+                    bctype.lower(), upc, int(bcsize))[1].save(imgdata, file_ext[1])
         if(upc is not None and (int(bcrotate) > 0 or int(bcrotate) < 0)):
             if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
-                upcean.encode.validate_draw_barcode(bctype.lower(), upc, int(bcsize)).rotate(
+                upcean.encode.validate_draw_barcode(bctype.lower(), upc, int(bcsize))[1].rotate(
                     int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1])
         if(upc is not None):
             imgdata.seek(0)
@@ -213,11 +213,11 @@ class GenerateBarcodes(object):
         if(params['upc'] is not None and (int(params['rotate']) == 0 or params['rotate'] is None)):
             if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
                 upcean.encode.validate_draw_barcode(params['bctype'].lower(
-                ), params['upc'], int(params['size'])).save(imgdata, file_ext[1])
+                ), params['upc'], int(params['size']))[1].save(imgdata, file_ext[1])
         if(params['upc'] is not None and (int(params['rotate']) > 0 or int(params['rotate']) < 0)):
             if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
                 upcean.encode.validate_draw_barcode(params['bctype'].lower(), params['upc'], int(
-                    params['size'])).rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1])
+                    params['size']))[1].rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1])
         if(params['upc'] is not None):
             imgdata.seek(0)
             return imgdata.read()
@@ -273,11 +273,11 @@ class GenerateBarcodes(object):
         if(upc is not None and (int(bcrotate) == 0 or bcrotate is None)):
             if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
                 upcean.encode.validate_draw_barcode(
-                    params['bctype'].lower(), upc, int(bcsize)).save(imgdata, file_ext[1])
+                    params['bctype'].lower(), upc, int(bcsize))[1].save(imgdata, file_ext[1])
         if(upc is not None and (int(bcrotate) > 0 or int(bcrotate) < 0)):
             if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
                 upcean.encode.validate_draw_barcode(params['bctype'].lower(), upc, int(
-                    bcsize)).rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1])
+                    bcsize))[1].rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1])
         if(upc is not None):
             imgdata.seek(0)
             return imgdata.read()

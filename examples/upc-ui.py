@@ -249,7 +249,7 @@ def GenerateBarcode():
     tmpbarcode.textcolor = barcode_text_color
     tmpbarcode.bgcolor = barcode_bg_color
     tmpbarcode.filename = None
-    validbc = tmpbarcode.validate_draw_barcode()
+    validbc = tmpbarcode.validate_draw_barcode()[1]
     if(not validbc):
         tkMessageBox.showerror("PyUPC-EAN - Error",
                                "Could not generate/save barcode.")

@@ -51,11 +51,11 @@ def decode_itf14_barcode(infile="./itf14.png", resize=1, barheight=(48, 54), bar
         resize = 1
 
     # Check if input is a Pillow Image, Cairo ImageSurface, or file path
-    if isinstance(infile, Image.Image):
-        upc_img = infile.convert('RGB')
-    elif "cairo" in sys.modules and isinstance(infile, sys.modules["cairo"].ImageSurface):
+    if isinstance(infile, list) and isinstance(infile[1], Image.Image):
+        upc_img = infile[1].convert('RGB')
+    elif cairosupport and isinstance(infile, list) and isinstance(infile[0], cairo.Context):
         stdoutfile = io.BytesIO()
-        infile.write_to_png(stdoutfile)
+        infile[1].write_to_png(stdoutfile)
         stdoutfile.seek(0)
         upc_img = Image.open(stdoutfile).convert('RGB')
     else:

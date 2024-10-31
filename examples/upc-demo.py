@@ -154,7 +154,7 @@ while(count < maxnum):
         barcodeobj[count].code = barcodeobj[count].convert_barcode()
         barcodeobj[count].type = barcodeobj[count].outtype
     barcodeobj[count].size = barcodesize
-    barcodedrw[count] = barcodeobj[count].validate_draw_barcode().convert(
+    barcodedrw[count] = barcodeobj[count].validate_draw_barcode()[1].convert(
         "RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True)
     barcodeimg[count] = pygame.image.fromstring(
         barcodedrw[count].tobytes(), barcodedrw[count].size, barcodedrw[count].mode)
@@ -253,7 +253,7 @@ while running:
                 barcodeobj[count].code = barcodeobj[count].convert_barcode()
                 barcodeobj[count].type = barcodeobj[count].outtype
             barcodeobj[count].size = barcodesize
-            barcodedrw[count] = barcodeobj[count].validate_draw_barcode().convert(
+            barcodedrw[count] = barcodeobj[count].validate_draw_barcode()[1].convert(
                 "RGBA").rotate(random.randint(0, 360), Image.BICUBIC, True)
             barcodeimg[count] = pygame.image.fromstring(
                 barcodedrw[count].tobytes(), barcodedrw[count].size, barcodedrw[count].mode)

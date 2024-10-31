@@ -341,9 +341,9 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, hideinfo=(False
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -835,9 +835,9 @@ def create_code93extended_barcode(upc, outfile="./code93extended.png", resize=1,
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -1320,9 +1320,9 @@ def create_code93alt_barcode(upc, outfile="./code93.png", resize=1, hideinfo=(Fa
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()

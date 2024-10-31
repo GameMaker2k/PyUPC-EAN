@@ -303,9 +303,9 @@ def create_code32_barcode(upc, outfile="./code32.png", resize=1, hideinfo=(False
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()

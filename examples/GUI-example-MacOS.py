@@ -346,7 +346,7 @@ class MainWin(tk.Frame):
 
     def previewbarcode(self, bcodevalue):
         tmpbarcode = self.generatebarcode(bcodevalue)
-        validbc = tmpbarcode.validate_draw_barcode()
+        validbc = tmpbarcode.validate_draw_barcode()[1]
         if(validbc):
             image1 = ImageTk.PhotoImage(validbc)
             self.imagepanel.create_image(

@@ -360,9 +360,9 @@ def create_ean5sup_barcode(upc, outfile="./ean5_supplement.png", resize=1, hidei
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -538,9 +538,9 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, hideinfo=(False, Fa
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return upc_preimg
+            return [upc_img, upc_preimg, locals()]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
