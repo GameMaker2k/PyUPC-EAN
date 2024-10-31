@@ -31,6 +31,12 @@ try:
 except NameError:
     basestring = str
 
+try:
+    file
+except NameError:
+    from io import IOBase
+    file = IOBase
+
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
 fontpathocrb = upcean.fonts.fontpathocrb
@@ -108,42 +114,81 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color):
     ctx.rectangle([(x1, y1), (x2, y2)], outline=color)
     return True
 
-
 def get_save_filename(outfile):
-    oldoutfile = None
-    if(isinstance(outfile, basestring)):
-        oldoutfile = outfile[:]
-    elif(isinstance(outfile, tuple)):
-        oldoutfile = tuple(outfile[:])
-    elif(isinstance(outfile, list)):
-        oldoutfile = list(outfile[:])
-    elif(outfile is None or isinstance(outfile, bool)):
-        oldoutfile = None
-    else:
-        return False
-    if(isinstance(oldoutfile, basestring)):
-        if(outfile != "-" and outfile != "" and outfile != " "):
-            if(len(re.findall("^\\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) > 0):
-                outfileext = re.findall(
-                    "^\\.([A-Za-z]+)", os.path.splitext(outfile)[1])[0].upper()
-            if(len(re.findall("^\\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall("(.*)\\:([a-zA-Z]+)", oldoutfile)) > 0):
-                tmpoutfile = re.findall("(.*)\\:([a-zA-Z]+)", oldoutfile)
-                del(outfile)
-                outfile = tmpoutfile[0][0]
-                outfileext = tmpoutfile[0][1].upper()
-            if(len(re.findall("^\\.([A-Za-z]+)$", os.path.splitext(oldoutfile)[1])) == 0 and len(re.findall("(.*)\\:([a-zA-Z]+)", oldoutfile)) == 0):
-                outfileext = "PNG"
-        if(outfileext == "BYTES"):
-            outfileext = "BYTES"
-        else:
-            outfileext = Image.registered_extensions().get("."+outfileext.lower(), "PNG")
-        return (outfile, outfileext.upper())
-    elif(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-        del(outfile)
-        outfile = oldoutfile[0]
-        outfileext = oldoutfile[1]
-        return (outfile, outfileext.upper())
-    elif(outfile is None or isinstance(outfile, bool) or isinstance(outfile, file)):
+    """
+    Processes the `outfile` parameter to determine a suitable filename and its corresponding
+    file extension for saving files (e.g., images). Returns a tuple (filename, EXTENSION)
+    or the original `outfile` if it's of type None, bool, or a file object. Returns False
+    for unsupported input types.
+
+    Parameters:
+        outfile (str, tuple, list, None, bool, file): The output file specification.
+
+    Returns:
+        tuple or original `outfile` or False
+    """
+    # Handle None or boolean types directly
+    if outfile is None or isinstance(outfile, bool):
         return outfile
-    else:
-        return False
+
+    # Handle file objects directly
+    if isinstance(outfile, file):
+        return outfile
+
+    # Handle string types (basestring covers both str and unicode in Python 2)
+    if isinstance(outfile, basestring):
+        outfile = outfile.strip()
+        if outfile in ["-", ""]:
+            return (outfile, None)
+
+        # Initialize extension
+        outfileext = None
+
+        # Extract extension using os.path.splitext
+        base, ext = os.path.splitext(outfile)
+        if ext:
+            # Match extension pattern
+            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
+            if ext_match:
+                outfileext = ext_match.group('ext').upper()
+        else:
+            # Check for custom format 'name:EXT'
+            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            if custom_match:
+                outfile = custom_match.group('name')
+                outfileext = custom_match.group('ext').upper()
+
+        # Assign default extension if none found
+        if not outfileext:
+            outfileext = "PNG"
+
+        # Handle specific extensions using PIL's Image.registered_extensions()
+        if outfileext != "BYTES":
+            # Lookup the extension in PIL's registered extensions
+            pil_extension = ".{}".format(outfileext.lower())
+            pil_format = Image.registered_extensions().get(pil_extension, "PNG").upper()
+            outfileext = pil_format
+
+        return (outfile, outfileext)
+
+    # Handle tuple or list types
+    if isinstance(outfile, (tuple, list)):
+        if len(outfile) != 2:
+            # Invalid tuple/list length
+            return False
+        filename, ext = outfile
+        if not isinstance(filename, basestring) or not isinstance(ext, basestring):
+            # Invalid types within tuple/list
+            return False
+        ext = ext.strip().upper()
+        if ext != "BYTES":
+            # Lookup the extension in PIL's registered extensions
+            pil_extension = ".{}".format(ext.lower())
+            pil_format = Image.registered_extensions().get(pil_extension, "PNG").upper()
+            ext = pil_format
+        return (filename, ext)
+
+    # Unsupported type
+    return False
+
+
