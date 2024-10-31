@@ -73,7 +73,7 @@ def check_if_string(strtext):
 
 
 def create_barcode_from_xml_file(xmlfile, draw=False):
-    if(check_if_string(xmlfile) and re.findall("^(http|https)\:\/\/", xmlfile)):
+    if(check_if_string(xmlfile) and re.findall("^(http|https)\\:\\/\\/", xmlfile)):
         xmlheaders = {'User-Agent': useragent_string}
         try:
             tree = cElementTree.ElementTree(file=urllib2.urlopen(
@@ -130,33 +130,33 @@ def create_barcode_from_xml_file(xmlfile, draw=False):
                     {"textxy": tuple(map(int, child.attrib['textxy'].split()))})
             if('color' in child.attrib):
                 colorsplit = child.attrib['color'].split()
-                colorsplit[0] = re.sub("\s+", "", colorsplit[0])
-                if(re.findall("^\#", colorsplit[0])):
+                colorsplit[0] = re.sub("\\s+", "", colorsplit[0])
+                if(re.findall("^\\#", colorsplit[0])):
                     colorsplit1 = re.findall(
-                        r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
+                        "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
                 if(re.findall("^rgb", colorsplit[0])):
                     colorsplit1 = re.findall(
-                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[0])
+                        "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[0])
                 colorsplit1 = colorsplit1[0]
                 colorlist1 = (int(colorsplit1[0], 16), int(
                     colorsplit1[1], 16), int(colorsplit1[2], 16))
-                colorsplit[1] = re.sub("\s+", "", colorsplit[1])
-                if(re.findall("^\#", colorsplit[1])):
+                colorsplit[1] = re.sub("\\s+", "", colorsplit[1])
+                if(re.findall("^\\#", colorsplit[1])):
                     colorsplit2 = re.findall(
-                        r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
+                        "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
                 if(re.findall("^rgb", colorsplit[1])):
                     colorsplit2 = re.findall(
-                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[1])
+                        "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[1])
                 colorsplit2 = colorsplit2[0]
                 colorlist2 = (int(colorsplit2[0], 16), int(
                     colorsplit2[1], 16), int(colorsplit2[2], 16))
-                colorsplit[2] = re.sub("\s+", "", colorsplit[2])
-                if(re.findall("^\#", colorsplit[2])):
+                colorsplit[2] = re.sub("\\s+", "", colorsplit[2])
+                if(re.findall("^\\#", colorsplit[2])):
                     colorsplit3 = re.findall(
-                        r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
+                        "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
                 if(re.findall("^rgb", colorsplit[2])):
                     colorsplit3 = re.findall(
-                        r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[2])
+                        "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[2])
                 colorsplit3 = colorsplit3[0]
                 colorlist3 = (int(colorsplit3[0], 16), int(
                     colorsplit3[1], 16), int(colorsplit3[2], 16))
@@ -190,7 +190,7 @@ def draw_barcode_from_xml_string(xmlfile):
 
 
 def convert_from_xml_to_json_file(xmlfile, jsonfile=None):
-    if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
+    if(check_if_string(jsonfile) and re.findall("^(http|https)\\:\\/\\/", jsonfile)):
         xmlheaders = {'User-Agent': useragent_string}
         try:
             tree = cElementTree.ElementTree(file=urllib2.urlopen(
@@ -244,7 +244,7 @@ def convert_from_xml_to_json_string(xmlfile, jsonfile=None):
 
 
 def create_barcode_from_json_file(jsonfile, draw=False):
-    if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
+    if(check_if_string(jsonfile) and re.findall("^(http|https)\\:\\/\\/", jsonfile)):
         jsonheaders = {'User-Agent': useragent_string}
         tree = json.load(urllib2.urlopen(
             urllib2.Request(jsonfile, None, jsonheaders)))
@@ -300,33 +300,33 @@ def create_barcode_from_json_file(jsonfile, draw=False):
                 {"textxy": tuple(map(int, bctree[bctreect]['textxy'].split()))})
         if('color' in bctree[bctreect]):
             colorsplit = bctree[bctreect]['color'].split()
-            colorsplit[0] = re.sub("\s+", "", colorsplit[0])
-            if(re.findall("^\#", colorsplit[0])):
+            colorsplit[0] = re.sub("\\s+", "", colorsplit[0])
+            if(re.findall("^\\#", colorsplit[0])):
                 colorsplit1 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
+                    "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
             if(re.findall("^rgb", colorsplit[0])):
                 colorsplit1 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[0])
+                    "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[0])
             colorsplit1 = colorsplit1[0]
             colorlist1 = (int(colorsplit1[0], 16), int(
                 colorsplit1[1], 16), int(colorsplit1[2], 16))
-            colorsplit[1] = re.sub("\s+", "", colorsplit[1])
-            if(re.findall("^\#", colorsplit[1])):
+            colorsplit[1] = re.sub("\\s+", "", colorsplit[1])
+            if(re.findall("^\\#", colorsplit[1])):
                 colorsplit2 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
+                    "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
             if(re.findall("^rgb", colorsplit[1])):
                 colorsplit2 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[1])
+                    "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[1])
             colorsplit2 = colorsplit2[0]
             colorlist2 = (int(colorsplit2[0], 16), int(
                 colorsplit2[1], 16), int(colorsplit2[2], 16))
-            colorsplit[2] = re.sub("\s+", "", colorsplit[2])
-            if(re.findall("^\#", colorsplit[2])):
+            colorsplit[2] = re.sub("\\s+", "", colorsplit[2])
+            if(re.findall("^\\#", colorsplit[2])):
                 colorsplit3 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
+                    "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
             if(re.findall("^rgb", colorsplit[2])):
                 colorsplit3 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[2])
+                    "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[2])
             colorsplit3 = colorsplit3[0]
             colorlist3 = (int(colorsplit3[0], 16), int(
                 colorsplit3[1], 16), int(colorsplit3[2], 16))
@@ -361,7 +361,7 @@ def draw_barcode_from_json_string(jsonfile):
 
 
 def convert_from_json_to_xml_file(jsonfile, xmlfile=None):
-    if(check_if_string(jsonfile) and re.findall("^(http|https)\:\/\/", jsonfile)):
+    if(check_if_string(jsonfile) and re.findall("^(http|https)\\:\\/\\/", jsonfile)):
         jsonheaders = {'User-Agent': useragent_string}
         tree = json.load(urllib2.urlopen(
             urllib2.Request(jsonfile, None, jsonheaders)))
@@ -405,7 +405,7 @@ def convert_from_json_to_xml_string(jsonfile, xmlfile=None):
 
 
 def create_barcode_from_qs_file(qsfile, draw=False):
-    if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
+    if(check_if_string(qsfile) and re.findall("^(http|https)\\:\\/\\/", qsfile)):
         qsheaders = {'User-Agent': useragent_string}
         tree = urlparse.parse_qs(urllib2.urlopen(
             urllib2.Request(qsfile, None, qsheaders)).read())
@@ -488,33 +488,33 @@ def create_barcode_from_qs_file(qsfile, draw=False):
             pass
         try:
             colorsplit = bctree['color'][bctreect].split()
-            colorsplit[0] = re.sub("\s+", "", colorsplit[0])
-            if(re.findall("^\#", colorsplit[0])):
+            colorsplit[0] = re.sub("\\s+", "", colorsplit[0])
+            if(re.findall("^\\#", colorsplit[0])):
                 colorsplit1 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
+                    "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[0])
             if(re.findall("^rgb", colorsplit[0])):
                 colorsplit1 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[0])
+                    "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[0])
             colorsplit1 = colorsplit1[0]
             colorlist1 = (int(colorsplit1[0], 16), int(
                 colorsplit1[1], 16), int(colorsplit1[2], 16))
-            colorsplit[1] = re.sub("\s+", "", colorsplit[1])
-            if(re.findall("^\#", colorsplit[1])):
+            colorsplit[1] = re.sub("\\s+", "", colorsplit[1])
+            if(re.findall("^\\#", colorsplit[1])):
                 colorsplit2 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
+                    "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[1])
             if(re.findall("^rgb", colorsplit[1])):
                 colorsplit2 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[1])
+                    "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[1])
             colorsplit2 = colorsplit2[0]
             colorlist2 = (int(colorsplit2[0], 16), int(
                 colorsplit2[1], 16), int(colorsplit2[2], 16))
-            colorsplit[2] = re.sub("\s+", "", colorsplit[2])
-            if(re.findall("^\#", colorsplit[2])):
+            colorsplit[2] = re.sub("\\s+", "", colorsplit[2])
+            if(re.findall("^\\#", colorsplit[2])):
                 colorsplit3 = re.findall(
-                    r"^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
+                    "^\\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})", colorsplit[2])
             if(re.findall("^rgb", colorsplit[2])):
                 colorsplit3 = re.findall(
-                    r"^rgb\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\)", colorsplit[2])
+                    "^rgb\\(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]),([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\)", colorsplit[2])
             colorsplit3 = colorsplit3[0]
             colorlist3 = (int(colorsplit3[0], 16), int(
                 colorsplit3[1], 16), int(colorsplit3[2], 16))
@@ -557,7 +557,7 @@ def draw_barcode_from_qs_string(qsfile):
 
 
 def convert_from_qs_to_xml_file(qsfile, xmlfile=None):
-    if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
+    if(check_if_string(qsfile) and re.findall("^(http|https)\\:\\/\\/", qsfile)):
         qsheaders = {'User-Agent': useragent_string}
         tree = urlparse.parse_qs(urllib2.urlopen(
             urllib2.Request(qsfile, None, qsheaders)).read())
@@ -654,7 +654,7 @@ def convert_from_qs_to_xml_string(qsfile, xmlfile=None):
 
 
 def convert_from_qs_to_json_file(qsfile, jsonfile=None):
-    if(check_if_string(qsfile) and re.findall("^(http|https)\:\/\/", qsfile)):
+    if(check_if_string(qsfile) and re.findall("^(http|https)\\:\\/\\/", qsfile)):
         qsheaders = {'User-Agent': useragent_string}
         tree = urlparse.parse_qs(urllib2.urlopen(
             urllib2.Request(qsfile, None, qsheaders)).read())
