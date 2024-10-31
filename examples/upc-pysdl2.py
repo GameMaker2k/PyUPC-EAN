@@ -9,6 +9,7 @@ import random
 import sdl2
 import sdl2.ext
 from PIL import Image
+import PIL
 import upcean
 
 # Constants
@@ -46,7 +47,7 @@ def create_barcode():
 
 def generate_barcode_image(barcode):
     barcode.size = BARCODE_SIZE
-    barcode_img = barcode.validate_draw_barcode()[1].convert("RGBA")
+    barcode_img = barcode.validate_draw_barcode().convert("RGBA")
     barcode_img = barcode_img.rotate(random.randint(0, 360), Image.BICUBIC, True)
     return barcode_img
 
