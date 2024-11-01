@@ -21,7 +21,6 @@ import os
 import re
 import base64
 import io  # For file object type checking
-import upcean.fonts
 
 # Define helper functions
 
@@ -96,6 +95,42 @@ def get_save_filename(outfile):
     # Unsupported type
     return False
 
+def drawColorRectangleAlt(dwg, x1, y1, x2, y2, color):
+    """
+    Draws a rectangle with only an outline (no fill) from (x1, y1) to (x2, y2) with the specified color.
+
+    Parameters:
+    - dwg: svgwrite.Drawing object.
+    - x1, y1: Top-left corner coordinates.
+    - x2, y2: Bottom-right corner coordinates.
+    - color: Tuple representing (R, G, B) or a valid SVG color string.
+
+    Returns:
+    - True if the rectangle is drawn successfully.
+    """
+    width_rect = x2 - x1
+    height_rect = y2 - y1
+
+    # Convert RGB tuple to SVG color string if necessary
+    if isinstance(color, tuple):
+        # Ensure RGB values are within 0-255
+        r = min(max(int(color[0]), 0), 255)
+        g = min(max(int(color[1]), 0), 255)
+        b = min(max(int(color[2]), 0), 255)
+        color = 'rgb({},{},{})'.format(r, g, b)
+
+    # Create and add the rectangle with no fill and specified stroke color
+    rectangle = dwg.rect(
+        insert=(x1, y1),
+        size=(width_rect, height_rect),
+        fill='none',
+        stroke=color,
+        stroke_width=1  # Default stroke width; modify as needed
+    )
+    dwg.add(rectangle)
+
+    return True
+
 def drawColorRectangle(dwg, x1, y1, x2, y2, color):
     """
     Draws a filled rectangle from (x1, y1) to (x2, y2) with the specified color.
@@ -105,16 +140,28 @@ def drawColorRectangle(dwg, x1, y1, x2, y2, color):
     - x1, y1: Top-left corner coordinates.
     - x2, y2: Bottom-right corner coordinates.
     - color: Tuple representing (R, G, B) or a valid SVG color string.
+
+    Returns:
+    - True if the rectangle is drawn successfully.
     """
     width_rect = x2 - x1
     height_rect = y2 - y1
 
     # Convert RGB tuple to SVG color string if necessary
     if isinstance(color, tuple):
-        color = 'rgb({},{},{})'.format(*color)
+        # Ensure RGB values are within 0-255
+        r = min(max(int(color[0]), 0), 255)
+        g = min(max(int(color[1]), 0), 255)
+        b = min(max(int(color[2]), 0), 255)
+        color = 'rgb({},{},{})'.format(r, g, b)
 
     # Create and add the rectangle to the drawing
-    rectangle = dwg.rect(insert=(x1, y1), size=(width_rect, height_rect), fill=color)
+    rectangle = dwg.rect(
+        insert=(x1, y1),
+        size=(width_rect, height_rect),
+        fill=color,
+        stroke='none'  # No outline
+    )
     dwg.add(rectangle)
 
     return True
@@ -129,15 +176,27 @@ def drawColorLine(dwg, x1, y1, x2, y2, width, color):
     - x2, y2: Ending coordinates.
     - width: Line width (integer >= 1).
     - color: Tuple representing (R, G, B) or a valid SVG color string.
+
+    Returns:
+    - True if the line is drawn successfully.
     """
     width = max(1, int(width))
 
     # Convert RGB tuple to SVG color string if necessary
     if isinstance(color, tuple):
-        color = 'rgb({},{},{})'.format(*color)
+        # Ensure RGB values are within 0-255
+        r = min(max(int(color[0]), 0), 255)
+        g = min(max(int(color[1]), 0), 255)
+        b = min(max(int(color[2]), 0), 255)
+        color = 'rgb({},{},{})'.format(r, g, b)
 
     # Create and add the line to the drawing
-    line = dwg.line(start=(x1, y1), end=(x2, y2), stroke=color, stroke_width=width)
+    line = dwg.line(
+        start=(x1, y1),
+        end=(x2, y2),
+        stroke=color,
+        stroke_width=width
+    )
     dwg.add(line)
 
     return True
@@ -153,10 +212,17 @@ def drawColorText(dwg, size, x, y, text, color, ftype="ocrb"):
     - text: The string to be drawn.
     - color: Tuple representing (R, G, B) or a valid SVG color string.
     - ftype: Font type (e.g., "ocrb"). Note: Custom fonts require embedding or system availability.
+
+    Returns:
+    - True if the text is drawn successfully.
     """
     # Convert RGB tuple to SVG color string if necessary
     if isinstance(color, tuple):
-        color = 'rgb({},{},{})'.format(*color)
+        # Ensure RGB values are within 0-255
+        r = min(max(int(color[0]), 0), 255)
+        g = min(max(int(color[1]), 0), 255)
+        b = min(max(int(color[2]), 0), 255)
+        color = 'rgb({},{},{})'.format(r, g, b)
 
     # Define font family based on ftype
     if ftype.lower() == "ocrb":
@@ -167,7 +233,13 @@ def drawColorText(dwg, size, x, y, text, color, ftype="ocrb"):
         font_family = "Monospace"
 
     # Create and add the text to the drawing
-    text_element = dwg.text(text, insert=(x, y), fill=color, font_size=size, font_family=font_family)
+    text_element = dwg.text(
+        text,
+        insert=(x, y),
+        fill=color,
+        font_size=size,
+        font_family=font_family
+    )
     dwg.add(text_element)
 
     return True
@@ -212,7 +284,7 @@ def embed_font(dwg, font_path, font_family):
 
 def create_complex_svg(outfile='complex_example.svg', embed_custom_font=False, font_path=None):
     """
-    Creates a complex SVG with a rectangle, a semi-transparent circle, a line, and text.
+    Creates a complex SVG with a rectangle outline, a semi-transparent circle, a line, and text.
 
     Parameters:
     - outfile: The output SVG filename.
@@ -239,8 +311,8 @@ def create_complex_svg(outfile='complex_example.svg', embed_custom_font=False, f
             raise ValueError("Font path must be provided to embed a custom font.")
         embed_font(dwg, font_path, 'OCRB')
 
-    # Draw a rectangle
-    drawColorRectangle(dwg, 50, 50, 350, 350, (0, 0, 0))  # Black rectangle
+    # Draw a rectangle outline (no fill)
+    drawColorRectangleAlt(dwg, 50, 50, 350, 350, (0, 0, 0))  # Black outline
 
     # Draw a semi-transparent red circle
     circle = dwg.circle(center=(200, 200), r=100, fill='red', fill_opacity=0.5)
@@ -264,3 +336,4 @@ if __name__ == "__main__":
     # To embed a custom font, ensure you have the font file and provide the path
     # Example:
     # create_complex_svg('complex_with_font.svg', embed_custom_font=True, font_path='OCRB.ttf')
+
