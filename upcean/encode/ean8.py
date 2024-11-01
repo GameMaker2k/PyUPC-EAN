@@ -39,7 +39,7 @@ if(cairosupport):
     import upcean.encode.precairo
 
 
-def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -143,6 +143,7 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
+    cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upc_matches = re.findall("(\\d{4})(\\d{4})", upc)
     upc_matches = upc_matches[0]
     if(len(upc_matches) <= 0):
@@ -202,30 +203,30 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0])
     upc_array['code'].append([1, 0, 1])
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1]
-    LineStart = 0
+    LineStart = shiftxy[0]
     BarNum = 0
     start_bc_num_end = len(start_barcode)
-    LineSize = barheight[1] * int(resize)
+    LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     while(BarNum < start_bc_num_end):
         if(BarNum < 12):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         else:
-            LineSize = barheight[0] * int(resize)
+            LineSize = (barheight[0] + shiftxy[1]) * int(resize)
         if(hidetext):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(start_barcode[BarNum] == 1):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
         if(start_barcode[BarNum] == 0):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     NumZero = 0
     while (NumZero < len(LeftDigit)):
-        LineSize = barheight[0] * int(resize)
+        LineSize = (barheight[0] + shiftxy[1]) * int(resize)
         if(hidetext):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         left_barcolor_l = [0, 0, 0, 0, 0, 0, 0]
         left_barcolor_g = [1, 1, 1, 1, 1, 1, 1]
         if(int(LeftDigit[NumZero]) == 0):
@@ -326,10 +327,10 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
         InnerUPCNum = 0
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+                drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
             if(left_barcolor[InnerUPCNum] == 0):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+                drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
             BarNum += 1
@@ -339,22 +340,22 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
     mid_barcode = [0, 1, 0, 1, 0]
     mid_bc_num = 0
     mid_bc_num_end = len(mid_barcode)
-    LineSize = barheight[1] * int(resize)
+    LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     while(mid_bc_num < mid_bc_num_end):
         if(mid_barcode[mid_bc_num] == 1):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
         if(mid_barcode[mid_bc_num] == 0):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
         mid_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     NumZero = 0
     while (NumZero < len(RightDigit)):
-        LineSize = barheight[0] * int(resize)
+        LineSize = (barheight[0] + shiftxy[1]) * int(resize)
         if(hidetext):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         right_barcolor = [0, 0, 0, 0, 0, 0, 0]
         if(int(RightDigit[NumZero]) == 0):
             right_barcolor = [1, 1, 1, 0, 0, 1, 0]
@@ -380,10 +381,10 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
         InnerUPCNum = 0
         while (InnerUPCNum < len(right_barcolor)):
             if(right_barcolor[InnerUPCNum] == 1):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+                drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
             if(right_barcolor[InnerUPCNum] == 0):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+                drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
             BarNum += 1
@@ -394,57 +395,57 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
     end_barcode = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
-    LineSize = barheight[1] * int(resize)
+    LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     while(end_bc_num < end_bc_num_end):
         if(end_bc_num < 4):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         else:
-            LineSize = barheight[0] * int(resize)
+            LineSize = (barheight[0] + shiftxy[1]) * int(resize)
         if(hidetext):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(end_barcode[end_bc_num] == 1):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
         if(end_barcode[end_bc_num] == 0):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
         end_bc_num = 1 + end_bc_num
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     if(not hidetext):
         if(hidesn is not None and not hidesn):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (1 + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), "<", barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (13 + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (19 + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftLeftDigit)[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (26 + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (32 + (29 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(LeftRightDigit)[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (45 + (46 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (51 + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightLeftDigit)[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (58 + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (64 + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(RightRightDigit)[1], barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((1 + shiftxy[0]) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), "<", barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((13 + shiftxy[0]) + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(LeftLeftDigit)[0], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((19 + shiftxy[0]) + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(LeftLeftDigit)[1], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((26 + shiftxy[0]) + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(LeftRightDigit)[0], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((32 + shiftxy[0]) + (29 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(LeftRightDigit)[1], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((45 + shiftxy[0]) + (46 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(RightLeftDigit)[0], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((51 + shiftxy[0]) + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(RightLeftDigit)[1], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((58 + shiftxy[0]) + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(RightRightDigit)[0], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((64 + shiftxy[0]) + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(RightRightDigit)[1], barcolor[1], "ocrb", imageoutlib)
         if(hidecd is not None and not hidecd):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (77 + (75 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[2] * int(resize)), ">", barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((77 + shiftxy[0]) + (75 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), ">", barcolor[1], "ocrb", imageoutlib)
     if(pilsupport and imageoutlib == "pillow"):
         if(supplement is not None and len(supplement) == 2):
             upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             if(upc_sup_img):
                 new_upc_img.paste(
                     upc_sup_img, ((83 * barwidth[0]) * int(resize), 0))
                 del(upc_sup_img)
         if(supplement is not None and len(supplement) == 5):
             upc_sup_img = upcean.encode.ean5.draw_ean5sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             if(upc_sup_img):
                 new_upc_img.paste(
                     upc_sup_img, ((83 * barwidth[0]) * int(resize), 0))
@@ -452,14 +453,14 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(supplement != None and len(supplement) == 2):
             upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             new_upc_img.set_source_surface(
                 upc_sup_img, (83 * barwidth[0]) * int(resize), 0)
             new_upc_img.paint()
             del(upc_sup_img)
         if(supplement != None and len(supplement) == 5):
             upc_sup_img = upcean.encode.ean5.draw_ean5sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             new_upc_img.set_source_surface(
                 upc_sup_img, (83 * barwidth[0]) * int(resize), 0)
             new_upc_img.paint()
@@ -467,9 +468,9 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'hideinfo': hideinfo, 'barheight': barheight, 'barwidth': barwidth, 'textxy': textxy, 'barcolor': barcolor}, upc_array]
+            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'hideinfo': hideinfo, 'barheight': barheight, 'barwidth': barwidth, 'textxy': textxy, 'barcolor': barcolor}, upc_array]
+            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -620,33 +621,33 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, hideinfo=(False, Fa
     return True
 
 
-def create_gtin8_barcode(upc, outfile="./gtin8.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean8_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def create_gtin8_barcode(upc, outfile="./gtin8.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean8_barcode(upc, outfile, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def create_ucc8_barcode(upc, outfile="./ucc8.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean8_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def create_ucc8_barcode(upc, outfile="./ucc8.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean8_barcode(upc, outfile, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def draw_ean8_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean8_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_ean8_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean8_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def draw_gtin8_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_gtin8_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_gtin8_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_gtin8_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def draw_ucc8_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ucc8_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_ucc8_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ucc8_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_ean8_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean8_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_ean8_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean8_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_gtin8_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_gtin8_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_gtin8_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_gtin8_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_ucc8_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ucc8_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_ucc8_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ucc8_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)

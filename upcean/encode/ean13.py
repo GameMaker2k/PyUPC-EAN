@@ -39,7 +39,7 @@ if(cairosupport):
     import upcean.encode.precairo
 
 
-def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -143,6 +143,7 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
+    cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upc_matches = re.findall("(\\d{1})(\\d{6})(\\d{6})", upc)
     if(len(upc_matches) <= 0):
         return False
@@ -195,30 +196,30 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     upc_array['code'].append([1, 0, 1])
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1]
-    LineStart = 0
+    LineStart = shiftxy[0]
     BarNum = 0
     start_bc_num_end = len(start_barcode)
-    LineSize = barheight[1] * int(resize)
+    LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     while(BarNum < start_bc_num_end):
         if(BarNum < 10):
-            LineSize = barheight[0] * int(resize)
+            LineSize = (barheight[0] + shiftxy[1]) * int(resize)
         else:
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(hidetext):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(start_barcode[BarNum] == 1):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
         if(start_barcode[BarNum] == 0):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     NumZero = 0
     while (NumZero < len(LeftDigit)):
-        LineSize = barheight[0] * int(resize)
+        LineSize = (barheight[0] + shiftxy[1]) * int(resize)
         if(hidetext):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         left_barcolor_l = [0, 0, 0, 0, 0, 0, 0]
         left_barcolor_g = [1, 1, 1, 1, 1, 1, 1]
         if(int(LeftDigit[NumZero]) == 0):
@@ -319,10 +320,10 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
         InnerUPCNum = 0
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+                drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
             if(left_barcolor[InnerUPCNum] == 0):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+                drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
             BarNum += 1
@@ -332,28 +333,28 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
     mid_barcode = [0, 1, 0, 1, 0]
     mid_bc_num = 0
     mid_bc_num_end = len(mid_barcode)
-    LineSize = barheight[1] * int(resize)
+    LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     while(mid_bc_num < mid_bc_num_end):
         if(mid_bc_num < 4):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         else:
-            LineSize = barheight[0] * int(resize)
+            LineSize = (barheight[0] + shiftxy[1]) * int(resize)
         if(hidetext):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(mid_barcode[mid_bc_num] == 1):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
         if(mid_barcode[mid_bc_num] == 0):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
         mid_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     NumZero = 0
     while (NumZero < len(RightDigit)):
-        LineSize = barheight[0] * int(resize)
+        LineSize = (barheight[0] + shiftxy[1]) * int(resize)
         if(hidetext):
-            LineSize = barheight[1] * int(resize)
+            LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         right_barcolor = [0, 0, 0, 0, 0, 0, 0]
         if(int(RightDigit[NumZero]) == 0):
             right_barcolor = [1, 1, 1, 0, 0, 1, 0]
@@ -379,10 +380,10 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
         InnerUPCNum = 0
         while (InnerUPCNum < len(right_barcolor)):
             if(right_barcolor[InnerUPCNum] == 1):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+                drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
             if(right_barcolor[InnerUPCNum] == 0):
-                drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+                drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
             BarNum += 1
@@ -393,59 +394,59 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
     end_barcode = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
-    LineSize = barheight[1] * int(resize)
+    LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
         if(end_barcode[end_bc_num] == 0):
-            drawColorLine(upc_img, LineStart, 10 * int(resize), LineStart,
+            drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     if(not hidetext):
         if(hidesn is not None and not hidesn):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (2 + (2 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), upc_matches[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (17 + (20 * (int(resize) - 1)) - (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (23 + (25 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (29 + (30 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[2], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (35 + (35 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[3], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (41 + (40 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[4], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (47 + (45 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[1])[5], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (63 + (65 * (int(resize) - 1)) - (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (69 + (70 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (75 + (75 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[2], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (81 + (80 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[3], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (87 + (85 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[4], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), (93 + (90 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[1] * int(resize)), list(upc_matches[2])[5], barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((2 + shiftxy[0]) + (2 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
+                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[0], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((17 + shiftxy[0]) + (20 * (int(resize) - 1)) - (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[0], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((23 + shiftxy[0]) + (25 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[1], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((29 + shiftxy[0]) + (30 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[2], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((35 + shiftxy[0]) + (35 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[3], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((41 + shiftxy[0]) + (40 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[4], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((47 + shiftxy[0]) + (45 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[5], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((63 + shiftxy[0]) + (65 * (int(resize) - 1)) - (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[2])[0], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((69 + shiftxy[0]) + (70 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[2])[1], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((75 + shiftxy[0]) + (75 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[2])[2], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((81 + shiftxy[0]) + (80 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[2])[3], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((87 + shiftxy[0]) + (85 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[2])[4], barcolor[1], "ocrb", imageoutlib)
+        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((93 + shiftxy[0]) + (90 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[2])[5], barcolor[1], "ocrb", imageoutlib)
         if(hidecd is not None and not hidecd):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (107 + (103 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (textxy[0] * int(resize)), ">", barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((107 + shiftxy[0]) + (103 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
+                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), ">", barcolor[1], "ocrb", imageoutlib)
     if(pilsupport and imageoutlib == "pillow"):
         if(supplement is not None and len(supplement) == 2):
             upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             if(upc_sup_img):
                 new_upc_img.paste(
                     upc_sup_img, ((115 * barwidth[0]) * int(resize), 0))
                 del(upc_sup_img)
         if(supplement is not None and len(supplement) == 5):
             upc_sup_img = upcean.encode.ean5.draw_ean5sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             if(upc_sup_img):
                 new_upc_img.paste(
                     upc_sup_img, ((115 * barwidth[0]) * int(resize), 0))
@@ -453,14 +454,14 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         if(supplement != None and len(supplement) == 2):
             upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             new_upc_img.set_source_surface(
                 upc_sup_img, (115 * barwidth[0]) * int(resize), 0)
             new_upc_img.paint()
             del(upc_sup_img)
         if(supplement != None and len(supplement) == 5):
             upc_sup_img = upcean.encode.ean5.draw_ean5sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             new_upc_img.set_source_surface(
                 upc_sup_img, (115 * barwidth[0]) * int(resize), 0)
             new_upc_img.paint()
@@ -468,9 +469,9 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'hideinfo': hideinfo, 'barheight': barheight, 'barwidth': barwidth, 'textxy': textxy, 'barcolor': barcolor}, upc_array]
+            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'hideinfo': hideinfo, 'barheight': barheight, 'barwidth': barwidth, 'textxy': textxy, 'barcolor': barcolor}, upc_array]
+            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -621,49 +622,49 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, hideinfo=(False, 
     return True
 
 
-def create_gtin13_barcode(upc, outfile="./gtin13.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean13_barcode(upc, outfile, resize, hideinfo, barheight, textxy, barcolor, imageoutlib)
+def create_gtin13_barcode(upc, outfile="./gtin13.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean13_barcode(upc, outfile, resize, shiftxy, hideinfo, barheight, barcolor, imageoutlib)
 
 
-def create_ucc13_barcode(upc, outfile="./ucc13.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean13_barcode(upc, outfile, resize, hideinfo, barheight, textxy, barcolor, imageoutlib)
+def create_ucc13_barcode(upc, outfile="./ucc13.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean13_barcode(upc, outfile, resize, shiftxy, hideinfo, barheight, barcolor, imageoutlib)
 
 
-def create_ean13_from_upca_barcode(upc, outfile="./upca.png", resize=1, hideinfo=(True, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def create_ean13_from_upca_barcode(upc, outfile="./upca.png", resize=1, shiftxy=(0, 0), hideinfo=(True, False, False), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
     if(len(upc) > 13 or len(upc) < 12):
         return False
     if(len(upc) < 13):
         upc = "0"+str(upc)
-    return create_ean13_barcode(upc, outfile, resize, hideinfo, barheight, textxy, barcolor, imageoutlib)
+    return create_ean13_barcode(upc, outfile, resize, shiftxy, hideinfo, barheight, barcolor, imageoutlib)
 
 
-def draw_ean13_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean13_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_ean13_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean13_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def draw_gtin13_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_gtin13_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_gtin13_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_gtin13_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def draw_ucc13_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ucc13_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_ucc13_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ucc13_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def draw_ean13_from_upca_barcode(upc, resize=1, hideinfo=(True, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean13_from_upca_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_ean13_from_upca_barcode(upc, resize=1, shiftxy=(0, 0), hideinfo=(True, False, False), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_ean13_from_upca_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_ean13_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean13_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_ean13_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean13_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_gtin13_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_gtin13_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_gtin13_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_gtin13_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_ucc13_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ucc13_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_ucc13_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ucc13_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_ean13_from_upca_barcode(upc, resize=1, hideinfo=(True, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_ean13_from_upca_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_ean13_from_upca_barcode(upc, resize=1, shiftxy=(0, 0), hideinfo=(True, False, False), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+    return create_ean13_from_upca_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)

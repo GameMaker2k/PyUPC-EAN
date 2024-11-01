@@ -41,7 +41,7 @@ if(cairosupport):
     import upcean.encode.precairo
 
 
-def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
+def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -140,6 +140,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
+    cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upc_matches = re.findall("(\\d{1})(\\d{5})(\\d{5})(\\d{1})", upc)
     if(len(upc_matches) <= 0):
         return False
@@ -220,13 +221,13 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
     if(pilsupport and imageoutlib == "pillow"):
         if(supplement is not None and len(supplement) == 2):
             upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             if(upc_sup_img):
                 new_upc_img.paste(upc_sup_img, (113 * int(resize), 0))
                 del(upc_sup_img)
         if(supplement is not None and len(supplement) == 5):
             upc_sup_img = upcean.encode.ean5.draw_ean5sup_barcode(
-                supplement, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
             if(upc_sup_img):
                 new_upc_img.paste(upc_sup_img, (113 * int(resize), 0))
                 del(upc_sup_img)
@@ -246,9 +247,9 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
     exargdict = {}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
-            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'hideinfo': hideinfo, 'barheight': barheight, 'barwidth': barwidth, 'textxy': textxy, 'barcolor': barcolor}, upc_array]
+            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'hideinfo': hideinfo, 'barheight': barheight, 'barwidth': barwidth, 'textxy': textxy, 'barcolor': barcolor}, upc_array]
+            return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
     if(sys.version[0] == "2"):
         if(outfile == "-" or outfile == "" or outfile == " " or outfile is None):
             stdoutfile = StringIO()
@@ -399,9 +400,9 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, hideinfo=(F
     return True
 
 
-def draw_goodwill_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_goodwill_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def draw_goodwill_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_goodwill_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_goodwill_barcode(upc, resize=1, hideinfo=(False, False, False), barheight=(48, 54), barwidth=(1, 1), textxy=(1, 1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), imageoutlib="pillow"):
-    return create_goodwill_barcode(upc, None, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+def encode_goodwill_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_goodwill_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)

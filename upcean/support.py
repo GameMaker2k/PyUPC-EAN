@@ -62,6 +62,15 @@ def check_for_cairo():
         cairosupport = False
     return cairosupport
 
+def check_for_svgwrite():
+    # PIL Support Check
+    svgwritesupport = True
+    try:
+        import svgwrite
+        svgwritesupport = True
+    except ImportError:
+        svgwritesupport = False
+    return svgwritesupport
 
 def check_for_pil():
     # PIL Support Check
@@ -242,6 +251,15 @@ def get_cairo_version(infotype=None):
         cairo_info = {'cairo_ver': cairo_ver}
         return cairo_info.get(infotype, cairo_info)
 
+def get_svgwrite_version(infotype=None):
+    svgwritesupport = check_for_svgwrite()
+    if(not svgwritesupport):
+        return svgwritesupport
+    if(svgwritesupport):
+        import svgwrite
+        svgwrite_ver = svgwrite.version
+        svgwrite_info = {'svgwrite_ver': svgwrite_ver}
+        return svgwrite_info.get(infotype, svgwrite_info)
 
 linuxdist = None
 try:
@@ -267,3 +285,4 @@ def get_python_info(infotype=None):
 pilsupport = check_for_pil()
 pillowsupport = check_for_pillow()
 cairosupport = check_for_cairo()
+svgwritesupport = check_for_svgwrite()
