@@ -213,7 +213,7 @@ def get_save_filename(outfile):
             outfileext = "PNG"
 
         # Handle specific extensions
-        valid_extensions = {"BYTES", "SVG", "PDF", "PS", "EPS"}
+        valid_extensions = {"SVG", "PDF", "PS", "EPS"}
         if outfileext not in valid_extensions:
             outfileext = "PNG"
 
@@ -229,7 +229,7 @@ def get_save_filename(outfile):
             # Invalid types within tuple/list
             return False
         ext = ext.strip().upper()
-        valid_extensions = {"BYTES", "SVG", "PDF", "PS", "EPS"}
+        valid_extensions = {"SVG", "PDF", "PS", "EPS"}
         if ext not in valid_extensions:
             ext = "PNG"
         return (filename, ext)

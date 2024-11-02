@@ -31,10 +31,13 @@ except ImportError:
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
+svgwritesupport = upcean.support.check_for_svgwrite()
 if(pilsupport or pillowsupport):
     import upcean.encode.prepil
 if(cairosupport):
     import upcean.encode.precairo
+if(svgwritesupport):
+    import upcean.encode.presvg
 
 
 def create_code128_barcode(upc, outfile="./code128.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):

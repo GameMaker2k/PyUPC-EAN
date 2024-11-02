@@ -163,11 +163,10 @@ def get_save_filename(outfile):
             outfileext = "PNG"
 
         # Handle specific extensions using PIL's Image.registered_extensions()
-        if outfileext != "BYTES":
-            # Lookup the extension in PIL's registered extensions
-            pil_extension = ".{}".format(outfileext.lower())
-            pil_format = Image.registered_extensions().get(pil_extension, "PNG").upper()
-            outfileext = pil_format
+        # Lookup the extension in PIL's registered extensions
+        pil_extension = ".{}".format(outfileext.lower())
+        pil_format = Image.registered_extensions().get(pil_extension, "PNG").upper()
+        outfileext = pil_format
 
         return (outfile, outfileext)
 
@@ -181,11 +180,10 @@ def get_save_filename(outfile):
             # Invalid types within tuple/list
             return False
         ext = ext.strip().upper()
-        if ext != "BYTES":
-            # Lookup the extension in PIL's registered extensions
-            pil_extension = ".{}".format(ext.lower())
-            pil_format = Image.registered_extensions().get(pil_extension, "PNG").upper()
-            ext = pil_format
+        # Lookup the extension in PIL's registered extensions
+        pil_extension = ".{}".format(ext.lower())
+        pil_format = Image.registered_extensions().get(pil_extension, "PNG").upper()
+        ext = pil_format
         return (filename, ext)
 
     # Unsupported type
