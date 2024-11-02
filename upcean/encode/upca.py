@@ -339,17 +339,11 @@ def draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         upc_preimg = Image.new(
             "RGB", (((113 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_img = ImageDraw.Draw(upc_preimg)
-        upc_img.rectangle([(0, 0), (((113 * barwidth[0]) + upc_size_add) * int(resize),
-                          (barheightadd + (9 * barwidth[1])) * int(resize))], fill=barcolor[2])
     if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         upc_preimg = cairo.RecordingSurface(
                 cairo.CONTENT_COLOR, ((113 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-        upc_img.rectangle(
-            0, 0, ((113 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
-        upc_img.set_source_rgb(barcolor[2][0], barcolor[2][1], barcolor[2][2])
-        upc_img.fill()
     imgout = predraw_upca_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
 
