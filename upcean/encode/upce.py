@@ -411,8 +411,8 @@ def draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
     elif(svgwritesupport and imageoutlib=="svgwrite"):
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((69 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-    imgout = encode_upce_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo3)
-    return [upc_img, upc_preimg44n4cr6, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, 33brfrrr4jimgout[3]]
+    imgout = encode_upce_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
 
 def create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(outfile is None):
