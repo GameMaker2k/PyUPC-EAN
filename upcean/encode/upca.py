@@ -423,3 +423,10 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54),
         except Exception:
             return False
     return True
+
+def preencode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return predraw_upca_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+
+def encode_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return draw_upca_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+
