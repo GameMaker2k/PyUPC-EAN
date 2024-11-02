@@ -86,7 +86,7 @@ def predraw_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
     if(pilsupport and imageoutlib == "pillow"):
         pil_addon_fix = 0
         cairo_addon_fix = 0
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwrite and imageoutlib == "svgwrite")):
         pil_addon_fix = 0
         cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
     else:
@@ -403,7 +403,7 @@ def draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         upc_preimg = Image.new(
             "RGB", (((69 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_img = ImageDraw.Draw(upc_preimg)
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwrite and imageoutlib == "svgwrite")):
         upc_preimg = cairo.RecordingSurface(
                 cairo.CONTENT_COLOR, (0.0, 0.0, float(((69 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
         upc_img = cairo.Context(upc_preimg)
