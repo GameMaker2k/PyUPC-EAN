@@ -349,9 +349,9 @@ def predraw_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((77 + shiftxy[0]) + (75 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
                 barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), ">", barcolor[1], "ocrb", imageoutlib)
     if(supplement is not None and len(supplement) == 2):
-        upcean.encode.ean2.predraw_ean2_barcode((upc_img, upc_preimg), upc, resize, (((83 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+        upcean.encode.ean2.predraw_ean2_barcode((upc_img, upc_preimg), supplement, resize, (((83 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     if(supplement is not None and len(supplement) == 5):
-        upcean.encode.ean5.predraw_ean5_barcode((upc_img, upc_preimg), upc, resize, (((83 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+        upcean.encode.ean5.predraw_ean5_barcode((upc_img, upc_preimg), supplement, resize, (((83 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
 
 
