@@ -349,36 +349,10 @@ def predraw_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         if(hidecd is not None and not hidecd):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((107 + shiftxy[0]) + (103 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
                 barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), ">", barcolor[1], "ocrb", imageoutlib)
-    if(pilsupport and imageoutlib == "pillow"):
-        if(supplement is not None and len(supplement) == 2):
-            upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
-                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            if(upc_sup_img):
-                new_upc_img.paste(
-                    upc_sup_img, ((115 * barwidth[0]) * int(resize), 0))
-                del(upc_sup_img)
-        if(supplement is not None and len(supplement) == 5):
-            upc_sup_img = upcean.encode.ean5.draw_ean5sup_barcode(
-                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            if(upc_sup_img):
-                new_upc_img.paste(
-                    upc_sup_img, ((115 * barwidth[0]) * int(resize), 0))
-                del(upc_sup_img)
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        if(supplement != None and len(supplement) == 2):
-            upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
-                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            new_upc_img.set_source_surface(
-                upc_sup_img, (115 * barwidth[0]) * int(resize), 0)
-            new_upc_img.paint()
-            del(upc_sup_img)
-        if(supplement != None and len(supplement) == 5):
-            upc_sup_img = upcean.encode.ean5.draw_ean5sup_barcode(
-                supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            new_upc_img.set_source_surface(
-                upc_sup_img, (115 * barwidth[0]) * int(resize), 0)
-            new_upc_img.paint()
-            del(upc_sup_img)
+    if(supplement is not None and len(supplement) == 2):
+        upcean.encode.ean2.predraw_ean2_barcode((upc_img, upc_preimg), upc, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None and len(supplement) == 5):
+        upcean.encode.ean5.predraw_ean5_barcode((upc_img, upc_preimg), upc, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
 
 
@@ -390,6 +364,7 @@ def draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barco
         barheightadd = barheight[1]
     upc_pieces = None
     supplement = None
+    fullupc = upc
     if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
         upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
         upc_pieces = upc_pieces[0]
@@ -414,7 +389,7 @@ def draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barco
                 cairo.CONTENT_COLOR, ((115 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    imgout = predraw_ean13_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    imgout = predraw_ean13_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
 
 def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
