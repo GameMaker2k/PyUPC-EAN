@@ -339,7 +339,7 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
         try:
             if(svgwritesupport and imageoutlib == "svgwrite"):
                     upc_preimg.close()
-                    upc_img.saveas(outfile)
+                    upc_img.saveas(outfile, True)
             if(pilsupport and imageoutlib == "pillow"):
                 if(outfileext == "XBM"):
                     with open(outfile, 'wb+') as f:
