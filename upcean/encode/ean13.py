@@ -104,7 +104,7 @@ def predraw_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         upc_size_add = 29 * barwidth[0]
     if(supplement is not None and len(supplement) == 5):
         upc_size_add = 56 * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((113 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2])
+    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((115 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2])
     upc_array = {'upc': upc, 'code': []}
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     upc_array['code'].append([1, 0, 1])
