@@ -42,7 +42,7 @@ if(svgwritesupport):
     import upcean.encode.presvg
 
 
-def predraw_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def encode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -53,18 +53,6 @@ def predraw_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
     upc_img = inimage[0]
     upc_preimg = inimage[1]
     upc_pieces = None
@@ -369,10 +357,10 @@ def predraw_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((61 + shiftxy[0]) + (61 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
                 barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[2], barcolor[1], "ocrb", imageoutlib)
     if(supplement is not None and len(supplement) == 2):
-        upcean.encode.ean2.predraw_ean2_barcode((upc_img, upc_preimg), supplement, resize, (((69 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+        upcean.encode.ean2.encode_ean2_barcode((upc_img, upc_preimg), supplement, resize, (((69 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     if(supplement is not None and len(supplement) == 5):
-        upcean.encode.ean5.predraw_ean5_barcode((upc_img, upc_preimg), supplement, resize, (((69 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-    return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
+        upcean.encode.ean5.encode_ean5_barcode((upc_img, upc_preimg), supplement, resize, (((69 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo}, upc_array]
 
 
 def draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -381,6 +369,18 @@ def draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
+    if(not pilsupport and imageoutlib == "pillow"):
+        imageoutlib = "cairo"
+    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "pillow"
+    if(not cairosupport and imageoutlib == "cairosvg"):
+        imageoutlib = "pillow"
+    if(not svgwritesupport and imageoutlib == "svgwrite"):
+        imageoutlib = "pillow"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+        imageoutlib = "pillow"
+    if(not pilsupport and not cairosupport and not svgwritesupport):
+        return False
     upc_pieces = None
     supplement = None
     fullupc = upc
@@ -411,8 +411,8 @@ def draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
     elif(svgwritesupport and imageoutlib=="svgwrite"):
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((69 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-    imgout = predraw_upce_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-    return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
+    imgout = encode_upce_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo3)
+    return [upc_img, upc_preimg44n4cr6, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, 33brfrrr4jimgout[3]]
 
 def create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(outfile is None):
@@ -510,9 +510,3 @@ def create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54),
         except Exception:
             return False
     return True
-
-def preencode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
-    return predraw_upce_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
-
-def encode_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
-    return draw_upce_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
