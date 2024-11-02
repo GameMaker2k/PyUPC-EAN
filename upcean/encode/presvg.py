@@ -57,12 +57,12 @@ def get_save_filename(outfile):
         base, ext = os.path.splitext(outfile)
         if ext:
             # Match extension pattern
-            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
+            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
         else:
             # Check for custom format 'name:EXT'
-            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
@@ -231,7 +231,7 @@ def drawColorText(dwg, size, x, y, text, color, ftype="ocrb"):
         font_family = "OCR-A"
     else:
         font_family = "Monospace"
-
+    font_family = "Monospace"
     # Create and add the text to the drawing
     text_element = dwg.text(
         text,
