@@ -75,19 +75,17 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color):
     - ctx: Cairo context.
     - x1, y1: Coordinates of the top-left corner.
     - x2, y2: Coordinates of the bottom-right corner.
-    - color: Tuple of (R, G, B) with values in [0, 1].
+    - color: Tuple of (R, G, B) with values in [0, 255].
     """
-    # Set the fill color
-    ctx.set_source_rgb(*color)
+    # Set the color for filling (scaled to [0, 1] for Cairo)
+    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
     
     # Calculate width and height
     width_rect = x2 - x1
     height_rect = y2 - y1
     
-    # Create the rectangle path
+    # Define the rectangle path and fill it
     ctx.rectangle(x1, y1, width_rect, height_rect)
-    
-    # Fill the rectangle
     ctx.fill()
     
     # Start a new path to avoid unintended connections
@@ -103,13 +101,13 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color):
     - x1, y1: Starting coordinates.
     - x2, y2: Ending coordinates.
     - width: Line width (integer >= 1).
-    - color: Tuple of (R, G, B) with values in [0, 1].
+    - color: Tuple of (R, G, B) with values in [0, 255].
     """
     # Ensure width is at least 1
     width = max(1, int(width))
     
-    # Set the fill color
-    ctx.set_source_rgb(*color)
+    # Set the fill color (scaled to [0, 1])
+    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
     
     # Snap coordinates for crisp lines
     x1, y1 = snapCoords(x1, y1)
@@ -141,11 +139,20 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color):
     # Start a new path to avoid unintended connections
     ctx.new_path()
 
-
 def drawText(ctx, size, x, y, text, ftype="ocrb"):
+    """
+    Draws text at a specified location with given size and font type.
+
+    Parameters:
+    - ctx: Cairo context.
+    - size: Font size.
+    - x, y: Coordinates for text position.
+    - text: The text to draw.
+    - ftype: Font type (optional, default is "ocrb").
+    """
     text = str(text)
     point1 = snapCoords(x, y)
-    ctx.select_font_face("Monospace")
+    ctx.select_font_face("Monospace")  # You can change the font face as required
     ctx.set_font_size(size)
     fo = cairo.FontOptions()
     fo.set_antialias(cairo.ANTIALIAS_DEFAULT)
@@ -157,11 +164,51 @@ def drawText(ctx, size, x, y, text, ftype="ocrb"):
     ctx.stroke()
     return True
 
-
 def drawColorText(ctx, size, x, y, text, color, ftype="ocrb"):
+    """
+    Draws colored text at a specified location with given size, color, and font type.
+
+    Parameters:
+    - ctx: Cairo context.
+    - size: Font size.
+    - x, y: Coordinates for text position.
+    - text: The text to draw.
+    - color: Tuple of (R, G, B) with values in [0, 255].
+    - ftype: Font type (optional, default is "ocrb").
+    """
     text = str(text)
-    ctx.set_source_rgb(color[0], color[1], color[2])
+    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
     drawText(ctx, size, x, y, text, ftype)
+    return True
+
+def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, line_width=1):
+    """
+    Draws an outlined rectangle from (x1, y1) to (x2, y2) with the specified color and line width.
+    
+    Parameters:
+    - ctx: Cairo context.
+    - x1, y1: Coordinates of the top-left corner.
+    - x2, y2: Coordinates of the bottom-right corner.
+    - color: Tuple of (R, G, B) with values in [0, 255].
+    - line_width: Width of the outline (default is 1).
+    """
+    # Set the outline color (scaling RGB values to [0, 1])
+    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
+    
+    # Set the line width for the outline
+    ctx.set_line_width(line_width)
+    
+    # Define the rectangle path (x, y, width, height)
+    width_rect = x2 - x1
+    height_rect = y2 - y1
+    ctx.rectangle(x1, y1, width_rect, height_rect)
+    
+    # Stroke the rectangle outline
+    ctx.stroke()
+    
+    # Start a new path to avoid unintended connections
+    ctx.new_path()
+
     return True
 
 def get_save_filename(outfile):
