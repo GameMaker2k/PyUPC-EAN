@@ -195,7 +195,15 @@ def draw_code11_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
         imageoutlib = "pillow"
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
-    upc_size_add = 0
+    upc_matc = upc.upper()
+    upc_matches = list(upc_matc)
+    upc_print = upc_matches
+    if(len(upc_matches) <= 0):
+        return False
+    bcsize6 = len(re.findall("([09\\-])", "".join(upc_matches)))
+    bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)))
+    upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) +
+                    len(upc_matches) - 1) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
             "RGB", (((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))

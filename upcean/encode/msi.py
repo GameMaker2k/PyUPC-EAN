@@ -195,7 +195,26 @@ def draw_msi_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolo
         imageoutlib = "pillow"
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
-    upc_size_add = 0
+    upc_matc = upc_matc.upper()
+    upc_matches = list(upc_matc)
+    upc_print = list(upc_matches)
+    if(len(upc) % 2 == 0):
+        PreChck1 = list(str(int("".join(upc_matches[1:][::2])) * 2))
+        PreChck2 = upc_matches[0:][::2]
+    else:
+        PreChck1 = list(str(int("".join(upc_matches[0:][::2])) * 2))
+        PreChck2 = upc_matches[1:][::2]
+    PreCount = 0
+    UPC_Sum = 0
+    while (PreCount <= len(PreChck1)-1):
+        UPC_Sum = UPC_Sum + int(PreChck1[PreCount])
+        PreCount += 1
+    PreCount = 0
+    while (PreCount <= len(PreChck2)-1):
+        UPC_Sum = UPC_Sum + int(PreChck2[PreCount])
+        PreCount += 1
+    upc_matches.append(str(10 - (UPC_Sum % 10)))
+    upc_size_add = (len(upc_matches) * 12) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
             "RGB", (((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))

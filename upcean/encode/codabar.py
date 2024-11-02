@@ -228,7 +228,15 @@ def draw_codabar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         imageoutlib = "pillow"
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
-    upc_size_add = 0
+    pre_upc_matches = upc_matches = re.findall(
+        "^([a-dA-DeEnN\\*tT])([0-9\\-\\$\\:\\/\\.\\+]+)([a-dA-DeEnN\\*tT])$", upc)
+    pre_upc_matches = pre_upc_matches[0]
+    upc_matches = list(pre_upc_matches[1])
+    bcsize9 = len(re.findall("([0-9\\-\\$])", "".join(upc_matches)))
+    bcsize10 = len(re.findall("([\\:\\/\\.])", "".join(upc_matches)))
+    bcsize12 = len(re.findall("([\\+])", "".join(upc_matches)))
+    upc_size_add = ((bcsize9 * 9) + (bcsize10 * 10) +
+                    (bcsize12 * 12) + len(upc_matches) - 1) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
             "RGB", (((40 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))

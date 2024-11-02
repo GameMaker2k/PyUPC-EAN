@@ -245,6 +245,7 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
 
 
 def draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    threewidebar = False
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
@@ -260,7 +261,13 @@ def draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barco
         imageoutlib = "pillow"
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
-    upc_size_add = 0
+    upc_matches = re.findall("([0-9]{2})", upc)
+    if(threewidebar):
+        upc_size_add = (len(upc_matches) * 18) * barwidth[0]
+    else:
+        upc_size_add = (len(upc_matches) * 14) * barwidth[0]
+    if(len(upc_matches) <= 0):
+        return False
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
             "RGB", (((44 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize)))

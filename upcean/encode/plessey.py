@@ -201,7 +201,11 @@ def draw_plessey_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         imageoutlib = "pillow"
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
-    upc_size_add = 0
+    upc_matches = list(upc)
+    upc_size_add = ((len(upc_matches) * 16) +
+                    (len(upc_matches) + 1)) * barwidth[0]
+    if(len(upc_matches) <= 0):
+        return False
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
             "RGB", (((48 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
