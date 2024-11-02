@@ -57,9 +57,9 @@ def predraw_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         imageoutlib = "pillow"
     if(not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "writesvg"):
+    if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "writesvg"):
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
     if(not pilsupport and not cairosupport and not svgwritesupport):
         return False
@@ -87,7 +87,7 @@ def predraw_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3)
     CheckSum = CheckSum % 10
     upc_size_add = 0
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((56 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2])
+    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((56 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'code': []}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
@@ -288,9 +288,12 @@ def draw_ean5_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         upc_preimg = Image.new(
             "RGB", (((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_img = ImageDraw.Draw(upc_preimg)
-    if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, ((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+                cairo.CONTENT_COLOR, (0.0, 0.0, float(((56 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
+    elif(svgwritesupport and imageoutlib=="svgwrite"):
+        upc_preimg = StringIO()
+        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
     imgout = predraw_ean5_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
@@ -334,6 +337,9 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
         else:
             exargdict = {}
         try:
+            if(svgwritesupport and imageoutlib == "svgwrite"):
+                    upc_preimg.close()
+                    upc_img.saveas(outfile)
             if(pilsupport and imageoutlib == "pillow"):
                 if(outfileext == "XBM"):
                     with open(outfile, 'wb+') as f:
@@ -355,8 +361,6 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
                         image_context.paint()
                         image_surface.flush()
                         image_surface.finish()
-                        # Save as PNG
-                        image_surface.write_to_png(outfile)
                     elif(outfileext == "PDF"):
                         # Create an ImageSurface with the exact dimensions of the recorded content
                         image_surface = cairo.PDFSurface(outfile, int(width), int(height))
@@ -366,8 +370,6 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
                         image_context.paint()
                         image_surface.flush()
                         image_surface.finish()
-                        # Save as PNG
-                        image_surface.write_to_png(outfile)
                     elif(outfileext == "PS" or outfileext == "EPS"):
                         # Create an PDFSurface with the exact dimensions of the recorded content
                         image_surface = cairo.PSSurface(outfile, int(width), int(height))
@@ -381,9 +383,6 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
                         image_context.paint()
                         image_surface.flush()
                         image_surface.finish()
-                        # Save as PNG
-                        image_surface.write_to_png(outfile)
-                    return True
                 else:
                     # Create an ImageSurface with the exact dimensions of the recorded content
                     image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
