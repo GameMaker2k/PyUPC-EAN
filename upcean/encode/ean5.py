@@ -423,3 +423,12 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
         except Exception as e:
             return False
     return True
+
+def encode_upc5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return encode_ean5_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo=, imageoutlib)
+
+def draw_upc5_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return draw_ean5_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+
+def create_upc5_barcode(upc, outfile="./ean2.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean5_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)

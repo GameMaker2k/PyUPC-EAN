@@ -282,9 +282,9 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     if(supplement is not None and len(supplement) == 2):
-        upcean.encode.ean2.encode_ean2_barcode((upc_img, upc_preimg), supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+        upcean.encode.ean2.encode_upc2_barcode((upc_img, upc_preimg), supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     if(supplement is not None and len(supplement) == 5):
-        upcean.encode.ean5.encode_ean5_barcode((upc_img, upc_preimg), supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+        upcean.encode.ean5.encode_upc5_barcode((upc_img, upc_preimg), supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
 
 
