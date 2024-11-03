@@ -22,7 +22,8 @@ import upcean.support
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
-if(pilsupport or cairosupport):
+svgwritesupport = upcean.support.check_for_svgwrite()
+if(pilsupport or cairosupport or svgwritesupport):
     import upcean.fonts
     import upcean.xml
     import upcean.encode
@@ -115,7 +116,7 @@ class encode:
             barcode_type = self.type
         return upcean.support.get_pillow_version()
     ''' // barcodes/__init__.py funtions '''
-    if(pilsupport or cairosupport):
+    if(pilsupport or cairosupport or svgwritesupport):
         def create_barcode(self, filename=None, size=None):
             if(filename is None):
                 filename = self.filename
