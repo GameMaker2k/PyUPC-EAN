@@ -90,7 +90,7 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
                    24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%", 43: "($)", 44: "(%)", 45: "(/)", 46: "(+)"}
     Code93Values = dict(zip(Code93Array.values(), Code93Array))
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((48 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'code': []}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
@@ -955,7 +955,7 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
                    24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%", 43: "($)", 44: "(%)", 45: "(/)", 46: "(+)"}
     Code93Values = dict(zip(Code93Array.values(), Code93Array))
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((48 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'code': []}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):

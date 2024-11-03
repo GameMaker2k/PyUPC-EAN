@@ -92,7 +92,7 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     subfromlist = upc_matches.count("6d")
     upc_size_add = (((len(upc_matches) - subfromlist) * 11) +
                     (len(re.findall("6c", upc)) * 2)) * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((48 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((29 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'code': []}
     LineSize = (barheight[1] + shiftxy[1]) * int(resize) if hidetext else barheight[0]
     start_barcode = [0] * 14
@@ -726,7 +726,7 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
     subfromlist = upc_matches.count("6d")
     upc_size_add = (((len(upc_matches) - subfromlist) * 11) +
                     (len(re.findall("6c", upc)) * 2)) * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((48 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((29 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'code': []}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
