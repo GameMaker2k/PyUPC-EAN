@@ -176,6 +176,8 @@ def encode_code11_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
                 barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
             LineTxtStart += 9 * int(resize)
             NumTxtZero += 1
+    if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
+        upc_preimg.flush()
     return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
 
 
@@ -323,9 +325,9 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, barheight=(48, 
                     image_context.set_source_surface(upc_preimg, -x, -y)
                     image_context.paint()
                     image_surface.flush()
-                    image_surface.finish()
                     # Save as PNG
                     image_surface.write_to_png(outfile)
+                    image_surface.finish()
                     return True
         except Exception:
             return False

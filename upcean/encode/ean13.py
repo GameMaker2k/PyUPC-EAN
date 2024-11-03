@@ -351,6 +351,8 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         if(hidecd is not None and not hidecd):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((107 + shiftxy[0]) + (103 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
                 barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), ">", barcolor[1], "ocrb", imageoutlib)
+    if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
+        upc_preimg.flush()
     if(supplement is not None and len(supplement) == 2):
         upcean.encode.ean2.encode_ean2_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     if(supplement is not None and len(supplement) == 5):
@@ -511,9 +513,9 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54
                     image_context.set_source_surface(upc_preimg, -x, -y)
                     image_context.paint()
                     image_surface.flush()
-                    image_surface.finish()
                     # Save as PNG
                     image_surface.write_to_png(outfile)
+                    image_surface.finish()
                     return True
         except Exception:
             return False

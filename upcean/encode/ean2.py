@@ -183,6 +183,8 @@ def encode_ean2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), LeftDigit[0], barcolor[1], "ocrb", imageoutlib)
         drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((13 + shiftxy[0]) + (13 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
             barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), LeftDigit[1], barcolor[1], "ocrb", imageoutlib)
+    if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
+        upc_preimg.flush()
     return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
 
 
@@ -322,9 +324,9 @@ def create_ean2_barcode(upc, outfile="./ean2.png", resize=1, barheight=(48, 54),
                     image_context.set_source_surface(upc_preimg, -x, -y)
                     image_context.paint()
                     image_surface.flush()
-                    image_surface.finish()
                     # Save as PNG
                     image_surface.write_to_png(outfile)
+                    image_surface.finish()
                     return True
         except Exception:
             return False
