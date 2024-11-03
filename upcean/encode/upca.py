@@ -655,7 +655,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     if(not hidetext):
         if(hidesn is not None and not hidesn):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((2 + shiftxy[0]) + (2 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), "<", barcolor[1], "ocrb", imageoutlib)
+                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), "0", barcolor[1], "ocrb", imageoutlib)
         drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((17 + shiftxy[0]) + (20 * (int(resize) - 1)) - (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
             barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[0], barcolor[1], "ocrb", imageoutlib)
         drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((23 + shiftxy[0]) + (25 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
