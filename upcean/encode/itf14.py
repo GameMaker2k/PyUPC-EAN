@@ -213,14 +213,14 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
-    drawColorRectangleAlt(upc_img, shiftxy[0], shiftxy[1], ((
-        (44 + shiftxy[0]) * barwidth[0]) + upc_size_add) - 1, ((barheight[0] + ((15 + shiftxy[1]) * barwidth[0])) - 11), barcolor[0])
-    drawColorRectangleAlt(upc_img, 1 + shiftxy[0], 1 + shiftxy[1], ((
-        (44 + shiftxy[0]) * barwidth[0]) + upc_size_add) - 2, ((barheight[0] + ((15 + shiftxy[1]) * barwidth[0])) - 12), barcolor[0])
-    drawColorRectangleAlt(upc_img, 2 + shiftxy[0], 2 + shiftxy[1], ((
-        (44 + shiftxy[0]) * barwidth[0]) + upc_size_add) - 3, ((barheight[0] + ((15 + shiftxy[1]) * barwidth[0])) - 13), barcolor[0])
-    drawColorRectangleAlt(upc_img, 3 + shiftxy[0], 3 + shiftxy[1], ((
-        (44 + shiftxy[0]) * barwidth[0]) + upc_size_add) - 4, ((barheight[0] + ((15 + shiftxy[1]) * barwidth[0])) - 14), barcolor[0])
+    RectAltLoop = 4 * resize
+    RectAltLoopSpin = 1
+    while(RectAltLoopSpin <= RectAltLoop):
+        RectAltLoopSpinAlt = RectAltLoopSpin + 10
+        RectAltLoopSpinDown = RectAltLoopSpin - 1
+        drawColorRectangleAlt(upc_img, shiftxy[0] + RectAltLoopSpin, shiftxy[1] + RectAltLoopSpin, ((
+        (44 + shiftxy[0]) * barwidth[0]) + upc_size_add) - RectAltLoopSpin, ((barheight[0] + ((15 + shiftxy[1]) * barwidth[0])) - RectAltLoopSpinAlt), barcolor[0])
+        RectAltLoopSpin += 1
     if(not hidetext):
         NumTxtZero = 0
         LineTxtStart = 23
