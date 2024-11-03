@@ -597,7 +597,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48
     imgout = draw_code128_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    exargdict = {}
+    exargdict = {'comment': upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
     else:
@@ -609,7 +609,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48
         elif(outfileext == "PNG"):
             exargdict.update({'optimize': True, 'compress_level': 9})
         else:
-            exargdict = {}
+            exargdict = {'comment': upc}
         try:
             if(svgwritesupport and imageoutlib == "svgwrite"):
                     upc_preimg.close()
@@ -1148,7 +1148,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, barheight=
     imgout = draw_code128old_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    exargdict = {}
+    exargdict = {'comment': upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
     else:
@@ -1160,7 +1160,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, barheight=
         elif(outfileext == "PNG"):
             exargdict.update({'optimize': True, 'compress_level': 9})
         else:
-            exargdict = {}
+            exargdict = {'comment': upc}
         try:
             if(svgwritesupport and imageoutlib == "svgwrite"):
                     upc_preimg.close()
