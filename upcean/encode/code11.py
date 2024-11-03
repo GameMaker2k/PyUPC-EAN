@@ -311,9 +311,9 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, barheight=(48, 
                         # Transfer the content from the RecordingSurface to the ImageSurface
                         image_context.set_source_surface(upc_preimg, -x, -y)
                         if(outfileext == "EPS"):
-                            upc_preimg.set_eps(True)
+                            image_surface.set_eps(True)
                         else:
-                            upc_preimg.set_eps(False)
+                            image_surface.set_eps(False)
                         image_context.paint()
                         image_surface.flush()
                         image_surface.finish()
@@ -329,6 +329,5 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, barheight=(48, 
                     image_surface.write_to_png(outfile)
                     image_surface.finish()
                     return True
-        except Exception:
+        except Exception as e:
             return False
-    return True
