@@ -218,7 +218,7 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
     while(RectAltLoopSpin <= RectAltLoop):
         RectAltLoopSpinAlt = RectAltLoopSpin + 10
         RectAltLoopSpinDown = RectAltLoopSpin - 1
-        drawColorRectangleAlt(upc_img, shiftxy[0] + RectAltLoopSpin, shiftxy[1] + RectAltLoopSpin, ((
+        drawColorRectangleAlt(upc_img, RectAltLoopSpinDown + shiftxy[0], RectAltLoopSpinDown + shiftxy[1], ((
         (44 + shiftxy[0]) * barwidth[0]) + upc_size_add) - RectAltLoopSpin, ((barheight[0] + ((15 + shiftxy[1]) * barwidth[0])) - RectAltLoopSpinAlt), barcolor[0])
         RectAltLoopSpin += 1
     if(not hidetext):
