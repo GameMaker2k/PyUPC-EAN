@@ -19,26 +19,26 @@ import platform
 from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, __build_python_is_set__, get_build_python_info, __revision__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date
 
 ''' // Barcode Support List '''
-bctype_dict = {'EAN2': "ean2", 'EAN2Sup': "ean2sup", 'UPCS2': "ean2", 'EAN5': "ean5", 'EAN5Sup': "ean5sup", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
+bctype_dict = {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCAEan': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
                'CODE11': "code11", 'CODE39': "code39", 'CODE93': "code93", 'CODE128': "code128", 'CODE128Alt': "code128alt", 'CODE128Dec': "code128dec", 'CODE128Hex': "code128hex", 'CODE128Man': "code128man", 'CODABAR': "codabar", 'MSI': "msi", "GOODWILL": "goodwill"}
-bctype_dict_alt = {'ean2': "EAN2", 'ean5': "EAN5", 'ean2sup': "EAN2Sup", 'ean5sup': "EAN5Sup", 'upca': "UPCA", 'upce': "UPCE", 'ean13': "EAN13", 'ean8': "EAN8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF6", 'itf14': "ITF14", 'code11': "CODE11",
+bctype_dict_alt = {'ean2': "EAN2", 'ean5': "EAN5", 'upc2': "UPC2", 'upc5': "UPC5", 'upca': "UPCA", 'upcaean': "UPCAEan", 'upce': "UPCE", 'ean13': "EAN13", 'ean8': "EAN8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF6", 'itf14': "ITF14", 'code11': "CODE11",
                    'code39': "CODE39", 'code93': "CODE93", 'code128': "CODE128", 'code128alt': "CODE128Alt", 'code128dec': "CODE128Dec", 'code128hex': "CODE128Hex", 'code128man': "CODE128Man", 'codabar': "CODABAR", 'msi': "MSI", "goodwill": "GOODWILL"}
-bctype_list = ["ean2", "ean2sup", "ean5", "ean5sup", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14",
+bctype_list = ["ean2", "upc2", "ean5", "upc5", "upca", "upcaean", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14",
                "code11", "code39", "code93", "code128", "code128alt", "code128dec", "code128hex", "code128man", "codabar", "msi"]
 PROVIDED_BARCODES = bctype_list
-bctype_tuple = ("ean2", "ean2sup", "ean5", "ean5sup", "upca", "upce", "ean13", "ean8", "stf", "itf",
+bctype_tuple = ("ean2", "upc2", "ean5", "upc5", "upca", "upcaean", "upce", "ean13", "ean8", "stf", "itf",
                 "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "code128dect", "codabar", "msi")
-bctype_name = {'ean2': "EAN-2", 'ean5': "EAN-5", 'ean2sup': "EAN-2 Sup", 'ean5sup': "EAN-5 Sup", 'upca': "UPC-A", 'upce': "UPC-E", 'ean13': "EAN-13", 'ean8': "EAN-8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF-6", 'itf14': "ITF-14", "code11": "Code 11",
+bctype_name = {'ean2': "EAN-2", 'ean5': "EAN-5", 'upc2': "EAN-2 Sup", 'upc5': "EAN-5 Sup", 'upca': "UPC-A", 'upcaean': "UPC-AEan", 'upce': "UPC-E", 'ean13': "EAN-13", 'ean8': "EAN-8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF-6", 'itf14': "ITF-14", "code11": "Code 11",
                "code39": "Code 39", "code93": "Code 93", "code128": "Code 128", "code128alt": "Code 128 Alt", "code128dec": "Code 128 Dec", "code128hex": "Code 128 Hex", "code128man": "Code 128 Man", 'codabar': "Codabar", 'msi': "MSI", "goodwill": "GOODWILL"}
 
 
 def supported_barcodes(return_type="dict"):
     if(return_type == "dict"):
-        return {'EAN2': "ean2", 'EAN2Sup': "ean2sup", 'UPCS2': "ean2", 'EAN5': "ean5", 'EAN5Sup': "ean5sup", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14", 'CODE11': "code11", 'CODE39': "code39", 'CODE93': "code93", 'CODE128': "code128", 'CODE128Alt': "code128alt", 'CODE128Dec': "code128dec", 'CODE128Hex': "code128hex", 'CODE128Man': "code128man", 'CODABAR': "codabar", 'MSI': "msi", "GOODWILL": "goodwill"}
+        return {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCA': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14", 'CODE11': "code11", 'CODE39': "code39", 'CODE93': "code93", 'CODE128': "code128", 'CODE128Alt': "code128alt", 'CODE128Dec': "code128dec", 'CODE128Hex': "code128hex", 'CODE128Man': "code128man", 'CODABAR': "codabar", 'MSI': "msi", "GOODWILL": "goodwill"}
     if(return_type == "list"):
-        return ["ean2", "ean2sup", "ean5", "ean5sup", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "code128dec", "code128hex", "code128man", "codabar", "msi", "goodwill"]
+        return ["ean2", "upc2", "ean5", "upc5", "upca", "upcaean", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "code128dec", "code128hex", "code128man", "codabar", "msi", "goodwill"]
     if(return_type == "tuple"):
-        return ("ean2", "ean2sup", "ean5", "ean5sup", "upca", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "code128dec", "code128hex", "code128man", "codabar", "msi", "goodwill")
+        return ("ean2", "upc2", "ean5", "upc5", "upca", "upcaean", "upce", "ean13", "ean8", "stf", "itf", "itf6", "itf14", "code11", "code39", "code93", "code128", "code128alt", "code128dec", "code128hex", "code128man", "codabar", "msi", "goodwill")
     return False
 
 
@@ -47,7 +47,7 @@ def barcode_support(return_type="dict"):
 
 
 def get_barcode_name(barcode_type="upca"):
-    bctype_name = {'ean2': "EAN-2", 'ean5': "EAN-5", 'ean2sup': "EAN-2 Sup", 'ean5sup': "EAN-5 Sup", 'upca': "UPC-A", 'upce': "UPC-E", 'ean13': "EAN-13", 'ean8': "EAN-8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF-6", 'itf14': "ITF-14", "code11": "Code 11",
+    bctype_name = {'ean2': "EAN-2", 'ean5': "EAN-5", 'upc2': "EAN-2 Sup", 'upc5': "EAN-5 Sup", 'upca': "UPC-A", 'upcaean': "UPC-AEan", 'upce': "UPC-E", 'ean13': "EAN-13", 'ean8': "EAN-8", 'stf': "STF", 'itf': "ITF", 'itf6': "ITF-6", 'itf14': "ITF-14", "code11": "Code 11",
                    "code39": "Code 39", "code93": "Code 93", "code128": "Code 128", "code128alt": "Code 128 Alt", "code128dec": "Code 128 Dec", "code128hex": "Code 128 Hex", "code128man": "Code 128 Man", 'codabar': "Codabar", 'msi': "MSI", "goodwill": "GOODWILL"}
     return bctype_name.get(barcode_type, False)
 
