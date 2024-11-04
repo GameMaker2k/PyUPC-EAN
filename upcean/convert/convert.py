@@ -1047,7 +1047,7 @@ def convert_text_to_hex_gs1_128_with_checksum(data, hidecs=True, reverse=False, 
     return code128_hex + hidecschar + checksum_hex + stopcode
 
 
-def convert_text_to_hex_code128_with_checksum(upc, hidecs=True, reverse=False, stopcode="6a"):
+def convert_text_to_hex_code128_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         stopcode = "6b"
     code128out = convert_text_to_hex_code128(upc, reverse)
@@ -1059,7 +1059,7 @@ def convert_text_to_hex_code128_with_checksum(upc, hidecs=True, reverse=False, s
     return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_auto_with_checksum(upc, hidecs=True, reverse=False, stopcode="6a"):
+def convert_text_to_hex_code128_auto_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         stopcode = "6b"
     code128out = convert_text_to_hex_code128_auto(upc, reverse)
@@ -1071,7 +1071,7 @@ def convert_text_to_hex_code128_auto_with_checksum(upc, hidecs=True, reverse=Fal
     return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_optimize_with_checksum(upc, hidecs=True, reverse=False, stopcode="6a"):
+def convert_text_to_hex_code128_optimize_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         stopcode = "6b"
     code128out = optimize_encoding_code128(upc, reverse)
@@ -1083,7 +1083,7 @@ def convert_text_to_hex_code128_optimize_with_checksum(upc, hidecs=True, reverse
     return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_optimize_alt_with_checksum(upc, hidecs=True, reverse=False, stopcode="6a"):
+def convert_text_to_hex_code128_optimize_alt_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         stopcode = "6b"
     code128out = optimize_encoding_code128_alt(upc, reverse)
@@ -1095,7 +1095,7 @@ def convert_text_to_hex_code128_optimize_alt_with_checksum(upc, hidecs=True, rev
     return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 
-def convert_text_to_hex_code128_manual_with_checksum(upc, hidecs=True, reverse=False, stopcode="6a"):
+def convert_text_to_hex_code128_manual_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
         stopcode = "6b"
     code128out = convert_text_to_hex_code128_manual(upc, reverse)
