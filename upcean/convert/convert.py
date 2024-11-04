@@ -264,15 +264,68 @@ def hex_to_decimal(hex_string):
     else:
         raise ValueError("Hex '{}' not found in the mapping.".format(hex_string))
 
-def decimal_to_hex(decimal_string):
-    """
-    Convert a decimal string (three-digit decimal) to a two-digit hex string.
-    """
-    decimal_value = int(decimal_string)
-    if decimal_value in code128_digit_to_hex:
-        return code128_digit_to_hex[decimal_value]
+def convert_first_number_to_hex_and_remove_last_odd_digit(s):
+    # Check if the last character is a digit and if it is odd
+    if s and s[-1].isdigit() and int(s[-1]) % 2 == 1:
+        # Separate the last odd digit and add 1 to it
+        last_digit = str(int(s[-1]) + 1)
+        remaining_string = s[:-1]
     else:
-        raise ValueError("Decimal '{}' not found in the mapping.".format(decimal_string))
+        # If the last digit is not odd, keep the original string and no last digit
+        remaining_string, last_digit = s, None
+
+    # Find the first sequence of digits at the beginning of the string
+    match = re.match('^(\\d+)', remaining_string)
+    if match:
+        # Extract the numeric part
+        num_str = match.group(0)
+        # Convert to hexadecimal with pairs, ensuring each part is two characters long
+        hex_value = ''.join(format(int(num_str[i:i+2]), '02x') for i in range(0, len(num_str), 2))
+        
+        # Preserve the original leading zeros
+        leading_zeros = len(num_str) - len(num_str.lstrip('0'))
+        hex_value_with_zeros = '0' * (leading_zeros * 2) + hex_value
+        
+        # Replace the original numeric part with the hex representation
+        remaining_string = hex_value_with_zeros + remaining_string[len(num_str):]
+
+    return remaining_string, last_digit
+
+def convert_numbers_to_hex_code128(upc, reverse=False):
+    upc = str(upc)
+    if len(upc) < 4:
+        return False
+    if not upc.isdigit():
+        return False
+    if reverse:
+        upc = upc[::-1]
+    
+    # Convert and format the string as per Code 128 requirements
+    digchck = convert_first_number_to_hex_and_remove_last_odd_digit(upc)
+    outstr = "69" + digchck[0]
+    if digchck[1] is not None:
+        # Directly add the adjusted last odd digit (already incremented by 1)
+        outstr = outstr + "651" + digchck[1]
+    
+    return outstr
+
+def convert_numbers_to_hex_code128(upc, reverse=False):
+    upc = str(upc)
+    if len(upc) < 4:
+        return False
+    if not upc.isdigit():
+        return False
+    if reverse:
+        upc = upc[::-1]
+    
+    # Convert and format the string as per Code 128 requirements
+    digchck = convert_first_number_to_hex_and_remove_last_odd_digit(upc)
+    outstr = "69" + digchck[0]
+    if digchck[1] is not None:
+        # Directly add the adjusted last odd digit (already incremented by 1)
+        outstr = outstr + "651" + digchck[1]
+    
+    return outstr
 
 def convert_ascii_code128_to_hex_code128(upc, reverse=False):
     upc = str(upc)
@@ -1184,6 +1237,16 @@ def convert_text_to_hex_code128_optimize_alt_with_checksum(upc, hidecs=True, rev
         hidecschar = "6d"
     return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
+def convert_numbers_to_hex_code128_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
+    if(reverse):
+        stopcode = "6b"
+    code128out = convert_numbers_to_hex_code128(upc, reverse)
+    if(not code128out):
+        return False
+    hidecschar = ""
+    if(hidecs):
+        hidecschar = "6d"
+    return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
 
 def convert_text_to_hex_code128_manual_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
     if(reverse):
