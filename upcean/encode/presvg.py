@@ -28,13 +28,14 @@ def get_save_filename(outfile):
     """
     Processes the `outfile` parameter to determine a suitable filename and its corresponding file extension for saving SVG files.
     Returns a tuple (filename, EXTENSION) or the original `outfile` if it's of type None, bool, or a file object.
+    Defaults to "SVG" as the extension if none is provided or if an unsupported extension is detected.
     Returns False for unsupported input types.
 
     Parameters:
         outfile (str, tuple, list, None, bool, file): The output file specification.
 
     Returns:
-        tuple or original `outfile` or False
+        tuple: (filename, "SVG") or False if invalid.
     """
     # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
@@ -50,28 +51,23 @@ def get_save_filename(outfile):
         if outfile in ["-", ""]:
             return (outfile, None)
 
-        # Initialize extension
-        outfileext = None
-
         # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
         if ext:
-            # Match extension pattern
-            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
+            # Match extension pattern and extract if valid
+            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
         else:
             # Check for custom format 'name:EXT'
-            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
+            else:
+                outfileext = None
 
-        # Assign default extension if none found
-        if not outfileext:
-            outfileext = "SVG"
-
-        # Ensure the extension is SVG
+        # Default to "SVG" if no valid extension was found or if it's not SVG
         if outfileext != "SVG":
             outfileext = "SVG"
 
@@ -87,8 +83,8 @@ def get_save_filename(outfile):
             # Invalid types within tuple/list
             return False
         ext = ext.strip().upper()
+        # Ensure the extension is SVG
         if ext != "SVG":
-            # Default to SVG if not specified
             ext = "SVG"
         return (filename, ext)
 

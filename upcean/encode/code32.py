@@ -304,7 +304,7 @@ def create_code32_barcode(upc, outfile="./code32.png", resize=1, barheight=(48, 
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
         elif(outfileext == "JPEG"):
             exargdict.update(
-                {'quality': 95, 'optimize': True, 'progressive': True})
+                {'quality': 100, 'optimize': True, 'progressive': True})
         elif(outfileext == "PNG"):
             exargdict.update({'optimize': True, 'compress_level': 9})
             if(pilsupport):

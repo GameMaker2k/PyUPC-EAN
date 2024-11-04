@@ -117,56 +117,58 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color):
 def get_save_filename(outfile):
     """
     Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files (e.g., images). Returns a tuple (filename, EXTENSION)
-    or the original `outfile` if it's of type None, bool, or a file object. Returns False
-    for unsupported input types.
+    file extension for saving files. Returns a tuple (filename, EXTENSION),
+    the original `outfile` if it's of type None, bool, or a file object, or
+    False for unsupported input types.
 
     Parameters:
-        outfile (str, tuple, list, None, bool, file): The output file specification.
+        outfile (str): The output file specification.
 
     Returns:
-        tuple or original `outfile` or False
+        tuple: (filename, EXTENSION) or False if invalid.
     """
     # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
-    # Handle file objects directly
+    # Handle file objects directly (using the cross-version file compatibility you've defined)
     if isinstance(outfile, file):
         return outfile
 
-    # Handle string types (basestring covers both str and unicode in Python 2)
-    if isinstance(outfile, basestring):
+    # Handle string types
+    if isinstance(outfile, (str, unicode) if 'unicode' in globals() else str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
             return (outfile, None)
 
-        # Initialize extension
-        outfileext = None
-
         # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
         if ext:
-            # Match extension pattern
-            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
+            # Match extension pattern and extract if valid
+            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
         else:
             # Check for custom format 'name:EXT'
-            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
+            else:
+                outfileext = None
 
-        # Assign default extension if none found
+        # Default to "PNG" if no valid extension was found
         if not outfileext:
             outfileext = "PNG"
 
-        # Handle specific extensions using PIL's Image.registered_extensions()
-        # Lookup the extension in PIL's registered extensions
-        pil_extension = ".{}".format(outfileext.lower())
-        pil_format = Image.registered_extensions().get(pil_extension, "PNG").upper()
-        outfileext = pil_format
+        # Check if the extension is supported by Pillow's registered extensions
+        pil_extensions = {ext[1:].upper(): fmt.upper() for ext, fmt in Image.registered_extensions().items()}
+        if outfileext in pil_extensions:
+            # If the extension is in the registered extensions, use the format specified there
+            outfileext = pil_extensions[outfileext]
+        else:
+            # Default to PNG if unsupported
+            outfileext = "PNG"
 
         return (outfile, outfileext)
 
@@ -176,17 +178,23 @@ def get_save_filename(outfile):
             # Invalid tuple/list length
             return False
         filename, ext = outfile
-        if not isinstance(filename, basestring) or not isinstance(ext, basestring):
+        if not isinstance(filename, (str, unicode) if 'unicode' in globals() else str) or \
+           not isinstance(ext, (str, unicode) if 'unicode' in globals() else str):
             # Invalid types within tuple/list
             return False
+
         ext = ext.strip().upper()
-        # Lookup the extension in PIL's registered extensions
-        pil_extension = ".{}".format(ext.lower())
-        pil_format = Image.registered_extensions().get(pil_extension, "PNG").upper()
-        ext = pil_format
+        # Check if the extension is supported by Pillow's registered extensions
+        pil_extensions = {ext[1:].upper(): fmt.upper() for ext, fmt in Image.registered_extensions().items()}
+        if ext in pil_extensions:
+            # If the extension is in the registered extensions, use the format specified there
+            ext = pil_extensions[ext]
+        else:
+            # Default to PNG if unsupported
+            ext = "PNG"
+
         return (filename, ext)
 
     # Unsupported type
     return False
-
 

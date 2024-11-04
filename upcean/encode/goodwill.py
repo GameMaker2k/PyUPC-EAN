@@ -263,7 +263,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
                     {'lossless': True, 'quality': 100, 'method': 6})
             elif(outfileext == "JPEG"):
                 exargdict.update(
-                    {'quality': 95, 'optimize': True, 'progressive': True})
+                    {'quality': 100, 'optimize': True, 'progressive': True})
             elif(outfileext == "PNG"):
                 exargdict.update({'optimize': True, 'compress_level': 9})
             else:
@@ -316,7 +316,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
                     {'lossless': True, 'quality': 100, 'method': 6})
             elif(outfileext == "JPEG"):
                 exargdict.update(
-                    {'quality': 95, 'optimize': True, 'progressive': True})
+                    {'quality': 100, 'optimize': True, 'progressive': True})
             elif(outfileext == "PNG"):
                 exargdict.update({'optimize': True, 'compress_level': 9})
             else:
@@ -366,7 +366,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
         elif(outfileext == "JPEG"):
             exargdict.update(
-                {'quality': 95, 'optimize': True, 'progressive': True})
+                {'quality': 100, 'optimize': True, 'progressive': True})
         elif(outfileext == "PNG"):
             exargdict.update({'optimize': True, 'compress_level': 9})
             if(pilsupport):

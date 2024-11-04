@@ -211,40 +211,40 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, line_width=1):
 
     return True
 
+# Define valid PyCairo output formats
+cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS"}
+
 def get_save_filename(outfile):
     """
     Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files. Returns a tuple (filename, EXTENSION)
+    file extension for saving files in PyCairo-compatible formats. Returns a tuple (filename, EXTENSION)
     or the original `outfile` if it's of type None, bool, or a file object.
-    Returns False for unsupported input types.
+    Defaults to "PNG" if the extension is not supported by PyCairo.
 
     Parameters:
         outfile (str, tuple, list, None, bool, file): The output file specification.
 
     Returns:
-        tuple or original `outfile` or False
+        tuple or original `outfile` or False if invalid.
     """
     # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
     # Handle file objects directly
-    if isinstance(outfile, file):
+    if isinstance(outfile, file):  # For Python 2 compatibility, this works as `file` is defined in the import
         return outfile
 
     # Handle string types (basestring covers both str and unicode in Python 2)
-    if isinstance(outfile, basestring):
+    if isinstance(outfile, (str, unicode) if 'unicode' in globals() else str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
             return (outfile, None)
 
-        # Initialize extension
-        outfileext = None
-
         # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
         if ext:
-            # Match extension pattern
+            # Match extension pattern and extract if valid
             ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
@@ -254,17 +254,39 @@ def get_save_filename(outfile):
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
+            else:
+                outfileext = None
 
-        # Assign default extension if none found
+        # Default to "PNG" if no valid extension was found
         if not outfileext:
             outfileext = "PNG"
 
-        # Handle specific extensions
-        valid_extensions = {"SVG", "PDF", "PS", "EPS"}
-        if outfileext not in valid_extensions:
-            outfileext = "PNG"
+        # Check if extension is supported by PyCairo
+        if outfileext not in cairo_valid_extensions:
+            outfileext = "PNG"  # Default to PNG if unsupported by PyCairo
 
         return (outfile, outfileext)
+
+    # Handle tuple or list types
+    if isinstance(outfile, (tuple, list)):
+        if len(outfile) != 2:
+            # Invalid tuple/list length
+            return False
+        filename, ext = outfile
+        if not isinstance(filename, (str, unicode) if 'unicode' in globals() else str) or \
+           not isinstance(ext, (str, unicode) if 'unicode' in globals() else str):
+            # Invalid types within tuple/list
+            return False
+
+        ext = ext.strip().upper()
+        # Check if extension is supported by PyCairo
+        if ext not in cairo_valid_extensions:
+            ext = "PNG"  # Default to PNG if unsupported by PyCairo
+
+        return (filename, ext)
+
+    # Unsupported type
+    return False
 
     # Handle tuple or list types
     if isinstance(outfile, (tuple, list)):
