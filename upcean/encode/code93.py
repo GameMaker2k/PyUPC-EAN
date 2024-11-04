@@ -359,88 +359,86 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, barheight=(48, 
                 exargdict.update({'pnginfo': info})
         else:
             exargdict = {'comment': "code93; "+upc}
-        try:
-            if(svgwritesupport and imageoutlib == "svgwrite"):
-                    upc_preimg.close()
-                    upc_img.saveas(outfile, True)
-            if(pilsupport and imageoutlib == "pillow"):
-                if outfileext == "XPM":
-                    # XPM supports only palette-based images ("P" mode)
-                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
-                elif outfileext == "XBM":
-                    # XBM supports only 1-bit images ("1" mode)
-                    upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
-                elif outfileext == "PBM":
-                    # PBM (Portable Bitmap) supports only monochrome (1-bit) images ("1" mode)
-                    upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
-                elif outfileext == "PGM":
-                    # PGM (Portable Graymap) supports only grayscale images ("L" mode)
-                    upc_preimg.convert(mode="L").save(outfile, outfileext, **exargdict)
-                elif outfileext == "GIF":
-                    # GIF supports only palette-based images with a maximum of 256 colors ("P" mode)
-                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
-                elif outfileext == "ICO":
-                    # ICO generally supports "L", "P", and "RGBA" but not direct "RGB".
-                    # Convert to RGBA for transparency support if available, or "P" otherwise.
-                    if "A" in upc_preimg.getbands():  # Check if alpha channel is present
-                        upc_preimg.convert(mode="RGBA").save(outfile, outfileext, **exargdict)
-                    else:
-                        upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+                upc_preimg.close()
+                upc_img.saveas(outfile, True)
+        if(pilsupport and imageoutlib == "pillow"):
+            if outfileext == "XPM":
+                # XPM supports only palette-based images ("P" mode)
+                upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            elif outfileext == "XBM":
+                # XBM supports only 1-bit images ("1" mode)
+                upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+            elif outfileext == "PBM":
+                # PBM (Portable Bitmap) supports only monochrome (1-bit) images ("1" mode)
+                upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+            elif outfileext == "PGM":
+                # PGM (Portable Graymap) supports only grayscale images ("L" mode)
+                upc_preimg.convert(mode="L").save(outfile, outfileext, **exargdict)
+            elif outfileext == "GIF":
+                # GIF supports only palette-based images with a maximum of 256 colors ("P" mode)
+                upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            elif outfileext == "ICO":
+                # ICO generally supports "L", "P", and "RGBA" but not direct "RGB".
+                # Convert to RGBA for transparency support if available, or "P" otherwise.
+                if "A" in upc_preimg.getbands():  # Check if alpha channel is present
+                    upc_preimg.convert(mode="RGBA").save(outfile, outfileext, **exargdict)
                 else:
-                    # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
-                    if upc_preimg.mode == "RGBA":
-                        upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
-                    else:
-                        upc_preimg.save(outfile, outfileext, **exargdict)
-            if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-                x, y, width, height = upc_preimg.ink_extents()
-                if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    if(outfileext == "SVG" or imageoutlib == "cairosvg"):
-                        # Create an ImageSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.SVGSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
-                    elif(outfileext == "PDF"):
-                        # Create an ImageSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.PDFSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
-                    elif(outfileext == "PS" or outfileext == "EPS"):
-                        # Create an PDFSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.PSSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        if(outfileext == "EPS"):
-                            image_surface.set_eps(True)
-                        else:
-                            image_surface.set_eps(False)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
+                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            else:
+                # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
+                if upc_preimg.mode == "RGBA":
+                    upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
                 else:
+                    upc_preimg.save(outfile, outfileext, **exargdict)
+        if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+            x, y, width, height = upc_preimg.ink_extents()
+            if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
+                if(outfileext == "SVG" or imageoutlib == "cairosvg"):
                     # Create an ImageSurface with the exact dimensions of the recorded content
-                    image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
+                    image_surface = cairo.SVGSurface(outfile, int(width), int(height))
                     image_context = cairo.Context(image_surface)
                     # Transfer the content from the RecordingSurface to the ImageSurface
                     image_context.set_source_surface(upc_preimg, -x, -y)
                     image_context.paint()
                     image_surface.flush()
-                    # Save as PNG
-                    image_surface.write_to_png(outfile)
                     image_surface.finish()
-                    return True
-        except Exception as e:
-            return False
+                elif(outfileext == "PDF"):
+                    # Create an ImageSurface with the exact dimensions of the recorded content
+                    image_surface = cairo.PDFSurface(outfile, int(width), int(height))
+                    image_context = cairo.Context(image_surface)
+                    # Transfer the content from the RecordingSurface to the ImageSurface
+                    image_context.set_source_surface(upc_preimg, -x, -y)
+                    image_context.paint()
+                    image_surface.flush()
+                    image_surface.finish()
+                elif(outfileext == "PS" or outfileext == "EPS"):
+                    # Create an PDFSurface with the exact dimensions of the recorded content
+                    image_surface = cairo.PSSurface(outfile, int(width), int(height))
+                    image_context = cairo.Context(image_surface)
+                    # Transfer the content from the RecordingSurface to the ImageSurface
+                    image_context.set_source_surface(upc_preimg, -x, -y)
+                    if(outfileext == "EPS"):
+                        image_surface.set_eps(True)
+                    else:
+                        image_surface.set_eps(False)
+                    image_context.paint()
+                    image_surface.flush()
+                    image_surface.finish()
+            else:
+                # Create an ImageSurface with the exact dimensions of the recorded content
+                image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
+                image_context = cairo.Context(image_surface)
+                # Transfer the content from the RecordingSurface to the ImageSurface
+                image_context.set_source_surface(upc_preimg, -x, -y)
+                image_context.paint()
+                image_surface.flush()
+                # Save as PNG
+                image_surface.write_to_png(outfile)
+                image_surface.finish()
+                return True
     return True
+
 
 def create_code93extended_barcode(upc, outfile="./code93extended.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     upc = str(upc)
@@ -1274,85 +1272,83 @@ def create_code93extended_barcode(upc, outfile="./code93.png", resize=1, barheig
                 exargdict.update({'pnginfo': info})
         else:
             exargdict = {'comment': upc}
-        try:
-            if(svgwritesupport and imageoutlib == "svgwrite"):
-                    upc_preimg.close()
-                    upc_img.saveas(outfile, True)
-            if(pilsupport and imageoutlib == "pillow"):
-                if outfileext == "XPM":
-                    # XPM supports only palette-based images ("P" mode)
-                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
-                elif outfileext == "XBM":
-                    # XBM supports only 1-bit images ("1" mode)
-                    upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
-                elif outfileext == "PBM":
-                    # PBM (Portable Bitmap) supports only monochrome (1-bit) images ("1" mode)
-                    upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
-                elif outfileext == "PGM":
-                    # PGM (Portable Graymap) supports only grayscale images ("L" mode)
-                    upc_preimg.convert(mode="L").save(outfile, outfileext, **exargdict)
-                elif outfileext == "GIF":
-                    # GIF supports only palette-based images with a maximum of 256 colors ("P" mode)
-                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
-                elif outfileext == "ICO":
-                    # ICO generally supports "L", "P", and "RGBA" but not direct "RGB".
-                    # Convert to RGBA for transparency support if available, or "P" otherwise.
-                    if "A" in upc_preimg.getbands():  # Check if alpha channel is present
-                        upc_preimg.convert(mode="RGBA").save(outfile, outfileext, **exargdict)
-                    else:
-                        upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+                upc_preimg.close()
+                upc_img.saveas(outfile, True)
+        if(pilsupport and imageoutlib == "pillow"):
+            if outfileext == "XPM":
+                # XPM supports only palette-based images ("P" mode)
+                upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            elif outfileext == "XBM":
+                # XBM supports only 1-bit images ("1" mode)
+                upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+            elif outfileext == "PBM":
+                # PBM (Portable Bitmap) supports only monochrome (1-bit) images ("1" mode)
+                upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+            elif outfileext == "PGM":
+                # PGM (Portable Graymap) supports only grayscale images ("L" mode)
+                upc_preimg.convert(mode="L").save(outfile, outfileext, **exargdict)
+            elif outfileext == "GIF":
+                # GIF supports only palette-based images with a maximum of 256 colors ("P" mode)
+                upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            elif outfileext == "ICO":
+                # ICO generally supports "L", "P", and "RGBA" but not direct "RGB".
+                # Convert to RGBA for transparency support if available, or "P" otherwise.
+                if "A" in upc_preimg.getbands():  # Check if alpha channel is present
+                    upc_preimg.convert(mode="RGBA").save(outfile, outfileext, **exargdict)
                 else:
-                    # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
-                    if upc_preimg.mode == "RGBA":
-                        upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
-                    else:
-                        upc_preimg.save(outfile, outfileext, **exargdict)
-            if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-                x, y, width, height = upc_preimg.ink_extents()
-                if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    if(outfileext == "SVG" or imageoutlib == "cairosvg"):
-                        # Create an ImageSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.SVGSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
-                    elif(outfileext == "PDF"):
-                        # Create an ImageSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.PDFSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
-                    elif(outfileext == "PS" or outfileext == "EPS"):
-                        # Create an PDFSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.PSSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        if(outfileext == "EPS"):
-                            image_surface.set_eps(True)
-                        else:
-                            image_surface.set_eps(False)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
+                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            else:
+                # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
+                if upc_preimg.mode == "RGBA":
+                    upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
                 else:
+                    upc_preimg.save(outfile, outfileext, **exargdict)
+        if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+            x, y, width, height = upc_preimg.ink_extents()
+            if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
+                if(outfileext == "SVG" or imageoutlib == "cairosvg"):
                     # Create an ImageSurface with the exact dimensions of the recorded content
-                    image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
+                    image_surface = cairo.SVGSurface(outfile, int(width), int(height))
                     image_context = cairo.Context(image_surface)
                     # Transfer the content from the RecordingSurface to the ImageSurface
                     image_context.set_source_surface(upc_preimg, -x, -y)
                     image_context.paint()
                     image_surface.flush()
-                    # Save as PNG
-                    image_surface.write_to_png(outfile)
                     image_surface.finish()
-                    return True
-        except Exception as e:
-            return False
+                elif(outfileext == "PDF"):
+                    # Create an ImageSurface with the exact dimensions of the recorded content
+                    image_surface = cairo.PDFSurface(outfile, int(width), int(height))
+                    image_context = cairo.Context(image_surface)
+                    # Transfer the content from the RecordingSurface to the ImageSurface
+                    image_context.set_source_surface(upc_preimg, -x, -y)
+                    image_context.paint()
+                    image_surface.flush()
+                    image_surface.finish()
+                elif(outfileext == "PS" or outfileext == "EPS"):
+                    # Create an PDFSurface with the exact dimensions of the recorded content
+                    image_surface = cairo.PSSurface(outfile, int(width), int(height))
+                    image_context = cairo.Context(image_surface)
+                    # Transfer the content from the RecordingSurface to the ImageSurface
+                    image_context.set_source_surface(upc_preimg, -x, -y)
+                    if(outfileext == "EPS"):
+                        image_surface.set_eps(True)
+                    else:
+                        image_surface.set_eps(False)
+                    image_context.paint()
+                    image_surface.flush()
+                    image_surface.finish()
+            else:
+                # Create an ImageSurface with the exact dimensions of the recorded content
+                image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
+                image_context = cairo.Context(image_surface)
+                # Transfer the content from the RecordingSurface to the ImageSurface
+                image_context.set_source_surface(upc_preimg, -x, -y)
+                image_context.paint()
+                image_surface.flush()
+                # Save as PNG
+                image_surface.write_to_png(outfile)
+                image_surface.finish()
+                return True
     return True
+
