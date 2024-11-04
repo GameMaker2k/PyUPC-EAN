@@ -94,7 +94,9 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
                     (len(re.findall("6c", upc)) * 2)) * barwidth[0]
     drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((29 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'code': []}
-    LineSize = (barheight[1] + shiftxy[1]) * int(resize) if hidetext else barheight[0]
+    LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+    if(hidetext):
+        LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     start_barcode = [0] * 14
     LineStart = shiftxy[0]
     BarNum = 0
