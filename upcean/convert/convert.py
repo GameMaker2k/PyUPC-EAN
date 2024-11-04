@@ -264,6 +264,16 @@ def hex_to_decimal(hex_string):
     else:
         raise ValueError("Hex '{}' not found in the mapping.".format(hex_string))
 
+def decimal_to_hex(decimal_string):
+    """
+    Convert a decimal string (three-digit decimal) to a two-digit hex string.
+    """
+    decimal_value = int(decimal_string)
+    if decimal_value in code128_digit_to_hex:
+        return code128_digit_to_hex[decimal_value]
+    else:
+        raise ValueError("Decimal '{}' not found in the mapping.".format(decimal_string))
+
 def convert_first_number_to_hex_and_remove_last_odd_digit(s):
     # Check if the last character is a digit and if it is odd
     if s and s[-1].isdigit() and int(s[-1]) % 2 == 1:
