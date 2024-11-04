@@ -274,11 +274,11 @@ def decimal_to_hex(decimal_string):
     else:
         raise ValueError("Decimal '{}' not found in the mapping.".format(decimal_string))
 
-def convert_first_number_to_hex_and_remove_last_odd_digit(s):
+def convert_first_number_to_hex_and_append_one_if_odd_length(s):
     # Check if the last character is a digit and if it is odd
     if s and s[-1].isdigit() and int(s[-1]) % 2 == 1:
-        # Separate the last odd digit and add 1 to it
-        last_digit = str(int(s[-1]) + 1)
+        # Separate the last odd digit and set it for appending '1' later
+        last_digit = s[-1]
         remaining_string = s[:-1]
     else:
         # If the last digit is not odd, keep the original string and no last digit
@@ -289,12 +289,16 @@ def convert_first_number_to_hex_and_remove_last_odd_digit(s):
     if match:
         # Extract the numeric part
         num_str = match.group(0)
-        # Convert to hexadecimal with pairs, ensuring each part is two characters long
+        # Convert to hexadecimal in pairs, ensuring each part is two characters long
         hex_value = ''.join(format(int(num_str[i:i+2]), '02x') for i in range(0, len(num_str), 2))
         
         # Preserve the original leading zeros
         leading_zeros = len(num_str) - len(num_str.lstrip('0'))
         hex_value_with_zeros = '0' * (leading_zeros * 2) + hex_value
+        
+        # If the length of the numeric part is odd, append '1' at the end
+        if len(num_str) % 2 == 1:
+            hex_value_with_zeros += '1'
         
         # Replace the original numeric part with the hex representation
         remaining_string = hex_value_with_zeros + remaining_string[len(num_str):]
@@ -311,28 +315,10 @@ def convert_numbers_to_hex_code128(upc, reverse=False):
         upc = upc[::-1]
     
     # Convert and format the string as per Code 128 requirements
-    digchck = convert_first_number_to_hex_and_remove_last_odd_digit(upc)
+    digchck = convert_first_number_to_hex_and_append_one_if_odd_length(upc)
     outstr = "69" + digchck[0]
     if digchck[1] is not None:
-        # Directly add the adjusted last odd digit (already incremented by 1)
-        outstr = outstr + "651" + digchck[1]
-    
-    return outstr
-
-def convert_numbers_to_hex_code128(upc, reverse=False):
-    upc = str(upc)
-    if len(upc) < 4:
-        return False
-    if not upc.isdigit():
-        return False
-    if reverse:
-        upc = upc[::-1]
-    
-    # Convert and format the string as per Code 128 requirements
-    digchck = convert_first_number_to_hex_and_remove_last_odd_digit(upc)
-    outstr = "69" + digchck[0]
-    if digchck[1] is not None:
-        # Directly add the adjusted last odd digit (already incremented by 1)
+        # Directly add the last odd digit if needed
         outstr = outstr + "651" + digchck[1]
     
     return outstr
