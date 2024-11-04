@@ -1004,7 +1004,7 @@ def convert_text_to_hex_gs1_128(data, reverse=False):
     return ''.join(hex_codes)
 
 
-def convert_text_to_hex_gs1_128_with_checksum(data, hidecs=True, reverse=False, stopcode='6a'):
+def convert_text_to_hex_gs1_128_with_checksum(data, hidecs=True, reverse=False, stopcode='6c'):
     if reverse:
         stopcode = '6b'
     code128_hex = convert_text_to_hex_gs1_128(data, reverse)
