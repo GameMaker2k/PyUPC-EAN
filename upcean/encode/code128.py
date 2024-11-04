@@ -607,11 +607,16 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
+        if(outfileext == "HEIC"):
+            exargdict.update({'lossless': True, 'quality': 100})
         elif(outfileext == "JPEG"):
             exargdict.update(
                 {'quality': 100, 'optimize': True, 'progressive': True})
+        elif(outfileext == "GIF"):
+            exargdict.update(
+                {'optimize': True})
         elif(outfileext == "PNG"):
-            exargdict.update({'optimize': True, 'compress_level': 9})
+            exargdict.update({'optimize': True, 'compress_level': 9, 'quality': 100})
             if(pilsupport):
                 # Add a comment to the image
                 info = PngImagePlugin.PngInfo()
@@ -1183,11 +1188,16 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, barheight=
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
+        if(outfileext == "HEIC"):
+            exargdict.update({'lossless': True, 'quality': 100})
         elif(outfileext == "JPEG"):
             exargdict.update(
                 {'quality': 100, 'optimize': True, 'progressive': True})
+        elif(outfileext == "GIF"):
+            exargdict.update(
+                {'optimize': True})
         elif(outfileext == "PNG"):
-            exargdict.update({'optimize': True, 'compress_level': 9})
+            exargdict.update({'optimize': True, 'compress_level': 9, 'quality': 100})
             if(pilsupport):
                 # Add a comment to the image
                 info = PngImagePlugin.PngInfo()

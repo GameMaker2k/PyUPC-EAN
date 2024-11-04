@@ -356,11 +356,16 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
+        if(outfileext == "HEIC"):
+            exargdict.update({'lossless': True, 'quality': 100})
         elif(outfileext == "JPEG"):
             exargdict.update(
                 {'quality': 100, 'optimize': True, 'progressive': True})
+        elif(outfileext == "GIF"):
+            exargdict.update(
+                {'optimize': True})
         elif(outfileext == "PNG"):
-            exargdict.update({'optimize': True, 'compress_level': 9})
+            exargdict.update({'optimize': True, 'compress_level': 9, 'quality': 100})
             if(pilsupport):
                 # Add a comment to the image
                 info = PngImagePlugin.PngInfo()

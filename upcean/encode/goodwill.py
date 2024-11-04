@@ -364,11 +364,16 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
     if(outfile != "-" and outfile != "" and outfile != " "):
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
+        if(outfileext == "HEIC"):
+            exargdict.update({'lossless': True, 'quality': 100})
         elif(outfileext == "JPEG"):
             exargdict.update(
                 {'quality': 100, 'optimize': True, 'progressive': True})
+        elif(outfileext == "GIF"):
+            exargdict.update(
+                {'optimize': True})
         elif(outfileext == "PNG"):
-            exargdict.update({'optimize': True, 'compress_level': 9})
+            exargdict.update({'optimize': True, 'compress_level': 9, 'quality': 100})
             if(pilsupport):
                 # Add a comment to the image
                 info = PngImagePlugin.PngInfo()
