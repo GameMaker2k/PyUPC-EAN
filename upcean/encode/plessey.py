@@ -34,6 +34,8 @@ cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
 if(pilsupport or pillowsupport):
     import upcean.encode.prepil
+    from PIL import PngImagePlugin
+
 if(cairosupport):
     import upcean.encode.precairo
 if(svgwritesupport):
@@ -259,7 +261,7 @@ def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, barheight=(48
     imgout = draw_plessey_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    exargdict = {'comment': upc}
+    exargdict = {'comment': "plessey; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
     else:
@@ -270,21 +272,46 @@ def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, barheight=(48
                 {'quality': 95, 'optimize': True, 'progressive': True})
         elif(outfileext == "PNG"):
             exargdict.update({'optimize': True, 'compress_level': 9})
+            if(pilsupport):
+                # Add a comment to the image
+                info = PngImagePlugin.PngInfo()
+                info.add_text("Comment", "plessey; "+upc)
+                exargdict.update({'pnginfo': info})
         else:
-            exargdict = {'comment': upc}
+            exargdict = {'comment': "plessey; "+upc}
         try:
             if(svgwritesupport and imageoutlib == "svgwrite"):
                     upc_preimg.close()
                     upc_img.saveas(outfile, True)
             if(pilsupport and imageoutlib == "pillow"):
-                if(outfileext == "XBM"):
-                    with open(outfile, 'wb+') as f:
-                        f.write(upc_preimg.get_data().tobytes())
-                elif(outfileext == "XPM"):
-                    upc_preimg.convert(mode="P").save(
-                        outfile, outfileext, **exargdict)
+                if outfileext == "XPM":
+                    # XPM supports only palette-based images ("P" mode)
+                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+                elif outfileext == "XBM":
+                    # XBM supports only 1-bit images ("1" mode)
+                    upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+                elif outfileext == "PBM":
+                    # PBM (Portable Bitmap) supports only monochrome (1-bit) images ("1" mode)
+                    upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+                elif outfileext == "PGM":
+                    # PGM (Portable Graymap) supports only grayscale images ("L" mode)
+                    upc_preimg.convert(mode="L").save(outfile, outfileext, **exargdict)
+                elif outfileext == "GIF":
+                    # GIF supports only palette-based images with a maximum of 256 colors ("P" mode)
+                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+                elif outfileext == "ICO":
+                    # ICO generally supports "L", "P", and "RGBA" but not direct "RGB".
+                    # Convert to RGBA for transparency support if available, or "P" otherwise.
+                    if "A" in upc_preimg.getbands():  # Check if alpha channel is present
+                        upc_preimg.convert(mode="RGBA").save(outfile, outfileext, **exargdict)
+                    else:
+                        upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
                 else:
-                    upc_preimg.save(outfile, outfileext, **exargdict)
+                    # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
+                    if upc_preimg.mode == "RGBA":
+                        upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
+                    else:
+                        upc_preimg.save(outfile, outfileext, **exargdict)
             if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
                 x, y, width, height = upc_preimg.ink_extents()
                 if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):

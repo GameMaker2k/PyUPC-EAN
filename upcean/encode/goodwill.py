@@ -38,6 +38,8 @@ cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
 if(pilsupport or pillowsupport):
     import upcean.encode.prepil
+    from PIL import PngImagePlugin
+
 if(cairosupport):
     import upcean.encode.precairo
 if(svgwritesupport):
@@ -247,7 +249,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
             new_upc_img.set_source_surface(upc_sup_img, 113, 0)
             new_upc_img.paint()
             del(upc_sup_img)
-    exargdict = {'comment': upc}
+    exargdict = {'comment': "upca; goodwill; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         if(pilsupport and imageoutlib == "pillow"):
             return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
@@ -265,7 +267,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
             elif(outfileext == "PNG"):
                 exargdict.update({'optimize': True, 'compress_level': 9})
             else:
-                exargdict = {'comment': upc}
+                exargdict = {'comment': "upca; goodwill; "+upc}
             try:
                 if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
@@ -367,6 +369,11 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
                 {'quality': 95, 'optimize': True, 'progressive': True})
         elif(outfileext == "PNG"):
             exargdict.update({'optimize': True, 'compress_level': 9})
+            if(pilsupport):
+                # Add a comment to the image
+                info = PngImagePlugin.PngInfo()
+                info.add_text("Comment", upc)
+                exargdict.update({'pnginfo': info})
         else:
             exargdict = {'comment': upc}
         try:
