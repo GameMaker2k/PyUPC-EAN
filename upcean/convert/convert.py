@@ -239,29 +239,21 @@ def convert_barcode_from_itf14_to_ean8(upc):
 // Source: http://en.wikipedia.org/wiki/Code_128
 '''
 
-# Provided mappings
-hextoaltdigit = {
-    '00': 32, '01': 33, '02': 34, '03': 35, '04': 36, '05': 37, '06': 38,
-    '07': 39, '08': 40, '09': 41, '0a': 42, '0b': 43, '0c': 44, '0d': 45,
-    '0e': 46, '0f': 47, '10': 48, '11': 49, '12': 50, '13': 51, '14': 52,
-    '15': 53, '16': 54, '17': 55, '18': 56, '19': 57, '1a': 58, '1b': 59,
-    '1c': 60, '1d': 61, '1e': 62, '1f': 63, '20': 64, '21': 65, '22': 66,
-    '23': 67, '24': 68, '25': 69, '26': 70, '27': 71, '28': 72, '29': 73,
-    '2a': 74, '2b': 75, '2c': 76, '2d': 77, '2e': 78, '2f': 79, '30': 80,
-    '31': 81, '32': 82, '33': 83, '34': 84, '35': 85, '36': 86, '37': 87,
-    '38': 88, '39': 89, '3a': 90, '3b': 91, '3c': 92, '3d': 93, '3e': 94,
-    '3f': 95, '40': 96, '41': 97, '42': 98, '43': 99, '44': 100, '45': 101,
-    '46': 102, '47': 103, '48': 104, '49': 105, '4a': 106, '4b': 107,
-    '4c': 108, '4d': 109, '4e': 110, '4f': 111, '50': 112, '51': 113,
-    '52': 114, '53': 115, '54': 116, '55': 117, '56': 118, '57': 119,
-    '58': 120, '59': 121, '5a': 122, '5b': 123, '5c': 124, '5d': 125,
-    '5e': 126, '5f': 195, '60': 196, '61': 197, '62': 198, '63': 199,
-    '64': 200, '65': 201, '66': 202, '67': 203, '68': 204, '69': 205,
-    '6a': 127, '6b': 128, '6c': 129
-}
+# Define the range for hex values from "00" to "6d" and create the mappings dynamically
 
-# Reverse mapping for decimal to hex based on hextoaltdigit
-altdigittohex = {v: k for k, v in hextoaltdigit.items()}
+# Initialize mappings
+hextoaltdigit = {}
+altdigittohex = {}
+
+# Starting decimal value
+current_decimal = 0
+
+# Populate mappings dynamically
+for i in range(int("00", 16), int("6d", 16) + 1):
+    hex_value = format(i, '02x')  # Convert to two-digit hex string
+    hextoaltdigit[hex_value] = current_decimal
+    altdigittohex[current_decimal] = hex_value
+    current_decimal += 1
 
 def hex_to_decimal(hex_string):
     """
