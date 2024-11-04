@@ -242,8 +242,8 @@ def convert_barcode_from_itf14_to_ean8(upc):
 # Define the range for hex values from "00" to "6d" and create the mappings dynamically
 
 # Initialize mappings
-hextoaltdigit = {}
-altdigittohex = {}
+code128_hex_to_digit = {}
+code128_digit_to_hex = {}
 
 # Starting decimal value
 current_decimal = 0
@@ -251,16 +251,16 @@ current_decimal = 0
 # Populate mappings dynamically
 for i in range(int("00", 16), int("6d", 16) + 1):
     hex_value = format(i, '02x')  # Convert to two-digit hex string
-    hextoaltdigit[hex_value] = current_decimal
-    altdigittohex[current_decimal] = hex_value
+    code128_hex_to_digit[hex_value] = current_decimal
+    code128_digit_to_hex[current_decimal] = hex_value
     current_decimal += 1
 
 def hex_to_decimal(hex_string):
     """
     Convert a hexadecimal string (two-digit hex) to a three-digit decimal string.
     """
-    if hex_string in hextoaltdigit:
-        return str(hextoaltdigit[hex_string]).zfill(3)
+    if hex_string in code128_hex_to_digit:
+        return str(code128_hex_to_digit[hex_string]).zfill(3)
     else:
         raise ValueError("Hex '{}' not found in the mapping.".format(hex_string))
 
@@ -269,8 +269,8 @@ def decimal_to_hex(decimal_string):
     Convert a decimal string (three-digit decimal) to a two-digit hex string.
     """
     decimal_value = int(decimal_string)
-    if decimal_value in altdigittohex:
-        return altdigittohex[decimal_value]
+    if decimal_value in code128_digit_to_hex:
+        return code128_digit_to_hex[decimal_value]
     else:
         raise ValueError("Decimal '{}' not found in the mapping.".format(decimal_string))
 
