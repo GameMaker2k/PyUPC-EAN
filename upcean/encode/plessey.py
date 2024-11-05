@@ -45,7 +45,6 @@ def encode_plessey_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
     hidetext = hideinfo[2]
-    imageoutlib = imageoutlib.lower()
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
@@ -188,7 +187,7 @@ def encode_plessey_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
-    return [upc_img, upc_preimg, upc_array]
+    return [upc_img, upc_preimg, imageoutlib, upc_array]
 
 
 def draw_plessey_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -226,7 +225,7 @@ def draw_plessey_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((48 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
     imgout = encode_plessey_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, imgout[2]]
+    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
 
 def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -266,7 +265,7 @@ def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, barheight=(48
     upc_preimg = imgout[1]
     exargdict = {'comment': "plessey; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imgout[2]]
+        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})

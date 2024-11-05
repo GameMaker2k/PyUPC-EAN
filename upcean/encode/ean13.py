@@ -47,7 +47,6 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
     hidetext = hideinfo[2]
-    imageoutlib = imageoutlib.lower()
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
@@ -361,7 +360,7 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         upcean.encode.ean2.encode_ean2_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
     if(supplement is not None and len(supplement) == 5):
         upcean.encode.ean5.encode_ean5_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, upc_array]
+    return [upc_img, upc_preimg, imageoutlib, upc_array]
 
 
 def draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -412,7 +411,7 @@ def draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barco
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((115 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
     imgout = encode_ean13_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, imgout[2]]
+    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
 
 def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -452,7 +451,7 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54
     upc_preimg = imgout[1]
     exargdict = {'comment': "ean13; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imgout[2]]
+        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})

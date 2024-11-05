@@ -46,7 +46,6 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
     hidecd = hideinfo[1]
     hidetext = hideinfo[2]
     threewidebar = True
-    imageoutlib = imageoutlib.lower()
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
@@ -247,7 +246,7 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
-    return [upc_img, upc_preimg, upc_array]
+    return [upc_img, upc_preimg, imageoutlib, upc_array]
 
 
 def draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -288,7 +287,7 @@ def draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barco
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((44 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize)))
         upc_preimg.close()
     imgout = encode_itf14_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, imgout[2]]
+    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
 
 def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -328,7 +327,7 @@ def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54
     upc_preimg = imgout[1]
     exargdict = {'comment': "itf14; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imgout[2]]
+        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
