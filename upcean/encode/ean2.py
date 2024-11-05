@@ -190,7 +190,7 @@ def encode_ean2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         upc_preimg.flush()
     return [upc_img, upc_preimg, imageoutlib, upc_array]
 
-def draw_ean2supplement_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def draw_ean2sup_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
@@ -223,7 +223,7 @@ def draw_ean2supplement_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 
     imgout = encode_ean2_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib, imgout[3]]
 
-def create_ean2supplement_barcode(upc, outfile="./ean2.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def create_ean2sup_barcode(upc, outfile="./ean2.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "cairo"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
@@ -256,7 +256,7 @@ def create_ean2supplement_barcode(upc, outfile="./ean2.png", resize=1, barheight
                 imageoutlib = "cairosvg"
             if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
                 imageoutlib = "cairo"
-    imgout = draw_ean2supplement_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    imgout = draw_ean2sup_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
     exargdict = {'comment': "ean2; "+upc}
@@ -361,11 +361,11 @@ def create_ean2supplement_barcode(upc, outfile="./ean2.png", resize=1, barheight
                 return True
     return True
 
-def draw_upc2supplement_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
-    return draw_ean2supplement_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+def draw_upc2sup_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return draw_ean2sup_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
-def create_upc2supplement_barcode(upc, outfile="./upc2.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
-    return create_ean2supplement_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+def create_upc2sup_barcode(upc, outfile="./upc2.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean2sup_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 def draw_ean2_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     barheightadd = barheight[1]
