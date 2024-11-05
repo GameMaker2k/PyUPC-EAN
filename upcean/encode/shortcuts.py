@@ -61,7 +61,7 @@ def validate_encode_barcode(bctype, inimage, upc, resize=1, shiftxy=(0, 0), barh
         if(not hasattr(upcean.encode.barcode, "validate_encode_"+bctype+"_barcode") or not callable(getattr(upcean.encode.barcode, "validate_encode_"+bctype+"_barcode"))):
             return False
         return False
-    if(bctype != "upca" and bctype != "upcaean" and bctype != "goodwill" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
         return encode_barcode(bctype, inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
@@ -74,7 +74,7 @@ def validate_draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1
         if(not hasattr(upcean.encode.barcode, "validate_draw_"+bctype+"_barcode") or not callable(getattr(upcean.encode.barcode, "validate_draw_"+bctype+"_barcode"))):
             return False
         return False
-    if(bctype != "upca" and bctype != "upcaean" and bctype != "goodwill" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
         return draw_barcode(bctype, upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
@@ -87,7 +87,7 @@ def validate_create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barh
         if(not hasattr(upcean.encode.barcode, "validate_create_"+bctype+"_barcode") or not callable(getattr(upcean.encode.barcode, "validate_create_"+bctype+"_barcode"))):
             return False
         return False
-    if(bctype != "upca" and bctype != "upcaean" and bctype != "goodwill" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
         return create_barcode(bctype, upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
@@ -100,7 +100,7 @@ def fix_encode_barcode(bctype, inimage, upc, resize=1, shiftxy=(0, 0), barheight
         if(not hasattr(upcean.encode.barcode, "fix_encode_"+bctype+"_barcode") or not callable(getattr(upcean.encode.barcode, "fix_encode_"+bctype+"_barcode"))):
             return False
         return False
-    if(bctype != "upca" and bctype != "upcaean" and bctype != "goodwill" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
         return encode_barcode(bctype, inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
@@ -113,7 +113,7 @@ def fix_draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1),
         if(not hasattr(upcean.encode.barcode, "fix_draw_"+bctype+"_barcode") or not callable(getattr(upcean.encode.barcode, "fix_draw_"+bctype+"_barcode"))):
             return False
         return False
-    if(bctype != "upca" and bctype != "upcaean" and bctype != "goodwill" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
         return draw_barcode(bctype, upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
@@ -126,5 +126,5 @@ def fix_create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight
         if(not hasattr(upcean.encode.barcode, "fix_create_"+bctype+"_barcode") or not callable(getattr(upcean.encode.barcode, "fix_create_"+bctype+"_barcode"))):
             return False
         return False
-    if(bctype != "upca" and bctype != "upcaean" and bctype != "goodwill" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
         return create_barcode(bctype, upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)

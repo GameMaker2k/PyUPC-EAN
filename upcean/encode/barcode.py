@@ -112,8 +112,6 @@ def validate_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, bar
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    if(not upcean.getprefix.getprefix.get_upcaean_upca_barcode_info(upc)):
-        return False
     return create_upcaean_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
@@ -122,8 +120,6 @@ def validate_draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    if(not upcean.getprefix.getprefix.get_upcaean_upca_barcode_info(upc)):
-        return False
     return draw_upcaean_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
@@ -131,8 +127,6 @@ def validate_encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barh
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
-        return False
-    if(not upcean.getprefix.getprefix.get_upcaean_upca_barcode_info(upc)):
         return False
     return encode_upcaean_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
@@ -304,8 +298,6 @@ def fix_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, barheigh
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    if(not upcean.getprefix.getprefix.get_upcaean_upca_barcode_info(upc)):
-        return False
     return create_upcaean_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
@@ -313,8 +305,6 @@ def fix_draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1),
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    if(not upcean.getprefix.getprefix.get_upcaean_upca_barcode_info(upc)):
-        return False
     return draw_upcaean_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
@@ -322,8 +312,6 @@ def fix_encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    if(not upcean.getprefix.getprefix.get_upcaean_upca_barcode_info(upc)):
-        return False
     return encode_upcaean_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
