@@ -182,7 +182,7 @@ def validate_create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
         return False
-    return create_upce_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return create_ean8_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -190,7 +190,7 @@ def validate_draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
         return False
-    return draw_upce_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_ean8_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
@@ -198,7 +198,7 @@ def validate_encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheig
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
         return False
-    return encode_upce_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
+    return encode_ean8_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
 def validate_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
