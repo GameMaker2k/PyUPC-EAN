@@ -12,7 +12,7 @@
     Copyright 2011-2023 Game Maker 2k
     Copyright 2011-2023 Kazuki Przyborowski
 
-    $FileInfo: svg_functions.py - Last Update: 04/27/2024 Ver. 1.0.0 - Author: ChatGPT $
+    $FileInfo: presvgwrite.py - Last Update: 04/27/2024 Ver. 1.0.0 - Author: ChatGPT $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
@@ -227,7 +227,6 @@ def drawColorText(dwg, size, x, y, text, color, ftype="ocrb"):
         font_family = "OCR-A"
     else:
         font_family = "Monospace"
-    font_family = "Monospace"
     # Create and add the text to the drawing
     text_element = dwg.text(
         text,

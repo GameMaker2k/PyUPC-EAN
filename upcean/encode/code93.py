@@ -33,13 +33,12 @@ pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
 if(pilsupport or pillowsupport):
-    import upcean.encode.prepil
+    import upcean.encode.predraw.prepil
     from PIL import PngImagePlugin
-
 if(cairosupport):
-    import upcean.encode.precairo
+    import upcean.encode.predraw.precairo
 if(svgwritesupport):
-    import upcean.encode.presvg
+    import upcean.encode.predraw.presvgwrite
 
 def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     upc = str(upc)
@@ -249,6 +248,11 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     if(not hidetext):
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+            try:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+            except OSError:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
         NumTxtZero = 0
         LineTxtStart = 18
         while (NumTxtZero < len(upc_matches)):
@@ -297,6 +301,7 @@ def draw_code93_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
     elif(svgwritesupport and imageoutlib=="svgwrite"):
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((37 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
+        upc_preimg.close()
     imgout = encode_code93_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
 
@@ -360,7 +365,6 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, barheight=(48, 
         else:
             exargdict = {'comment': "code93; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
-                upc_preimg.close()
                 upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):
             if outfileext == "XPM":
@@ -764,6 +768,11 @@ def create_code93extended_barcode(upc, outfile="./code93extended.png", resize=1,
     code93extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '$': "$", '%': "%", '/F': "&", '/G': "'", '/H': "(", '/I': "", '/J': "*", '+': "+", '/L': ",", '-': "-", '.': ".", '/': "/", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?",
                       '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
     if(not hidetext):
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+            try:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+            except OSError:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
         NumTxtZero = 0
         LineTxtStart = 18
         while (NumTxtZero < len(upc_matches)):
@@ -1154,6 +1163,11 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     code93extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '$': "$", '%': "%", '/F': "&", '/G': "'", '/H': "(", '/I': "", '/J': "*", '+': "+", '/L': ",", '-': "-", '.': ".", '/': "/", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?",
                       '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
     if(not hidetext):
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+            try:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+            except OSError:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
         NumTxtZero = 0
         LineTxtStart = 18
         while (NumTxtZero < len(upc_matches)):
@@ -1210,6 +1224,7 @@ def draw_code93extended_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 
     elif(svgwritesupport and imageoutlib=="svgwrite"):
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((37 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
+        upc_preimg.close()
     imgout = encode_code93extended_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
 
@@ -1273,7 +1288,6 @@ def create_code93extended_barcode(upc, outfile="./code93.png", resize=1, barheig
         else:
             exargdict = {'comment': upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
-                upc_preimg.close()
                 upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):
             if outfileext == "XPM":

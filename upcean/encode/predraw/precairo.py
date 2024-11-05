@@ -152,7 +152,18 @@ def drawText(ctx, size, x, y, text, ftype="ocrb"):
     """
     text = str(text)
     point1 = snapCoords(x, y)
-    ctx.select_font_face("Monospace")  # You can change the font face as required
+    # Create a font face object
+    if(ftype == "ocra"):
+        try:
+            font = cairo.ToyFontFace(fontpathocra)
+        except OSError:
+            font = cairo.ToyFontFace(fontpathocraalt)
+    if(ftype == "ocrb"):
+        try:
+            font = cairo.ToyFontFace(fontpathocrb)
+        except OSError:
+            font = cairo.ToyFontFace(fontpathocrbalt)
+    ctx.set_font_face(font)
     ctx.set_font_size(size)
     fo = cairo.FontOptions()
     fo.set_antialias(cairo.ANTIALIAS_DEFAULT)

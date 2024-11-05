@@ -33,13 +33,12 @@ pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
 if(pilsupport or pillowsupport):
-    import upcean.encode.prepil
+    import upcean.encode.predraw.prepil
     from PIL import PngImagePlugin
-
 if(cairosupport):
-    import upcean.encode.precairo
+    import upcean.encode.predraw.precairo
 if(svgwritesupport):
-    import upcean.encode.presvg
+    import upcean.encode.predraw.presvgwrite
 
 def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     upc = str(upc)
@@ -224,6 +223,11 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         ((44 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize)) - RectAltLoopSpin, ((barheight[0] + ((15 + shiftxy[1]) * barwidth[0])) - RectAltLoopSpinAlt), barcolor[0], imageoutlib)
         RectAltLoopSpin += 1
     if(not hidetext):
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+            try:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+            except OSError:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
         NumTxtZero = 0
         LineTxtStart = 23
         if(not threewidebar):
@@ -284,6 +288,7 @@ def draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barco
     elif(svgwritesupport and imageoutlib=="svgwrite"):
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((44 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize)))
+        upc_preimg.close()
     imgout = encode_itf14_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
 
@@ -347,7 +352,6 @@ def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54
         else:
             exargdict = {'comment': "itf14; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
-                upc_preimg.close()
                 upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):
             if outfileext == "XPM":

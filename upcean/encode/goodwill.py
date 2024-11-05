@@ -37,13 +37,13 @@ pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
 if(pilsupport or pillowsupport):
-    import upcean.encode.prepil
+    import upcean.encode.predraw.prepil
     from PIL import PngImagePlugin
 
 if(cairosupport):
-    import upcean.encode.precairo
+    import upcean.encode.predraw.precairo
 if(svgwritesupport):
-    import upcean.encode.presvg
+    import upcean.encode.predraw.presvgwrite
 
 
 def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):

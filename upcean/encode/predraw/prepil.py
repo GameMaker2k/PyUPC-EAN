@@ -90,8 +90,6 @@ def drawColorLine(draw, x1, y1, x2, y2, width, color):
     
     return True  # Optional, based on your use case
 
-
-
 def drawColorText(ctx, size, x, y, text, color, ftype="ocrb"):
     font = ImageFont.truetype(fontpathocra, size)
     if(ftype == "ocra"):

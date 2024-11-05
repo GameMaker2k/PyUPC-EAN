@@ -57,13 +57,13 @@ if pilsupport:
         pilsupport = False
         NEAREST = None  # If Pillow isn't available, NEAREST isn't needed
     else:
-        import upcean.encode.prepil
+        import upcean.encode.predraw.prepil
 
 # Initialize Cairo support if available
 if cairosupport:
     try:
         import cairo
-        import upcean.encode.precairo
+        import upcean.encode.predraw.precairo
     except ImportError:
         cairosupport = False
         logger.warning("Cairo support failed to initialize.")
@@ -72,7 +72,7 @@ if cairosupport:
 if svgwritesupport:
     try:
         import svgwrite
-        import upcean.encode.presvg
+        import upcean.encode.predraw.presvgwrite
     except ImportError:
         svgwritesupport = False
         logger.warning("svgwrite support failed to initialize.")
@@ -155,11 +155,11 @@ def snapCoords(ctx, x, y, imageoutlib="pillow"):
         return False
 
     if selected_lib == "pillow" and pilsupport:
-        return upcean.encode.prepil.snapCoords(ctx, x, y)
+        return upcean.encode.predraw.prepil.snapCoords(ctx, x, y)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.encode.precairo.snapCoords(ctx, x, y)
+        return upcean.encode.predraw.precairo.snapCoords(ctx, x, y)
     elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.encode.presvg.snapCoords(ctx, x, y)
+        return upcean.encode.predraw.presvgwrite.snapCoords(ctx, x, y)
 
     logger.error("snapCoords: Selected library is not supported.")
     return False
@@ -188,11 +188,11 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow"):
         return False
 
     if selected_lib == "pillow" and pilsupport:
-        return upcean.encode.prepil.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+        return upcean.encode.predraw.prepil.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.encode.precairo.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+        return upcean.encode.predraw.precairo.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.encode.presvg.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+        return upcean.encode.predraw.presvgwrite.drawColorLine(ctx, x1, y1, x2, y2, width, color)
 
     logger.error("drawColorLine: Selected library is not supported.")
     return False
@@ -220,11 +220,11 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
         return False
 
     if selected_lib == "pillow" and pilsupport:
-        return upcean.encode.prepil.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+        return upcean.encode.predraw.prepil.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.encode.precairo.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+        return upcean.encode.predraw.precairo.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.encode.presvg.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+        return upcean.encode.predraw.presvgwrite.drawColorRectangle(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangle: Selected library is not supported.")
     return False
@@ -255,11 +255,11 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib="pillo
         return False
 
     if selected_lib == "pillow" and pilsupport:
-        return upcean.encode.prepil.drawColorText(ctx, size, x, y, text, color, ftype)
+        return upcean.encode.predraw.prepil.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.encode.precairo.drawColorText(ctx, size, x, y, text, color, ftype)
+        return upcean.encode.predraw.precairo.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.encode.presvg.drawColorText(ctx, size, x, y, text, color, ftype)
+        return upcean.encode.predraw.presvgwrite.drawColorText(ctx, size, x, y, text, color, ftype)
 
     logger.error("drawColorText: Selected library is not supported.")
     return False
@@ -287,11 +287,11 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
         return False
 
     if selected_lib == "pillow" and pilsupport:
-        return upcean.encode.prepil.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+        return upcean.encode.predraw.prepil.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.encode.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+        return upcean.encode.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.encode.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+        return upcean.encode.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangleAlt: Selected library is not supported.")
     return False
@@ -320,11 +320,11 @@ def get_save_filename(outfile, imageoutlib="pillow"):
         return False
 
     if selected_lib == "pillow" and pilsupport:
-        return upcean.encode.prepil.get_save_filename(outfile)
+        return upcean.encode.predraw.prepil.get_save_filename(outfile)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.encode.precairo.get_save_filename(outfile)
+        return upcean.encode.predraw.precairo.get_save_filename(outfile)
     elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.encode.precairo.get_save_filename(outfile)
+        return upcean.encode.predraw.precairo.get_save_filename(outfile)
 
     logger.error("get_save_filename: Selected library is not supported.")
     return False
