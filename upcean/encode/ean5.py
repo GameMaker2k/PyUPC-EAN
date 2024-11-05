@@ -283,7 +283,7 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     return [upc_img, upc_preimg, imageoutlib, upc_array]
 
 
-def draw_ean5_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def draw_ean5supplement_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
@@ -314,6 +314,184 @@ def draw_ean5_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
     imgout = encode_ean5_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+
+def create_ean5supplement_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    if(not pilsupport and imageoutlib == "pillow"):
+        imageoutlib = "cairo"
+    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "pillow"
+    if(not cairosupport and imageoutlib == "cairosvg"):
+        imageoutlib = "pillow"
+    if(not svgwritesupport and imageoutlib == "svgwrite"):
+        imageoutlib = "pillow"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+        imageoutlib = "pillow"
+    if(not pilsupport and not cairosupport and not svgwritesupport):
+        return False
+    if(outfile is None):
+        if(imageoutlib == "cairosvg"):
+            oldoutfile = None
+            outfile = None
+            outfileext = "SVG"
+        else:
+            oldoutfile = None
+            outfile = None
+            outfileext = None
+    else:
+        oldoutfile = upcean.encode.predraw.get_save_filename(
+            outfile, imageoutlib)
+        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+            del(outfile)
+            outfile = oldoutfile[0]
+            outfileext = oldoutfile[1]
+            if(cairosupport and imageoutlib == "cairo" and outfileext == "SVG"):
+                imageoutlib = "cairosvg"
+            if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
+                imageoutlib = "cairo"
+    imgout = draw_ean5supplement_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    upc_img = imgout[0]
+    upc_preimg = imgout[1]
+    exargdict = {'comment': "ean5; "+upc}
+    if(oldoutfile is None or isinstance(oldoutfile, bool)):
+        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+    else:
+        if(outfileext == "WEBP"):
+            exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
+        if(outfileext == "HEIC"):
+            exargdict.update({'lossless': True, 'quality': 100})
+        elif(outfileext == "JPEG"):
+            exargdict.update(
+                {'quality': 100, 'optimize': True, 'progressive': True})
+        elif(outfileext == "GIF"):
+            exargdict.update(
+                {'optimize': True})
+        elif(outfileext == "PNG"):
+            exargdict.update({'optimize': True, 'compress_level': 9, 'quality': 100})
+            if(pilsupport):
+                # Add a comment to the image
+                info = PngImagePlugin.PngInfo()
+                info.add_text("Comment", "ean5; "+upc)
+                exargdict.update({'pnginfo': info})
+        else:
+            exargdict = {'comment': "ean5; "+upc}
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+                upc_img.saveas(outfile, True)
+        if(pilsupport and imageoutlib == "pillow"):
+            if outfileext == "XPM":
+                # XPM supports only palette-based images ("P" mode)
+                upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            elif outfileext == "XBM":
+                # XBM supports only 1-bit images ("1" mode)
+                upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+            elif outfileext == "PBM":
+                # PBM (Portable Bitmap) supports only monochrome (1-bit) images ("1" mode)
+                upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+            elif outfileext == "PGM":
+                # PGM (Portable Graymap) supports only grayscale images ("L" mode)
+                upc_preimg.convert(mode="L").save(outfile, outfileext, **exargdict)
+            elif outfileext == "GIF":
+                # GIF supports only palette-based images with a maximum of 256 colors ("P" mode)
+                upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            elif outfileext == "ICO":
+                # ICO generally supports "L", "P", and "RGBA" but not direct "RGB".
+                # Convert to RGBA for transparency support if available, or "P" otherwise.
+                if "A" in upc_preimg.getbands():  # Check if alpha channel is present
+                    upc_preimg.convert(mode="RGBA").save(outfile, outfileext, **exargdict)
+                else:
+                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+            else:
+                # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
+                if upc_preimg.mode == "RGBA":
+                    upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
+                else:
+                    upc_preimg.save(outfile, outfileext, **exargdict)
+        if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+            x, y, width, height = upc_preimg.ink_extents()
+            if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
+                if(outfileext == "SVG" or imageoutlib == "cairosvg"):
+                    # Create an ImageSurface with the exact dimensions of the recorded content
+                    image_surface = cairo.SVGSurface(outfile, int(width), int(height))
+                    image_context = cairo.Context(image_surface)
+                    # Transfer the content from the RecordingSurface to the ImageSurface
+                    image_context.set_source_surface(upc_preimg, -x, -y)
+                    image_context.paint()
+                    image_surface.flush()
+                    image_surface.finish()
+                elif(outfileext == "PDF"):
+                    # Create an ImageSurface with the exact dimensions of the recorded content
+                    image_surface = cairo.PDFSurface(outfile, int(width), int(height))
+                    image_context = cairo.Context(image_surface)
+                    # Transfer the content from the RecordingSurface to the ImageSurface
+                    image_context.set_source_surface(upc_preimg, -x, -y)
+                    image_context.paint()
+                    image_surface.flush()
+                    image_surface.finish()
+                elif(outfileext == "PS" or outfileext == "EPS"):
+                    # Create an PDFSurface with the exact dimensions of the recorded content
+                    image_surface = cairo.PSSurface(outfile, int(width), int(height))
+                    image_context = cairo.Context(image_surface)
+                    # Transfer the content from the RecordingSurface to the ImageSurface
+                    image_context.set_source_surface(upc_preimg, -x, -y)
+                    if(outfileext == "EPS"):
+                        image_surface.set_eps(True)
+                    else:
+                        image_surface.set_eps(False)
+                    image_context.paint()
+                    image_surface.flush()
+                    image_surface.finish()
+            else:
+                # Create an ImageSurface with the exact dimensions of the recorded content
+                image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
+                image_context = cairo.Context(image_surface)
+                # Transfer the content from the RecordingSurface to the ImageSurface
+                image_context.set_source_surface(upc_preimg, -x, -y)
+                image_context.paint()
+                image_surface.flush()
+                # Save as PNG
+                image_surface.write_to_png(outfile)
+                image_surface.finish()
+                return True
+    return True
+
+def draw_upc5supplement_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return draw_ean5supplement_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+
+def create_upc5supplement_barcode(upc, outfile="./upc5.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_ean5supplement_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+
+def draw_ean5_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(not pilsupport and imageoutlib == "pillow"):
+        imageoutlib = "cairo"
+    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "pillow"
+    if(not cairosupport and imageoutlib == "cairosvg"):
+        imageoutlib = "pillow"
+    if(not svgwritesupport and imageoutlib == "svgwrite"):
+        imageoutlib = "pillow"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+        imageoutlib = "pillow"
+    upc_size_add = 0
+    if(pilsupport and imageoutlib == "pillow"):
+        upc_preimg = Image.new(
+            "RGB", ((((56 + 8) * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
+        upc_img = ImageDraw.Draw(upc_preimg)
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
+        upc_preimg = cairo.RecordingSurface(
+                cairo.CONTENT_COLOR, (0.0, 0.0, float((((56 + 8) * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
+        upc_img = cairo.Context(upc_preimg)
+        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
+    elif(svgwritesupport and imageoutlib=="svgwrite"):
+        upc_preimg = StringIO()
+        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=((((56 + 8) * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
+        upc_preimg.close()
+    drawColorRectangle(upc_img, 0, 0, (((56 + 8) * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    imgout = encode_ean5_barcode((upc_img, upc_preimg), upc, resize, (8 * int(resize), 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib, imgout[3]]
 
 def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -453,7 +631,6 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
                 image_surface.finish()
                 return True
     return True
-
 
 def encode_upc5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     return encode_ean5_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
