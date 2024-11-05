@@ -65,11 +65,12 @@ class encode:
         if(code is not None):
             self.code = code
         self.filename = "./barcode.png"
+        self.inimage = None
         self.size = 1
         self.hidesn = False
         self.hidecd = False
         self.hidetext = False
-        self.textxy = (1, 1, 1)
+        self.shiftxy = (0, 0)
         self.barheight = (48, 54)
         self.barwidth = (1, 1)
         self.barcolor = (0, 0, 0)
@@ -122,51 +123,51 @@ class encode:
                 filename = self.filename
             if(size is None):
                 size = self.size
-            return upcean.encode.create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
+            return upcean.encode.create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
 
         def validate_create_barcode(self, filename=None, size=None):
             if(filename is None):
                 filename = self.filename
             if(size is None):
                 size = self.size
-            return upcean.encode.validate_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
+            return upcean.encode.validate_create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
 
         def fix_create_barcode(self, filename=None, size=None):
             if(filename is None):
                 filename = self.filename
             if(size is None):
                 size = self.size
-            return upcean.encode.fix_create_barcode(self.type, self.code, filename, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
+            return upcean.encode.fix_create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
 
         def draw_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
-
-        def encode_barcode(self, size=None):
-            if(size is None):
-                size = self.size
-            return upcean.encode.draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
+            return upcean.encode.draw_barcode(self.type, self.code, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
 
         def validate_draw_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
-
-        def validate_encode_barcode(self, size=None):
-            if(size is None):
-                size = self.size
-            return upcean.encode.validate_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
+            return upcean.encode.validate_draw_barcode(self.type, self.code, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
 
         def fix_draw_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
+            return upcean.encode.fix_draw_barcode(self.type, self.code, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
+
+        def encode_barcode(self, size=None):
+            if(size is None):
+                size = self.size
+            return upcean.encode.draw_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
+
+        def validate_encode_barcode(self, size=None):
+            if(size is None):
+                size = self.size
+            return upcean.encode.validate_draw_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
 
         def fix_encode_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.fix_draw_barcode(self.type, self.code, size, (self.hidesn, self.hidecd, self.hidetext), self.barheight, self.barwidth, self.textxy, (self.barcolor, self.textcolor, self.bgcolor), self.imageoutlib)
+            return upcean.encode.fix_draw_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
     ''' // validate/__init__.py funtions '''
 
     def validate_checksum(self):

@@ -489,7 +489,6 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
     hidetext = hideinfo[2]
-    imageoutlib = imageoutlib.lower()
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
