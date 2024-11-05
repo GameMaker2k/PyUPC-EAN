@@ -358,28 +358,34 @@ def validate_ean13_checksum(upc, return_check=False):
     
     # Trim UPC to 13 digits if it's too long
     if len(upc) > 13:
-        upc = re.findall("^\\d{13}", upc)[0]
+        upc = re.findall(r"^\d{13}", upc)[0]
     
     # Check for valid length (should be 12 or 13)
     if len(upc) not in {12, 13}:
         return False
 
-    # Convert UPC string to a list of integers
+    # Convert UPC string to a list of integers (including checksum digit if present)
     upc_digits = [int(digit) for digit in upc]
     
-    # Calculate the sum of even and odd positions
-    odd_sum = sum(upc_digits[0::2])
-    even_sum = sum(upc_digits[1::2]) * 3
-    
+    # Determine whether to exclude the checksum digit in calculations
+    if len(upc) == 13:
+        data_digits = upc_digits[:-1]  # Exclude checksum digit
+    else:
+        data_digits = upc_digits
+
+    # Calculate the sum of odd and even positions
+    odd_sum = sum(data_digits[::2])
+    even_sum = sum(data_digits[1::2]) * 3
+
     # Calculate the checksum digit
     total_sum = odd_sum + even_sum
     checksum = (10 - (total_sum % 10)) % 10
-    
+
     # Return the checksum digit if requested
     if return_check:
         return str(checksum)
     
-    # If UPC is 13 digits, verify checksum
+    # If UPC is 13 digits, verify checksum using upc_digits[-1]
     return checksum == upc_digits[-1] if len(upc) == 13 else str(checksum)
 
 

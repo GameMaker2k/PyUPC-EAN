@@ -157,17 +157,17 @@ class encode:
         def encode_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.draw_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
+            return upcean.encode.encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
 
         def validate_encode_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.validate_draw_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
+            return upcean.encode.validate_encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
 
         def fix_encode_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.fix_draw_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
+            return upcean.encode.fix_encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
     ''' // validate/__init__.py funtions '''
 
     def validate_checksum(self):
