@@ -54,10 +54,10 @@ def encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         barheightadd = barheight[1]
     upc_img = inimage[0]
     upc_preimg = inimage[1]
-    if pilsupport and isinstance(upc_img, cairo.Surface) and isinstance(upc_preimg, cairo.Context):
-        imageoutlib = "cairo"
-    elif cairosupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
+    if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
+    elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
+        imageoutlib = "cairo"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
     elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
