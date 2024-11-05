@@ -41,8 +41,7 @@ except NameError:
 try:
     file
 except NameError:
-    from io import IOBase
-    file = IOBase
+    from io import IOBase as file
 
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
@@ -243,11 +242,11 @@ def get_save_filename(outfile):
         return outfile
 
     # Handle file objects directly
-    if isinstance(outfile, file):  # For Python 2 compatibility, this works as `file` is defined in the import
+    if isinstance(outfile, file):
         return outfile
 
-    # Handle string types (basestring covers both str and unicode in Python 2)
-    if isinstance(outfile, (str, unicode) if 'unicode' in globals() else str):
+    # Handle string types
+    if isinstance(outfile, str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
             return (outfile, None)
@@ -255,13 +254,14 @@ def get_save_filename(outfile):
         # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
         if ext:
-            # Match extension pattern and extract if valid
-            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
+            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
+            else:
+                outfileext = None
         else:
             # Check for custom format 'name:EXT'
-            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
@@ -274,7 +274,7 @@ def get_save_filename(outfile):
 
         # Check if extension is supported by PyCairo
         if outfileext not in cairo_valid_extensions:
-            outfileext = "PNG"  # Default to PNG if unsupported by PyCairo
+            outfileext = "PNG"
 
         return (outfile, outfileext)
 
@@ -283,38 +283,27 @@ def get_save_filename(outfile):
         if len(outfile) != 2:
             # Invalid tuple/list length
             return False
+
         filename, ext = outfile
-        if not isinstance(filename, (str, unicode) if 'unicode' in globals() else str) or \
-           not isinstance(ext, (str, unicode) if 'unicode' in globals() else str):
-            # Invalid types within tuple/list
+
+        # Allow file objects as the first item in tuple
+        if isinstance(filename, file):
+            filename = filename  # fileobj is valid as-is
+        elif isinstance(filename, str):
+            filename = filename.strip()
+        else:
+            return False
+
+        # Ensure the extension is a valid string
+        if not isinstance(ext, str):
             return False
 
         ext = ext.strip().upper()
         # Check if extension is supported by PyCairo
         if ext not in cairo_valid_extensions:
-            ext = "PNG"  # Default to PNG if unsupported by PyCairo
-
-        return (filename, ext)
-
-    # Unsupported type
-    return False
-
-    # Handle tuple or list types
-    if isinstance(outfile, (tuple, list)):
-        if len(outfile) != 2:
-            # Invalid tuple/list length
-            return False
-        filename, ext = outfile
-        if not isinstance(filename, basestring) or not isinstance(ext, basestring):
-            # Invalid types within tuple/list
-            return False
-        ext = ext.strip().upper()
-        valid_extensions = {"SVG", "PDF", "PS", "EPS"}
-        if ext not in valid_extensions:
             ext = "PNG"
+
         return (filename, ext)
 
     # Unsupported type
     return False
-
-

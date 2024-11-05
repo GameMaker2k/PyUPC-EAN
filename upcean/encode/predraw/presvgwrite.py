@@ -22,12 +22,17 @@ import re
 import base64
 import io  # For file object type checking
 
+try:
+    file
+except NameError:
+    from io import IOBase as file
+
 # Define helper functions
 
 def get_save_filename(outfile):
     """
     Processes the `outfile` parameter to determine a suitable filename and its corresponding file extension for saving SVG files.
-    Returns a tuple (filename, EXTENSION) or the original `outfile` if it's of type None, bool, or a file object.
+    Returns a tuple (filename, "SVG") or the original `outfile` if it's of type None, bool, or a file object.
     Defaults to "SVG" as the extension if none is provided or if an unsupported extension is detected.
     Returns False for unsupported input types.
 
@@ -42,7 +47,7 @@ def get_save_filename(outfile):
         return outfile
 
     # Handle file objects directly
-    if isinstance(outfile, io.IOBase):
+    if isinstance(outfile, file):
         return outfile
 
     # Handle string types
@@ -54,13 +59,14 @@ def get_save_filename(outfile):
         # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
         if ext:
-            # Match extension pattern and extract if valid
-            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
+            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
+            else:
+                outfileext = None
         else:
             # Check for custom format 'name:EXT'
-            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
@@ -76,16 +82,27 @@ def get_save_filename(outfile):
     # Handle tuple or list types
     if isinstance(outfile, (tuple, list)):
         if len(outfile) != 2:
-            # Invalid tuple/list length
-            return False
+            return False  # Invalid tuple/list length
+
         filename, ext = outfile
-        if not isinstance(filename, str) or not isinstance(ext, str):
-            # Invalid types within tuple/list
+
+        # Allow file objects or strings as the first element
+        if isinstance(filename, file):
+            filename = filename  # file object is valid as-is
+        elif isinstance(filename, str):
+            filename = filename.strip()
+        else:
+            return False  # Invalid first element type
+
+        # Ensure the extension is a valid string
+        if not isinstance(ext, str):
             return False
+
         ext = ext.strip().upper()
         # Ensure the extension is SVG
         if ext != "SVG":
             ext = "SVG"
+
         return (filename, ext)
 
     # Unsupported type
@@ -276,59 +293,3 @@ def embed_font(dwg, font_path, font_family):
 
     # Add the style to the SVG
     dwg.defs.add(dwg.style(font_face))
-
-def create_complex_svg(outfile='complex_example.svg', embed_custom_font=False, font_path=None):
-    """
-    Creates a complex SVG with a rectangle outline, a semi-transparent circle, a line, and text.
-
-    Parameters:
-    - outfile: The output SVG filename.
-    - embed_custom_font: Boolean indicating whether to embed a custom font.
-    - font_path: Path to the custom font file if embedding is desired.
-    """
-    # Process the outfile to ensure it has the correct extension
-    save_info = get_save_filename(outfile)
-    if not save_info:
-        raise ValueError("Unsupported outfile format.")
-
-    # Unpack filename and extension
-    filename, ext = save_info
-
-    if ext != "SVG":
-        raise ValueError("Unsupported extension for SVG creation.")
-
-    # Initialize the SVG drawing
-    dwg = svgwrite.Drawing(filename, profile='full', size=(400, 400))
-
-    # Optionally embed a custom font
-    if embed_custom_font:
-        if not font_path:
-            raise ValueError("Font path must be provided to embed a custom font.")
-        embed_font(dwg, font_path, 'OCRB')
-
-    # Draw a rectangle outline (no fill)
-    drawColorRectangleAlt(dwg, 50, 50, 350, 350, (0, 0, 0))  # Black outline
-
-    # Draw a semi-transparent red circle
-    circle = dwg.circle(center=(200, 200), r=100, fill='red', fill_opacity=0.5)
-    dwg.add(circle)
-
-    # Draw a blue line
-    drawColorLine(dwg, 50, 50, 350, 350, 3, (0, 0, 255))  # Blue line
-
-    # Draw green text
-    drawColorText(dwg, 20, 150, 200, "Complex SVG", (0, 255, 0), ftype="ocrb")  # Green text
-
-    # Save the SVG file
-    dwg.save()
-    print("SVG file '{}' created successfully.".format(filename))
-
-# Example usage
-if __name__ == "__main__":
-    # Create a complex SVG without embedding a custom font
-    create_complex_svg('complex_example.svg')
-
-    # To embed a custom font, ensure you have the font file and provide the path
-    # Example:
-    # create_complex_svg('complex_with_font.svg', embed_custom_font=True, font_path='OCRB.ttf')
-

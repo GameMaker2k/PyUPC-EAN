@@ -34,8 +34,7 @@ except NameError:
 try:
     file
 except NameError:
-    from io import IOBase
-    file = IOBase
+    from io import IOBase as file
 
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
@@ -120,7 +119,7 @@ def get_save_filename(outfile):
     False for unsupported input types.
 
     Parameters:
-        outfile (str): The output file specification.
+        outfile (str, tuple, list, None, bool, file): The output file specification.
 
     Returns:
         tuple: (filename, EXTENSION) or False if invalid.
@@ -146,6 +145,8 @@ def get_save_filename(outfile):
             ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
+            else:
+                outfileext = None
         else:
             # Check for custom format 'name:EXT'
             custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
@@ -162,37 +163,40 @@ def get_save_filename(outfile):
         # Check if the extension is supported by Pillow's registered extensions
         pil_extensions = {ext[1:].upper(): fmt.upper() for ext, fmt in Image.registered_extensions().items()}
         if outfileext in pil_extensions:
-            # If the extension is in the registered extensions, use the format specified there
             outfileext = pil_extensions[outfileext]
         else:
-            # Default to PNG if unsupported
-            outfileext = "PNG"
+            outfileext = "PNG"  # Default to PNG if unsupported
 
         return (outfile, outfileext)
 
     # Handle tuple or list types
     if isinstance(outfile, (tuple, list)):
         if len(outfile) != 2:
-            # Invalid tuple/list length
-            return False
+            return False  # Invalid tuple/list length
+
         filename, ext = outfile
-        if not isinstance(filename, (str, unicode) if 'unicode' in globals() else str) or \
-           not isinstance(ext, (str, unicode) if 'unicode' in globals() else str):
-            # Invalid types within tuple/list
+
+        # Allow file objects or strings as the first element
+        if isinstance(filename, file):
+            filename = filename  # file object is valid as-is
+        elif isinstance(filename, (str, unicode) if 'unicode' in globals() else str):
+            filename = filename.strip()
+        else:
+            return False  # Invalid first element type
+
+        # Ensure the extension is a valid string
+        if not isinstance(ext, (str, unicode) if 'unicode' in globals() else str):
             return False
 
         ext = ext.strip().upper()
         # Check if the extension is supported by Pillow's registered extensions
         pil_extensions = {ext[1:].upper(): fmt.upper() for ext, fmt in Image.registered_extensions().items()}
         if ext in pil_extensions:
-            # If the extension is in the registered extensions, use the format specified there
             ext = pil_extensions[ext]
         else:
-            # Default to PNG if unsupported
-            ext = "PNG"
+            ext = "PNG"  # Default to PNG if unsupported
 
         return (filename, ext)
 
     # Unsupported type
     return False
-
