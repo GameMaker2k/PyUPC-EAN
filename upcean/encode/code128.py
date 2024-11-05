@@ -40,7 +40,7 @@ if(cairosupport):
 if(svgwritesupport):
     import upcean.encode.predraw.presvgwrite
 
-def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -51,22 +51,20 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
-    if(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
     upc_img = inimage[0]
     upc_preimg = inimage[1]
+    if pilsupport and isinstance(upc_img, cairo.Surface) and isinstance(upc_preimg, cairo.Context):
+        imageoutlib = "cairo"
+    elif cairosupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
+        imageoutlib = "pillow"
+    elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
+        imageoutlib = "svgwrite"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+        imageoutlib = "pillow"
+    elif(not pilsupport and not cairosupport and not svgwritesupport):
+        return False
+    else:
+        return False
     if(len(upc) % 2):
         return False
     if(len(upc) < 8):
@@ -527,7 +525,7 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
-    return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
+    return [upc_img, upc_preimg, upc_array]
 
 
 def draw_code128_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -567,8 +565,8 @@ def draw_code128_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((29 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
-    imgout = encode_code128_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-    return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
+    imgout = encode_code128_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    return [upc_img, upc_preimg, imgout[2]]
 
 def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -608,7 +606,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48
     upc_preimg = imgout[1]
     exargdict = {'comment': "code128; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
+        return [upc_img, upc_preimg, imgout[2]]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
@@ -709,7 +707,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48
     return True
 
 
-def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -720,22 +718,20 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
-    if(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
     upc_img = inimage[0]
     upc_preimg = inimage[1]
+    if pilsupport and isinstance(upc_img, cairo.Surface) and isinstance(upc_preimg, cairo.Context):
+        imageoutlib = "cairo"
+    elif cairosupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
+        imageoutlib = "pillow"
+    elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
+        imageoutlib = "svgwrite"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+        imageoutlib = "pillow"
+    elif(not pilsupport and not cairosupport and not svgwritesupport):
+        return False
+    else:
+        return False
     if(len(upc) % 2):
         return False
     if(len(upc) < 8):
@@ -1111,7 +1107,7 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
             NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
-    return [upc_img, upc_preimg, {'inimage': inimage, 'upc': upc, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
+    return [upc_img, upc_preimg, upc_array]
 
 
 def draw_code128old_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -1151,8 +1147,8 @@ def draw_code128old_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), 
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((29 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
-    imgout = encode_code128old_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-    return [upc_img, upc_preimg, {'upc': upc, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
+    imgout = encode_code128old_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    return [upc_img, upc_preimg, imgout[2]]
 
 def create_code128old_barcode(upc, outfile="./code128.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -1192,7 +1188,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, barheight=
     upc_preimg = imgout[1]
     exargdict = {'comment': upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, imgout[3]]
+        return [upc_img, upc_preimg, imgout[2]]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
