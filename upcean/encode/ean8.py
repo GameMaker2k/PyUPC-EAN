@@ -399,11 +399,11 @@ def draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         upc_preimg = Image.new(
             "RGB", (((83 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_img = ImageDraw.Draw(upc_preimg)
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg = cairo.RecordingSurface(
                 cairo.CONTENT_COLOR, (0.0, 0.0, float(((83 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
+        upc_img = cairo.Context(upc_preimg)
+        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
     elif(svgwritesupport and imageoutlib=="svgwrite"):
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((83 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
