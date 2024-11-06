@@ -20,6 +20,10 @@ import re
 import sys
 import upcean.support
 try:
+    file
+except NameError:
+    from io import IOBase as file
+try:
     from io import StringIO, BytesIO
 except ImportError:
     try:
@@ -405,7 +409,10 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54),
         else:
             exargdict = {'comment': "upca; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
-                upc_img.saveas(outfile, True)
+                if isinstance(outfile, file):
+                    upc_img.write(outfile)
+                else:
+                    upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):
             if outfileext == "XPM":
                 # XPM supports only palette-based images ("P" mode)
@@ -841,7 +848,10 @@ def create_upcaean_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
         else:
             exargdict = {'comment': "upca; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
-                upc_img.saveas(outfile, True)
+                if isinstance(outfile, file):
+                    upc_img.write(outfile)
+                else:
+                    upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):
             if outfileext == "XPM":
                 # XPM supports only palette-based images ("P" mode)

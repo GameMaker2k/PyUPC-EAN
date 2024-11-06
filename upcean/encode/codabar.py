@@ -20,6 +20,10 @@ import re
 import sys
 import upcean.support
 try:
+    file
+except NameError:
+    from io import IOBase as file
+try:
     from io import StringIO, BytesIO
 except ImportError:
     try:

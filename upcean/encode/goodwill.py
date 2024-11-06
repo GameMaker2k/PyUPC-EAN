@@ -19,6 +19,10 @@ from upcean.encode.predraw import *
 import re
 import sys
 import upcean.support
+try:
+    file
+except NameError:
+    from io import IOBase as file
 import upcean.getprefix.getprefix
 try:
     from io import StringIO, BytesIO
