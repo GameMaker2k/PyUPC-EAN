@@ -427,3 +427,11 @@ def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54
                 return True
     return True
 
+def encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
+ return encode_itf14_barcode(inimage, upc, resize=1, shiftxy, barheight, barwidth, barcolor, hideinfo);
+
+def draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+ return draw_itf14_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib);
+
+def create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+    return create_itf14_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib);
