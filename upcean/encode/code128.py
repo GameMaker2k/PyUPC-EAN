@@ -632,7 +632,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48
             exargdict = {'comment': "code128; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
-                    upc_img.write(outfile)
+                    upc_img.write(outfile, True)
                 else:
                     upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):
@@ -1216,7 +1216,7 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, barheight=
             exargdict = {'comment': upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
-                    upc_img.write(outfile)
+                    upc_img.write(outfile, True)
                 else:
                     upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):

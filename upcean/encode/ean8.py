@@ -477,7 +477,7 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=(48, 54),
             exargdict = {'comment': "ean8; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
-                    upc_img.write(outfile)
+                    upc_img.write(outfile, True)
                 else:
                     upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):

@@ -292,7 +292,7 @@ def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, barheight=(48
             exargdict = {'comment': "plessey; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
-                    upc_img.write(outfile)
+                    upc_img.write(outfile, True)
                 else:
                     upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):

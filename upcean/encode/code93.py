@@ -367,7 +367,7 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, barheight=(48, 
             exargdict = {'comment': "code93; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
-                    upc_img.write(outfile)
+                    upc_img.write(outfile, True)
                 else:
                     upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):
@@ -780,7 +780,7 @@ def create_code93extended_barcode(upc, outfile="./code93.png", resize=1, barheig
             exargdict = {'comment': upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
-                    upc_img.write(outfile)
+                    upc_img.write(outfile, True)
                 else:
                     upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):

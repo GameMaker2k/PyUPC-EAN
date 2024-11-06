@@ -307,7 +307,7 @@ def create_stf_barcode(upc, outfile="./stf.png", resize=1, barheight=(48, 54), b
             exargdict = {'comment': "stf; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
-                    upc_img.write(outfile)
+                    upc_img.write(outfile, True)
                 else:
                     upc_img.saveas(outfile, True)
         if(pilsupport and imageoutlib == "pillow"):
