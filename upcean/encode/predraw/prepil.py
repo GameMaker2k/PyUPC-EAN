@@ -130,7 +130,7 @@ def get_save_filename(outfile):
 
     # Handle file objects directly (using the cross-version file compatibility you've defined)
     if isinstance(outfile, file):
-        return outfile
+        return (outfile, "PNG")
 
     # Handle string types
     if isinstance(outfile, (str, unicode) if 'unicode' in globals() else str):

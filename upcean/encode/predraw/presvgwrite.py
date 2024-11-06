@@ -48,7 +48,7 @@ def get_save_filename(outfile):
 
     # Handle file objects directly
     if isinstance(outfile, file):
-        return outfile
+        return (outfile, "SVG")
 
     # Handle string types
     if isinstance(outfile, str):
