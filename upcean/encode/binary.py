@@ -92,7 +92,7 @@ def encode_barcode_from_binary(inimage, upc, resize=1, shiftxy=(0, 0), barheight
         while(subbari < subbarmax):
             if(upc['code'][bari][subbari] == 1):
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
-                          upc['barsize'][bari][subbari], barwidth[0] * int(resize), barcolor[0], imageoutlib)
+                          (upc['barsize'][bari][subbari] + shiftxy[1]) * int(resize), barwidth[0] * int(resize), barcolor[0], imageoutlib)
             elif(upc['code'][bari][subbari] == 0):
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           upc['barsize'][bari][subbari], barwidth[0] * int(resize), barcolor[2], imageoutlib)

@@ -106,7 +106,7 @@ def encode_ean2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         if(start_barcode[BarNum] == 0):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        barsizeloop.append(LineSize)
+        barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
@@ -172,7 +172,7 @@ def encode_ean2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
-            barsizeloop.append(LineSize)
+            barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
             BarNum += 1
             InnerUPCNum += 1
         if(NumZero == 0):
@@ -183,7 +183,7 @@ def encode_ean2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
             LineStart += barwidth[0] * int(resize)
-            barsizeloop.append(LineSize)
+            barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
             BarNum += 1
         upc_array['barsize'].append(barsizeloop)
         NumZero += 1
