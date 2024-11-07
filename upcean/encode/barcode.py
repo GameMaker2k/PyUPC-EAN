@@ -30,6 +30,7 @@ from upcean.encode.ean8 import *
 from upcean.encode.ean13 import *
 from upcean.encode.upce import *
 from upcean.encode.goodwill import *
+from upcean.encode.binary import *
 from upcean.encode.upca import *
 from upcean.encode.ean5 import *
 from upcean.encode.ean2 import *

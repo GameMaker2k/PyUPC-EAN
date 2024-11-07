@@ -703,8 +703,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             InnerUPCNum += 1
         upc_array['barsize'].append(barsizeloop)
         NumZero += 1
-    upc_array['code'].append([1, 0, 1])
-    upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0])
+    upc_array['code'].append([1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     end_barcode = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
