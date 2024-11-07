@@ -341,6 +341,7 @@ def encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         end_bc_num = 1 + end_bc_num
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:
