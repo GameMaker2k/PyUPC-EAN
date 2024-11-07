@@ -587,7 +587,7 @@ def create_barcode_from_binary(upc, outfile="./upca.png", resize=1, barheight=(4
             if(pilsupport):
                 # Add a comment to the image
                 info = PngImagePlugin.PngInfo()
-                info.add_text("Comment", "upca; "+upc)
+                info.add_text("Comment", "upca; "+upc['upc'])
                 exargdict.update({'pnginfo': info})
         else:
             exargdict = {'comment': "barcode; "+upc['upc']}
