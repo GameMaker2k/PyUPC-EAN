@@ -366,30 +366,22 @@ def encode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
-    if(not hidetext):
-        if(svgwritesupport and imageoutlib == "svgwrite"):
-            try:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
-            except OSError:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        if(hidesn is not None and not hidesn):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((1 + shiftxy[0]) + (2 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((15 + shiftxy[0]) + (18 * (int(resize) - 1)) - (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((21 + shiftxy[0]) + (23 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((27 + shiftxy[0]) + (28 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[2], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((33 + shiftxy[0]) + (33 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[3], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((39 + shiftxy[0]) + (38 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[4], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((45 + shiftxy[0]) + (43 * (int(resize) - 1)) + (5 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(upc_matches[1])[5], barcolor[1], "ocrb", imageoutlib)
-        if(hidecd is not None and not hidecd):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((61 + shiftxy[0]) + (61 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[2], barcolor[1], "ocrb", imageoutlib)
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0] + (2 * int(resize))
+    upc_print = list(upc)
+    while (NumTxtZero < len(upc_print)):
+        texthidden = False
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 7 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        if(NumTxtZero==0):
+            LineTxtStart += 3 * int(resize)
+        if(NumTxtZero==6):
+            LineTxtStart += 6 * int(resize)
+        LineTxtStart += 7 * int(resize)
+        NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     if(supplement is not None and len(supplement) == 2):

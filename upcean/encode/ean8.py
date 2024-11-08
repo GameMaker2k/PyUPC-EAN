@@ -353,34 +353,24 @@ def encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
-    if(not hidetext):
-        if(svgwritesupport and imageoutlib == "svgwrite"):
-            try:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
-            except OSError:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        if(hidesn is not None and not hidesn):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((1 + shiftxy[0]) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), "<", barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((13 + shiftxy[0]) + (14 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(LeftLeftDigit)[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((19 + shiftxy[0]) + (19 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(LeftLeftDigit)[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((26 + shiftxy[0]) + (24 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(LeftRightDigit)[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((32 + shiftxy[0]) + (29 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(LeftRightDigit)[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((45 + shiftxy[0]) + (46 * (int(resize) - 1)) - (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(RightLeftDigit)[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((51 + shiftxy[0]) + (51 * (int(resize) - 1)) - (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(RightLeftDigit)[1], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((58 + shiftxy[0]) + (56 * (int(resize) - 1)) + (1 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(RightRightDigit)[0], barcolor[1], "ocrb", imageoutlib)
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((64 + shiftxy[0]) + (61 * (int(resize) - 1)) + (3 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), list(RightRightDigit)[1], barcolor[1], "ocrb", imageoutlib)
-        if(hidecd is not None and not hidecd):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((77 + shiftxy[0]) + (75 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), ">", barcolor[1], "ocrb", imageoutlib)
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0]
+    upc_print = ["<"]+list(upc)+[">"]
+    while (NumTxtZero < len(upc_print)):
+        texthidden = False
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 9 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        if(NumTxtZero==0):
+            LineTxtStart += 5 * int(resize)
+        if(NumTxtZero==4):
+            LineTxtStart += 4 * int(resize)
+        if(NumTxtZero==8):
+            LineTxtStart += 5 * int(resize)
+        LineTxtStart += 7 * int(resize)
+        NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     if(supplement is not None and len(supplement) == 2):
