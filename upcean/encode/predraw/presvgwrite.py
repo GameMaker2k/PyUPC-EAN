@@ -285,7 +285,7 @@ def embed_font(dwg, font_path, font_family):
     font_face = """
     @font-face {{
         font-family: '{0}';
-        src: url(data:font/{1};base64,{2}) format('{1}');
+        src: url(data:font/{1};base64,{2}) format('{1}')
         font-weight: normal;
         font-style: normal;
     }}

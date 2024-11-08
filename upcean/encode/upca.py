@@ -282,14 +282,16 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
-    if(svgwritesupport and imageoutlib == "svgwrite"):
-        try:
-            upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
-        except OSError:
-            upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
+    if(not hidetext):
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+            try:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+            except OSError:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
     LineTxtStart = shiftxy[0] + (2 * int(resize))
-    upc_print = list(upc)
+    LineTxtStartNorm = 2
+    upc_print = list(re.findall("(\\d{12})", upc)[0])
     while (NumTxtZero < len(upc_print)):
         texthidden = False
         if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
@@ -297,13 +299,25 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         if(not texthidden):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
             barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_print[NumTxtZero])
+        if(NumTxtZero == 0):
+         upc_array['text']['type'].append("sn")
+        elif(NumTxtZero == 11):
+         upc_array['text']['type'].append("cd")
+        else:
+         upc_array['text']['type'].append("txt")
         if(NumTxtZero==0):
             LineTxtStart += 10 * int(resize)
+            LineTxtStartNorm += 10
         if(NumTxtZero==5):
             LineTxtStart += 5 * int(resize)
+            LineTxtStartNorm += 5
         if(NumTxtZero==10):
             LineTxtStart += 10 * int(resize)
+            LineTxtStartNorm += 10
         LineTxtStart += 7 * int(resize)
+        LineTxtStartNorm += 7
         NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
@@ -311,10 +325,16 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         supout = upcean.encode.ean2.encode_upc2_barcode((upc_img, upc_preimg), supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         upc_array['code'] += supout[3]['code']
         upc_array['barsize'] += supout[3]['barsize']
+        upc_array['text']['location'] += [x + 113 for x in supout[3]['text']['location']]
+        upc_array['text']['type'] += supout[3]['text']['type']
+        upc_array['text']['text'] += supout[3]['text']['text']
     if(supplement is not None and len(supplement) == 5):
         supout = upcean.encode.ean5.encode_upc5_barcode((upc_img, upc_preimg), supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         upc_array['code'] += supout[3]['code']
         upc_array['barsize'] += supout[3]['barsize']
+        upc_array['text']['location'] += [x + 113 for x in supout[3]['text']['location']]
+        upc_array['text']['type'] += supout[3]['text']['type']
+        upc_array['text']['text'] += supout[3]['text']['text']
     return [upc_img, upc_preimg, imageoutlib, upc_array]
 
 
@@ -737,9 +757,16 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
+    if(not hidetext):
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+            try:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+            except OSError:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
     LineTxtStart = shiftxy[0] + (2 * int(resize))
-    upc_print = [0]+list(upc)+[">"]
+    LineTxtStartNorm = 2
+    upc_print = [0]+list(re.findall("(\\d{12})", upc)[0])+[">"]
     while (NumTxtZero < len(upc_print)):
         texthidden = False
         if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 13 and (hidecd is None or hidecd)):
@@ -747,20 +774,50 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         if(not texthidden):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
             barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_print[NumTxtZero])
+        if(NumTxtZero == 0):
+         upc_array['text']['type'].append("sn")
+        elif(NumTxtZero == 13):
+         upc_array['text']['type'].append("cd")
+        else:
+         upc_array['text']['type'].append("txt")
         if(NumTxtZero==0):
             LineTxtStart += 5 * int(resize)
+            LineTxtStartNorm += 5
         if(NumTxtZero==6):
             LineTxtStart += 3 * int(resize)
+            LineTxtStartNorm += 3
         if(NumTxtZero==12):
             LineTxtStart += 5 * int(resize)
+            LineTxtStartNorm += 5
         LineTxtStart += 7 * int(resize)
+        LineTxtStartNorm += 7
         NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     if(supplement is not None and len(supplement) == 2):
-        upcean.encode.ean2.encode_upc2_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        supout = upcean.encode.ean2.encode_upc2_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        upc_array['code'] += supout[3]['code']
+        upc_array['barsize'] += supout[3]['barsize']
+        # Add 115 to every 0th element in each sublist of upc_array['text']['location']
+        for sublist in upc_array['text']['location']:
+            if isinstance(sublist, list) and len(sublist) > 0:
+                sublist[0] += 115
+        upc_array['text']['location'] += supout[3]['text']['location']
+        upc_array['text']['type'] += supout[3]['text']['type']
+        upc_array['text']['text'] += supout[3]['text']['text']
     if(supplement is not None and len(supplement) == 5):
-        upcean.encode.ean5.encode_upc5_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        supout = upcean.encode.ean5.encode_upc5_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        upc_array['code'] += supout[3]['code']
+        upc_array['barsize'] += supout[3]['barsize']
+        # Add 115 to every 0th element in each sublist of upc_array['text']['location']
+        for sublist in upc_array['text']['location']:
+            if isinstance(sublist, list) and len(sublist) > 0:
+                sublist[0] += 115
+        upc_array['text']['location'] += supout[3]['text']['location']
+        upc_array['text']['type'] += supout[3]['text']['type']
+        upc_array['text']['text'] += supout[3]['text']['text']
     return [upc_img, upc_preimg, imageoutlib, upc_array]
 
 

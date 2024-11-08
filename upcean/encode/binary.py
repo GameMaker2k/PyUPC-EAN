@@ -104,6 +104,23 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
             subbari += 1
             LineStart += barwidth[0] * int(resize)
         bari += 1
+    if(not hidetext):
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+            try:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+            except OSError:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
+    txtbari = 0
+    txtbarmax = len(upc['text']['text'])
+    LineStart = shiftxy[0]
+    while(txtbari < txtbarmax):
+        texthidden = False
+        if hidetext or (upc['text']['type'][txtbari] == "sn" and (hidesn is None or hidesn)) or (upc['text']['type'][txtbari] == "cd" and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + (upc['text']['location'][txtbari] * int(resize))) * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
+        txtbari += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     return [upc_img, upc_preimg, imageoutlib, upc]

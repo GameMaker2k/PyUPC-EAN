@@ -263,17 +263,20 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             barsizeloop.append(LineSizeType)
             BarNum += 1
             InnerUPCNum += 1
+        upc_array['barsize'].append(barsizeloop)
         if(NumZero < 4):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
+            upc_array['barsize'].append([LineSizeType])
+            upc_array['code'].append([0])
             BarNum += 1
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
             LineStart += barwidth[0] * int(resize)
-            barsizeloop.append(LineSizeType)
+            upc_array['barsize'].append([LineSizeType])
+            upc_array['code'].append([1])
             BarNum += 1
-        upc_array['barsize'].append(barsizeloop)
         NumZero += 1
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0])
     end_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -294,8 +297,15 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
+    if(not hidetext):
+        if(svgwritesupport and imageoutlib == "svgwrite"):
+            try:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+            except OSError:
+                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
     LineTxtStart = shiftxy[0] + (7 * int(resize))
+    LineTxtStartNorm = 7
     upc_print = LeftDigit
     while (NumTxtZero < len(upc_print)):
         texthidden = False
@@ -304,7 +314,16 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         if(not texthidden):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
             (barheight[0]) * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_print[NumTxtZero])
+        if(NumTxtZero == 0):
+         upc_array['text']['type'].append("sn")
+        elif(NumTxtZero == 9):
+         upc_array['text']['type'].append("cd")
+        else:
+         upc_array['text']['type'].append("txt")
         LineTxtStart += 8 * int(resize)
+        LineTxtStartNorm += 8
         NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
