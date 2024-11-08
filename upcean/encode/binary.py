@@ -46,7 +46,7 @@ if(cairosupport):
 if(svgwritesupport):
     import upcean.encode.predraw.presvgwrite
 
-def encode_barcode_from_binary(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
+def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
     hidetext = hideinfo[2]
@@ -104,7 +104,7 @@ def encode_barcode_from_binary(inimage, upc, resize=1, shiftxy=(0, 0), barheight
     return [upc_img, upc_preimg, imageoutlib, upc]
 
 
-def draw_barcode_from_binary(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def draw_binary_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
@@ -136,10 +136,10 @@ def draw_barcode_from_binary(upc, resize=1, barheight=(48, 54), barwidth=(1, 1),
         upc_preimg = StringIO()
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(upc_size_add, (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
-    imgout = encode_barcode_from_binary((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    imgout = encode_binary_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib, upc]
 
-def create_barcode_from_binary(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def create_binary_barcode(upc, outfile="./binary.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "cairo"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
@@ -172,7 +172,7 @@ def create_barcode_from_binary(upc, outfile="./upca.png", resize=1, barheight=(4
                 imageoutlib = "cairosvg"
             if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
                 imageoutlib = "cairo"
-    imgout = draw_barcode_from_binary(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    imgout = draw_binary_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
     exargdict = {'comment': "barcode; "+upc['upc']}
