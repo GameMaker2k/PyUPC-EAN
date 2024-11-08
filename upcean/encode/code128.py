@@ -95,7 +95,7 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     upc_size_add = (((len(upc_matches) - subfromlist) * 11) +
                     (len(re.findall("6c", upc)) * 2)) * barwidth[0]
     drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((29 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'code': []}
+    upc_array = {'upc': upc, 'barsize': [], 'code': []}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
@@ -512,7 +512,7 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         NumTxtZero = 0
         LineTxtStart = 16
         if(barcode_is_rev):
-            upc_print.reverse();
+            upc_print.reverse()
         while (NumTxtZero < len(upc_print)):
             if(len(upc_print[NumTxtZero]) == 1):
                 drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
@@ -764,7 +764,7 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
     upc_size_add = (((len(upc_matches) - subfromlist) * 11) +
                     (len(re.findall("6c", upc)) * 2)) * barwidth[0]
     drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((29 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'code': []}
+    upc_array = {'upc': upc, 'barsize': [], 'code': []}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
@@ -1094,7 +1094,7 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
         if(barcode_is_rev):
-            upc_print.reverse();
+            upc_print.reverse()
         NumTxtZero = 0
         LineTxtStart = 16
         while (NumTxtZero < len(upc_print)):

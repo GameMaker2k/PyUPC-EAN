@@ -93,14 +93,17 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
     if(len(upc_matches) <= 0):
         return False
     drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((44 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (15 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'code': []}
+    upc_array = {'upc': upc, 'barsize': [], 'code': []}
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0]
+    upc_array['code'].append(start_barcode)
     LineStart = shiftxy[0]
     BarNum = 0
     start_bc_num_end = len(start_barcode)
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+    barsizeloop = []
+    LineSizeType = 0
     while(BarNum < start_bc_num_end):
         if(start_barcode[BarNum] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -109,8 +112,13 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
         LineStart += barwidth[0] * int(resize)
+        barsizeloop.append(LineSizeType)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     NumZero = 0
+    barsizeloop = []
+    LineSizeType = 0
+    subcode = []
     while (NumZero < len(upc_matches)):
         ArrayDigit = list(upc_matches[NumZero])
         left_barcolor = [0, 0, 1, 1, 0]
@@ -161,50 +169,71 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
+                barsizeloop.append(LineSizeType)
+                subcode.append(1)
                 BarNum += 1
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
+                barsizeloop.append(LineSizeType)
+                subcode.append(1)
                 BarNum += 1
                 if(threewidebar):
                     drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                                   LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
                     LineStart += barwidth[0] * int(resize)
+                    barsizeloop.append(LineSizeType)
+                    subcode.append(1)
                     BarNum += 1
             if(left_barcolor[InnerUPCNum] == 0):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
+                barsizeloop.append(LineSizeType)
+                subcode.append(1)
                 BarNum += 1
             if(right_barcolor[InnerUPCNum] == 1):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
+                barsizeloop.append(LineSizeType)
+                subcode.append(0)
                 BarNum += 1
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
+                barsizeloop.append(LineSizeType)
+                subcode.append(0)
                 BarNum += 1
                 if(threewidebar):
                     drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                                   LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                     LineStart += barwidth[0] * int(resize)
+                    barsizeloop.append(LineSizeType)
+                    subcode.append(0)
                     BarNum += 1
             if(right_barcolor[InnerUPCNum] == 0):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
+                barsizeloop.append(LineSizeType)
+                subcode.append(0)
                 BarNum += 1
             InnerUPCNum += 1
         NumZero += 1
+    upc_array['code'].append(subcode)
+    upc_array['barsize'].append(barsizeloop)
     if(threewidebar):
         end_barcode = [1, 1, 1, 0, 1, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     else:
         end_barcode = [1, 1, 0, 1, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    upc_array['code'].append(end_barcode)
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
+    barsizeloop = []
+    LineSizeType = 0
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -213,8 +242,10 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
         end_bc_num += 1
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     RectAltLoop = 4 * resize
     RectAltLoopSpin = 1
     while(RectAltLoopSpin <= RectAltLoop):
@@ -435,10 +466,10 @@ def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54
     return True
 
 def encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
- return encode_itf14_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo);
+ return encode_itf14_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 def draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
- return draw_itf14_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib);
+ return draw_itf14_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 def create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
-    return create_itf14_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib);
+    return create_itf14_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
