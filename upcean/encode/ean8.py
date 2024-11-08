@@ -116,7 +116,7 @@ def encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     elif(supplement is not None and len(supplement) == 5):
         upc_size_add = 56 * barwidth[0]
     drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((83 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'barsize': [], 'code': []}
+    upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1])
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1]
     LineStart = shiftxy[0]
