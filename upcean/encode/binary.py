@@ -90,12 +90,17 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         subbari = 0
         subbarmax = len(upc['code'][bari])
         while(subbari < subbarmax):
+            if(hidetext):
+                LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+            else:
+                LineSizeNum = upc['barsize'][bari][subbari]
+                LineSize = (barheight[LineSizeNum] + shiftxy[1]) * int(resize)
             if(upc['code'][bari][subbari] == 1):
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
-                          (upc['barsize'][bari][subbari] + shiftxy[1]) * int(resize), barwidth[0] * int(resize), barcolor[0], imageoutlib)
+                          LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
             elif(upc['code'][bari][subbari] == 0):
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
-                          upc['barsize'][bari][subbari], barwidth[0] * int(resize), barcolor[2], imageoutlib)
+                          LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             subbari += 1
             LineStart += barwidth[0] * int(resize)
         bari += 1

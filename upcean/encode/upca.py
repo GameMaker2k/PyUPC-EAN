@@ -120,11 +120,14 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     barsizeloop = []
+    LineSizeType = 0
     while(BarNum < start_bc_num_end):
         if(BarNum < 9):
             LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+            LineSizeType = 0
         else:
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+            LineSizeType = 1
         if(hidetext):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(start_barcode[BarNum] == 1):
@@ -133,16 +136,19 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         if(start_barcode[BarNum] == 0):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
     NumZero = 0
+    LineSizeType = 0
     while (NumZero < len(LeftDigit)):
         if(NumZero > 0):
             LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+            LineSizeType = 0
         if(NumZero == 0):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+            LineSizeType = 1
         if(hidetext):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         left_barcolor = [0, 0, 0, 0, 0, 0, 0]
@@ -177,7 +183,7 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
-            barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+            barsizeloop.append(LineSizeType)
             BarNum += 1
             InnerUPCNum += 1
         upc_array['barsize'].append(barsizeloop)
@@ -187,6 +193,7 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     mid_bc_num = 0
     mid_bc_num_end = len(mid_barcode)
     LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+    LineSizeType = 1
     barsizeloop = []
     while(mid_bc_num < mid_bc_num_end):
         if(mid_barcode[mid_bc_num] == 1):
@@ -195,17 +202,20 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         if(mid_barcode[mid_bc_num] == 0):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+        barsizeloop.append(LineSizeType)
         mid_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
     NumZero = 0
+    LineSizeType = 0
     while (NumZero < len(RightDigit)):
         if(NumZero != 5):
             LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+            LineSizeType = 0
         if(NumZero == 5):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+            LineSizeType = 1
         if(hidetext):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         right_barcolor = [0, 0, 0, 0, 0, 0, 0]
@@ -240,7 +250,7 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
-            barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+            barsizeloop.append(LineSizeType)
             BarNum += 1
             InnerUPCNum += 1
         upc_array['barsize'].append(barsizeloop)
@@ -250,12 +260,15 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
     LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+    LineSizeType = 1
     barsizeloop = []
     while(end_bc_num < end_bc_num_end):
         if(end_bc_num < 4):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+            LineSizeType = 1
         else:
             LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+            LineSizeType = 0
         if(hidetext):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(end_barcode[end_bc_num] == 1):
@@ -264,7 +277,7 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         if(end_barcode[end_bc_num] == 0):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+        barsizeloop.append(LineSizeType)
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
@@ -578,13 +591,18 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     LineStart = shiftxy[0]
     BarNum = 0
     start_bc_num_end = len(start_barcode)
-    LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+    LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+    if(hidetext):
+        LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     barsizeloop = []
+    LineSizeType = 1
     while(BarNum < start_bc_num_end):
         if(BarNum < 10):
             LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+            LineSizeType = 0
         else:
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+            LineSizeType = 1
         if(hidetext):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(start_barcode[BarNum] == 1):
@@ -593,13 +611,15 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         if(start_barcode[BarNum] == 0):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
     NumZero = 0
+    LineSizeType = 0
     while (NumZero < len(LeftDigit)):
         LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+        LineSizeType = 0
         if(hidetext):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         left_barcolor = [0, 0, 0, 0, 0, 0, 0]
@@ -633,7 +653,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             if(left_barcolor[InnerUPCNum] == 0):
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-            barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+            barsizeloop.append(LineSizeType)
             LineStart += barwidth[0] * int(resize)
             BarNum += 1
             InnerUPCNum += 1
@@ -645,6 +665,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     mid_bc_num_end = len(mid_barcode)
     LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     barsizeloop = []
+    LineSizeType = 1
     while(mid_bc_num < mid_bc_num_end):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         if(mid_barcode[mid_bc_num] == 1):
@@ -653,17 +674,20 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         if(mid_barcode[mid_bc_num] == 0):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+        barsizeloop.append(LineSizeType)
         mid_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
     NumZero = 0
+    LineSizeType = 0
     while (NumZero < len(RightDigit)):
         if(NumZero != 6):
             LineSize = (barheight[0] + shiftxy[1]) * int(resize)
+            LineSizeType = 0
         if(NumZero == 6):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
+            LineSizeType = 1
         if(hidetext):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
         right_barcolor = [0, 0, 0, 0, 0, 0, 0]
@@ -698,7 +722,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
                 drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
             LineStart += barwidth[0] * int(resize)
-            barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+            barsizeloop.append(LineSizeType)
             BarNum += 1
             InnerUPCNum += 1
         upc_array['barsize'].append(barsizeloop)
@@ -709,6 +733,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     end_bc_num_end = len(end_barcode)
     LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     barsizeloop = []
+    LineSizeType = 1
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
@@ -716,7 +741,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         if(end_barcode[end_bc_num] == 0):
             drawColorLine(upc_img, LineStart, (10 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
-        barsizeloop.append((LineSize / int(resize)) - shiftxy[1])
+        barsizeloop.append(LineSizeType)
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
