@@ -97,9 +97,12 @@ def encode_plessey_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                      1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0]
+    upc_array['code'].append(start_barcode)
     LineStart = shiftxy[0]
     BarNum = 0
     start_bc_num_end = len(start_barcode)
+    barsizeloop = []
+    LineSizeType = 0
     while(BarNum < start_bc_num_end):
         if(start_barcode[BarNum] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -107,8 +110,10 @@ def encode_plessey_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         if(start_barcode[BarNum] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     NumZero = 0
     while (NumZero < len(upc_matches)):
         left_barcolor = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
@@ -144,7 +149,9 @@ def encode_plessey_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             left_barcolor = [1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0]
         if(upc_matches[NumZero] == "F"):
             left_barcolor = [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0]
+        upc_array['code'].append(left_barcolor)
         InnerUPCNum = 0
+        barsizeloop = []
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -156,16 +163,22 @@ def encode_plessey_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
                 BarNum += 1
+            barsizeloop.append(LineSizeType)
             InnerUPCNum += 1
+        upc_array['barsize'].append(barsizeloop)
         drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize,
                       barwidth[0], barcolor[2], imageoutlib)
+        upc_array['code'].append(0)
+        upc_array['barsize'].append(barsizeloop)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
         NumZero += 1
     end_barcode = [1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0,
                    1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    upc_array['code'].append(end_barcode)
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
+    barsizeloop = []
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -173,9 +186,11 @@ def encode_plessey_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         if(end_barcode[end_bc_num] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:

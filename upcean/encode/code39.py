@@ -97,9 +97,12 @@ def encode_code39_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                      0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]
+    upc_array['code'].append(start_barcode)
     LineStart = shiftxy[0]
     BarNum = 0
     start_bc_num_end = len(start_barcode)
+    barsizeloop = []
+    LineSizeType = 0
     while(BarNum < start_bc_num_end):
         if(start_barcode[BarNum] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -107,8 +110,10 @@ def encode_code39_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         if(start_barcode[BarNum] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     NumZero = 0
     while (NumZero < len(upc_matches)):
         left_barcolor = [1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1]
@@ -198,7 +203,9 @@ def encode_code39_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
             left_barcolor = [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1]
         if(upc_matches[NumZero] == "%"):
             left_barcolor = [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1]
+        upc_array['code'].append(left_barcolor)
         InnerUPCNum = 0
+        barsizeloop = []
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -209,8 +216,10 @@ def encode_code39_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
+                barsizeloop.append(LineSizeType)
                 BarNum += 1
             InnerUPCNum += 1
+        upc_array['barsize'].append(barsizeloop)
         drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize,
                       barwidth[0], barcolor[2], imageoutlib)
         LineStart += barwidth[0] * int(resize)
@@ -218,8 +227,10 @@ def encode_code39_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         NumZero += 1
     end_barcode = [0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0,
                    1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    upc_array['code'].append(end_barcode)
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
+    barsizeloop = []
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -227,9 +238,11 @@ def encode_code39_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         if(end_barcode[end_bc_num] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:
@@ -491,8 +504,11 @@ def encode_code39extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                      0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]
+    upc_array['code'].append(start_barcode)
     LineStart = shiftxy[0]
     BarNum = 0
+    barsizeloop = []
+    LineSizeType = 0
     start_bc_num_end = len(start_barcode)
     while(BarNum < start_bc_num_end):
         if(start_barcode[BarNum] == 1):
@@ -501,8 +517,10 @@ def encode_code39extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         if(start_barcode[BarNum] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     NumZero = 0
     while (NumZero < len(upc_matches)):
         left_barcolor = [1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1]
@@ -592,7 +610,9 @@ def encode_code39extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
             left_barcolor = [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1]
         if(upc_matches[NumZero] == "%"):
             left_barcolor = [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1]
+        upc_array['code'].append(left_barcolor)
         InnerUPCNum = 0
+        barsizeloop = []
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -604,16 +624,22 @@ def encode_code39extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
                 BarNum += 1
+            barsizeloop.append(LineSizeType)
             InnerUPCNum += 1
+        upc_array['barsize'].append(barsizeloop)
         drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize,
                       barwidth[0], barcolor[2], imageoutlib)
+        upc_array['code'].append(0)
+        upc_array['barsize'].append(barsizeloop)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
         NumZero += 1
     end_barcode = [0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0,
                    1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    upc_array['code'].append(end_barcode)
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
+    barsizeloop = []
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -624,6 +650,7 @@ def encode_code39extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     code39extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '/D': "$", '/E': "%", '/F': "&", '/G': "'",
                           '/H': "(", '/I': ")", '/J': "*", '/K': "+", '/L': ",", '/M': "-", '/N': ".", '/O': "/", '-': "-", '.': ".", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?", '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
     if(not hidetext):

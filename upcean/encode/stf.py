@@ -96,12 +96,15 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     upc_array = {'upc': upc, 'barsize': [], 'code': []}
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0]
+    upc_array['code'].append(start_barcode)
     LineStart = shiftxy[0]
     BarNum = 0
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     start_bc_num_end = len(start_barcode)
+    barsizeloop = []
+    LineSizeType = 0
     while(BarNum < start_bc_num_end):
         if(start_barcode[BarNum] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -109,8 +112,10 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         if(start_barcode[BarNum] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     NumZero = 0
     while (NumZero < len(upc_matches)):
         if(threewidebar):
@@ -157,7 +162,9 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
                 left_barcolor = [1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0]
             if(int(upc_matches[NumZero]) == 9):
                 left_barcolor = [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0]
+        upc_array['code'].append(left_barcolor)
         InnerUPCNum = 0
+        barsizeloop = []
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -169,12 +176,16 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
                 BarNum += 1
+            barsizeloop.append(LineSizeType)
             InnerUPCNum += 1
+        upc_array['barsize'].append(barsizeloop)
         NumZero += 1
     end_barcode = [1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0,
                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    upc_array['code'].append(end_barcode)
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
+    barsizeloop = []
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -182,9 +193,11 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         if(end_barcode[end_bc_num] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:

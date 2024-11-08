@@ -104,13 +104,18 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     BarNum = 0
     # Draw the start barcode
     start_barcode = [0] * 14
+    upc_array['code'].append(start_barcode)
+    barsizeloop = []
+    LineSizeType = 0
     for bar in start_barcode:
         if bar == 1:
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
         else:
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     # Optimized Mappings
     hextocharsetone = {
         '00': " ", '01': "!", '02': "\"", '03': "#", '04': "$", '05': "%", '06': "&",
@@ -480,11 +485,15 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
                 left_barcolor = []
                 cur_set = 3
         # Draw the bar colors
+        if(len(left_barcolor)>0):
+            upc_array['code'].append(left_barcolor)
+        barsizeloop = []
         for color in left_barcolor:
             if color == 1:
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
             else:
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+            barsizeloop.append(LineSizeType)
             LineStart += barwidth[0] * int(resize)
             BarNum += 1
         # Reset cur_set if shift was applied
@@ -492,17 +501,22 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             cur_set = old_cur_set
             start_shift = 0
         NumZero += 1
+        upc_array['barsize'].append(barsizeloop)
     # Define the mappings for left_barcolor and cur_set changes
     # (Already defined above)
     # Draw the end barcode
     end_barcode = [0] * 15
+    upc_array['code'].append(end_barcode)
+    barsizeloop = []
     for bar in end_barcode:
         if bar == 1:
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
         else:
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:
@@ -769,9 +783,12 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    upc_array['code'].append(start_barcode)
     LineStart = shiftxy[0]
     BarNum = 0
     start_bc_num_end = len(start_barcode)
+    barsizeloop = []
+    LineSizeType = 0
     while(BarNum < start_bc_num_end):
         if(start_barcode[BarNum] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -779,8 +796,10 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         if(start_barcode[BarNum] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     NumZero = 0
     cur_set = 0
     hextocharsetone = {'00': " ", '01': "!", '02': "\"", '03': "#", '04': "$", '05': "%", '06': "&", '07': "'", '08': "(", '09': ")", '0a': "*", '0b': "+", '0c': ",", '0d': "-", '0e': ".", '0f': "/", '10': "0", '11': "1", '12': "2", '13': "3", '14': "4", '15': "5", '16': "6", '17': "7", '18': "8", '19': "9", '1a': ":", '1b': ";", '1c': "<", '1d': "=", '1e': ">", '1f': "?", '20': "@", '21': "A", '22': "B", '23': "C", '24': "D", '25': "E", '26': "F", '27': "G", '28': "H", '29': "I", '2a': "J", '2b': "K", '2c': "L", '2d': "M", '2e': "N", '2f': "O", '30': "P", '31': "Q", '32': "R", '33': "S", '34': "T", '35': "U",
@@ -1062,7 +1081,10 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         if(start_shift == 1):
             cur_set = old_cur_set
             start_shift = 0
+        if(len(left_barcolor)>0):
+            upc_array['code'].append(left_barcolor)
         InnerUPCNum = 0
+        barsizeloop = []
         while (InnerUPCNum < len(left_barcolor)):
             if(left_barcolor[InnerUPCNum] == 1):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -1070,13 +1092,17 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
             if(left_barcolor[InnerUPCNum] == 0):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+            barsizeloop.append(LineSizeType)
             LineStart += barwidth[0] * int(resize)
             BarNum += 1
             InnerUPCNum += 1
         NumZero += 1
+    upc_array['barsize'].append(barsizeloop)
     end_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    upc_array['code'].append(end_barcode)
     end_bc_num = 0
     end_bc_num_end = len(end_barcode)
+    barsizeloop = []
     while(end_bc_num < end_bc_num_end):
         if(end_barcode[end_bc_num] == 1):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
@@ -1084,9 +1110,11 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         if(end_barcode[end_bc_num] == 0):
             drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                           LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
+        barsizeloop.append(LineSizeType)
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
+    upc_array['barsize'].append(barsizeloop)
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:
