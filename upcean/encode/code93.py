@@ -260,19 +260,22 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
-    if(not hidetext):
-        if(svgwritesupport and imageoutlib == "svgwrite"):
-            try:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
-            except OSError:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        NumTxtZero = 0
-        LineTxtStart = 18
-        while (NumTxtZero < len(upc_matches)):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (19 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
-            LineTxtStart += 9 * int(resize)
-            NumTxtZero += 1
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0] + (18 * int(resize))
+    LineTxtStartNorm = 18
+    while (NumTxtZero < len(upc_matches)):
+        texthidden = False
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_matches[NumTxtZero])
+        upc_array['text']['type'].append("txt")
+        LineTxtStart += 9 * int(resize)
+        LineTxtStartNorm += 9
+        NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     return [upc_img, upc_preimg, imageoutlib, upc_array]
@@ -679,27 +682,32 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     upc_array['barsize'].append(barsizeloop)
     code93extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '$': "$", '%': "%", '/F': "&", '/G': "'", '/H': "(", '/I': "", '/J': "*", '+': "+", '/L': ",", '-': "-", '.': ".", '/': "/", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?",
                       '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
-    if(not hidetext):
-        if(svgwritesupport and imageoutlib == "svgwrite"):
-            try:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
-            except OSError:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        NumTxtZero = 0
-        LineTxtStart = 18
-        while (NumTxtZero < len(upc_matches)):
-            NumTxtZeroNext = NumTxtZero + 1
-            NumTxtZeroNextUp = NumTxtZero + 2
-            if(NumTxtZeroNextUp < len(upc_matches) and code93extended.get(str(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext]+upc_matches[NumTxtZeroNextUp]), False)):
-                LineTxtStart += 16 * int(resize)
-                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (19 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + (
-                    textxy[1] * int(resize)), code93extended.get(str(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext]+upc_matches[NumTxtZeroNextUp]), False), barcolor[1], "ocrb", imageoutlib)
-                NumTxtZero += 2
-            else:
-                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (19 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                    barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
-            LineTxtStart += 9 * int(resize)
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0] + (18 * int(resize))
+    LineTxtStartNorm = 18
+    while (NumTxtZero < len(upc_matches)):
+        texthidden = False
+        NumTxtZeroNext = NumTxtZero + 1
+        if(NumTxtZeroNext < len(upc_matches) and code93extended.get(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext], False)):
+            LineTxtStart += 16 * int(resize)
+            LineTxtStartNorm += 16
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, code93extended.get(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext], " "), barcolor[1], "ocrb", imageoutlib)
             NumTxtZero += 1
+        else:
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, code93extended.get(upc_matches[NumTxtZero], upc_matches[NumTxtZero]), barcolor[1], "ocrb", imageoutlib)
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_matches[NumTxtZero])
+        upc_array['text']['type'].append("txt")
+        LineTxtStart += 9 * int(resize)
+        LineTxtStartNorm += 9
+        NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     return [upc_img, upc_preimg, imageoutlib, upc_array]
