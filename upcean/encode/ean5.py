@@ -324,12 +324,7 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             (barheight[0]) * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
         upc_array['text']['location'].append(LineTxtStartNorm)
         upc_array['text']['text'].append(upc_print[NumTxtZero])
-        if(NumTxtZero == 0):
-         upc_array['text']['type'].append("sn")
-        elif(NumTxtZero == 9):
-         upc_array['text']['type'].append("cd")
-        else:
-         upc_array['text']['type'].append("txt")
+        upc_array['text']['type'].append("txt")
         LineTxtStart += 8 * int(resize)
         LineTxtStartNorm += 8
         NumTxtZero += 1
