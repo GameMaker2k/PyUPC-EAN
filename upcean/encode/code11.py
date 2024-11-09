@@ -179,24 +179,29 @@ def encode_code11_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['code'].append([1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        NumTxtZero = 0
-        LineTxtStart = shiftxy[0] + (10 * int(resize))
-        LineTxtStartNorm = 10
-        while (NumTxtZero < len(upc_print)):
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0] + (10 * int(resize))
+    LineTxtStartNorm = 10
+    while (NumTxtZero < len(upc_print)):
+        texthidden = False
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
             barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
-            upc_array['text']['location'].append(LineTxtStartNorm)
-            upc_array['text']['text'].append(upc_print[NumTxtZero])
-            upc_array['text']['type'].append("txt")
-            LineTxtStart += 9 * int(resize)
-            LineTxtStartNorm += 9
-            NumTxtZero += 1
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_print[NumTxtZero])
+        upc_array['text']['type'].append("txt")
+        LineTxtStart += 9 * int(resize)
+        LineTxtStartNorm += 9
+        NumTxtZero += 1
     upc_array['barsize'].append(barsizeloop)
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()

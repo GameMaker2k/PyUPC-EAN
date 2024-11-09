@@ -183,7 +183,7 @@ def encode_codabar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         upc_array['barsize'].append(barsizeloop)
         drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize,
                       barwidth[0], barcolor[2], imageoutlib)
-        upc_array['code'].append(0)
+        upc_array['code'].append([0])
         upc_array['barsize'].append(barsizeloop)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
