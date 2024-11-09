@@ -207,7 +207,7 @@ def create_binary_barcode(upc, outfile="./binary.png", resize=1, barheight=(48, 
     imgout = draw_binary_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    exargdict = {'comment': "barcode; "+upc['upc']}
+    exargdict = {'comment': upc['type']+"; "+upc['upc']}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
@@ -226,10 +226,10 @@ def create_binary_barcode(upc, outfile="./binary.png", resize=1, barheight=(48, 
             if(pilsupport):
                 # Add a comment to the image
                 info = PngImagePlugin.PngInfo()
-                info.add_text("Comment", "upca; "+upc['upc'])
+                info.add_text("Comment", upc['type']+"; "+upc['upc'])
                 exargdict.update({'pnginfo': info})
         else:
-            exargdict = {'comment': "barcode; "+upc['upc']}
+            exargdict = {'comment': upc['type']+"; "+upc['upc']}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
                     upc_img.write(outfile, True)
