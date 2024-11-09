@@ -335,7 +335,10 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
-    return [upc_img, upc_preimg, imageoutlib, upc_array]
+    if(imageoutlib is None):
+        return upc_array
+    else:
+        return [upc_img, upc_preimg, imageoutlib]
 
 
 def draw_ean5sup_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -369,7 +372,7 @@ def draw_ean5sup_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
     imgout = encode_ean5_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+    return [upc_img, upc_preimg, imageoutlib]
 
 def create_ean5sup_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -409,7 +412,7 @@ def create_ean5sup_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 5
     upc_preimg = imgout[1]
     exargdict = {'comment': "ean5; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+        return [upc_img, upc_preimg, imageoutlib]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
@@ -550,7 +553,7 @@ def draw_ean5_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         upc_preimg.close()
     drawColorRectangle(upc_img, 0, 0, (((56 + 8) * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     imgout = encode_ean5_barcode((upc_img, upc_preimg), upc, resize, (8 * int(resize), 0), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+    return [upc_img, upc_preimg, imageoutlib]
 
 def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -590,7 +593,7 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
     upc_preimg = imgout[1]
     exargdict = {'comment': "ean5; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+        return [upc_img, upc_preimg, imageoutlib]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})

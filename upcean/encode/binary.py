@@ -61,14 +61,17 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
+    imageoutlib = "pillow"
     if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib is not None):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
         imageoutlib = "pillow"
+    elif(inimage == "none" or inimage is None):
+        imageoutlib = None
     elif(not pilsupport and not cairosupport and not svgwritesupport):
         return False
     else:
@@ -127,7 +130,10 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         txtbari += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
-    return [upc_img, upc_preimg, imageoutlib, upc]
+    if(imageoutlib is None):
+        return upc
+    else:
+        return [upc_img, upc_preimg, imageoutlib]
 
 
 def draw_binary_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -203,7 +209,7 @@ def create_binary_barcode(upc, outfile="./binary.png", resize=1, barheight=(48, 
     upc_preimg = imgout[1]
     exargdict = {'comment': "barcode; "+upc['upc']}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+        return [upc_img, upc_preimg, imageoutlib]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})

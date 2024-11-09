@@ -335,23 +335,32 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         else:
             supimgout = (upc_img, upc_preimg)
         supout = upcean.encode.ean2.encode_upc2_barcode(supimgout, supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
-        upc_array['code'] += supout[3]['code']
-        upc_array['barsize'] += supout[3]['barsize']
-        upc_array['text']['location'] += [x + 113 for x in supout[3]['text']['location']]
-        upc_array['text']['type'] += supout[3]['text']['type']
-        upc_array['text']['text'] += supout[3]['text']['text']
+        if(imageoutlib is None):
+            upc_array['code'] += supout['code']
+            upc_array['barsize'] += supout['barsize']
+            # Add 115 to every 0th element in each sublist of upc_array['text']['location']
+            upc_array['text']['location'] += [x + 113 for x in supout['text']['location']]
+            upc_array['text']['location'] += supout['text']['location']
+            upc_array['text']['type'] += supout['text']['type']
+            upc_array['text']['text'] += supout['text']['text']
     if(supplement is not None and len(supplement) == 5):
         if(imageoutlib is None):
             supimgout = None
         else:
             supimgout = (upc_img, upc_preimg)
         supout = upcean.encode.ean5.encode_upc5_barcode(supimgout, supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
-        upc_array['code'] += supout[3]['code']
-        upc_array['barsize'] += supout[3]['barsize']
-        upc_array['text']['location'] += [x + 113 for x in supout[3]['text']['location']]
-        upc_array['text']['type'] += supout[3]['text']['type']
-        upc_array['text']['text'] += supout[3]['text']['text']
-    return [upc_img, upc_preimg, imageoutlib, upc_array]
+        if(imageoutlib is None):
+            upc_array['code'] += supout['code']
+            upc_array['barsize'] += supout['barsize']
+            # Add 115 to every 0th element in each sublist of upc_array['text']['location']
+            upc_array['text']['location'] += [x + 113 for x in supout['text']['location']]
+            upc_array['text']['location'] += supout['text']['location']
+            upc_array['text']['type'] += supout['text']['type']
+            upc_array['text']['text'] += supout['text']['text']
+    if(imageoutlib is None):
+        return upc_array
+    else:
+        return [upc_img, upc_preimg, imageoutlib]
 
 
 def draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -404,7 +413,7 @@ def draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((113 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
     imgout = encode_upca_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+    return [upc_img, upc_preimg, imageoutlib]
 
 def create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -444,7 +453,7 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54),
     upc_preimg = imgout[1]
     exargdict = {'comment': "upca; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+        return [upc_img, upc_preimg, imageoutlib]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
@@ -826,31 +835,32 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         else:
             supimgout = (upc_img, upc_preimg)
         supout = upcean.encode.ean2.encode_upc2_barcode(supimgout, supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
-        upc_array['code'] += supout[3]['code']
-        upc_array['barsize'] += supout[3]['barsize']
-        # Add 115 to every 0th element in each sublist of upc_array['text']['location']
-        for sublist in upc_array['text']['location']:
-            if isinstance(sublist, list) and len(sublist) > 0:
-                sublist[0] += 115
-        upc_array['text']['location'] += supout[3]['text']['location']
-        upc_array['text']['type'] += supout[3]['text']['type']
-        upc_array['text']['text'] += supout[3]['text']['text']
+        if(imageoutlib is None):
+            upc_array['code'] += supout['code']
+            upc_array['barsize'] += supout['barsize']
+            # Add 115 to every 0th element in each sublist of upc_array['text']['location']
+            upc_array['text']['location'] += [x + 115 for x in supout['text']['location']]
+            upc_array['text']['location'] += supout['text']['location']
+            upc_array['text']['type'] += supout['text']['type']
+            upc_array['text']['text'] += supout['text']['text']
     if(supplement is not None and len(supplement) == 5):
         if(imageoutlib is None):
             supimgout = None
         else:
             supimgout = (upc_img, upc_preimg)
         supout = upcean.encode.ean5.encode_upc5_barcode(supimgout, supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
-        upc_array['code'] += supout[3]['code']
-        upc_array['barsize'] += supout[3]['barsize']
-        # Add 115 to every 0th element in each sublist of upc_array['text']['location']
-        for sublist in upc_array['text']['location']:
-            if isinstance(sublist, list) and len(sublist) > 0:
-                sublist[0] += 115
-        upc_array['text']['location'] += supout[3]['text']['location']
-        upc_array['text']['type'] += supout[3]['text']['type']
-        upc_array['text']['text'] += supout[3]['text']['text']
-    return [upc_img, upc_preimg, imageoutlib, upc_array]
+        if(imageoutlib is None):
+            upc_array['code'] += supout['code']
+            upc_array['barsize'] += supout['barsize']
+            # Add 115 to every 0th element in each sublist of upc_array['text']['location']
+            upc_array['text']['location'] += [x + 115 for x in supout['text']['location']]
+            upc_array['text']['location'] += supout['text']['location']
+            upc_array['text']['type'] += supout['text']['type']
+            upc_array['text']['text'] += supout['text']['text']
+    if(imageoutlib is None):
+        return upc_array
+    else:
+        return [upc_img, upc_preimg, imageoutlib]
 
 
 def draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -903,7 +913,7 @@ def draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((115 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
     imgout = encode_upcaean_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+    return [upc_img, upc_preimg, imageoutlib]
 
 def create_upcaean_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -943,7 +953,7 @@ def create_upcaean_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
     upc_preimg = imgout[1]
     exargdict = {'comment': "upca; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+        return [upc_img, upc_preimg, imageoutlib]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})

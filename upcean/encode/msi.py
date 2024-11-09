@@ -215,7 +215,10 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     upc_array['barsize'].append(barsizeloop)
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
-    return [upc_img, upc_preimg, imageoutlib, upc_array]
+    if(imageoutlib is None):
+        return upc_array
+    else:
+        return [upc_img, upc_preimg, imageoutlib]
 
 
 def draw_msi_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
@@ -268,7 +271,7 @@ def draw_msi_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolo
         upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
         upc_preimg.close()
     imgout = encode_msi_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
-    return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+    return [upc_img, upc_preimg, imageoutlib]
 
 def create_msi_barcode(upc, outfile="./msi.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
@@ -308,7 +311,7 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, barheight=(48, 54), b
     upc_preimg = imgout[1]
     exargdict = {'comment': "msi; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imageoutlib, imgout[3]]
+        return [upc_img, upc_preimg, imageoutlib]
     else:
         if(outfileext == "WEBP"):
             exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
