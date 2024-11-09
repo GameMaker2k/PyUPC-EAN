@@ -417,7 +417,8 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             upc_array['code'] += supout['code']
             upc_array['barsize'] += supout['barsize']
             # Add 115 to every 0th element in each sublist of upc_array['text']['location']
-            upc_array['text']['location'] += [x + 115 for x in supout['text']['location']]location'] += supout['text']['location']
+            upc_array['text']['location'] += [x + 115 for x in supout['text']['location']]
+            upc_array['text']['location'] += supout['text']['location']
             upc_array['text']['type'] += supout['text']['type']
             upc_array['text']['text'] += supout['text']['text']
     if(imageoutlib is None):
