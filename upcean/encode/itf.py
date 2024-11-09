@@ -190,13 +190,14 @@ def encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
                               LineSize, barwidth[0] * int(resize), barcolor[0], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
                 barsizeloop.append(LineSizeType)
-                subcode.append(0)
+                subcode.append(1)
                 BarNum += 1
             if(right_barcolor[InnerUPCNum] == 1):
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
                 LineStart += barwidth[0] * int(resize)
                 barsizeloop.append(LineSizeType)
+                subcode.append(0)
                 BarNum += 1
                 drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart,
                               LineSize, barwidth[0] * int(resize), barcolor[2], imageoutlib)
@@ -219,9 +220,9 @@ def encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
                 subcode.append(0)
                 BarNum += 1
             InnerUPCNum += 1
+        upc_array['code'].append(subcode)
+        upc_array['barsize'].append(barsizeloop)
         NumZero += 1
-    upc_array['code'].append(subcode)
-    upc_array['barsize'].append(barsizeloop)
     if(threewidebar):
         end_barcode = [1, 1, 1, 0, 1, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -251,25 +252,39 @@ def encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        NumTxtZero = 0
-        LineTxtStart = 20
-        if(not threewidebar):
-            LineTxtStart -= 2
-        while (NumTxtZero < len(upc_matches)):
-            ArrayDigit = list(upc_matches[NumTxtZero])
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (21 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), ArrayDigit[0], barcolor[1], "ocrb", imageoutlib)
-            if(threewidebar):
-                LineTxtStart += 9 * int(resize)
-            else:
-                LineTxtStart += 7 * int(resize)
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (21 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (
-                barheight[0] + (barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), ArrayDigit[1], barcolor[1], "ocrb", imageoutlib)
-            if(threewidebar):
-                LineTxtStart += 9 * int(resize)
-            else:
-                LineTxtStart += 7 * int(resize)
-            NumTxtZero += 1
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0] + (20 * int(resize))
+    LineTxtStartNorm = 20
+    while (NumTxtZero < len(upc_matches)):
+        ArrayDigit = list(upc_matches[NumTxtZero])
+        texthidden = False
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, ArrayDigit[0], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(ArrayDigit[0])
+        upc_array['text']['type'].append("txt")
+        if(threewidebar):
+            LineTxtStart += 9 * int(resize)
+            LineTxtStartNorm += 9
+        else:
+            LineTxtStart += 7 * int(resize)
+            LineTxtStartNorm += 7
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, ArrayDigit[1], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(ArrayDigit[1])
+        upc_array['text']['type'].append("txt")
+        if(threewidebar):
+            LineTxtStart += 9 * int(resize)
+            LineTxtStartNorm += 9
+        else:
+            LineTxtStart += 7 * int(resize)
+            LineTxtStartNorm += 7
+        NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     return [upc_img, upc_preimg, imageoutlib, upc_array]

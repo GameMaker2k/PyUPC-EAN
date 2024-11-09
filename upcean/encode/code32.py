@@ -229,15 +229,23 @@ def encode_code32_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        drawColorText(upc_img, 10 * int(resize * barwidth[1]), ((14 + shiftxy[1]) * int(resize)) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-            barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), "A", barcolor[1], "ocrb", imageoutlib)
-        NumTxtZero = 0
-        LineTxtStart = 30 * int(resize)
-        while (NumTxtZero < len(upc_matches)):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (int(resize) - 1)) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
-            LineTxtStart += 16 * int(resize)
-            NumTxtZero += 1
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0] + (30 * int(resize))
+    LineTxtStartNorm = 30
+    while (NumTxtZero < len(upc_matches)):
+        texthidden = False
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_matches[NumTxtZero])
+        upc_array['text']['type'].append("txt")
+        LineTxtStart += 16 * int(resize)
+        LineTxtStartNorm += 16
+        NumTxtZero += 1
+    upc_array['barsize'].append(barsizeloop)
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     return [upc_img, upc_preimg, imageoutlib, upc_array]
