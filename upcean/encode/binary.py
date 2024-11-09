@@ -55,15 +55,19 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    upc_img = inimage[0]
-    upc_preimg = inimage[1]
+    if(inimage is None):
+        upc_img = None
+        upc_preimg = None
+    else:
+        upc_img = inimage[0]
+        upc_preimg = inimage[1]
     if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib is not None):
         imageoutlib = "pillow"
     elif(not pilsupport and not cairosupport and not svgwritesupport):
         return False
@@ -140,7 +144,7 @@ def draw_binary_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
         imageoutlib = "pillow"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib is not None):
         imageoutlib = "pillow"
     if(not pilsupport and not cairosupport and not svgwritesupport):
         return False
@@ -170,7 +174,7 @@ def create_binary_barcode(upc, outfile="./binary.png", resize=1, barheight=(48, 
         imageoutlib = "pillow"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib is not None):
         imageoutlib = "pillow"
     if(not pilsupport and not cairosupport and not svgwritesupport):
         return False

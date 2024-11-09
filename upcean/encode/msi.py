@@ -54,16 +54,23 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    upc_img = inimage[0]
-    upc_preimg = inimage[1]
+    if(inimage is None):
+        upc_img = None
+        upc_preimg = None
+    else:
+        upc_img = inimage[0]
+        upc_preimg = inimage[1]
+    imageoutlib = "pillow"
     if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
         imageoutlib = "pillow"
+    elif(inimage == "none" or inimage is None):
+        imageoutlib = None
     elif(not pilsupport and not cairosupport and not svgwritesupport):
         return False
     else:
@@ -104,7 +111,8 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         PreCount += 1
     upc_matches.append(str(10 - (UPC_Sum % 10)))
     upc_size_add = (len(upc_matches) * 12) * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((34 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    if(inimage is not None):
+        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((34 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):

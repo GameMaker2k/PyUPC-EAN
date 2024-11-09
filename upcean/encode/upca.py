@@ -56,18 +56,25 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    upc_img = inimage[0]
-    upc_preimg = inimage[1]
+    if(inimage is None):
+        upc_img = None
+        upc_preimg = None
+    else:
+        upc_img = inimage[0]
+        upc_preimg = inimage[1]
     upc_pieces = None
     supplement = None
+    imageoutlib = "pillow"
     if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
         imageoutlib = "pillow"
+    elif(inimage == "none" or inimage is None):
+        imageoutlib = None
     elif(not pilsupport and not cairosupport and not svgwritesupport):
         return False
     else:
@@ -109,7 +116,8 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         upc_size_add = 29 * barwidth[0]
     if(supplement is not None and len(supplement) == 5):
         upc_size_add = 56 * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((113 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    if(inimage is not None):
+        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((113 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1])
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1]
@@ -322,14 +330,22 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     if(supplement is not None and len(supplement) == 2):
-        supout = upcean.encode.ean2.encode_upc2_barcode((upc_img, upc_preimg), supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        if(imageoutlib is None):
+            supimgout = None
+        else:
+            supimgout = (upc_img, upc_preimg)
+        supout = upcean.encode.ean2.encode_upc2_barcode(supimgout, supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         upc_array['code'] += supout[3]['code']
         upc_array['barsize'] += supout[3]['barsize']
         upc_array['text']['location'] += [x + 113 for x in supout[3]['text']['location']]
         upc_array['text']['type'] += supout[3]['text']['type']
         upc_array['text']['text'] += supout[3]['text']['text']
     if(supplement is not None and len(supplement) == 5):
-        supout = upcean.encode.ean5.encode_upc5_barcode((upc_img, upc_preimg), supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        if(imageoutlib is None):
+            supimgout = None
+        else:
+            supimgout = (upc_img, upc_preimg)
+        supout = upcean.encode.ean5.encode_upc5_barcode(supimgout, supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         upc_array['code'] += supout[3]['code']
         upc_array['barsize'] += supout[3]['barsize']
         upc_array['text']['location'] += [x + 113 for x in supout[3]['text']['location']]
@@ -542,18 +558,25 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    upc_img = inimage[0]
-    upc_preimg = inimage[1]
+    if(inimage is None):
+        upc_img = None
+        upc_preimg = None
+    else:
+        upc_img = inimage[0]
+        upc_preimg = inimage[1]
     upc_pieces = None
     supplement = None
+    imageoutlib = "pillow"
     if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
         imageoutlib = "pillow"
+    elif(inimage == "none" or inimage is None):
+        imageoutlib = None
     elif(not pilsupport and not cairosupport and not svgwritesupport):
         return False
     else:
@@ -595,7 +618,8 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         upc_size_add = 29 * barwidth[0]
     if(supplement is not None and len(supplement) == 5):
         upc_size_add = 56 * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((115 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    if(inimage is not None):
+        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((115 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1])
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1]
@@ -797,7 +821,11 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     if(supplement is not None and len(supplement) == 2):
-        supout = upcean.encode.ean2.encode_upc2_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        if(imageoutlib is None):
+            supimgout = None
+        else:
+            supimgout = (upc_img, upc_preimg)
+        supout = upcean.encode.ean2.encode_upc2_barcode(supimgout, supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         upc_array['code'] += supout[3]['code']
         upc_array['barsize'] += supout[3]['barsize']
         # Add 115 to every 0th element in each sublist of upc_array['text']['location']
@@ -808,7 +836,11 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         upc_array['text']['type'] += supout[3]['text']['type']
         upc_array['text']['text'] += supout[3]['text']['text']
     if(supplement is not None and len(supplement) == 5):
-        supout = upcean.encode.ean5.encode_upc5_barcode((upc_img, upc_preimg), supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        if(imageoutlib is None):
+            supimgout = None
+        else:
+            supimgout = (upc_img, upc_preimg)
+        supout = upcean.encode.ean5.encode_upc5_barcode(supimgout, supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         upc_array['code'] += supout[3]['code']
         upc_array['barsize'] += supout[3]['barsize']
         # Add 115 to every 0th element in each sublist of upc_array['text']['location']

@@ -108,6 +108,10 @@ def select_image_output_lib(imageoutlib="pillow"):
     Raises:
         UnsupportedLibraryError: If neither Pillow nor Cairo is supported.
     """
+
+    if imageoutlib == "none" or imageoutlib == None:
+        return "none"
+
     imageoutlib = imageoutlib.lower()
 
     # Adjust imageoutlib based on support flags
@@ -154,6 +158,8 @@ def snapCoords(ctx, x, y, imageoutlib="pillow"):
         logger.error("snapCoords failed: {}".format(e))
         return False
 
+    if selected_lib == "none" or selected_lib == None:
+        return True
     if selected_lib == "pillow" and pilsupport:
         return upcean.encode.predraw.prepil.snapCoords(ctx, x, y)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
@@ -187,6 +193,8 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow"):
         logger.error("drawColorLine failed: {}".format(e))
         return False
 
+    if selected_lib == "none" or selected_lib == None:
+        return True
     if selected_lib == "pillow" and pilsupport:
         return upcean.encode.predraw.prepil.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
@@ -219,6 +227,8 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
         logger.error("drawColorRectangle failed: {}".format(e))
         return False
 
+    if selected_lib == "none" or selected_lib == None:
+        return True
     if selected_lib == "pillow" and pilsupport:
         return upcean.encode.predraw.prepil.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
@@ -254,6 +264,8 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib="pillo
         logger.error("drawColorText failed: {}".format(e))
         return False
 
+    if selected_lib == "none" or selected_lib == None:
+        return True
     if selected_lib == "pillow" and pilsupport:
         return upcean.encode.predraw.prepil.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
@@ -286,6 +298,8 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
         logger.error("drawColorRectangleAlt failed: {}".format(e))
         return False
 
+    if selected_lib == "none" or selected_lib == None:
+        return True
     if selected_lib == "pillow" and pilsupport:
         return upcean.encode.predraw.prepil.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
@@ -319,6 +333,8 @@ def get_save_filename(outfile, imageoutlib="pillow"):
         logger.error("get_save_filename failed: {}".format(e))
         return False
 
+    if selected_lib == "none" or selected_lib == None:
+        return True
     if selected_lib == "pillow" and pilsupport:
         return upcean.encode.predraw.prepil.get_save_filename(outfile)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:

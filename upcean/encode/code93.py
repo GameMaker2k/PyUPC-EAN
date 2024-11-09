@@ -54,16 +54,23 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    upc_img = inimage[0]
-    upc_preimg = inimage[1]
+    if(inimage is None):
+        upc_img = None
+        upc_preimg = None
+    else:
+        upc_img = inimage[0]
+        upc_preimg = inimage[1]
+    imageoutlib = "pillow"
     if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
         imageoutlib = "pillow"
+    elif(inimage == "none" or inimage is None):
+        imageoutlib = None
     elif(not pilsupport and not cairosupport and not svgwritesupport):
         return False
     else:
@@ -92,7 +99,8 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
                    24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%", 43: "($)", 44: "(%)", 45: "(/)", 46: "(+)"}
     Code93Values = dict(zip(Code93Array.values(), Code93Array))
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    if(inimage is not None):
+        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
@@ -472,16 +480,23 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    upc_img = inimage[0]
-    upc_preimg = inimage[1]
+    if(inimage is None):
+        upc_img = None
+        upc_preimg = None
+    else:
+        upc_img = inimage[0]
+        upc_preimg = inimage[1]
+    imageoutlib = "pillow"
     if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
         imageoutlib = "pillow"
+    elif(inimage == "none" or inimage is None):
+        imageoutlib = None
     elif(not pilsupport and not cairosupport and not svgwritesupport):
         return False
     else:
@@ -510,7 +525,8 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
                    24: "O", 25: "P", 26: "Q", 27: "R", 28: "S", 29: "T", 30: "U", 31: "V", 32: "W", 33: "X", 34: "Y", 35: "Z", 36: "-", 37: ".", 38: " ", 39: "$", 40: "/", 41: "+", 42: "%", 43: "($)", 44: "(%)", 45: "(/)", 46: "(+)"}
     Code93Values = dict(zip(Code93Array.values(), Code93Array))
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    if(inimage is not None):
+        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
