@@ -224,13 +224,22 @@ def encode_codabar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        NumTxtZero = 0
-        LineTxtStart = 20
-        while (NumTxtZero < len(upc_matches)):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
-            LineTxtStart += 11 * int(resize)
-            NumTxtZero += 1
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0] + (20 * int(resize))
+    LineTxtStartNorm = 20
+    while (NumTxtZero < len(upc_matches)):
+        texthidden = False
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_matches[NumTxtZero])
+        upc_array['text']['type'].append("txt")
+        LineTxtStart += 11 * int(resize)
+        LineTxtStartNorm += 11
+        NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     return [upc_img, upc_preimg, imageoutlib, upc_array]

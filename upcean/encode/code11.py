@@ -179,7 +179,6 @@ def encode_code11_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['code'].append([1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:

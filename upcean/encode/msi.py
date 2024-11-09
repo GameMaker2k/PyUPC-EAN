@@ -182,20 +182,29 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         end_bc_num += 1
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
-    upc_array['barsize'].append(barsizeloop)
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
-        NumTxtZero = 0
-        LineTxtStart = 16
-        while (NumTxtZero < len(upc_print)):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
-            LineTxtStart += 12 * int(resize)
-            NumTxtZero += 1
+    NumTxtZero = 0
+    LineTxtStart = shiftxy[0] + (16 * int(resize))
+    LineTxtStartNorm = 16
+    while (NumTxtZero < len(upc_print)):
+        texthidden = False
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+            texthidden = True
+        if(not texthidden):
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+        upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['text'].append(upc_print[NumTxtZero])
+        upc_array['text']['type'].append("txt")
+        LineTxtStart += 12 * int(resize)
+        LineTxtStartNorm += 12
+        NumTxtZero += 1
+    upc_array['barsize'].append(barsizeloop)
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
     return [upc_img, upc_preimg, imageoutlib, upc_array]
@@ -217,7 +226,7 @@ def draw_msi_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolo
         imageoutlib = "pillow"
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
-    upc_matc = upc_matc.upper()
+    upc_matc = upc.upper()
     upc_matches = list(upc_matc)
     upc_print = list(upc_matches)
     if(len(upc) % 2 == 0):
