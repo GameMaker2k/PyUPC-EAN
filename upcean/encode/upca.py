@@ -339,7 +339,6 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
             barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
         upc_array['text']['location'].append(LineTxtStartNorm)
-        upc_array['text']['heightadd'].append(9)
         upc_array['text']['text'].append(upc_print[NumTxtZero])
         if(NumTxtZero == 0):
          upc_array['text']['type'].append("sn")
@@ -373,7 +372,6 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             # Add 115 to every 0th element in each sublist of upc_array['text']['location']
             upc_array['text']['location'] += [x + 113 for x in supout['text']['location']]
             upc_array['text']['location'] += supout['text']['location']
-            upc_array['text']['heightadd'] += supout['text']['location']
             upc_array['text']['type'] += supout['text']['type']
             upc_array['text']['text'] += supout['text']['text']
     if(supplement is not None and len(supplement) == 5):
@@ -388,7 +386,6 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             # Add 115 to every 0th element in each sublist of upc_array['text']['location']
             upc_array['text']['location'] += [x + 113 for x in supout['text']['location']]
             upc_array['text']['location'] += supout['text']['location']
-            upc_array['text']['heightadd'] += supout['text']['location']
             upc_array['text']['type'] += supout['text']['type']
             upc_array['text']['text'] += supout['text']['text']
     if(imageoutlib is None):
@@ -872,7 +869,6 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
             barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
         upc_array['text']['location'].append(LineTxtStartNorm)
-        upc_array['text']['heightadd'].append(9)
         upc_array['text']['text'].append(upc_print[NumTxtZero])
         if(NumTxtZero == 0):
          upc_array['text']['type'].append("sn")
@@ -906,7 +902,6 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             # Add 115 to every 0th element in each sublist of upc_array['text']['location']
             upc_array['text']['location'] += [x + 115 for x in supout['text']['location']]
             upc_array['text']['location'] += supout['text']['location']
-            upc_array['text']['heightadd'] += supout['text']['location']
             upc_array['text']['type'] += supout['text']['type']
             upc_array['text']['text'] += supout['text']['text']
     if(supplement is not None and len(supplement) == 5):
@@ -921,7 +916,6 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             # Add 115 to every 0th element in each sublist of upc_array['text']['location']
             upc_array['text']['location'] += [x + 115 for x in supout['text']['location']]
             upc_array['text']['location'] += supout['text']['location']
-            upc_array['text']['heightadd'] += supout['text']['location']
             upc_array['text']['type'] += supout['text']['type']
             upc_array['text']['text'] += supout['text']['text']
     if(imageoutlib is None):
