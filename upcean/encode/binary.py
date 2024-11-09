@@ -58,7 +58,7 @@ def get_binary_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), b
     upc_size_add_wo_shift = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
     upc_size_add_w_shift = (len([item for sublist in upc['code'] for item in sublist]) + shiftxy[0]) * (barwidth[0] * int(resize))
     reswoshift = (upc_size_add_wo_shift, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize))
-    reswshift = (upc_size_add_w_shift, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize)
+    reswshift = (upc_size_add_w_shift, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize))
     return {'without_shift': reswoshift, 'with_shift': reswshift}
 
 
@@ -173,16 +173,16 @@ def draw_binary_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
     upc_size_add = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", ((upc_size_add, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize))))
+            "RGB", ((upc_size_add, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize)))
         upc_img = ImageDraw.Draw(upc_preimg)
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(upc_size_add), float((barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize))))
+                cairo.CONTENT_COLOR, (0.0, 0.0, float(upc_size_add), float((barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize)))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
     elif(svgwritesupport and imageoutlib=="svgwrite"):
         upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(upc_size_add, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize)))
+        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(upc_size_add, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize))
         upc_preimg.close()
     imgout = encode_binary_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib, upc]
