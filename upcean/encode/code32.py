@@ -91,7 +91,7 @@ def encode_code32_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     if(len(upc_matches) <= 0):
         return False
     drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((50 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'barsize': [], 'code': []}
+    upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)

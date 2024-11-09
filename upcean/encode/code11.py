@@ -94,7 +94,7 @@ def encode_code11_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) +
                     len(upc_matches) - 1) * barwidth[0]
     drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((34 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'barsize': [], 'code': []}
+    upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
@@ -158,7 +158,7 @@ def encode_code11_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         upc_array['barsize'].append(barsizeloop)
         drawColorLine(upc_img, LineStart, (4 + shiftxy[1]) * int(resize), LineStart, LineSize,
                       barwidth[0], barcolor[2], imageoutlib)
-        upc_array['code'].append(0)
+        upc_array['code'].append([0])
         upc_array['barsize'].append(barsizeloop)
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
@@ -186,11 +186,16 @@ def encode_code11_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
         NumTxtZero = 0
-        LineTxtStart = 0
+        LineTxtStart = shiftxy[0] + (10 * int(resize))
+        LineTxtStartNorm = 10
         while (NumTxtZero < len(upc_print)):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (LineTxtStart + (16 * (int(resize) - 1))) * barwidth[0], cairo_addon_fix + (barheight[0] + (
-                barheight[0] * (int(resize) - 1)) + pil_addon_fix) + int(resize), upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
+            barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+            upc_array['text']['location'].append(LineTxtStartNorm)
+            upc_array['text']['text'].append(upc_print[NumTxtZero])
+            upc_array['text']['type'].append("txt")
             LineTxtStart += 9 * int(resize)
+            LineTxtStartNorm += 9
             NumTxtZero += 1
     upc_array['barsize'].append(barsizeloop)
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):

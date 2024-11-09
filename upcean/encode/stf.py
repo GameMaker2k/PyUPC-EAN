@@ -93,7 +93,7 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     if(len(upc_matches) <= 0):
         return False
     drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((46 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (15 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'barsize': [], 'code': []}
+    upc_array = {'upc': upc, 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0]
     upc_array['code'].append(start_barcode)
