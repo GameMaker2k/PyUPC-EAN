@@ -46,6 +46,22 @@ if(cairosupport):
 if(svgwritesupport):
     import upcean.encode.predraw.presvgwrite
 
+
+def get_binary_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
+        resize = 1
+    upc_size_add_wo_shift = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
+    upc_size_add_w_shift = (len([item for sublist in upc['code'] for item in sublist]) + shiftxy[0]) * (barwidth[0] * int(resize))
+    reswoshift = (upc_size_add_wo_shift, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize))
+    reswshift = (upc_size_add_w_shift, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize)
+    return {'without_shift': reswoshift, 'with_shift': reswshift}
+
+
 def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -88,8 +104,8 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         pil_addon_fix = 0
         cairo_addon_fix = 0
     cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
-    upc_size_add = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], upc_size_add, ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    upc_size_add = (len([item for sublist in upc['code'] for item in sublist]) + shiftxy[0]) * (barwidth[0] * int(resize))
+    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], upc_size_add, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     bari = 0
     barmax = len(upc['code'])
     LineStart = shiftxy[0]
@@ -157,16 +173,16 @@ def draw_binary_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
     upc_size_add = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
-            "RGB", ((upc_size_add, (barheightadd + (9 * barwidth[1])) * int(resize))))
+            "RGB", ((upc_size_add, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize))))
         upc_img = ImageDraw.Draw(upc_preimg)
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(upc_size_add), float((barheightadd + (9 * barwidth[1])) * int(resize))))
+                cairo.CONTENT_COLOR, (0.0, 0.0, float(upc_size_add), float((barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize))))
         upc_img = cairo.Context(upc_preimg)
         upc_img.set_antialias(cairo.ANTIALIAS_NONE)
     elif(svgwritesupport and imageoutlib=="svgwrite"):
         upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(upc_size_add, (barheightadd + (9 * barwidth[1])) * int(resize)))
+        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(upc_size_add, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(resize)))
         upc_preimg.close()
     imgout = encode_binary_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib, upc]

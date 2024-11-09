@@ -44,6 +44,29 @@ if(cairosupport):
 if(svgwritesupport):
     import upcean.encode.predraw.presvgwrite
 
+
+def get_code93_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(len(upc) < 1):
+        return False
+    if(not re.findall("([0-9a-zA-Z\\-\\.\\$\\/\\+% ]+)", upc)):
+        return False
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
+        resize = 1
+    upc = upc.upper()
+    upc_matches = list(upc)
+    if(len(upc_matches) <= 0):
+        return False
+    upc_size_add = (len(upc_matches) * 9) * barwidth[0]
+    reswoshift = (((37 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+    reswshift = ((((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize))
+    return {'without_shift': reswoshift, 'with_shift': reswshift}
+
+
 def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     upc = str(upc)
     hidesn = hideinfo[0]
@@ -101,7 +124,7 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
     if(inimage is not None):
         drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'type': "code93", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
+    upc_array = {'upc': upc, 'heightadd': 9, 'type': "code93", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
@@ -473,6 +496,29 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, barheight=(48, 
                 return True
     return True
 
+
+def get_code93extended_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(len(upc) < 1):
+        return False
+    if(not re.findall("([0-9a-zA-Z\\-\\.\\$\\/\\+% ]+)", upc)):
+        return False
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
+        resize = 1
+    upc = upc.upper()
+    upc_matches = list(upc)
+    if(len(upc_matches) <= 0):
+        return False
+    upc_size_add = (len(upc_matches) * 9) * barwidth[0]
+    reswoshift = (((37 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+    reswshift = ((((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize))
+    return {'without_shift': reswoshift, 'with_shift': reswshift}
+
+
 def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     upc = str(upc)
     hidesn = hideinfo[0]
@@ -530,7 +576,7 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
     if(inimage is not None):
         drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'type': "code93", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
+    upc_array = {'upc': upc, 'heightadd': 9, 'type': "code93", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)

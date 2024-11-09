@@ -44,6 +44,32 @@ if(cairosupport):
 if(svgwritesupport):
     import upcean.encode.predraw.presvgwrite
 
+
+def get_stf_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
+    barheightadd = barheight[1]
+    threewidebar = True
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(len(upc) % 2):
+        return False
+    if(len(upc) < 6):
+        return False
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
+        resize = 1
+    upc_matches = list(upc)
+    if(threewidebar):
+        upc_size_add = (len(upc_matches) * 14) * barwidth[0]
+    else:
+        upc_size_add = (len(upc_matches) * 12) * barwidth[0]
+    if(len(upc_matches) <= 0):
+        return False
+    reswoshift = (((46 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize))
+    reswshift = ((((46 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (15 * barwidth[1])) * int(resize))
+    return {'without_shift': reswoshift, 'with_shift': reswshift}
+
+
 def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     upc = str(upc)
     hidesn = hideinfo[0]
@@ -101,7 +127,7 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         return False
     if(inimage is not None):
         drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((46 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (15 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'type': "stf", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
+    upc_array = {'upc': upc, 'heightadd': 9, 'type': "stf", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0]
     upc_array['code'].append(start_barcode)

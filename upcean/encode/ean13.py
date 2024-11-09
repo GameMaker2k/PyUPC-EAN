@@ -46,6 +46,37 @@ if(cairosupport):
 if(svgwritesupport):
     import upcean.encode.predraw.presvgwrite
 
+
+def get_upcaean_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(len(upc) > 13 or len(upc) < 13):
+        return False
+    if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
+        resize = 1
+    upc_size_add = 0
+    if(supplement is not None and len(supplement) == 2):
+        upc_size_add = 29 * barwidth[0]
+    if(supplement is not None and len(supplement) == 5):
+        upc_size_add = 56 * barwidth[0]
+    reswoshift = (((115 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
+    reswshift = ((((115 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize))
+    return {'without_shift': reswoshift, 'with_shift': reswshift}
+
+
 def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
     upc = str(upc)
     hidesn = hideinfo[0]
@@ -117,7 +148,7 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         upc_size_add = 56 * barwidth[0]
     if(inimage is not None):
         drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((115 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    upc_array = {'upc': upc, 'type': "ean13", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
+    upc_array = {'upc': upc, 'heightadd': 9, 'type': "ean13", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1])
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1]
     LineStart = shiftxy[0]
@@ -372,6 +403,7 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
             barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
         upc_array['text']['location'].append(LineTxtStartNorm)
+        upc_array['text']['heightadd'].append(9)
         upc_array['text']['text'].append(upc_print[NumTxtZero])
         if(NumTxtZero == 0):
          upc_array['text']['type'].append("sn")
@@ -405,6 +437,7 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             # Add 115 to every 0th element in each sublist of upc_array['text']['location']
             upc_array['text']['location'] += [x + 115 for x in supout['text']['location']]
             upc_array['text']['location'] += supout['text']['location']
+            upc_array['text']['heightadd'] += supout['text']['location']
             upc_array['text']['type'] += supout['text']['type']
             upc_array['text']['text'] += supout['text']['text']
     elif(supplement is not None and len(supplement) == 5):
@@ -419,6 +452,7 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             # Add 115 to every 0th element in each sublist of upc_array['text']['location']
             upc_array['text']['location'] += [x + 115 for x in supout['text']['location']]
             upc_array['text']['location'] += supout['text']['location']
+            upc_array['text']['heightadd'] += supout['text']['location']
             upc_array['text']['type'] += supout['text']['type']
             upc_array['text']['text'] += supout['text']['text']
     if(imageoutlib is None):
