@@ -16,7 +16,10 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-import svgwrite
+try:
+    import svgwrite
+except ImportError:
+    import upcean.encode.predraw.svgcreate as svgwrite
 import os
 import re
 import base64
