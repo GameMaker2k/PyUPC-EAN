@@ -45,11 +45,9 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
-if(pilsupport or pillowsupport):
-    cairosupport = False
-else:
-    cairosupport = upcean.support.check_for_cairo()
-if(pilsupport or pillowsupport or cairosupport):
+pillowsupport = upcean.support.check_for_pillow()
+svgwritesupport = upcean.support.check_for_svgwrite()
+if(pilsupport or pillowsupport or cairosupport or svgwritesupport):
     import upcean.fonts
     import upcean.xml
     import upcean.encode

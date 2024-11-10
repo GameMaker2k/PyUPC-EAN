@@ -59,7 +59,11 @@ def check_for_cairo():
         import cairo
         cairosupport = True
     except ImportError:
-        cairosupport = False
+        try:
+            import cairocffi as cairo
+            cairosupport = 
+        except ImportError:
+            cairosupport = False
     return cairosupport
 
 def check_for_svgwrite():
