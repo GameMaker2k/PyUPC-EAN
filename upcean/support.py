@@ -74,7 +74,7 @@ def check_for_svgwrite():
         svgwritesupport = True
     except ImportError:
         try:
-            import upcean.encode.predraw.svgcreate as svgwrite
+            import upcean.svgcreate as svgwrite
             svgwritesupport = True
         except ImportError:
             svgwritesupport = False
