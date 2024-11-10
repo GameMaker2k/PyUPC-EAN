@@ -333,6 +333,28 @@ class Group(SVGElement):
 class Defs(SVGElement):
     def __init__(self):
         super(Defs, self).__init__()
+        self.child_elements = {}  # Key: element's unique identifier, Value: element
+
+    def add(self, element):
+        # Create a unique identifier for the element
+        # For Style elements, we can use the css_text
+        if isinstance(element, Style):
+            key = ('style', element.css_text.strip())
+        else:
+            # For other elements, use their 'id' attribute if available
+            element_id = element.kwargs.get('id')
+            if element_id:
+                key = ('id', element_id)
+            else:
+                # Fallback to element type and string representation
+                key = ('type', str(element))
+
+        if key in self.child_elements:
+            # Element already exists, do not add it again
+            return
+        else:
+            self.child_elements[key] = element
+            self.children.append(element)
 
     def to_xml(self, doc):
         el = doc.createElement('defs')
