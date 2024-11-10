@@ -72,10 +72,12 @@ if cairosupport:
 if svgwritesupport:
     try:
         import svgwrite
-        import upcean.encode.predraw.presvgwrite
     except ImportError:
-        svgwritesupport = False
-        logger.warning("svgwrite support failed to initialize.")
+        try:
+            import upcean.svgcreate as svgwrite
+        except ImportError:
+            svgwritesupport = False
+            logger.warning("svgwrite support failed to initialize.")
 
 # Initialize pkg_resources support
 try:
@@ -340,7 +342,7 @@ def get_save_filename(outfile, imageoutlib="pillow"):
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.encode.predraw.precairo.get_save_filename(outfile)
     elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.encode.predraw.precairo.get_save_filename(outfile)
+        return upcean.encode.predraw.presvgwrite.get_save_filename(outfile)
 
     logger.error("get_save_filename: Selected library is not supported.")
     return False

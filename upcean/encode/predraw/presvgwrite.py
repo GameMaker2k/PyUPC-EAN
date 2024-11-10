@@ -19,7 +19,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 try:
     import svgwrite
 except ImportError:
-    import upcean.encode.predraw.svgcreate as svgwrite
+    import upcean.svgcreate as svgwrite
 import os
 import re
 import base64
