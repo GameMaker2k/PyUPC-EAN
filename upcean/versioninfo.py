@@ -87,7 +87,7 @@ def get_build_python_info(infotype=None):
 
 
 __revision__ = __version_info__[3]
-__revision_id__ = "$Id$"
+__revision_id__ = "$Id: 7f5da003f889f59f6f12979ef2f7904f2144d45a $"
 if(__version_info__[3] is not None):
     __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[
                                                              0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3])

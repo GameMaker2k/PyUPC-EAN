@@ -53,7 +53,7 @@ def get_barcode_name(barcode_type="upca"):
 
 
 def check_for_cairo():
-    # PIL Support Check
+    # Cairo Support Check
     cairosupport = True
     try:
         import cairo
@@ -61,19 +61,23 @@ def check_for_cairo():
     except ImportError:
         try:
             import cairocffi as cairo
-            cairosupport = 
+            cairosupport = True
         except ImportError:
             cairosupport = False
     return cairosupport
 
 def check_for_svgwrite():
-    # PIL Support Check
+    # SVGWrite Support Check
     svgwritesupport = True
     try:
         import svgwrite
         svgwritesupport = True
     except ImportError:
-        svgwritesupport = False
+        try:
+            import upcean.encode.predraw.svgcreate as svgwrite
+            svgwritesupport = True
+        except ImportError:
+            svgwritesupport = False
     return svgwritesupport
 
 def check_for_pil():
@@ -97,6 +101,7 @@ def check_for_pil():
 
 
 def check_for_pillow():
+    # Pillow Support Check
     pilsupport = check_for_pil()
     if(not pilsupport):
         return pilsupport
