@@ -254,10 +254,10 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     NumZero = 0
     LineSizeType = 0
     while (NumZero < len(RightDigit)):
-        if(NumZero != 5):
+        if(NumZero != len(RightDigit) - 1):
             LineSize = (barheight[0] + shiftxy[1]) * int(resize)
             LineSizeType = 0
-        if(NumZero == 5):
+        if(NumZero == len(RightDigit) - 1):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
             LineSizeType = 1
         if(hidetext):
@@ -797,10 +797,10 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
     NumZero = 0
     LineSizeType = 0
     while (NumZero < len(RightDigit)):
-        if(NumZero != 6):
+        if(NumZero != len(RightDigit)):
             LineSize = (barheight[0] + shiftxy[1]) * int(resize)
             LineSizeType = 0
-        if(NumZero == 6):
+        if(NumZero == len(RightDigit)):
             LineSize = (barheight[1] + shiftxy[1]) * int(resize)
             LineSizeType = 1
         if(hidetext):
@@ -889,7 +889,7 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         if(NumTxtZero==0):
             LineTxtStart += 5 * int(resize)
             LineTxtStartNorm += 5
-        if(NumTxtZero==len(upc_print)-6):
+        if(NumTxtZero==(len(upc_print)/2)-1):
             LineTxtStart += 3 * int(resize)
             LineTxtStartNorm += 3
         if(NumTxtZero==len(upc_print)-2):
