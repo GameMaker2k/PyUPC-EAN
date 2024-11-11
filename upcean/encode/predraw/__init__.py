@@ -118,17 +118,17 @@ def select_image_output_lib(imageoutlib="pillow"):
 
     # Adjust imageoutlib based on support flags
     if not pilsupport and imageoutlib == "pillow":
-        imageoutlib = "cairo"
-        logger.info("Pillow not supported. Switching to Cairo.")
+        imageoutlib = "svgwrite"
+        logger.info("Pillow not supported. Switching to svgwrite.")
     if not cairosupport and imageoutlib in ["cairo", "cairosvg"]:
-        imageoutlib = "pillow"
-        logger.info("Cairo not supported. Switching to Pillow.")
+        imageoutlib = "svgwrite"
+        logger.info("Cairo not supported. Switching to svgwrite.")
     if not svgwritesupport and imageoutlib == "svgwrite":
-        imageoutlib = "pillow"
-        logger.info("Cairo not supported. Switching to Pillow.")
+        imageoutlib = "svgwrite"
+        logger.info("Cairo not supported. Switching to svgwrite.")
     if imageoutlib not in ["pillow", "cairo", "cairosvg", "svgwrite"]:
-        imageoutlib = "pillow"
-        logger.info("Invalid library specified. Defaulting to Pillow.")
+        imageoutlib = "svgwrite"
+        logger.info("Invalid library specified. Defaulting to svgwrite.")
 
     # If neither library is supported, log the issue and raise an exception
     if not pilsupport and not cairosupport and not svgwritesupport:
