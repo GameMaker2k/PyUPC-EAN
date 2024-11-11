@@ -37,7 +37,7 @@ def get_gs1_prefix(upc):
         upc += "000000000" + str(upcean.validate.get_ean13_checksum(upc))
 
     if re.match("^0(\\d{3}\\d{10})$", upc):
-        upc = re.match("^0(\\d{3}\d{10})$", upc).group(1)
+        upc = re.match("^0(\\d{3}\\d{10})$", upc).group(1)
 
     if not re.match("^\\d{3}\\d{5}$|^\\d{3}\\d{10}$", upc):
         return False
