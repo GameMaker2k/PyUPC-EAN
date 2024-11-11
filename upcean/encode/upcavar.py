@@ -487,7 +487,7 @@ def create_upcavar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
     imgout = draw_upcavar_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    exargdict = {'comment': "upca; "+upc}
+    exargdict = {'comment': "upcavar; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
@@ -506,10 +506,10 @@ def create_upcavar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
             if(pilsupport):
                 # Add a comment to the image
                 info = PngImagePlugin.PngInfo()
-                info.add_text("Comment", "upca; "+upc)
+                info.add_text("Comment", "upcavar; "+upc)
                 exargdict.update({'pnginfo': info})
         else:
-            exargdict = {'comment': "upca; "+upc}
+            exargdict = {'comment': "upcavar; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
                     upc_img.write(outfile, True)
@@ -1022,7 +1022,7 @@ def create_upcaeanvar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48
     imgout = draw_upcaeanvar_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    exargdict = {'comment': "upca; "+upc}
+    exargdict = {'comment': "upcavar; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
@@ -1041,10 +1041,10 @@ def create_upcaeanvar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48
             if(pilsupport):
                 # Add a comment to the image
                 info = PngImagePlugin.PngInfo()
-                info.add_text("Comment", "upca; "+upc)
+                info.add_text("Comment", "upcavar; "+upc)
                 exargdict.update({'pnginfo': info})
         else:
-            exargdict = {'comment': "upca; "+upc}
+            exargdict = {'comment': "upcavar; "+upc}
         if(svgwritesupport and imageoutlib == "svgwrite"):
                 if isinstance(outfile, file):
                     upc_img.write(outfile, True)
