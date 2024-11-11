@@ -873,7 +873,7 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
     upc_print = [0]+list(re.findall("(\\d+)", upc)[0])+[">"]
     while (NumTxtZero < len(upc_print)):
         texthidden = False
-        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == len(upc)-1 and (hidecd is None or hidecd)):
+        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == len(upc_print)-1 and (hidecd is None or hidecd)):
             texthidden = True
         if(not texthidden):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
@@ -882,7 +882,7 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         upc_array['text']['text'].append(upc_print[NumTxtZero])
         if(NumTxtZero == 0):
          upc_array['text']['type'].append("sn")
-        elif(NumTxtZero == len(upc)-1):
+        elif(NumTxtZero == len(upc_print)-1):
          upc_array['text']['type'].append("cd")
         else:
          upc_array['text']['type'].append("txt")
