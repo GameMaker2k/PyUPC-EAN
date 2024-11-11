@@ -19,5 +19,6 @@ import upcean.support
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
-if(pilsupport or cairosupport):
+svgwritesupport = upcean.support.check_for_svgwrite()
+if(pilsupport or cairosupport or svgwritesupport):
     from upcean.encode.predraw import get_save_filename
