@@ -98,7 +98,7 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
-    imageoutlib = "pillow"
+    imageoutlib = None
     if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
@@ -106,7 +106,7 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
     elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
-        imageoutlib = "pillow"
+        imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
     elif(not pilsupport and not cairosupport and not svgwritesupport):
@@ -313,17 +313,17 @@ def draw_msi_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolo
 
 def create_msi_barcode(upc, outfile="./msi.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
+        imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
+        imageoutlib = "svgwrite"
     if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
+        imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
+        imageoutlib = "svgwrite"
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
+        imageoutlib = "svgwrite"
+    if(not pilsupport and not cairosupport):
+        imageoutlib = "svgwrite"
     if(outfile is None):
         if(imageoutlib == "cairosvg"):
             oldoutfile = None

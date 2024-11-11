@@ -326,17 +326,17 @@ def draw_codabar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
 
 def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
     if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
+        imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
+        imageoutlib = "svgwrite"
     if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
+        imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
+        imageoutlib = "svgwrite"
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
-    if(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
+        imageoutlib = "svgwrite"
+    if(not pilsupport and not cairosupport):
+        imageoutlib = "svgwrite"
     if(outfile is None):
         if(imageoutlib == "cairosvg"):
             oldoutfile = None
