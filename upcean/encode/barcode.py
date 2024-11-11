@@ -32,6 +32,7 @@ from upcean.encode.upce import *
 from upcean.encode.goodwill import *
 from upcean.encode.binary import *
 from upcean.encode.upca import *
+from upcean.encode.upcavar import *
 from upcean.encode.ean5 import *
 from upcean.encode.ean2 import *
 import upcean.support
