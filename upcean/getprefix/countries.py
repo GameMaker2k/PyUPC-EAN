@@ -26,25 +26,25 @@ import upcean.validate
 
 def get_gs1_prefix(upc):
     upc = str(upc)
-    if re.match(r"^\d{12}$", upc):
+    if re.match("^\\d{12}$", upc):
         upc = "0" + upc
 
-    if re.match(r"^\d{1}$", upc):
+    if re.match("^\\d{1}$", upc):
         upc += "00000000000" + str(upcean.validate.get_ean13_checksum(upc))
-    elif re.match(r"^\d{2}$", upc):
+    elif re.match("^\\d{2}$", upc):
         upc += "0000000000" + str(upcean.validate.get_ean13_checksum(upc))
-    elif re.match(r"^\d{3}$", upc):
+    elif re.match("^\\d{3}$", upc):
         upc += "000000000" + str(upcean.validate.get_ean13_checksum(upc))
 
-    if re.match(r"^0(\d{3}\d{10})$", upc):
-        upc = re.match(r"^0(\d{3}\d{10})$", upc).group(1)
+    if re.match("^0(\\d{3}\\d{10})$", upc):
+        upc = re.match("^0(\\d{3}\d{10})$", upc).group(1)
 
-    if not re.match(r"^\d{3}\d{5}$|^\d{3}\d{10}$", upc):
+    if not re.match("^\\d{3}\\d{5}$|^\\d{3}\\d{10}$", upc):
         return False
 
-    if re.match(r"^\d{3}\d{10}$", upc) and not upcean.validate.validate_ean13_checksum(upc):
+    if re.match("^\\d{3}\\d{10}$", upc) and not upcean.validate.validate_ean13_checksum(upc):
         return False
-    if re.match(r"^\d{3}\d{5}$", upc) and not upcean.validate.validate_ean8_checksum(upc):
+    if re.match("^\\d{3}\\d{5}$", upc) and not upcean.validate.validate_ean8_checksum(upc):
         return False
 
     # GS1 prefix rules
