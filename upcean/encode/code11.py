@@ -38,7 +38,6 @@ cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
 if(pilsupport or pillowsupport):
     import upcean.encode.predraw.prepil
-    from PIL import PngImagePlugin
 if(cairosupport):
     import upcean.encode.predraw.precairo
 if(svgwritesupport):
@@ -322,107 +321,8 @@ def create_code11_barcode(upc, outfile="./code11.png", resize=1, barheight=(48, 
     imgout = draw_code11_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    exargdict = {'comment': "code11; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        if(outfileext == "WEBP"):
-            exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
-        if(outfileext == "HEIC"):
-            exargdict.update({'lossless': True, 'quality': 100})
-        elif(outfileext == "JPEG"):
-            exargdict.update(
-                {'quality': 100, 'optimize': True, 'progressive': True})
-        elif(outfileext == "GIF"):
-            exargdict.update(
-                {'optimize': True})
-        elif(outfileext == "PNG"):
-            exargdict.update({'optimize': True, 'compress_level': 9, 'quality': 100})
-            if(pilsupport):
-                # Add a comment to the image
-                info = PngImagePlugin.PngInfo()
-                info.add_text("Comment", "code11; "+upc)
-                exargdict.update({'pnginfo': info})
-        else:
-            exargdict = {'comment': "code11; "+upc}
-        try:
-            if(svgwritesupport and imageoutlib == "svgwrite"):
-                    upc_preimg.close()
-                    upc_img.saveas(outfile, True)
-            if(pilsupport and imageoutlib == "pillow"):
-                if outfileext == "XPM":
-                    # XPM supports only palette-based images ("P" mode)
-                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
-                elif outfileext == "XBM":
-                    # XBM supports only 1-bit images ("1" mode)
-                    upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
-                elif outfileext == "PBM":
-                    # PBM (Portable Bitmap) supports only monochrome (1-bit) images ("1" mode)
-                    upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
-                elif outfileext == "PGM":
-                    # PGM (Portable Graymap) supports only grayscale images ("L" mode)
-                    upc_preimg.convert(mode="L").save(outfile, outfileext, **exargdict)
-                elif outfileext == "GIF":
-                    # GIF supports only palette-based images with a maximum of 256 colors ("P" mode)
-                    upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
-                elif outfileext == "ICO":
-                    # ICO generally supports "L", "P", and "RGBA" but not direct "RGB".
-                    # Convert to RGBA for transparency support if available, or "P" otherwise.
-                    if "A" in upc_preimg.getbands():  # Check if alpha channel is present
-                        upc_preimg.convert(mode="RGBA").save(outfile, outfileext, **exargdict)
-                    else:
-                        upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
-                else:
-                    # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
-                    if upc_preimg.mode == "RGBA":
-                        upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
-                    else:
-                        upc_preimg.save(outfile, outfileext, **exargdict)
-            if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-                x, y, width, height = upc_preimg.ink_extents()
-                if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-                    if(outfileext == "SVG" or imageoutlib == "cairosvg"):
-                        # Create an ImageSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.SVGSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
-                    elif(outfileext == "PDF"):
-                        # Create an ImageSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.PDFSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
-                    elif(outfileext == "PS" or outfileext == "EPS"):
-                        # Create an PDFSurface with the exact dimensions of the recorded content
-                        image_surface = cairo.PSSurface(outfile, int(width), int(height))
-                        image_context = cairo.Context(image_surface)
-                        # Transfer the content from the RecordingSurface to the ImageSurface
-                        image_context.set_source_surface(upc_preimg, -x, -y)
-                        if(outfileext == "EPS"):
-                            image_surface.set_eps(True)
-                        else:
-                            image_surface.set_eps(False)
-                        image_context.paint()
-                        image_surface.flush()
-                        image_surface.finish()
-                else:
-                    # Create an ImageSurface with the exact dimensions of the recorded content
-                    image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
-                    image_context = cairo.Context(image_surface)
-                    # Transfer the content from the RecordingSurface to the ImageSurface
-                    image_context.set_source_surface(upc_preimg, -x, -y)
-                    image_context.paint()
-                    image_surface.flush()
-                    # Save as PNG
-                    image_surface.write_to_png(outfile)
-                    image_surface.finish()
-                    return True
-        except Exception as e:
-            return False
+        upcean.encode.predraw.prepil.save_to_file((upc_img, upc_preimg), outfile, outfileext, "code11; "+upc)
+    return True

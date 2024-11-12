@@ -16,6 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 from PIL import Image, ImageDraw, ImageFont
+from PIL import PngImagePlugin
 import os
 import re
 import upcean.fonts
@@ -200,3 +201,55 @@ def get_save_filename(outfile):
 
     # Unsupported type
     return False
+
+def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
+    upc_img = inimage[0]
+    upc_preimg = inimage[1]
+    exargdict = {'comment': imgcomment}
+    if(outfileext == "WEBP"):
+        exargdict.update({'lossless': True, 'quality': 100, 'method': 6})
+    if(outfileext == "HEIC"):
+        exargdict.update({'lossless': True, 'quality': 100})
+    elif(outfileext == "JPEG"):
+        exargdict.update(
+            {'quality': 100, 'optimize': True, 'progressive': True})
+    elif(outfileext == "GIF"):
+        exargdict.update(
+            {'optimize': True})
+    elif(outfileext == "PNG"):
+        exargdict.update({'optimize': True, 'compress_level': 9, 'quality': 100})
+        # Add a comment to the image
+        info = PngImagePlugin.PngInfo()
+        info.add_text("Comment", imgcomment)
+        exargdict.update({'pnginfo': info})
+    else:
+        exargdict = {'comment': imgcomment}
+    if outfileext == "XPM":
+        # XPM supports only palette-based images ("P" mode)
+        upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+    elif outfileext == "XBM":
+        # XBM supports only 1-bit images ("1" mode)
+        upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+    elif outfileext == "PBM":
+        # PBM (Portable Bitmap) supports only monochrome (1-bit) images ("1" mode)
+        upc_preimg.convert(mode="1").save(outfile, outfileext, **exargdict)
+    elif outfileext == "PGM":
+        # PGM (Portable Graymap) supports only grayscale images ("L" mode)
+        upc_preimg.convert(mode="L").save(outfile, outfileext, **exargdict)
+    elif outfileext == "GIF":
+        # GIF supports only palette-based images with a maximum of 256 colors ("P" mode)
+        upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+    elif outfileext == "ICO":
+        # ICO generally supports "L", "P", and "RGBA" but not direct "RGB".
+        # Convert to RGBA for transparency support if available, or "P" otherwise.
+        if "A" in upc_preimg.getbands():  # Check if alpha channel is present
+            upc_preimg.convert(mode="RGBA").save(outfile, outfileext, **exargdict)
+        else:
+            upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
+    else:
+        # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
+        if upc_preimg.mode == "RGBA":
+            upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
+        else:
+            upc_preimg.save(outfile, outfileext, **exargdict)
+    return True

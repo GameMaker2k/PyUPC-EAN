@@ -42,7 +42,6 @@ cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
 if(pilsupport or pillowsupport):
     import upcean.encode.predraw.prepil
-    from PIL import PngImagePlugin
 
 if(cairosupport):
     import upcean.encode.predraw.precairo

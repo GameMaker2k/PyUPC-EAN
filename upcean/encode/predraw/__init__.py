@@ -347,3 +347,21 @@ def get_save_filename(outfile, imageoutlib="pillow"):
     logger.error("get_save_filename: Selected library is not supported.")
     return False
 
+def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib="pillow"):
+    try:
+        selected_lib = select_image_output_lib(imageoutlib)
+    except UnsupportedLibraryError as e:
+        logger.error("save_to_file failed: {}".format(e))
+        return False
+
+    if selected_lib == "none" or selected_lib == None:
+        return True
+    if selected_lib == "pillow" and pilsupport:
+        return upcean.encode.predraw.prepil.save_to_file(inimage, outfile, outfileext, imgcomment)
+    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
+        return upcean.encode.predraw.precairo.save_to_file(inimage, outfile, outfileext, imgcomment)
+    elif selected_lib == "svgwrite" and svgwritesupport:
+        return upcean.encode.predraw.presvgwrite.save_to_file(inimage, outfile, outfileext, imgcomment)
+
+    logger.error("save_to_file: Selected library is not supported.")
+    return False

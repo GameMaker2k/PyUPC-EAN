@@ -296,3 +296,12 @@ def embed_font(dwg, font_path, font_family):
 
     # Add the style to the SVG
     dwg.defs.add(dwg.style(font_face))
+
+def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
+    upc_img = inimage[0]
+    upc_preimg = inimage[1]
+    if isinstance(outfile, file):
+       upc_img.write(outfile, True)
+    else:
+       upc_img.saveas(outfile, True)
+    return True
