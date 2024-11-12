@@ -297,7 +297,7 @@ def SaveGeneratedBarcode():
     if(listboxtxt1.get() == "UPC-A" or listboxtxt1.get() == "UPC-E" or listboxtxt1.get() == "EAN-13" or listboxtxt1.get() == "EAN-8"):
         if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", entry1.get())):
             upc_pieces = re.findall(
-                r"([0-9]+)([ |\\|]{1})([0-9]{2})$", entry1.get())
+                "([0-9]+)([ |\\|]{1})([0-9]{2})$", entry1.get())
             upc_pieces = upc_pieces[0]
             upc_validate = upc_pieces[0]
         if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", entry1.get())):
