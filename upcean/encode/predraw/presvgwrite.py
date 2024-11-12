@@ -310,6 +310,7 @@ def embed_font(dwg, font_path, font_family):
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
+    uploadfile = None
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         uploadfile = outfile
         outfile = StringIO()
@@ -317,7 +318,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
        upc_img.write(outfile, True)
     else:
        upc_img.saveas(outfile, True)
-    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile))):
         outfile.seek(0, 0)
         byte_buffer = BytesIO(outfile.getvalue().encode("utf-8"))  # Convert text to binary
         outfile.close()

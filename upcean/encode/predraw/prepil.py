@@ -234,6 +234,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         exargdict.update({'pnginfo': info})
     else:
         exargdict = {'comment': imgcomment}
+    uploadfile = None
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         uploadfile = outfile
         outfile = BytesIO()
@@ -265,7 +266,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
             upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
         else:
             upc_preimg.save(outfile, outfileext, **exargdict)
-    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile))):
         outfile.seek(0, 0)
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()

@@ -314,6 +314,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
     x, y, width, height = upc_preimg.ink_extents()
+    uploadfile = None
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         uploadfile = outfile
         outfile = BytesIO()
@@ -368,7 +369,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         # Save as PNG
         image_surface.write_to_png(outfile)
         image_surface.finish()
-    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile))):
         outfile.seek(0, 0)
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()
