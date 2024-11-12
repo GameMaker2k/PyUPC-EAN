@@ -149,11 +149,11 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     if(supplement is not None and len(supplement) == 5):
         upc_size_add = 56 * barwidth[0]
     if(inimage is not None):
-        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((113 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+        drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), (((113 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'heightadd': 9, 'type': "upca", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1])
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1]
-    LineStart = shiftxy[0]
+    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
     BarNum = 0
     start_bc_num_end = len(start_barcode)
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
@@ -329,7 +329,7 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
-    LineTxtStart = shiftxy[0] + (2 * int(resize))
+    LineTxtStart = ((shiftxy[0] + 2) * int(resize))
     LineTxtStartNorm = 2
     upc_print = list(re.findall("(\\d{12})", upc)[0])
     while (NumTxtZero < len(upc_print)):
@@ -366,7 +366,7 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             supimgout = None
         else:
             supimgout = (upc_img, upc_preimg)
-        supout = upcean.encode.ean2.encode_upc2_barcode(supimgout, supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        supout = upcean.encode.ean2.encode_upc2_barcode(supimgout, supplement, resize, (113, shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         if(imageoutlib is None):
             upc_array['code'] += supout['code']
             upc_array['barsize'] += supout['barsize']
@@ -380,7 +380,7 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             supimgout = None
         else:
             supimgout = (upc_img, upc_preimg)
-        supout = upcean.encode.ean5.encode_upc5_barcode(supimgout, supplement, resize, (((113 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        supout = upcean.encode.ean5.encode_upc5_barcode(supimgout, supplement, resize, (113, shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         if(imageoutlib is None):
             upc_array['code'] += supout['code']
             upc_array['barsize'] += supout['barsize']
@@ -591,11 +591,11 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     if(supplement is not None and len(supplement) == 5):
         upc_size_add = 56 * barwidth[0]
     if(inimage is not None):
-        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((115 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+        drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), (((115 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'heightadd': 9, 'type': "upca", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     upc_array['code'].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1])
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1]
-    LineStart = shiftxy[0]
+    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
     BarNum = 0
     start_bc_num_end = len(start_barcode)
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
@@ -760,7 +760,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
-    LineTxtStart = shiftxy[0] + (2 * int(resize))
+    LineTxtStart = ((shiftxy[0] + 2) * int(resize))
     LineTxtStartNorm = 2
     upc_print = [0]+list(re.findall("(\\d{12})", upc)[0])+[">"]
     while (NumTxtZero < len(upc_print)):
@@ -797,7 +797,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             supimgout = None
         else:
             supimgout = (upc_img, upc_preimg)
-        supout = upcean.encode.ean2.encode_upc2_barcode(supimgout, supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        supout = upcean.encode.ean2.encode_upc2_barcode(supimgout, supplement, resize, (115, shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         if(imageoutlib is None):
             upc_array['code'] += supout['code']
             upc_array['barsize'] += supout['barsize']
@@ -811,7 +811,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             supimgout = None
         else:
             supimgout = (upc_img, upc_preimg)
-        supout = upcean.encode.ean5.encode_upc5_barcode(supimgout, supplement, resize, (((115 + shiftxy[0]) * barwidth[0]) * int(resize), shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        supout = upcean.encode.ean5.encode_upc5_barcode(supimgout, supplement, resize, (115, shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
         if(imageoutlib is None):
             upc_array['code'] += supout['code']
             upc_array['barsize'] += supout['barsize']

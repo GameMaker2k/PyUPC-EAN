@@ -108,10 +108,10 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         cairo_addon_fix = 0
     cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upc_size_add = (len([item for sublist in upc['code'] for item in sublist]) + shiftxy[0]) * (barwidth[0] * int(resize))
-    drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], upc_size_add, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), upc_size_add, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     bari = 0
     barmax = len(upc['code'])
-    LineStart = shiftxy[0]
+    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
     while(bari < barmax):
         subbari = 0
         subbarmax = len(upc['code'][bari])
@@ -138,7 +138,7 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     txtbari = 0
     txtbarmax = len(upc['text']['text'])
-    LineStart = shiftxy[0]
+    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
     while(txtbari < txtbarmax):
         texthidden = False
         if hidetext or (upc['text']['type'][txtbari] == "sn" and (hidesn is None or hidesn)) or (upc['text']['type'][txtbari] == "cd" and (hidecd is None or hidecd)):

@@ -121,14 +121,14 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     CheckSum = CheckSum % 10
     upc_size_add = 0
     if(inimage is not None):
-        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((56 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+        drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), (((56 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'heightadd': 9, 'type': "ean5", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     upc_array['code'].append([0, 1, 0, 1, 1])
     start_barcode = [0, 1, 0, 1, 1]
-    LineStart = shiftxy[0]
+    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
     BarNum = 0
     start_bc_num_end = len(start_barcode)
     barsizeloop = []
@@ -335,7 +335,7 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
-    LineTxtStart = shiftxy[0] + (7 * int(resize))
+    LineTxtStart = ((shiftxy[0] + 7) * int(resize))
     LineTxtStartNorm = 7
     upc_print = LeftDigit
     while (NumTxtZero < len(upc_print)):

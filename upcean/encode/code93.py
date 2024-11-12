@@ -126,14 +126,14 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     Code93Values = dict(zip(Code93Array.values(), Code93Array))
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
     if(inimage is not None):
-        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+        drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'heightadd': 9, 'type': "code93", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0]
     upc_array['code'].append(start_barcode)
-    LineStart = shiftxy[0]
+    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
     BarNum = 0
     start_bc_num_end = len(start_barcode)
     barsizeloop = []
@@ -295,7 +295,7 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
     NumTxtZero = 0
-    LineTxtStart = shiftxy[0] + (18 * int(resize))
+    LineTxtStart = ((shiftxy[0] + 18) * int(resize))
     LineTxtStartNorm = 18
     while (NumTxtZero < len(upc_matches)):
         texthidden = False
@@ -482,14 +482,14 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     Code93Values = dict(zip(Code93Array.values(), Code93Array))
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
     if(inimage is not None):
-        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+        drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), (((37 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'heightadd': 9, 'type': "code93", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
         LineSize = (barheight[1] + shiftxy[1]) * int(resize)
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0]
     upc_array['code'].append(start_barcode)
-    LineStart = shiftxy[0]
+    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
     BarNum = 0
     start_bc_num_end = len(start_barcode)
     barsizeloop = []
@@ -655,7 +655,7 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     code93extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '$': "$", '%': "%", '/F': "&", '/G': "'", '/H': "(", '/I': "", '/J': "*", '+': "+", '/L': ",", '-': "-", '.': ".", '/': "/", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?",
                       '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
     NumTxtZero = 0
-    LineTxtStart = shiftxy[0] + (18 * int(resize))
+    LineTxtStart = ((shiftxy[0] + 18) * int(resize))
     LineTxtStartNorm = 18
     while (NumTxtZero < len(upc_matches)):
         texthidden = False

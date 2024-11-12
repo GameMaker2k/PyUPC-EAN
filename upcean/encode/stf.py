@@ -129,12 +129,12 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     if(len(upc_matches) <= 0):
         return False
     if(inimage is not None):
-        drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((46 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (15 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+        drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), (((46 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (15 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'heightadd': 9, 'type': "stf", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0]
     upc_array['code'].append(start_barcode)
-    LineStart = shiftxy[0]
+    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
     BarNum = 0
     LineSize = (barheight[0] + shiftxy[1]) * int(resize)
     if(hidetext):
@@ -242,7 +242,7 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
-    LineTxtStart = shiftxy[0] + (24 * int(resize))
+    LineTxtStart = shiftxy[0] * int(resize) + (24 * int(resize))
     LineTxtStartNorm = 24
     while (NumTxtZero < len(upc_matches)):
         texthidden = False
