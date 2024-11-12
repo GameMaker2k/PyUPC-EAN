@@ -36,25 +36,16 @@ from upcean.encode.upcavar import *
 from upcean.encode.ean5 import *
 from upcean.encode.ean2 import *
 import upcean.support
+pilsupport = upcean.support.check_for_pil()
+pillowsupport = upcean.support.check_for_pillow()
+cairosupport = upcean.support.check_for_cairo()
+svgwritesupport = upcean.support.check_for_svgwrite()
 defaultdraw = upcean.support.defaultdraw
 import upcean.getprefix.getprefix
-
-try:
-    import upcean.encode.stf as code25
-except:
-    pass
-try:
-    import upcean.encode.itf14 as itf6
-except:
-    pass
-try:
-    import upcean.encode.ean2 as upc2
-except:
-    pass
-try:
-    import upcean.encode.ean5 as upc5
-except:
-    pass
+import upcean.encode.stf as code25
+import upcean.encode.itf14 as itf6
+import upcean.encode.ean2 as upc2
+import upcean.encode.ean5 as upc5
 
 def validate_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 12):
