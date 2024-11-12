@@ -347,8 +347,8 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             LineTxtStart += 10 * int(resize)
             LineTxtStartNorm += 10
         if(NumTxtZero==5):
-            LineTxtStart += 5 * int(resize)
-            LineTxtStartNorm += 5
+            LineTxtStart += 4 * int(resize)
+            LineTxtStartNorm += 4
         if(NumTxtZero==10):
             LineTxtStart += 10 * int(resize)
             LineTxtStartNorm += 10
