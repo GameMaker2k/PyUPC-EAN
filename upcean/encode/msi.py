@@ -58,23 +58,6 @@ def get_msi_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barw
         resize = 1
     upc = upc.upper()
     upc_matches = list(upc)
-    upc_print = list(upc_matches)
-    if(len(upc) % 2 == 0):
-        PreChck1 = list(str(int("".join(upc_matches[1:][::2])) * 2))
-        PreChck2 = upc_matches[0:][::2]
-    else:
-        PreChck1 = list(str(int("".join(upc_matches[0:][::2])) * 2))
-        PreChck2 = upc_matches[1:][::2]
-    PreCount = 0
-    UPC_Sum = 0
-    while (PreCount <= len(PreChck1)-1):
-        UPC_Sum = UPC_Sum + int(PreChck1[PreCount])
-        PreCount += 1
-    PreCount = 0
-    while (PreCount <= len(PreChck2)-1):
-        UPC_Sum = UPC_Sum + int(PreChck2[PreCount])
-        PreCount += 1
-    upc_matches.append(str(10 - (UPC_Sum % 10)))
     upc_size_add = (len(upc_matches) * 12) * barwidth[0]
     reswoshift = (((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize))
     reswshift = ((((34 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize))
@@ -131,22 +114,6 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     upc = upc.upper()
     upc_matches = list(upc)
     upc_print = list(upc_matches)
-    if(len(upc) % 2 == 0):
-        PreChck1 = list(str(int("".join(upc_matches[1:][::2])) * 2))
-        PreChck2 = upc_matches[0:][::2]
-    else:
-        PreChck1 = list(str(int("".join(upc_matches[0:][::2])) * 2))
-        PreChck2 = upc_matches[1:][::2]
-    PreCount = 0
-    UPC_Sum = 0
-    while (PreCount <= len(PreChck1)-1):
-        UPC_Sum = UPC_Sum + int(PreChck1[PreCount])
-        PreCount += 1
-    PreCount = 0
-    while (PreCount <= len(PreChck2)-1):
-        UPC_Sum = UPC_Sum + int(PreChck2[PreCount])
-        PreCount += 1
-    upc_matches.append(str(10 - (UPC_Sum % 10)))
     upc_size_add = (len(upc_matches) * 12) * barwidth[0]
     if(inimage is not None):
         drawColorRectangle(upc_img, 0 + shiftxy[0], 0 + shiftxy[1], (((34 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
@@ -276,23 +243,6 @@ def draw_msi_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolo
         imageoutlib = "pillow"
     upc_matc = upc.upper()
     upc_matches = list(upc_matc)
-    upc_print = list(upc_matches)
-    if(len(upc) % 2 == 0):
-        PreChck1 = list(str(int("".join(upc_matches[1:][::2])) * 2))
-        PreChck2 = upc_matches[0:][::2]
-    else:
-        PreChck1 = list(str(int("".join(upc_matches[0:][::2])) * 2))
-        PreChck2 = upc_matches[1:][::2]
-    PreCount = 0
-    UPC_Sum = 0
-    while (PreCount <= len(PreChck1)-1):
-        UPC_Sum = UPC_Sum + int(PreChck1[PreCount])
-        PreCount += 1
-    PreCount = 0
-    while (PreCount <= len(PreChck2)-1):
-        UPC_Sum = UPC_Sum + int(PreChck2[PreCount])
-        PreCount += 1
-    upc_matches.append(str(10 - (UPC_Sum % 10)))
     upc_size_add = (len(upc_matches) * 12) * barwidth[0]
     if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
