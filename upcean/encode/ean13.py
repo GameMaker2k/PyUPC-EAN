@@ -413,8 +413,8 @@ def encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
             LineTxtStart += 5 * int(resize)
             LineTxtStartNorm += 5
         if(NumTxtZero==6):
-            LineTxtStart += 3 * int(resize)
-            LineTxtStartNorm += 3
+            LineTxtStart += 4 * int(resize)
+            LineTxtStartNorm += 4
         if(NumTxtZero==12):
             LineTxtStart += 5 * int(resize)
             LineTxtStartNorm += 5
