@@ -224,7 +224,7 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, line_width=1):
     return True
 
 # Define valid Qahirah output formats
-cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS"}
+cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "CAIRO"}
 
 def get_save_filename(outfile):
     """
@@ -317,38 +317,46 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         uploadfile = outfile
         outfile = BytesIO()
-    if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
-        if(outfileext == "SVG" or imageoutlib == "cairosvg"):
-            # Create an ImageSurface with the exact dimensions of the recorded content
-            image_surface = cairo.SVGSurface(outfile, int(width), int(height))
-            image_context = cairo.Context(image_surface)
-            # Transfer the content from the RecordingSurface to the ImageSurface
-            image_context.set_source_surface(upc_preimg, -x, -y)
-            image_context.paint()
-            image_surface.flush()
-            image_surface.finish()
-        elif(outfileext == "PDF"):
-            # Create an ImageSurface with the exact dimensions of the recorded content
-            image_surface = cairo.PDFSurface(outfile, int(width), int(height))
-            image_context = cairo.Context(image_surface)
-            # Transfer the content from the RecordingSurface to the ImageSurface
-            image_context.set_source_surface(upc_preimg, -x, -y)
-            image_context.paint()
-            image_surface.flush()
-            image_surface.finish()
-        elif(outfileext == "PS" or outfileext == "EPS"):
-            # Create an PDFSurface with the exact dimensions of the recorded content
-            image_surface = cairo.PSSurface(outfile, int(width), int(height))
-            image_context = cairo.Context(image_surface)
-            # Transfer the content from the RecordingSurface to the ImageSurface
-            image_context.set_source_surface(upc_preimg, -x, -y)
-            if(outfileext == "EPS"):
-                image_surface.set_eps(True)
-            else:
-                image_surface.set_eps(False)
-            image_context.paint()
-            image_surface.flush()
-            image_surface.finish()
+    if(outfileext == "SVG"):
+        # Create an ImageSurface with the exact dimensions of the recorded content
+        image_surface = cairo.SVGSurface(outfile, int(width), int(height))
+        image_context = cairo.Context(image_surface)
+        # Transfer the content from the RecordingSurface to the ImageSurface
+        image_context.set_source_surface(upc_preimg, -x, -y)
+        image_context.paint()
+        image_surface.flush()
+        image_surface.finish()
+    elif(outfileext == "PDF"):
+        # Create an ImageSurface with the exact dimensions of the recorded content
+        image_surface = cairo.PDFSurface(outfile, int(width), int(height))
+        image_context = cairo.Context(image_surface)
+        # Transfer the content from the RecordingSurface to the ImageSurface
+        image_context.set_source_surface(upc_preimg, -x, -y)
+        image_context.paint()
+        image_surface.flush()
+        image_surface.finish()
+    elif(outfileext == "PS" or outfileext == "EPS"):
+        # Create an PDFSurface with the exact dimensions of the recorded content
+        image_surface = cairo.PSSurface(outfile, int(width), int(height))
+        image_context = cairo.Context(image_surface)
+        # Transfer the content from the RecordingSurface to the ImageSurface
+        image_context.set_source_surface(upc_preimg, -x, -y)
+        if(outfileext == "EPS"):
+            image_surface.set_eps(True)
+        else:
+            image_surface.set_eps(False)
+        image_context.paint()
+        image_surface.flush()
+        image_surface.finish()
+    elif(outfileext == "CAIRO" or outfileext == "CAIRO"):
+        # Create an ScriptSurface with the exact dimensions of the recorded content
+        image_surface = cairo.ScriptSurface(cairo.ScriptDevice(outfile), cairo.FORMAT_RGB24, int(width), int(height))
+        image_context = cairo.Context(image_surface)
+        # Transfer the content from the RecordingSurface to the ImageSurface
+        image_context.set_source_surface(upc_preimg, -x, -y)
+        image_context.paint()
+        image_surface.flush()
+        image_surface.finish()
     else:
         # Create an ImageSurface with the exact dimensions of the recorded content
         image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
