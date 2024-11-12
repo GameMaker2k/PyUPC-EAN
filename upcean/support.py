@@ -302,6 +302,6 @@ if((pilsupport or pillowsupport) and defaultdraw is None):
 if(cairosupport and defaultdraw is None):
     defaultdraw = "cairo"
 if(svgwritesupport and defaultdraw is None):
-    svgwritesupport = "svgwrite"
+    defaultdraw = "svgwrite"
 if(defaultdraw is None):
-    svgwritesupport = "svgwrite"
+    defaultdraw = "svgwrite"
