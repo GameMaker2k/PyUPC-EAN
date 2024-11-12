@@ -66,6 +66,15 @@ def check_for_cairo():
             cairosupport = False
     return cairosupport
 
+def check_for_cairosvg():
+    cairosvgsupport = True
+    try:
+        import cairosvg
+        cairosvgsupport = True
+    except ImportError:
+        cairosvgsupport = False
+    return cairosvgsupport
+
 def check_for_svgwrite():
     # SVGWrite Support Check
     svgwritesupport = True
@@ -294,6 +303,7 @@ def get_python_info(infotype=None):
 pilsupport = check_for_pil()
 pillowsupport = check_for_pillow()
 cairosupport = check_for_cairo()
+cairosvgsupport = check_for_cairosvg()
 svgwritesupport = check_for_svgwrite()
 
 defaultdraw = None

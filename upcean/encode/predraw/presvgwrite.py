@@ -40,7 +40,15 @@ except ImportError:
         from StringIO import StringIO
         from StringIO import StringIO as BytesIO
 
-# Define helper functions
+try:
+    import cairosvg
+    cairosvgsupport = True
+    # Define valid CairoSVG output formats
+    cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "PNG"}
+except ImportError:
+    cairosvgsupport = False
+    # Define valid SVGWrite output formats
+    cairo_valid_extensions = {"SVG"}
 
 def get_save_filename(outfile):
     """
@@ -58,66 +66,71 @@ def get_save_filename(outfile):
     # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
-
+    
     # Handle file objects directly
     if isinstance(outfile, file):
         return (outfile, "SVG")
-
+    
     # Handle string types
     if isinstance(outfile, str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
             return (outfile, None)
-
+    
         # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
         if ext:
-            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
+            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
             else:
                 outfileext = None
         else:
             # Check for custom format 'name:EXT'
-            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
             else:
                 outfileext = None
-
-        # Default to "SVG" if no valid extension was found or if it's not SVG
-        if outfileext != "SVG":
+    
+        # Default to "SVG" if no valid extension was found
+        if not outfileext:
             outfileext = "SVG"
-
+    
+        # Check if extension is supported by Qahirah
+        if outfileext not in cairo_valid_extensions:
+            outfileext = "SVG"
+    
         return (outfile, outfileext)
-
+    
     # Handle tuple or list types
     if isinstance(outfile, (tuple, list)):
         if len(outfile) != 2:
-            return False  # Invalid tuple/list length
-
+            # Invalid tuple/list length
+            return False
+    
         filename, ext = outfile
-
-        # Allow file objects or strings as the first element
+    
+        # Allow file objects as the first item in tuple
         if isinstance(filename, file):
-            filename = filename  # file object is valid as-is
+            filename = filename  # fileobj is valid as-is
         elif isinstance(filename, str):
             filename = filename.strip()
         else:
-            return False  # Invalid first element type
-
+            return False
+    
         # Ensure the extension is a valid string
         if not isinstance(ext, str):
             return False
-
+    
         ext = ext.strip().upper()
-        # Ensure the extension is SVG
-        if ext != "SVG":
+        # Check if extension is supported by Qahirah
+        if ext not in cairo_valid_extensions:
             ext = "SVG"
-
+    
         return (filename, ext)
-
+    
     # Unsupported type
     return False
 
@@ -315,14 +328,109 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         uploadfile = outfile
         outfile = StringIO()
     if isinstance(outfile, file):
-       upc_img.write(outfile, True)
+       if(cairosvgsupport and outfileext=="PNG"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2png(file_obj=byte_buffer, write_to=outfile)
+       elif(cairosvgsupport and outfileext=="PDF"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2pdf(file_obj=byte_buffer, write_to=outfile)
+       elif(cairosvgsupport and outfileext=="PS"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2ps(file_obj=byte_buffer, write_to=outfile)
+       elif(cairosvgsupport and outfileext=="EPS"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2eps(file_obj=byte_buffer, write_to=outfile)
+       elif(cairosvgsupport and outfileext=="SVG"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2svg(file_obj=byte_buffer, write_to=outfile)
+       else:
+           upc_img.write(outfile, True)
     else:
-       upc_img.saveas(outfile, True)
+       if(cairosvgsupport and outfileext=="PNG"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2png(file_obj=byte_buffer, write_to=outfile)
+       elif(cairosvgsupport and outfileext=="PDF"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2pdf(file_obj=byte_buffer, write_to=outfile)
+       elif(cairosvgsupport and outfileext=="PS"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2ps(file_obj=byte_buffer, write_to=outfile)
+       elif(cairosvgsupport and outfileext=="EPS"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2eps(file_obj=byte_buffer, write_to=outfile)
+       elif(cairosvgsupport and outfileext=="SVG"):
+           preoutfile = StringIO()
+           preoutfile.seek(0, 0)
+           upc_img.write(preoutfile, True)
+           preoutfile.seek(0, 0)
+           byte_buffer = BytesIO(preoutfile.getvalue().encode("utf-8"))  # Convert text to binary
+           preoutfile.close()
+           byte_buffer.seek(0, 0)
+           cairosvg.svg2svg(file_obj=byte_buffer, write_to=outfile)
+       else:
+           upc_img.saveas(outfile, True)
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile))):
-        outfile.seek(0, 0)
-        byte_buffer = BytesIO(outfile.getvalue().encode("utf-8"))  # Convert text to binary
-        outfile.close()
-        byte_buffer.seek(0, 0)
+        if(cairosvgsupport):
+            byte_buffer.seek(0, 0)
+        else:
+            outfile.seek(0, 0)
+            byte_buffer = BytesIO(outfile.getvalue().encode("utf-8"))  # Convert text to binary
+            outfile.close()
+            byte_buffer.seek(0, 0)
         upload_file_to_internet_file(byte_buffer, uploadfile)
         byte_buffer.close()
     return True

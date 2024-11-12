@@ -35,6 +35,7 @@ except ImportError:
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
+cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
@@ -104,7 +105,7 @@ def encode_ean2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     if(pilsupport and imageoutlib == "pillow"):
         pil_addon_fix = 0
         cairo_addon_fix = 0
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwrite and cairosvgsupport and imageoutlib == "svgwrite")):
         pil_addon_fix = 0
         cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
     elif(svgwrite and imageoutlib == "svgwrite"):
