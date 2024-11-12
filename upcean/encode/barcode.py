@@ -36,6 +36,7 @@ from upcean.encode.upcavar import *
 from upcean.encode.ean5 import *
 from upcean.encode.ean2 import *
 import upcean.support
+defaultdraw = upcean.support.defaultdraw
 import upcean.getprefix.getprefix
 
 ''' // Code for making EAN-2 supplement by Kazuki Przyborowski '''
@@ -85,7 +86,7 @@ except:
 ''' // Code for making Modified Plessey by Kazuki Przyborowski '''
 
 
-def validate_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
@@ -93,7 +94,7 @@ def validate_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=
     return create_upca_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
@@ -109,7 +110,7 @@ def validate_encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheig
     return encode_upca_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def validate_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
@@ -117,7 +118,7 @@ def validate_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, bar
     return create_upcaean_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
@@ -133,7 +134,7 @@ def validate_encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barh
     return encode_upcaean_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def validate_create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_upce_checksum(upc)):
@@ -141,7 +142,7 @@ def validate_create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=
     return create_upce_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_upce_checksum(upc)):
@@ -156,7 +157,7 @@ def validate_encode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheig
     return encode_upce_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def validate_create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 13 or len(upc) < 13):
         return False
     if(not upcean.validate.validate_ean13_checksum(upc)):
@@ -164,7 +165,7 @@ def validate_create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheigh
     return create_ean13_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 13 or len(upc) < 13):
         return False
     if(not upcean.validate.validate_ean13_checksum(upc)):
@@ -179,7 +180,7 @@ def validate_encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     return encode_ean13_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def validate_create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
@@ -187,7 +188,7 @@ def validate_create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=
     return create_ean8_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
@@ -203,7 +204,7 @@ def validate_encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheig
     return encode_ean8_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def validate_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 14):
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
@@ -211,7 +212,7 @@ def validate_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(4
     return create_itf_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 14):
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
@@ -227,7 +228,7 @@ def validate_encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheigh
     return encode_itf_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def validate_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 6):
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
@@ -235,7 +236,7 @@ def validate_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=
     return create_itf6_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 6):
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
@@ -251,7 +252,7 @@ def validate_encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheig
     return encode_itf6_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def validate_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 14):
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
@@ -259,7 +260,7 @@ def validate_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheigh
     return create_itf14_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 14):
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
@@ -275,14 +276,14 @@ def validate_encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     return encode_itf14_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def fix_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
     return create_upca_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def fix_draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
@@ -296,14 +297,14 @@ def fix_encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(4
     return encode_upca_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def fix_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
     return create_upcaean_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def fix_draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
@@ -317,14 +318,14 @@ def fix_encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight
     return encode_upcaean_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def fix_create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_upce_checksum(upc)
     return create_upce_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def fix_draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_upce_checksum(upc)
@@ -338,14 +339,14 @@ def fix_encode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(4
     return encode_upce_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def fix_create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 13 or len(upc) < 12):
         return False
     upc = upcean.validate.fix_ean13_checksum(upc)
     return create_ean13_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def fix_draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 13 or len(upc) < 12):
         return False
     upc = upcean.validate.fix_ean13_checksum(upc)
@@ -359,14 +360,14 @@ def fix_encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(
     return encode_ean13_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def fix_create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_ean8_checksum(upc)
     return create_ean8_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def fix_draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_ean8_checksum(upc)
@@ -380,14 +381,14 @@ def fix_encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(4
     return encode_ean8_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def fix_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
     return create_itf_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
-def fix_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
@@ -401,14 +402,14 @@ def fix_encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     return encode_itf_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
-def fix_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
     return create_itf6_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
-def fix_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
@@ -422,14 +423,14 @@ def fix_encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(4
     return encode_itf6_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
-def fix_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
     return create_itf14_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
-def fix_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)

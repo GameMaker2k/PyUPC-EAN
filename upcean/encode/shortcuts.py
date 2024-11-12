@@ -18,6 +18,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import upcean.encode.barcode
 import upcean.xml.files
 import upcean.support
+defaultdraw = upcean.support.defaultdraw
 
 ''' // Shortcut Codes by Kazuki Przyborowski '''
 
@@ -32,7 +33,7 @@ def encode_barcode(bctype, inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     return False
 
 
-def draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(bctype not in upcean.support.supported_barcodes("tuple")):
         return False
     if(hasattr(upcean.encode.barcode, "draw_"+bctype+"_barcode") and callable(getattr(upcean.encode.barcode, "draw_"+bctype+"_barcode"))):
@@ -42,7 +43,7 @@ def draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
     return False
 
 
-def create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(bctype not in upcean.support.supported_barcodes("tuple")):
         return False
     if(hasattr(upcean.encode.barcode, "create_"+bctype+"_barcode") and callable(getattr(upcean.encode.barcode, "create_"+bctype+"_barcode"))):
@@ -65,7 +66,7 @@ def validate_encode_barcode(bctype, inimage, upc, resize=1, shiftxy=(0, 0), barh
         return encode_barcode(bctype, inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def validate_draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(bctype not in upcean.support.supported_barcodes("tuple")):
         return False
     if(bctype == "upca" or bctype == "upcaean" or bctype == "goodwill" or bctype == "upce" or bctype == "ean13" or bctype == "ean8" or bctype == "itf" or bctype == "itf6" or bctype == "itf14"):
@@ -78,7 +79,7 @@ def validate_draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1
         return draw_barcode(bctype, upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def validate_create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def validate_create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(bctype not in upcean.support.supported_barcodes("tuple")):
         return False
     if(bctype == "upca" or bctype == "upcaean" or bctype == "goodwill" or bctype == "upce" or bctype == "ean13" or bctype == "ean8" or bctype == "itf" or bctype == "itf6" or bctype == "itf14"):
@@ -104,7 +105,7 @@ def fix_encode_barcode(bctype, inimage, upc, resize=1, shiftxy=(0, 0), barheight
         return encode_barcode(bctype, inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo)
 
 
-def fix_draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(bctype not in upcean.support.supported_barcodes("tuple")):
         return False
     if(bctype == "upca" or bctype == "upcaean" or bctype == "goodwill" or bctype == "upce" or bctype == "ean13" or bctype == "ean8" or bctype == "itf" or bctype == "itf6" or bctype == "itf14"):
@@ -117,7 +118,7 @@ def fix_draw_barcode(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1),
         return draw_barcode(bctype, upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def fix_create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def fix_create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(bctype not in upcean.support.supported_barcodes("tuple")):
         return False
     if(bctype == "upca" or bctype == "upcaean" or bctype == "goodwill" or bctype == "upce" or bctype == "ean13" or bctype == "ean8" or bctype == "itf" or bctype == "itf6" or bctype == "itf14"):

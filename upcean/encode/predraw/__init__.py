@@ -138,7 +138,7 @@ def select_image_output_lib(imageoutlib="pillow"):
     logger.info("Selected image output library: {}".format(imageoutlib))
     return imageoutlib
 
-def snapCoords(ctx, x, y, imageoutlib="pillow"):
+def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
     """
     Snaps coordinates using the selected image output library.
 
@@ -172,7 +172,7 @@ def snapCoords(ctx, x, y, imageoutlib="pillow"):
     logger.error("snapCoords: Selected library is not supported.")
     return False
 
-def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow"):
+def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=defaultdraw):
     """
     Draws a colored line using the selected image output library.
 
@@ -207,7 +207,7 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib="pillow"):
     logger.error("drawColorLine: Selected library is not supported.")
     return False
 
-def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
+def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
     """
     Draws a colored rectangle using the selected image output library.
 
@@ -241,7 +241,7 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
     logger.error("drawColorRectangle: Selected library is not supported.")
     return False
 
-def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib="pillow"):
+def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib=defaultdraw):
     """
     Draws colored text using the selected image output library.
 
@@ -278,7 +278,7 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib="pillo
     logger.error("drawColorText: Selected library is not supported.")
     return False
 
-def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
+def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
     """
     Draws an alternative colored rectangle using the selected image output library.
 
@@ -312,7 +312,7 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib="pillow"):
     logger.error("drawColorRectangleAlt: Selected library is not supported.")
     return False
 
-def get_save_filename(outfile, imageoutlib="pillow"):
+def get_save_filename(outfile, imageoutlib=defaultdraw):
     """
     Processes the `outfile` parameter to determine a suitable filename and its corresponding
     file extension for saving files (e.g., images). Returns a tuple (filename, EXTENSION)
@@ -347,7 +347,7 @@ def get_save_filename(outfile, imageoutlib="pillow"):
     logger.error("get_save_filename: Selected library is not supported.")
     return False
 
-def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib="pillow"):
+def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib=defaultdraw):
     try:
         selected_lib = select_image_output_lib(imageoutlib)
     except UnsupportedLibraryError as e:

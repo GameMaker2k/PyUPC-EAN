@@ -295,3 +295,13 @@ pilsupport = check_for_pil()
 pillowsupport = check_for_pillow()
 cairosupport = check_for_cairo()
 svgwritesupport = check_for_svgwrite()
+
+defaultdraw = None
+if((pilsupport or pillowsupport) and defaultdraw is None):
+    defaultdraw = "pillow
+if(cairosupport and defaultdraw is None):
+    defaultdraw = "cairo"
+if(svgwritesupport and defaultdraw is None):
+    svgwritesupport = "svgwrite"
+if(defaultdraw is None):
+    svgwritesupport = "svgwrite"

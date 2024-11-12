@@ -40,6 +40,7 @@ pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
+defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
     import upcean.encode.predraw.prepil
 
@@ -49,7 +50,7 @@ if(svgwritesupport):
     import upcean.encode.predraw.presvgwrite
 
 
-def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -418,9 +419,9 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
     return True
 
 
-def draw_goodwill_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def draw_goodwill_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     return create_goodwill_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
-def encode_goodwill_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib="pillow"):
+def encode_goodwill_barcode(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     return create_goodwill_barcode(upc, None, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)

@@ -23,6 +23,7 @@ pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
 svgwritesupport = upcean.support.check_for_svgwrite()
+defaultdraw = upcean.support.defaultdraw
 if(pilsupport or cairosupport or svgwritesupport):
     import upcean.fonts
     import upcean.xml
