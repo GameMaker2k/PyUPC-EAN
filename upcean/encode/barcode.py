@@ -39,52 +39,22 @@ import upcean.support
 defaultdraw = upcean.support.defaultdraw
 import upcean.getprefix.getprefix
 
-''' // Code for making EAN-2 supplement by Kazuki Przyborowski '''
-''' // Code for making EAN-5 supplement by Kazuki Przyborowski '''
-''' // Code for making UPC-A by Kazuki Przyborowski '''
-try:
-    import upcean.encode.upca as gtin12
-    import upcean.encode.upca as ucc12
-except:
-    pass
-''' // Code for making Goodwill Barcodes by Kazuki Przyborowski '''
-''' // Code for making UPC-E by Kazuki Przyborowski '''
-''' // Code for making EAN-13 by Kazuki Przyborowski '''
-try:
-    import upcean.encode.ean13 as gtin13
-    import upcean.encode.ean13 as ucc13
-except:
-    pass
-''' // Code for making EAN-8 by Kazuki Przyborowski '''
-try:
-    import upcean.encode.ean8 as gtin8
-    import upcean.encode.ean8 as ucc8
-except:
-    pass
-''' // Code for making Standard 2 of 5 by Kazuki Przyborowski '''
 try:
     import upcean.encode.stf as code25
 except:
     pass
-''' // Code for making Interleaved 2 of 5 by Kazuki Przyborowski '''
-''' // Code for making ITF-14 by Kazuki Przyborowski '''
 try:
     import upcean.encode.itf14 as itf6
 except:
     pass
-''' // Code for making Code 11 by Kazuki Przyborowski '''
-''' // Code for making Code 32 by Kazuki Przyborowski '''
 try:
-    import upcean.encode.code32 as pharmacode
+    import upcean.encode.ean2 as upc2
 except:
     pass
-''' // Code for making Code 39 by Kazuki Przyborowski '''
-''' // Code for making Code 93 by Kazuki Przyborowski '''
-''' // Code for making Code 128 by Kazuki Przyborowski '''
-''' // Code for making Codabar by Kazuki Przyborowski '''
-''' // Code for making Plessey by Kazuki Przyborowski '''
-''' // Code for making Modified Plessey by Kazuki Przyborowski '''
-
+try:
+    import upcean.encode.ean5 as upc5
+except:
+    pass
 
 def validate_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 12):
