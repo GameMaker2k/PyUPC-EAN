@@ -16,6 +16,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
+from upcean.xml.downloader import upload_file_to_internet_file
 import os
 import re
 try:
@@ -45,6 +46,15 @@ try:
     file
 except NameError:
     from io import IOBase as file
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO
+        from StringIO import StringIO as BytesIO
 
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
@@ -315,6 +325,9 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
     x, y, width, height = upc_preimg.ink_extents()
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+        uploadfile = outfile
+        outfile = BytesIO()
     if(outfileext == "SVG" or outfileext == "PDF" or outfileext == "PS" or outfileext == "EPS" or imageoutlib == "cairosvg"):
         if(outfileext == "SVG" or imageoutlib == "cairosvg"):
             # Create an ImageSurface with the exact dimensions of the recorded content
@@ -358,4 +371,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         # Save as PNG
         image_surface.write_to_png(outfile)
         image_surface.finish()
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+        outfile.seek(0, 0)
+        upload_file_to_internet_file(outfile, uploadfile)
     return True

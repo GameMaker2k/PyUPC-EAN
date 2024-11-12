@@ -15,6 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
+from upcean.xml.downloader import upload_file_to_internet_file
 from PIL import Image, ImageDraw, ImageFont
 from PIL import PngImagePlugin
 import os
@@ -36,6 +37,15 @@ try:
     file
 except NameError:
     from io import IOBase as file
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO
+        from StringIO import StringIO as BytesIO
 
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
@@ -224,6 +234,9 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         exargdict.update({'pnginfo': info})
     else:
         exargdict = {'comment': imgcomment}
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+        uploadfile = outfile
+        outfile = BytesIO()
     if outfileext == "XPM":
         # XPM supports only palette-based images ("P" mode)
         upc_preimg.convert(mode="P").save(outfile, outfileext, **exargdict)
@@ -252,4 +265,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
             upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
         else:
             upc_preimg.save(outfile, outfileext, **exargdict)
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+        outfile.seek(0, 0)
+        upload_file_to_internet_file(outfile, uploadfile)
     return True

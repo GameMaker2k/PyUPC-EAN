@@ -16,6 +16,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
+from upcean.xml.downloader import upload_file_to_internet_file
 try:
     import svgwrite
 except ImportError:
@@ -29,6 +30,15 @@ try:
     file
 except NameError:
     from io import IOBase as file
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO
+        from StringIO import StringIO as BytesIO
 
 # Define helper functions
 
@@ -300,8 +310,14 @@ def embed_font(dwg, font_path, font_family):
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+        uploadfile = outfile
+        outfile = BytesIO()
     if isinstance(outfile, file):
        upc_img.write(outfile, True)
     else:
        upc_img.saveas(outfile, True)
+    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+        outfile.seek(0, 0)
+        upload_file_to_internet_file(outfile, uploadfile)
     return True
