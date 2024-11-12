@@ -336,8 +336,8 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
-    LineTxtStart = ((shiftxy[0] + 2) * int(resize))
-    LineTxtStartNorm = 2
+    LineTxtStart = ((shiftxy[0] + 1) * int(resize))
+    LineTxtStartNorm = 1
     upc_print = list(re.findall("(\\d+)", upc)[0])
     while (NumTxtZero < len(upc_print)):
         texthidden = False
@@ -355,14 +355,14 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         else:
          upc_array['text']['type'].append("txt")
         if(NumTxtZero==0):
-            LineTxtStart += 10 * int(resize)
-            LineTxtStartNorm += 10
-        if(NumTxtZero==(len(upc)/2)-1):
-            LineTxtStart += 4 * int(resize)
-            LineTxtStartNorm += 4
-        if(NumTxtZero==len(upc)-2):
             LineTxtStart += 11 * int(resize)
             LineTxtStartNorm += 11
+        if(NumTxtZero==(len(upc)/2)-1):
+            LineTxtStart += 5 * int(resize)
+            LineTxtStartNorm += 5
+        if(NumTxtZero==len(upc)-2):
+            LineTxtStart += 12 * int(resize)
+            LineTxtStartNorm += 12
         LineTxtStart += 7 * int(resize)
         LineTxtStartNorm += 7
         NumTxtZero += 1

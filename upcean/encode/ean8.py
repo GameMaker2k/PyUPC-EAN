@@ -427,8 +427,8 @@ def encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             LineTxtStart += 4 * int(resize)
             LineTxtStartNorm += 4
         if(NumTxtZero==8):
-            LineTxtStart += 4 * int(resize)
-            LineTxtStartNorm += 4
+            LineTxtStart += 5 * int(resize)
+            LineTxtStartNorm += 5
         LineTxtStart += 7 * int(resize)
         LineTxtStartNorm += 7
         NumTxtZero += 1

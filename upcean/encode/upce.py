@@ -417,8 +417,8 @@ def encode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             except OSError:
                 upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
-    LineTxtStart = ((shiftxy[0] + 2) * int(resize))
-    LineTxtStartNorm = 2
+    LineTxtStart = ((shiftxy[0] + 1) * int(resize))
+    LineTxtStartNorm = 1
     upc_print = list(re.findall("(\\d{8})", upc)[0])
     while (NumTxtZero < len(upc_print)):
         texthidden = False
@@ -436,8 +436,8 @@ def encode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         else:
          upc_array['text']['type'].append("txt")
         if(NumTxtZero==0):
-            LineTxtStart += 3 * int(resize)
-            LineTxtStartNorm += 3
+            LineTxtStart += 4 * int(resize)
+            LineTxtStartNorm += 4
         if(NumTxtZero==6):
             LineTxtStart += 6 * int(resize)
             LineTxtStartNorm += 6
