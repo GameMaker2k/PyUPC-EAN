@@ -107,9 +107,12 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     if(pilsupport and imageoutlib == "pillow"):
         pil_addon_fix = 0
         cairo_addon_fix = 0
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwrite and imageoutlib == "svgwrite")):
+    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
         cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
+    elif(svgwrite and imageoutlib == "svgwrite"):
+        pil_addon_fix = 0
+        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
@@ -460,9 +463,12 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     if(pilsupport and imageoutlib == "pillow"):
         pil_addon_fix = 0
         cairo_addon_fix = 0
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwrite and imageoutlib == "svgwrite")):
+    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         pil_addon_fix = 0
         cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
+    elif(svgwrite and imageoutlib == "svgwrite"):
+        pil_addon_fix = 0
+        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
     else:
         pil_addon_fix = 0
         cairo_addon_fix = 0
