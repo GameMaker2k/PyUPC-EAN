@@ -326,7 +326,10 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     uploadfile = None
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         uploadfile = outfile
-        outfile = StringIO()
+        if(cairosvgsupport):
+            outfile = BytesIO()
+        else:
+            outfile = StringIO()
     if isinstance(outfile, file):
        if(cairosvgsupport and outfileext=="PNG"):
            preoutfile = StringIO()
