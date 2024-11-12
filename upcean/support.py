@@ -298,7 +298,7 @@ svgwritesupport = check_for_svgwrite()
 
 defaultdraw = None
 if((pilsupport or pillowsupport) and defaultdraw is None):
-    defaultdraw = "pillow
+    defaultdraw = "pillow"
 if(cairosupport and defaultdraw is None):
     defaultdraw = "cairo"
 if(svgwritesupport and defaultdraw is None):
