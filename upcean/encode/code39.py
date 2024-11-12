@@ -395,7 +395,7 @@ def create_code39_barcode(upc, outfile="./code39.png", resize=1, barheight=(48, 
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.encode.predraw.prepil.save_to_file((upc_img, upc_preimg), outfile, outfileext, "code39; "+upc)
+        upcean.encode.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "code39; "+upc, imageoutlib)
     return True
 
 def get_code39extended_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
@@ -762,5 +762,5 @@ def create_code39extended_barcode(upc, outfile="./code39.png", resize=1, barheig
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.encode.predraw.prepil.save_to_file((upc_img, upc_preimg), outfile, outfileext, "code39; "+upc)
+        upcean.encode.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "code39; "+upc, imageoutlib)
     return True

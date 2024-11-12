@@ -553,5 +553,5 @@ def create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=(48, 54),
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.encode.predraw.prepil.save_to_file((upc_img, upc_preimg), outfile, outfileext, "ean8; "+upc)
+        upcean.encode.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "ean8; "+upc, imageoutlib)
     return True

@@ -363,4 +363,5 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         outfile.seek(0, 0)
         upload_file_to_internet_file(outfile, uploadfile)
+        outfile.close()
     return True

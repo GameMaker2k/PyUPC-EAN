@@ -312,12 +312,16 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_preimg = inimage[1]
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         uploadfile = outfile
-        outfile = BytesIO()
+        outfile = StringIO()
     if isinstance(outfile, file):
        upc_img.write(outfile, True)
     else:
        upc_img.saveas(outfile, True)
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         outfile.seek(0, 0)
-        upload_file_to_internet_file(outfile, uploadfile)
+        byte_buffer = BytesIO(outfile.getvalue().encode("utf-8"))  # Convert text to binary
+        outfile.close()
+        byte_buffer.seek(0, 0)
+        upload_file_to_internet_file(byte_buffer, uploadfile)
+        byte_buffer.close()
     return True

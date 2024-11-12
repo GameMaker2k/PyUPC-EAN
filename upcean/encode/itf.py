@@ -405,5 +405,5 @@ def create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), b
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.encode.predraw.prepil.save_to_file((upc_img, upc_preimg), outfile, outfileext, "itf; "+upc)
+        upcean.encode.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "itf; "+upc, imageoutlib)
     return True

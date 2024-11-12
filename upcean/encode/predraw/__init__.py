@@ -357,7 +357,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
     if selected_lib == "none" or selected_lib == None:
         return True
     if selected_lib == "pillow" and pilsupport:
-        return upcean.encode.predraw.prepil.save_to_file(inimage, outfile, outfileext, imgcomment)
+        return upcean.encode.predraw.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.encode.predraw.precairo.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "svgwrite" and svgwritesupport:
