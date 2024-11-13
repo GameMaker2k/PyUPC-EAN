@@ -33,6 +33,12 @@ import re
 # Import 'open' from 'io' to support 'encoding' parameter in both Python 2 and Python 3
 from io import open
 
+# Import the download functions from upcean.xml.downloader
+from upcean.xml.downloader import (
+    download_file_from_internet_file,
+    download_file_from_internet_string
+)
+
 class BaseElement(object):
     """
     Base class for all SVG elements.
@@ -283,13 +289,11 @@ class Drawing(BaseElement):
 
         # Fetch the CSS from the URI
         try:
-            import requests
-            response = requests.get(uri)
-            if response.status_code != 200:
+            # Use the provided function to download the CSS as bytes
+            css_bytes = download_file_from_internet_string(uri)
+            if not css_bytes:
                 raise Exception("Failed to fetch Google Font CSS.")
-            css = response.text
-        except ImportError:
-            raise ImportError("The 'requests' library is required to fetch Google Fonts.")
+            css = css_bytes.decode('utf-8')
         except Exception as e:
             raise Exception("Error fetching Google Font: {}".format(e))
 
@@ -313,11 +317,12 @@ class Drawing(BaseElement):
             font_url = match.strip('\'"')
             # Fetch the font file
             try:
-                import requests
-                response = requests.get(font_url)
-                if response.status_code != 200:
+                # Use the provided function to download the font file as BytesIO
+                font_file_obj = download_file_from_internet_file(font_url)
+                if not font_file_obj:
                     continue  # Skip if failed to fetch
-                font_data = response.content
+                # Read the font data from the BytesIO object
+                font_data = font_file_obj.read()
                 # Determine the font format
                 if '.woff2' in font_url:
                     font_format = 'woff2'
@@ -335,7 +340,8 @@ class Drawing(BaseElement):
                 data_uri = 'url(data:font/{0};base64,{1}) format(\'{0}\')'.format(font_format, font_base64)
                 # Replace the URL in CSS
                 css = css.replace('url({})'.format(match), data_uri)
-            except Exception:
+            except Exception as e:
+                print("Error embedding font from URL '{}': {}".format(font_url, e))
                 continue  # Skip on any error
 
         return css
