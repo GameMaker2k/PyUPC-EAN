@@ -359,11 +359,11 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             LineTxtStart += 11 * int(resize)
             LineTxtStartNorm += 11
         if(NumTxtZero==(len(upc)/2)-1):
-            LineTxtStart += 5 * int(resize)
-            LineTxtStartNorm += 5
+            LineTxtStart += 4 * int(resize)
+            LineTxtStartNorm += 4
         if(NumTxtZero==len(upc)-2):
-            LineTxtStart += 12 * int(resize)
-            LineTxtStartNorm += 12
+            LineTxtStart += 11 * int(resize)
+            LineTxtStartNorm += 11
         LineTxtStart += 7 * int(resize)
         LineTxtStartNorm += 7
         NumTxtZero += 1
