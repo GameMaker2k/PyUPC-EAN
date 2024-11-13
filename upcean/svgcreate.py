@@ -28,6 +28,9 @@ except ImportError:
 import base64
 import os
 
+version = (1, 4, 3, 'release')
+VERSION = "1.4.3"
+
 class Drawing(object):
     def __init__(self, filename=None, size=('100%', '100%'), profile='full', **kwargs):
         self.filename = filename

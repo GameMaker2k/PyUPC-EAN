@@ -18,6 +18,11 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import platform
 from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, __build_python_is_set__, get_build_python_info, __revision__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date
 
+
+enable_pilsupport = True
+enable_cairosupport = True
+enable_cairosvgsupport = True
+
 ''' // Barcode Support List '''
 bctype_dict = {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCAEan': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
                'CODE11': "code11", 'CODE39': "code39", 'CODE93': "code93", 'CODE128': "code128", 'CODE128Alt': "code128alt", 'CODE128Dec': "code128dec", 'CODE128Hex': "code128hex", 'CODE128Man': "code128man", 'CODABAR': "codabar", 'MSI': "msi", "GOODWILL": "goodwill"}
@@ -51,29 +56,38 @@ def get_barcode_name(barcode_type="upca"):
                    "code39": "Code 39", "code93": "Code 93", "code128": "Code 128", "code128alt": "Code 128 Alt", "code128dec": "Code 128 Dec", "code128hex": "Code 128 Hex", "code128man": "Code 128 Man", 'codabar': "Codabar", 'msi': "MSI", "goodwill": "GOODWILL"}
     return bctype_name.get(barcode_type, False)
 
+enable_pillowsupport = enable_pilsupport
 
-def check_for_cairo():
-    # Cairo Support Check
-    cairosupport = True
-    try:
-        import cairo
+if(enable_cairosupport):
+    def check_for_cairo():
+        # Cairo Support Check
         cairosupport = True
-    except ImportError:
         try:
-            import cairocffi as cairo
+            import cairo
             cairosupport = True
         except ImportError:
-            cairosupport = False
-    return cairosupport
+            try:
+                import cairocffi as cairo
+                cairosupport = True
+            except ImportError:
+                cairosupport = False
+        return cairosupport
+else:
+    def check_for_cairo():
+        return False
 
-def check_for_cairosvg():
-    cairosvgsupport = True
-    try:
-        import cairosvg
+if(enable_cairosvgsupport):
+    def check_for_cairosvg():
         cairosvgsupport = True
-    except ImportError:
-        cairosvgsupport = False
-    return cairosvgsupport
+        try:
+            import cairosvg
+            cairosvgsupport = True
+        except ImportError:
+            cairosvgsupport = False
+        return cairosvgsupport
+else:
+    def check_for_cairosvg():
+        return False
 
 def check_for_svgwrite():
     # SVGWrite Support Check
@@ -89,53 +103,60 @@ def check_for_svgwrite():
             svgwritesupport = False
     return svgwritesupport
 
-def check_for_pil():
-    # PIL Support Check
-    pilsupport = True
-    try:
-        import PIL
+if(enable_pilsupport):
+    def check_for_pil():
+        # PIL Support Check
         pilsupport = True
-    except ImportError:
         try:
-            import Image
+            import PIL
             pilsupport = True
         except ImportError:
             try:
-                from PIL import Image, ImageDraw, ImageFont
+                import Image
                 pilsupport = True
             except ImportError:
-                pilsupport = False
-            return pilsupport
-    return pilsupport
-
-
-def check_for_pillow():
-    # Pillow Support Check
-    pilsupport = check_for_pil()
-    if(not pilsupport):
+                try:
+                    from PIL import Image, ImageDraw, ImageFont
+                    pilsupport = True
+                except ImportError:
+                    pilsupport = False
+                return pilsupport
         return pilsupport
-    if(pilsupport):
-        from PIL import Image
-        try:
-            pil_ver = Image.PILLOW_VERSION
-            pil_is_pillow = True
-        except AttributeError:
+else:
+    def check_for_pil():
+        return False
+
+if(enable_pillowsupport):
+    def check_for_pillow():
+        # Pillow Support Check
+        pilsupport = check_for_pil()
+        if(not pilsupport):
+            return pilsupport
+        if(pilsupport):
+            from PIL import Image
             try:
-                pil_ver = Image.__version__
+                pil_ver = Image.PILLOW_VERSION
                 pil_is_pillow = True
             except AttributeError:
-                pil_is_pillow = False
+                try:
+                    pil_ver = Image.__version__
+                    pil_is_pillow = True
+                except AttributeError:
+                    pil_is_pillow = False
+                except NameError:
+                    pil_is_pillow = False
             except NameError:
-                pil_is_pillow = False
-        except NameError:
-            try:
-                pil_ver = Image.__version__
-                pil_is_pillow = True
-            except AttributeError:
-                pil_is_pillow = False
-            except NameError:
-                pil_is_pillow = False
-    return pil_is_pillow
+                try:
+                    pil_ver = Image.__version__
+                    pil_is_pillow = True
+                except AttributeError:
+                    pil_is_pillow = False
+                except NameError:
+                    pil_is_pillow = False
+        return pil_is_pillow
+else:
+    def check_for_pillow():
+        return False
 
 
 def check_pil_is_pillow():
