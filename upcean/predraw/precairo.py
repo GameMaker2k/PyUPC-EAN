@@ -321,6 +321,9 @@ def get_save_filename(outfile):
     # Unsupported type
     return False
 
+def get_save_file(outfile):
+    return get_save_filename(outfile)
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]

@@ -124,6 +124,9 @@ def get_save_filename(outfile):
 
     return False
 
+def get_save_file(outfile):
+    return get_save_filename(outfile)
+
 def save_to_file(image, outfile, outfileext, imgcomment="barcode"):
     # Set file format and compression options based on `outfileext`
     image.quality(100)  # Set high quality for formats like JPEG/WEBP

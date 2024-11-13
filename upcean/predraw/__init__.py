@@ -350,6 +350,9 @@ def get_save_filename(outfile, imageoutlib=defaultdraw):
     logger.error("get_save_filename: Selected library is not supported.")
     return False
 
+def get_save_file(outfile, imageoutlib=defaultdraw):
+    return get_save_filename(outfile, imageoutlib)
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib=defaultdraw):
     try:
         selected_lib = select_image_output_lib(imageoutlib)

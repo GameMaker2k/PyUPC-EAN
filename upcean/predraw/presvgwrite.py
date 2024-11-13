@@ -134,6 +134,9 @@ def get_save_filename(outfile):
     # Unsupported type
     return False
 
+def get_save_file(outfile):
+    return get_save_filename(outfile)
+
 def drawColorRectangleAlt(dwg, x1, y1, x2, y2, color):
     """
     Draws a rectangle with only an outline (no fill) from (x1, y1) to (x2, y2) with the specified color.

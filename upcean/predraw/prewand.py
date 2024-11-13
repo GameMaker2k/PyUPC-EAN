@@ -133,6 +133,9 @@ def get_save_filename(outfile):
 
     return False
 
+def get_save_file(outfile):
+    return get_save_filename(outfile)
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     img = inimage
     with Image() as img:
