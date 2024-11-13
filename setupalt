@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# Set default command paths if not already defined
+RMFILE="${RMFILE:-$(command -v rm) -rf}"
+PYTHON="${PYTHON:-$(command -v python)}"
+MKDIR="${MKDIR:-$(command -v mkdir) -p}"
+INSTALL="${INSTALL:-$(command -v install) -v -c}"
+
+# Determine the Python library installation path
+PREFIX="${PREFIX:-$(${PYTHON} -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')}"
+
+# Function to execute a command and print it
+run_command() {
+    echo "$1"
+    eval "$1"
+}
+
+# Function to create directory if it doesn't exist
+ensure_directory() {
+    [ -z "$1" ] || run_command "${MKDIR} \"$1\""
+}
+
+# Function to install Python files
+install_python_file() {
+    run_command "${INSTALL} \"$1\" \"$2\""
+}
+
+# Function to compile Python files
+compile_python_files() {
+    run_command "${PYTHON} -m compileall \"$PREFIX/$1\""
+    run_command "${PYTHON} -O -m compileall \"$PREFIX/$1\""
+}
+
+# Main installation process
+main() {
+    local OLDCWD="$(pwd)"
+    
+    echo "Installing Python Module upcean"
+    
+    # Check for required Python modules
+    for module in PIL readline; do
+        if ! ${PYTHON} -c "import $module" &>/dev/null; then
+            echo "Required Python module '$module' not found."
+            exit 1
+        fi
+    done
+
+    # Create installation directory if necessary
+    ensure_directory "$PREFIX/upcean"
+
+    # Copy files to the target directory
+    for file in ./upcean/*; do
+        install_python_file "$file" "$PREFIX/upcean/$(basename "$file")"
+    done
+
+    # Compile the installed files
+    run_command "cd \"$PREFIX\""
+    compile_python_files "upcean"
+    run_command "cd \"$OLDCWD\""
+
+    echo "Finished installing Python Module upcean"
+}
+
+# Execute main installation function
+main
