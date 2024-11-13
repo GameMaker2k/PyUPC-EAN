@@ -66,7 +66,7 @@ def get_upcavar_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), 
         supplement = upc_pieces[2]
     if(len(upc) % 2):
         return False
-    if(len(upc) < 6):
+    if(len(upc) < 4):
         return False
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
@@ -144,7 +144,7 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         return False
     if(len(upc) % 2):
         return False
-    if(len(upc) < 6):
+    if(len(upc) < 4):
         return False
     upc_matches = upc_matches[0]
     PrefixDigit = upc_matches[0]
@@ -515,7 +515,7 @@ def get_upcaeanvar_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         supplement = upc_pieces[2]
     if(len(upc) % 2):
         return False
-    if(len(upc) < 6):
+    if(len(upc) < 4):
         return False
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
@@ -593,7 +593,7 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         return False
     if(len(upc) % 2):
         return False
-    if(len(upc) < 6):
+    if(len(upc) < 4):
         return False
     upc_matches = upc_matches[0]
     PrefixDigit = upc_matches[0]
