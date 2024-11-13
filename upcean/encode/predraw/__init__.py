@@ -368,3 +368,46 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
 
     logger.error("save_to_file: Selected library is not supported.")
     return False
+
+def save_to_filename(imgout, outfile, imgcomment="barcode"):
+    upc_img = imgout[0]
+    upc_preimg = imgout[1]
+    imageoutlib = None
+    if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
+        imageoutlib = "pillow"
+    elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
+        imageoutlib = "cairo"
+    elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
+        imageoutlib = "svgwrite"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imgout != "none" and imgout is not None):
+        imageoutlib = None
+    elif(imgout == "none" or imgout is None):
+        return False
+    elif(not pilsupport and not cairosupport and not svgwritesupport):
+        return False
+    else:
+        return False
+    if(outfile is None):
+        if(imageoutlib == "cairosvg"):
+            oldoutfile = None
+            outfile = None
+            outfileext = "SVG"
+        else:
+            oldoutfile = None
+            outfile = None
+            outfileext = None
+    else:
+        oldoutfile = get_save_filename(
+            outfile, imageoutlib)
+        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+            del(outfile)
+            outfile = oldoutfile[0]
+            outfileext = oldoutfile[1]
+            if(cairosupport and imageoutlib == "cairo" and outfileext == "SVG"):
+                imageoutlib = "cairosvg"
+            if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
+                imageoutlib = "cairo"
+    if(oldoutfile is None or isinstance(oldoutfile, bool)):
+        return [upc_img, upc_preimg, imageoutlib]
+    save_to_file(imgout, outfile, outfileext, imgcomment, imageoutlib)
+    return True
