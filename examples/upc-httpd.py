@@ -208,7 +208,7 @@ class GenerateIndexPage(object):
             cherrypy.response.headers['Content-Type'] = "image/jpeg"
         if(file_ext[1] == "BMP"):
             cherrypy.response.headers['Content-Type'] = "image/bmp"
-        if(file_ext[1] == "EPS"):
+        if(file_ext[1] == "PS"):
             cherrypy.response.headers['Content-Type'] = "application/postscript"
         if(file_ext[1] == "EPS"):
             cherrypy.response.headers['Content-Type'] = "application/postscript"
@@ -266,7 +266,7 @@ class GenerateBarcodes(object):
             cherrypy.response.headers['Content-Type'] = "image/jpeg"
         if(file_ext[1] == "BMP"):
             cherrypy.response.headers['Content-Type'] = "image/bmp"
-        if(file_ext[1] == "EPS"):
+        if(file_ext[1] == "PS"):
             cherrypy.response.headers['Content-Type'] = "application/postscript"
         if(file_ext[1] == "EPS"):
             cherrypy.response.headers['Content-Type'] = "application/postscript"
@@ -326,7 +326,7 @@ class GenerateBarcodes(object):
             cherrypy.response.headers['Content-Type'] = "image/jpeg"
         if(file_ext[1] == "BMP"):
             cherrypy.response.headers['Content-Type'] = "image/bmp"
-        if(file_ext[1] == "EPS"):
+        if(file_ext[1] == "PS"):
             cherrypy.response.headers['Content-Type'] = "application/postscript"
         if(file_ext[1] == "EPS"):
             cherrypy.response.headers['Content-Type'] = "application/postscript"
