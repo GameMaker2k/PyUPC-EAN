@@ -374,3 +374,22 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()
     return True
+
+def save_to_filename(imgout, outfile, imgcomment="barcode"):
+    upc_img = imgout[0]
+    upc_preimg = imgout[1]
+    if(outfile is None):
+        oldoutfile = None
+        outfile = None
+        outfileext = None
+    else:
+        oldoutfile = get_save_filename(
+            outfile)
+        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+            del(outfile)
+            outfile = oldoutfile[0]
+            outfileext = oldoutfile[1]
+    if(oldoutfile is None or isinstance(oldoutfile, bool)):
+        return [upc_img, upc_preimg, "cairo"]
+    save_to_file(imgout, outfile, outfileext, imgcomment)
+    return True
