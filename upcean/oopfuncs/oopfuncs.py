@@ -271,7 +271,7 @@ class encode:
         def get_save_filename(self, filename=None):
             if(filename is None):
                 filename = self.filename
-            return upcean.encode.predraw.get_save_filename(self.filename)
+            return upcean.predraw.get_save_filename(self.filename)
     ''' // getprefix/__init__.py funtions '''
 
     def get_barcode_info(self):

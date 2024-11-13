@@ -15,9 +15,9 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-from upcean.encode.predraw import *
+from upcean.predraw import *
 import re
-import upcean.encode.predraw.getsfname
+import upcean.predraw.getsfname
 import upcean.support
 try:
     from PIL import Image, UnidentifiedImageError

@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-from upcean.encode.predraw import *
+from upcean.predraw import *
 import re
 import sys
 import upcean.support
@@ -41,11 +41,11 @@ cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
-    import upcean.encode.predraw.prepil
+    import upcean.predraw.prepil
 if(cairosupport):
-    import upcean.encode.predraw.precairo
+    import upcean.predraw.precairo
 if(svgwritesupport):
-    import upcean.encode.predraw.presvgwrite
+    import upcean.predraw.presvgwrite
 
 def get_upca_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
     barheightadd = barheight[1]
@@ -326,9 +326,9 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+                upcean.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
             except OSError:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
+                upcean.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
     LineTxtStart = ((shiftxy[0] + 1) * int(resize))
     LineTxtStartNorm = 1
@@ -470,7 +470,7 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54),
             outfile = None
             outfileext = None
     else:
-        oldoutfile = upcean.encode.predraw.get_save_filename(
+        oldoutfile = upcean.predraw.get_save_filename(
             outfile, imageoutlib)
         if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
             del(outfile)
@@ -486,7 +486,7 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54),
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.encode.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "upca; "+upc, imageoutlib)
+        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "upca; "+upc, imageoutlib)
     return True
 
 def get_upcaean_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
@@ -757,9 +757,9 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     if(not hidetext):
         if(svgwritesupport and imageoutlib == "svgwrite"):
             try:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+                upcean.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
             except OSError:
-                upcean.encode.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
+                upcean.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     NumTxtZero = 0
     LineTxtStart = ((shiftxy[0] + 2) * int(resize))
     LineTxtStartNorm = 2
@@ -901,7 +901,7 @@ def create_upcaean_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
             outfile = None
             outfileext = None
     else:
-        oldoutfile = upcean.encode.predraw.get_save_filename(
+        oldoutfile = upcean.predraw.get_save_filename(
             outfile, imageoutlib)
         if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
             del(outfile)
@@ -917,5 +917,5 @@ def create_upcaean_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.encode.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "upca; "+upc, imageoutlib)
+        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "upca; "+upc, imageoutlib)
     return True

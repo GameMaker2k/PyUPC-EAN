@@ -15,7 +15,7 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-from upcean.encode.predraw import *
+from upcean.predraw import *
 import re
 import sys
 import upcean.support
@@ -43,12 +43,12 @@ cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
-    import upcean.encode.predraw.prepil
+    import upcean.predraw.prepil
 
 if(cairosupport):
-    import upcean.encode.predraw.precairo
+    import upcean.predraw.precairo
 if(svgwritesupport):
-    import upcean.encode.predraw.presvgwrite
+    import upcean.predraw.presvgwrite
 
 
 def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -77,7 +77,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
             outfile = None
             outfileext = None
     else:
-        oldoutfile = upcean.encode.predraw.get_save_filename(
+        oldoutfile = upcean.predraw.get_save_filename(
             outfile, imageoutlib)
         if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
             del(outfile)

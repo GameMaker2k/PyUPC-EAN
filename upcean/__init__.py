@@ -51,7 +51,7 @@ if(pilsupport or pillowsupport or cairosupport or svgwritesupport):
     import upcean.fonts
     import upcean.xml
     import upcean.encode
-    import upcean.encode.predraw.getsfname
+    import upcean.predraw.getsfname
     import upcean.encode as barcodes
 if(pilsupport or pillowsupport):
     import upcean.decode

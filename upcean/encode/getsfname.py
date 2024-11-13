@@ -23,4 +23,4 @@ cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or cairosupport or svgwritesupport):
-    from upcean.encode.predraw import get_save_filename
+    from upcean.predraw import get_save_filename
