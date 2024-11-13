@@ -297,7 +297,8 @@ def get_svgwrite_version(infotype=None):
     if(svgwritesupport):
         import svgwrite
         svgwrite_ver = svgwrite.version
-        svgwrite_info = {'svgwrite_ver': svgwrite_ver}
+        svgwrite_str_ver = svgwrite.VERSION
+        svgwrite_info = {'svgwrite_ver': svgwrite_ver, 'svgwrite_str_ver': svgwrite_str_ver}
         return svgwrite_info.get(infotype, svgwrite_info)
 
 linuxdist = None
