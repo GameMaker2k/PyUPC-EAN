@@ -122,9 +122,9 @@ def drawText(ctx, size, x, y, text, ftype="ocrb"):
         ctx.set_font_face(font)
     ctx.set_font_size(size)
     fo = qah.FontOptions()
-    fo.antialias = 0
-    fo.hint_style = 1
-    fo.hint_metrics = 1
+    fo.antialias = qah.CAIRO.ANTIALIAS_DEFAULT
+    fo.hint_style = qah.CAIRO.HINT_METRICS_OFF
+    fo.hint_metrics = qah.CAIRO.HINT_STYLE_NONE
     ctx.set_font_options(fo)
     ctx.move_to(qah.Vector(point1[0], point1[1]))
     ctx.show_text(text)
@@ -277,7 +277,7 @@ def new_image_surface(sizex, sizey, bgcolor):
     # Create a drawing context
     upc_img = qah.Context.create(upc_preimg)
     # Disable antialiasing
-    upc_img.set_antialias(1)
+    upc_img.set_antialias(qah.CAIRO.ANTIALIAS_NONE)
     # Draw the colored rectangle (assumes drawColorRectangle is defined)
     drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
     return [upc_img, upc_preimg]
@@ -315,18 +315,19 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
         image_surface.flush()
-    elif outfileext == "CAIRO":
-        # Step 1: Create the ScriptDevice
+    if outfileext == "CAIRO":
+        # Step 1: Create the ScriptDevice, specifying the output file
         script_device = qah.ScriptDevice.create(outfile)
-        # Step 2: Create a proxy surface that records to the ScriptDevice
+        # Step 2: Create a proxy surface linked to the ScriptDevice
+        # The proxy surface acts as an intermediary for drawing operations
         proxy_surface = script_device.surface_create_for_target(upc_preimg)
-        # Step 3: Create a Context for the proxy surface and draw as usual
+        # Step 3: Create a context for the proxy surface and draw as usual
         image_context = qah.Context.create(proxy_surface)
         image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
     else:
         # Default to ImageSurface with FORMAT_RGB24 for RGB output
-        image_surface = qah.ImageSurface.create(format=1, dimensions=(int(width), int(height)))
+        image_surface = qah.ImageSurface.create(format=qah.CAIRO.FORMAT_RGB24, dimensions=(int(width), int(height)))
         image_context = qah.Context.create(image_surface)
         image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
