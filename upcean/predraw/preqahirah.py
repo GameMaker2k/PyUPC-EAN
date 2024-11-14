@@ -168,8 +168,8 @@ def drawText(ctx, size, x, y, text, ftype="ocrb"):
     ctx.set_font_size(size)
     fo = qah.FontOptions()
     fo.antialias = qah.Antialias.DEFAULT
-    fo.hint_style = qah.HintStyle.FULL
-    fo.hint_metrics = qah.HintMetrics.ON
+    fo.hint_style = qah.HintStyle.NONE
+    fo.hint_metrics = qah.HintMetrics.OFF
     ctx.set_font_options(fo)
     ctx.move_to(qah.Vector(point1[0], point1[1]))
     ctx.show_text(text)
