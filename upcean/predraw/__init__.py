@@ -43,6 +43,8 @@ pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
 cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
+wandsupport = upcean.support.check_for_wand()
+magicksupport = upcean.support.check_for_magick()
 defaultdraw = upcean.support.defaultdraw
 
 # Initialize Pillow support if available

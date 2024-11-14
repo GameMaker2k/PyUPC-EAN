@@ -22,6 +22,8 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 enable_pilsupport = True
 enable_cairosupport = True
 enable_cairosvgsupport = True
+enable_wandsupport = True
+enable_magicksupport = True
 
 ''' // Barcode Support List '''
 bctype_dict = {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCAEan': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
@@ -156,6 +158,34 @@ if(enable_pillowsupport):
         return pil_is_pillow
 else:
     def check_for_pillow():
+        return False
+
+
+if(enable_wandsupport):
+    def check_for_wand():
+        wandsupport = True
+        try:
+            import wand
+            wandsupport = True
+        except ImportError:
+            wandsupport = False
+        return wandsupport
+else:
+    def check_for_wand():
+        return False
+
+
+if(enable_magicksupport):
+    def check_for_magick():
+        magicksupport = True
+        try:
+            import PythonMagick
+            magicksupport = True
+        except ImportError:
+            magicksupport = False
+        return magicksupport
+else:
+    def check_for_magick():
         return False
 
 
@@ -327,6 +357,8 @@ pillowsupport = check_for_pillow()
 cairosupport = check_for_cairo()
 cairosvgsupport = check_for_cairosvg()
 svgwritesupport = check_for_svgwrite()
+wandsupport = check_for_wand()
+magicksupport = check_for_magick()
 
 defaultdraw = None
 if((pilsupport or pillowsupport) and defaultdraw is None):
