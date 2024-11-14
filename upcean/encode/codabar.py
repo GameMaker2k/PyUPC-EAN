@@ -35,6 +35,7 @@ except ImportError:
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
+qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
@@ -44,6 +45,8 @@ if(pilsupport or pillowsupport):
     import upcean.predraw.prepil
 if(cairosupport):
     import upcean.predraw.precairo
+if(qahirahsupport):
+    import upcean.predraw.preqahirah
 if(svgwritesupport):
     import upcean.predraw.presvgwrite
 
@@ -322,6 +325,8 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48
     if(not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "svgwrite"
+    if(not qahirahsupport and imageoutlib == "qahirah"):
         imageoutlib = "svgwrite"
     if(not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "svgwrite"

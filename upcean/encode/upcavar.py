@@ -37,6 +37,7 @@ import upcean.encode.ean5
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
+qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
@@ -46,6 +47,8 @@ if(pilsupport or pillowsupport):
     import upcean.predraw.prepil
 if(cairosupport):
     import upcean.predraw.precairo
+if(qahirahsupport):
+    import upcean.predraw.preqahirah
 if(svgwritesupport):
     import upcean.predraw.presvgwrite
 
@@ -105,9 +108,11 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
+    elif qahirahsupport and isinstance(upc_img, qah.Context) and isinstance(upc_preimg, qah.Surface):
+        imageoutlib = "qahirah"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
         imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
@@ -415,6 +420,8 @@ def draw_upcavar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         imageoutlib = "svgwrite"
+    if(not qahirahsupport and imageoutlib == "qahirah"):
+        imageoutlib = "svgwrite"
     if(not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
@@ -449,6 +456,8 @@ def create_upcavar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
     if(not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "svgwrite"
+    if(not qahirahsupport and imageoutlib == "qahirah"):
         imageoutlib = "svgwrite"
     if(not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "svgwrite"
@@ -542,9 +551,11 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
+    elif qahirahsupport and isinstance(upc_img, qah.Context) and isinstance(upc_preimg, qah.Surface):
+        imageoutlib = "qahirah"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
         imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
@@ -841,6 +852,8 @@ def draw_upcaeanvar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), 
         imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
         imageoutlib = "svgwrite"
+    if(not qahirahsupport and imageoutlib == "qahirah"):
+        imageoutlib = "svgwrite"
     if(not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
@@ -875,6 +888,8 @@ def create_upcaeanvar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48
     if(not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        imageoutlib = "svgwrite"
+    if(not qahirahsupport and imageoutlib == "qahirah"):
         imageoutlib = "svgwrite"
     if(not cairosupport and imageoutlib == "cairosvg"):
         imageoutlib = "svgwrite"

@@ -46,8 +46,13 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
+qahirahsupport = upcean.support.check_for_qahirah()
+cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
-if(pilsupport or pillowsupport or cairosupport or svgwritesupport):
+wandsupport = upcean.support.check_for_wand()
+magicksupport = upcean.support.check_for_magick()
+defaultdraw = upcean.support.defaultdraw
+if(pilsupport or pillowsupport or cairosupport or qahirahsupport or svgwritesupport):
     import upcean.fonts
     import upcean.xml
     import upcean.encode

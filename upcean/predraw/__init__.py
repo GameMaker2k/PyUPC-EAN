@@ -41,6 +41,7 @@ except NameError:
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
+qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
@@ -72,6 +73,15 @@ if cairosupport:
     except ImportError:
         cairosupport = False
         logger.warning("Cairo support failed to initialize.")
+
+# Initialize Cairo support if available
+if qahirahsupport:
+    try:
+        import qahirah as qah
+        import upcean.predraw.preqahirah
+    except ImportError:
+        qahirahsupport = False
+        logger.warning("Qahirah support failed to initialize.")
 
 # Initialize svgwrite support if available
 if svgwritesupport:
@@ -128,15 +138,18 @@ def select_image_output_lib(imageoutlib="pillow"):
     if not cairosupport and imageoutlib in ["cairo", "cairosvg"]:
         imageoutlib = "svgwrite"
         logger.info("Cairo not supported. Switching to svgwrite.")
+    if not qahirahsupport and imageoutlib == "qahirah":
+        imageoutlib = "svgwrite"
+        logger.info("Qahirah not supported. Switching to svgwrite.")
     if not svgwritesupport and imageoutlib == "svgwrite":
         imageoutlib = "svgwrite"
-        logger.info("Cairo not supported. Switching to svgwrite.")
-    if imageoutlib not in ["pillow", "cairo", "cairosvg", "svgwrite"]:
+        logger.info("svgwrite not supported. Switching to svgwrite.")
+    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "svgwrite"]:
         imageoutlib = "svgwrite"
         logger.info("Invalid library specified. Defaulting to svgwrite.")
 
     # If neither library is supported, log the issue and raise an exception
-    if not pilsupport and not cairosupport and not svgwritesupport:
+    if not pilsupport and not cairosupport and not qahirahsupport and not svgwritesupport:
         logger.error("Neither Pillow nor Cairo is supported.")
         raise UnsupportedLibraryError("Neither Pillow nor Cairo is supported.")
 
@@ -171,6 +184,8 @@ def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
         return upcean.predraw.prepil.snapCoords(ctx, x, y)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.predraw.precairo.snapCoords(ctx, x, y)
+    if selected_lib == "qahirah" and qahirahsupport:
+        return upcean.predraw.preqahirah.snapCoords(ctx, x, y)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.snapCoords(ctx, x, y)
 
@@ -206,6 +221,8 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=defaultdraw):
         return upcean.predraw.prepil.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.predraw.precairo.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+    elif selected_lib == "qahirah" and qahirahsupport:
+        return upcean.predraw.preqahirah.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.drawColorLine(ctx, x1, y1, x2, y2, width, color)
 
@@ -240,6 +257,8 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.prepil.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.predraw.precairo.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "qahirah" and qahirahsupport:
+        return upcean.predraw.preqahirah.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.drawColorRectangle(ctx, x1, y1, x2, y2, color)
 
@@ -277,6 +296,8 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib=defaul
         return upcean.predraw.prepil.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.predraw.precairo.drawColorText(ctx, size, x, y, text, color, ftype)
+    elif selected_lib == "qahirah" and qahirahsupport:
+        return upcean.predraw.preqahirah.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.drawColorText(ctx, size, x, y, text, color, ftype)
 
@@ -311,6 +332,8 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.prepil.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "qahirah" and qahirahsupport:
+        return upcean.predraw.preqahirah.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
 
@@ -346,6 +369,8 @@ def get_save_filename(outfile, imageoutlib=defaultdraw):
         return upcean.predraw.prepil.get_save_filename(outfile)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.predraw.precairo.get_save_filename(outfile)
+    elif selected_lib == "qahirah" and qahirahsupport:
+        return upcean.predraw.preqahirah.get_save_filename(outfile)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.get_save_filename(outfile)
 
@@ -368,6 +393,8 @@ def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
         return upcean.predraw.prepil.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.predraw.precairo.new_image_surface(sizex, sizey, bgcolor)
+    elif selected_lib == "qahirah" and qahirahsupport:
+        return upcean.predraw.preqahirah.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.new_image_surface(sizex, sizey, bgcolor)
 
@@ -387,6 +414,8 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
         return upcean.predraw.prepil.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
         return upcean.predraw.precairo.save_to_file(inimage, outfile, outfileext, imgcomment)
+    elif selected_lib == "qahirah" and qahirahsupport:
+        return upcean.predraw.preqahirah.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.save_to_file(inimage, outfile, outfileext, imgcomment)
 
@@ -401,9 +430,11 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
         imageoutlib = "pillow"
     elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
         imageoutlib = "cairo"
+    elif qahirahsupport and isinstance(upc_img, qah.Context) and isinstance(upc_preimg, qah.Surface):
+        imageoutlib = "qahirah"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imgout != "none" and imgout is not None):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imgout != "none" and imgout is not None):
         imageoutlib = None
     elif(imgout == "none" or imgout is None):
         return False

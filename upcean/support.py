@@ -21,6 +21,7 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 
 enable_pilsupport = True
 enable_cairosupport = True
+enable_qahirahsupport = True
 enable_cairosvgsupport = True
 enable_wandsupport = True
 enable_magicksupport = True
@@ -59,6 +60,20 @@ def get_barcode_name(barcode_type="upca"):
     return bctype_name.get(barcode_type, False)
 
 enable_pillowsupport = enable_pilsupport
+
+if(enable_qahirahsupport):
+    def check_for_qahirah():
+        # Qahirah Support Check
+        qahirahsupport = True
+        try:
+            import qahirah
+            qahirahsupport = True
+        except ImportError:
+            qahirahsupport = False
+        return qahirahsupport
+else:
+    def check_for_cairo():
+        return False
 
 if(enable_cairosupport):
     def check_for_cairo():
@@ -355,6 +370,7 @@ def get_python_info(infotype=None):
 pilsupport = check_for_pil()
 pillowsupport = check_for_pillow()
 cairosupport = check_for_cairo()
+qahirahsupport = check_for_qahirah()
 cairosvgsupport = check_for_cairosvg()
 svgwritesupport = check_for_svgwrite()
 wandsupport = check_for_wand()
@@ -365,6 +381,8 @@ if((pilsupport or pillowsupport) and defaultdraw is None):
     defaultdraw = "pillow"
 if(cairosupport and defaultdraw is None):
     defaultdraw = "cairo"
+if(qahirahsupport and defaultdraw is None):
+    defaultdraw = "qahirah"
 if(svgwritesupport and defaultdraw is None):
     defaultdraw = "svgwrite"
 if(defaultdraw is None):
