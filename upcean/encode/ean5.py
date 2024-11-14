@@ -379,20 +379,8 @@ def draw_ean5sup_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
     upc_size_add = 0
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_preimg = Image.new(
-            "RGB", (((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_img = ImageDraw.Draw(upc_preimg)
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
-        upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(((56 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    elif(svgwritesupport and imageoutlib=="svgwrite"):
-        upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_preimg.close()
-    imgout = encode_ean5_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    imgout = encode_ean5_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_ean5sup_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -434,7 +422,7 @@ def create_ean5sup_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 5
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "ean5; "+upc, imageoutlib)
+        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "ean5; "+upc, imageoutlib)
     return True
 
 def draw_upc5sup_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -460,21 +448,9 @@ def draw_ean5_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
     if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
     upc_size_add = 0
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_preimg = Image.new(
-            "RGB", ((((56 + 8) * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_img = ImageDraw.Draw(upc_preimg)
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
-        upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float((((56 + 8) * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    elif(svgwritesupport and imageoutlib=="svgwrite"):
-        upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=((((56 + 8) * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_preimg.close()
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     drawColorRectangle(upc_img, 0, 0, (((56 + 8) * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    imgout = encode_ean5_barcode((upc_img, upc_preimg), upc, resize, (8 * int(resize), 0), barheight, barwidth, barcolor, hideinfo)
+    imgout = encode_ean5_barcode([upc_img, upc_preimg], upc, resize, (8 * int(resize), 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -516,7 +492,7 @@ def create_ean5_barcode(upc, outfile="./ean5.png", resize=1, barheight=(48, 54),
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "ean5; "+upc, imageoutlib)
+        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "ean5; "+upc, imageoutlib)
     return True
 
 def encode_upc5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):

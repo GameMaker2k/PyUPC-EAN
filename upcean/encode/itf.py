@@ -132,7 +132,7 @@ def encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     if(len(upc_matches) <= 0):
         return False
     if(inimage is not None):
-        drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), (((39 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (15 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+        drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), (((39 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize), ((barheightadd + shiftxy[1]) + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     upc_array = {'upc': upc, 'heightadd': 9, 'type': "itf", 'barsize': [], 'code': [], 'text': {'location': [], 'text': [], 'type': []}}
     start_barcode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0]
     upc_array['code'].append(start_barcode)
@@ -357,20 +357,8 @@ def draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolo
         upc_size_add = (len(upc_matches) * 14) * barwidth[0]
     if(len(upc_matches) <= 0):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_preimg = Image.new(
-            "RGB", (((39 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize)))
-        upc_img = ImageDraw.Draw(upc_preimg)
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
-        upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(((39 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (15 * barwidth[1])) * int(resize))))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    elif(svgwritesupport and imageoutlib=="svgwrite"):
-        upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((39 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize)))
-        upc_preimg.close()
-    imgout = encode_itf_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(((39 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    imgout = encode_itf_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -412,5 +400,5 @@ def create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), b
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "itf; "+upc, imageoutlib)
+        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "itf; "+upc, imageoutlib)
     return True

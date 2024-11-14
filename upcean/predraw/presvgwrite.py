@@ -137,6 +137,13 @@ def get_save_filename(outfile):
 def get_save_file(outfile):
     return get_save_filename(outfile)
 
+def new_image_surface(sizex, sizey, bgcolor):
+    upc_preimg = StringIO()
+    upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(sizex, sizey))
+    upc_preimg.close()
+    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
+    return [upc_img, upc_preimg]
+
 def drawColorRectangleAlt(dwg, x1, y1, x2, y2, color):
     """
     Draws a rectangle with only an outline (no fill) from (x1, y1) to (x2, y2) with the specified color.

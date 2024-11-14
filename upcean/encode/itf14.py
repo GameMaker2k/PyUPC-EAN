@@ -365,20 +365,8 @@ def draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barco
         upc_size_add = (len(upc_matches) * 14) * barwidth[0]
     if(len(upc_matches) <= 0):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_preimg = Image.new(
-            "RGB", (((44 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize)))
-        upc_img = ImageDraw.Draw(upc_preimg)
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
-        upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(((44 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (15 * barwidth[1])) * int(resize))))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    elif(svgwritesupport and imageoutlib=="svgwrite"):
-        upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((44 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize)))
-        upc_preimg.close()
-    imgout = encode_itf14_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(((44 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (15 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    imgout = encode_itf14_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -420,7 +408,7 @@ def create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "itf14; "+upc, imageoutlib)
+        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "itf14; "+upc, imageoutlib)
     return True
 
 def encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):

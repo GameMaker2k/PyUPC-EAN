@@ -355,6 +355,25 @@ def get_save_filename(outfile, imageoutlib=defaultdraw):
 def get_save_file(outfile, imageoutlib=defaultdraw):
     return get_save_filename(outfile, imageoutlib)
 
+def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
+    try:
+        selected_lib = select_image_output_lib(imageoutlib)
+    except UnsupportedLibraryError as e:
+        logger.error("new_image_surface failed: {}".format(e))
+        return False
+
+    if selected_lib == "none" or selected_lib == None:
+        return True
+    if selected_lib == "pillow" and pilsupport:
+        return upcean.predraw.prepil.new_image_surface(sizex, sizey, bgcolor)
+    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
+        return upcean.predraw.precairo.new_image_surface(sizex, sizey, bgcolor)
+    elif selected_lib == "svgwrite" and svgwritesupport:
+        return upcean.predraw.presvgwrite.new_image_surface(sizex, sizey, bgcolor)
+
+    logger.error("save_to_file: Selected library is not supported.")
+    return False
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib=defaultdraw):
     try:
         selected_lib = select_image_output_lib(imageoutlib)

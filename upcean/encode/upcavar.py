@@ -441,20 +441,8 @@ def draw_upcavar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         upc_size_add += 29 * barwidth[0]
     elif(supplement is not None and len(supplement) == 5):
         upc_size_add += 56 * barwidth[0]
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_preimg = Image.new(
-            "RGB", (((29 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_img = ImageDraw.Draw(upc_preimg)
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(((29 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    elif(svgwritesupport and imageoutlib=="svgwrite"):
-        upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((29 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_preimg.close()
-    imgout = encode_upcavar_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(((29 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    imgout = encode_upcavar_barcode([upc_img, upc_preimg], fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_upcavar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -496,7 +484,7 @@ def create_upcavar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "upcavar; "+upc, imageoutlib)
+        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "upcavar; "+upc, imageoutlib)
     return True
 
 def get_upcaeanvar_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
@@ -879,20 +867,8 @@ def draw_upcaeanvar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), 
         upc_size_add += 29 * barwidth[0]
     elif(supplement is not None and len(supplement) == 5):
         upc_size_add += 56 * barwidth[0]
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_preimg = Image.new(
-            "RGB", (((31 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_img = ImageDraw.Draw(upc_preimg)
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(((31 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    elif(svgwritesupport and imageoutlib=="svgwrite"):
-        upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((31 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_preimg.close()
-    imgout = encode_upcaeanvar_barcode((upc_img, upc_preimg), fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(((31 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    imgout = encode_upcaeanvar_barcode([upc_img, upc_preimg], fullupc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_upcaeanvar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -934,5 +910,5 @@ def create_upcaeanvar_barcode(upc, outfile="./upca.png", resize=1, barheight=(48
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "upcavar; "+upc, imageoutlib)
+        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "upcavar; "+upc, imageoutlib)
     return True

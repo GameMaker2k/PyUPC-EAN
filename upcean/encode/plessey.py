@@ -280,20 +280,8 @@ def draw_plessey_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
                     (len(upc_matches) + 1)) * barwidth[0]
     if(len(upc_matches) <= 0):
         return False
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_preimg = Image.new(
-            "RGB", (((48 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_img = ImageDraw.Draw(upc_preimg)
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
-        upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(((48 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    elif(svgwritesupport and imageoutlib=="svgwrite"):
-        upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((48 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_preimg.close()
-    imgout = encode_plessey_barcode((upc_img, upc_preimg), upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(((48 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    imgout = encode_plessey_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -335,5 +323,5 @@ def create_plessey_barcode(upc, outfile="./plessey.png", resize=1, barheight=(48
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file((upc_img, upc_preimg), outfile, outfileext, "plessey; "+upc, imageoutlib)
+        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "plessey; "+upc, imageoutlib)
     return True
