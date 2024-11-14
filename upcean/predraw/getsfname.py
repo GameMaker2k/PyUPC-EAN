@@ -19,5 +19,11 @@ import upcean.support
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
-if(pilsupport or cairosupport):
+qahirahsupport = upcean.support.check_for_qahirah()
+cairosvgsupport = upcean.support.check_for_cairosvg()
+svgwritesupport = upcean.support.check_for_svgwrite()
+wandsupport = upcean.support.check_for_wand()
+magicksupport = upcean.support.check_for_magick()
+defaultdraw = upcean.support.defaultdraw
+if(pilsupport or cairosupport or svgwritesupport):
     from upcean.predraw import get_save_filename

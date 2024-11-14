@@ -65,77 +65,32 @@ def snapCoords(x, y):
     """
     return (round(x) + 0.5, round(y) + 0.5)
 
+
 def drawColorRectangle(ctx, x1, y1, x2, y2, color):
-    """
-    Draws a filled rectangle from (x1, y1) to (x2, y2) with the specified color.
+    # Set the color as a tuple for qahirah
+    ctx.set_source_colour(color)
     
-    Parameters:
-    - ctx: Qahirah context.
-    - x1, y1: Coordinates of the top-left corner.
-    - x2, y2: Coordinates of the bottom-right corner.
-    - color: Tuple of (R, G, B) with values in [0, 255].
-    """
-    # Set the color for filling (scaled to [0, 1] for Qahirah)
-    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
+    # Calculate width and height from the given coordinates
+    width = x2 - x1
+    height = y2 - y1
     
-    # Calculate width and height
-    width_rect = x2 - x1
-    height_rect = y2 - y1
-    
-    # Define the rectangle path and fill it
-    ctx.rectangle(qah.Rect(qah.Vector(x1, y1), qah.Vector(width_rect, height_rect)))
+    # Define the rectangle using the top-left corner and dimensions
+    ctx.rectangle(qah.Rect(x1, y1, width, height))
     ctx.fill()
-    
-    # Start a new path to avoid unintended connections
-    ctx.new_path()
 
 def drawColorLine(ctx, x1, y1, x2, y2, width, color):
-    """
-    Draws a colored line from (x1, y1) to (x2, y2) with specified width.
-    Uses rectangles to simulate thick vertical and horizontal lines.
+    # Set the color as a tuple for qahirah
+    ctx.set_source_colour(color)
     
-    Parameters:
-    - ctx: Qahirah context.
-    - x1, y1: Starting coordinates.
-    - x2, y2: Ending coordinates.
-    - width: Line width (integer >= 1).
-    - color: Tuple of (R, G, B) with values in [0, 255].
-    """
-    # Ensure width is at least 1
-    width = max(1, int(width))
-    
-    # Set the fill color (scaled to [0, 1])
-    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
-    
-    # Snap coordinates for crisp lines
-    x1, y1 = snapCoords(x1, y1)
-    x2, y2 = snapCoords(x2, y2)
-    
-    if x1 == x2:
-        # Vertical line: draw a rectangle with specified width
-        rect_x = x1 - width / 2
-        rect_y = min(y1, y2)
-        rect_width = width
-        rect_height = abs(y2 - y1)
-        ctx.rectangle(qah.Rect(qah.Vector(rect_x, rect_y), qah.Vector(rect_width, rect_height)))
-        ctx.fill()
-    elif y1 == y2:
-        # Horizontal line: draw a rectangle with specified width
-        rect_x = min(x1, x2)
-        rect_y = y1 - width / 2
-        rect_width = abs(x2 - x1)
-        rect_height = width
-        ctx.rectangle(qah.Rect(qah.Vector(rect_x, rect_y), qah.Vector(rect_width, rect_height)))
-        ctx.fill()
-    else:
-        # If not purely vertical or horizontal, use Qahirah's line with set_line_width
-        ctx.set_line_width(width)
-        ctx.move_to(qah.Vector(x1, y1))
-        ctx.line_to(qah.Vector(x2, y2))
-        ctx.stroke()
-    
-    # Start a new path to avoid unintended connections
-    ctx.new_path()
+    # Calculate width and height for the rectangle based on coordinates
+    rect_x = min(x1, x2)
+    rect_y = min(y1, y2)
+    rect_width = abs(x2 - x1) if x1 != x2 else width
+    rect_height = abs(y2 - y1) if y1 != y2 else width
+
+    # Define the rectangle directly with x, y, width, and height
+    ctx.rectangle(qah.Rect(rect_x, rect_y, rect_width, rect_height))
+    ctx.fill()
 
 def drawText(ctx, size, x, y, text, ftype="ocrb"):
     """
@@ -167,9 +122,9 @@ def drawText(ctx, size, x, y, text, ftype="ocrb"):
         ctx.set_font_face(font)
     ctx.set_font_size(size)
     fo = qah.FontOptions()
-    fo.antialias = qah.Antialias.DEFAULT
-    fo.hint_style = qah.HintStyle.NONE
-    fo.hint_metrics = qah.HintMetrics.OFF
+    fo.antialias = qah.CAIRO.ANTIALIAS_DEFAULT
+    fo.hint_style = qah.CAIRO.HINT_METRICS_OFF
+    fo.hint_metrics = qah.CAIRO.HINT_STYLE_NONE
     ctx.set_font_options(fo)
     ctx.move_to(qah.Vector(point1[0], point1[1]))
     ctx.show_text(text)
@@ -189,7 +144,7 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb"):
     - ftype: Font type (optional, default is "ocrb").
     """
     text = str(text)
-    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
+    ctx.set_source_colour((color[0] / 255.0, color[1] / 255.0, color[2] / 255.0))
     drawText(ctx, size, x, y, text, ftype)
     return True
 
@@ -205,7 +160,7 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, line_width=1):
     - line_width: Width of the outline (default is 1).
     """
     # Set the outline color (scaling RGB values to [0, 1])
-    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
+    ctx.set_source_colour((color[0] / 255.0, color[1] / 255.0, color[2] / 255.0))
     
     # Set the line width for the outline
     ctx.set_line_width(line_width)
@@ -314,12 +269,15 @@ def get_save_file(outfile):
     return get_save_filename(outfile)
 
 def new_image_surface(sizex, sizey, bgcolor):
-    # Create a RecordingSurface
-    upc_preimg = qah.RecordingSurface(qah.Rect(0, 0, sizex, sizey))
+    # Define the content type and create a Rect for the extents
+    content_type = qah.CAIRO.CONTENT_COLOR  # Use COLOR if you don't need transparency; use COLOR_ALPHA if you do
+    extents = qah.Rect(0, 0, sizex, sizey)
+    # Create the RecordingSurface using the create method
+    upc_preimg = qah.RecordingSurface.create(content=content_type, extents=extents)
     # Create a drawing context
     upc_img = qah.Context.create(upc_preimg)
     # Disable antialiasing
-    upc_img.set_antialias(qah.ANTIALIAS_NONE)
+    upc_img.set_antialias(qah.CAIRO.ANTIALIAS_NONE)
     # Draw the colored rectangle (assumes drawColorRectangle is defined)
     drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
     return [upc_img, upc_preimg]
@@ -327,61 +285,54 @@ def new_image_surface(sizex, sizey, bgcolor):
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
-    x, y, width, height = upc_preimg.ink_extents()
+    # Access the Rect properties individually
+    rect = upc_preimg.ink_extents
+    x = rect.left
+    y = rect.top
+    width = rect.width
+    height = rect.height
     uploadfile = None
     if re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
     if outfileext == "SVG":
-        # Create an SVGSurface with the exact dimensions of the recorded content
-        image_surface = qah.SVGSurface(outfile, int(width), int(height))
+        # Instantiate SVGSurface with only the file path
+        image_surface = qah.SVGSurface.create(outfile, (int(width), int(height)))
         image_context = qah.Context.create(image_surface)
-        # Transfer the content from the RecordingSurface to the SVGSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
+        image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
         image_surface.flush()
-        image_surface.finish()
     elif outfileext == "PDF":
-        # Create a PDFSurface with the exact dimensions of the recorded content
-        image_surface = qah.PDFSurface(outfile, int(width), int(height))
+        image_surface = qah.PDFSurface.create(outfile, (int(width), int(height)))
         image_context = qah.Context.create(image_surface)
-        # Transfer the content from the RecordingSurface to the PDFSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
+        image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
         image_surface.flush()
-        image_surface.finish()
     elif outfileext == "PS" or outfileext == "EPS":
-        # Create a PSSurface with the exact dimensions of the recorded content
-        image_surface = qah.PSSurface(outfile, int(width), int(height))
+        image_surface = qah.PSSurface.create(outfile, (int(width), int(height)))
         image_context = qah.Context.create(image_surface)
-        # Set EPS format if needed
         image_surface.set_eps(outfileext == "EPS")
-        # Transfer the content from the RecordingSurface to the PSSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
+        image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
         image_surface.flush()
-        image_surface.finish()
-    elif outfileext == "CAIRO":
-        # For a ScriptSurface equivalent in qahirah, saving as CAIRO
-        image_surface = qah.ScriptSurface(outfile, int(width), int(height))
-        image_context = qah.Context.create(image_surface)
-        # Transfer the content from the RecordingSurface to the ScriptSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
+    if outfileext == "CAIRO":
+        # Step 1: Create the ScriptDevice, specifying the output file
+        script_device = qah.ScriptDevice.create(outfile)
+        # Step 2: Create a proxy surface linked to the ScriptDevice
+        # The proxy surface acts as an intermediary for drawing operations
+        proxy_surface = script_device.surface_create_for_target(upc_preimg)
+        # Step 3: Create a context for the proxy surface and draw as usual
+        image_context = qah.Context.create(proxy_surface)
+        image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
-        image_surface.flush()
-        image_surface.finish()
     else:
-        # Default to ImageSurface and save as PNG
-        image_surface = qah.ImageSurface.create(format=qah.ImageSurface.FORMAT_RGB24, dimensions=(int(width), int(height)))
+        # Default to ImageSurface with FORMAT_RGB24 for RGB output
+        image_surface = qah.ImageSurface.create(format=qah.CAIRO.FORMAT_RGB24, dimensions=(int(width), int(height)))
         image_context = qah.Context.create(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
+        image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
         image_surface.flush()
-        # Save as PNG
         image_surface.write_to_png(outfile)
-        image_surface.finish()
-    # Handle file upload if required
     if re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile)):
         outfile.seek(0, 0)
         upload_file_to_internet_file(outfile, uploadfile)

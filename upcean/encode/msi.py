@@ -113,10 +113,10 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     if(pilsupport and imageoutlib == "pillow"):
         pil_addon_fix = 0
         cairo_addon_fix = 0
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwrite and cairosvgsupport and imageoutlib == "svgwrite")):
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
         pil_addon_fix = 0
         cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
-    elif(svgwrite and imageoutlib == "svgwrite"):
+    elif(svgwritesupport and imageoutlib == "svgwrite"):
         pil_addon_fix = 0
         cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
     else:
@@ -251,7 +251,7 @@ def draw_msi_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolo
         imageoutlib = "pillow"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "pillow"
     upc_matc = upc.upper()
     upc_matches = list(upc_matc)
@@ -271,7 +271,7 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, barheight=(48, 54), b
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"
