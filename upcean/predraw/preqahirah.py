@@ -313,58 +313,67 @@ def get_save_filename(outfile):
 def get_save_file(outfile):
     return get_save_filename(outfile)
 
+def new_image_surface(sizex, sizey, bgcolor):
+    # Create a RecordingSurface
+    upc_preimg = qah.RecordingSurface(qah.Rect(0, 0, sizex, sizey))
+    # Create a drawing context
+    upc_img = qah.Context.create(upc_preimg)
+    # Disable antialiasing
+    upc_img.set_antialias(qah.ANTIALIAS_NONE)
+    # Draw the colored rectangle (assumes drawColorRectangle is defined)
+    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
+    return [upc_img, upc_preimg]
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
     x, y, width, height = upc_preimg.ink_extents()
     uploadfile = None
-    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+    if re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
-    if(outfileext == "SVG"):
-        # Create an ImageSurface with the exact dimensions of the recorded content
-        image_surface = cairo.SVGSurface(outfile, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
+    if outfileext == "SVG":
+        # Create an SVGSurface with the exact dimensions of the recorded content
+        image_surface = qah.SVGSurface(outfile, int(width), int(height))
+        image_context = qah.Context.create(image_surface)
+        # Transfer the content from the RecordingSurface to the SVGSurface
         image_context.set_source_surface(upc_preimg, -x, -y)
         image_context.paint()
         image_surface.flush()
         image_surface.finish()
-    elif(outfileext == "PDF"):
-        # Create an ImageSurface with the exact dimensions of the recorded content
-        image_surface = cairo.PDFSurface(outfile, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
+    elif outfileext == "PDF":
+        # Create a PDFSurface with the exact dimensions of the recorded content
+        image_surface = qah.PDFSurface(outfile, int(width), int(height))
+        image_context = qah.Context.create(image_surface)
+        # Transfer the content from the RecordingSurface to the PDFSurface
         image_context.set_source_surface(upc_preimg, -x, -y)
         image_context.paint()
         image_surface.flush()
         image_surface.finish()
-    elif(outfileext == "PS" or outfileext == "EPS"):
-        # Create an PDFSurface with the exact dimensions of the recorded content
-        image_surface = cairo.PSSurface(outfile, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
+    elif outfileext == "PS" or outfileext == "EPS":
+        # Create a PSSurface with the exact dimensions of the recorded content
+        image_surface = qah.PSSurface(outfile, int(width), int(height))
+        image_context = qah.Context.create(image_surface)
+        # Set EPS format if needed
+        image_surface.set_eps(outfileext == "EPS")
+        # Transfer the content from the RecordingSurface to the PSSurface
         image_context.set_source_surface(upc_preimg, -x, -y)
-        if(outfileext == "EPS"):
-            image_surface.set_eps(True)
-        else:
-            image_surface.set_eps(False)
         image_context.paint()
         image_surface.flush()
         image_surface.finish()
-    elif(outfileext == "CAIRO" or outfileext == "CAIRO"):
-        # Create an ScriptSurface with the exact dimensions of the recorded content
-        image_surface = cairo.ScriptSurface(cairo.ScriptDevice(outfile), cairo.FORMAT_RGB24, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
+    elif outfileext == "CAIRO":
+        # For a ScriptSurface equivalent in qahirah, saving as CAIRO
+        image_surface = qah.ScriptSurface(outfile, int(width), int(height))
+        image_context = qah.Context.create(image_surface)
+        # Transfer the content from the RecordingSurface to the ScriptSurface
         image_context.set_source_surface(upc_preimg, -x, -y)
         image_context.paint()
         image_surface.flush()
         image_surface.finish()
     else:
-        # Create an ImageSurface with the exact dimensions of the recorded content
-        image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
-        image_context = cairo.Context(image_surface)
+        # Default to ImageSurface and save as PNG
+        image_surface = qah.ImageSurface.create(format=qah.ImageSurface.FORMAT_RGB24, dimensions=(int(width), int(height)))
+        image_context = qah.Context.create(image_surface)
         # Transfer the content from the RecordingSurface to the ImageSurface
         image_context.set_source_surface(upc_preimg, -x, -y)
         image_context.paint()
@@ -372,7 +381,8 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         # Save as PNG
         image_surface.write_to_png(outfile)
         image_surface.finish()
-    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile))):
+    # Handle file upload if required
+    if re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile)):
         outfile.seek(0, 0)
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()

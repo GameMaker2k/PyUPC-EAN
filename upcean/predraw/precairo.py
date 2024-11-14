@@ -324,6 +324,13 @@ def get_save_filename(outfile):
 def get_save_file(outfile):
     return get_save_filename(outfile)
 
+def new_image_surface(sizex, sizey, bgcolor):
+    upc_preimg = cairo.RecordingSurface(cairo.CONTENT_COLOR, (0.0, 0.0, float(sizex), float(sizey)))
+    upc_img = cairo.Context(upc_preimg)
+    upc_img.set_antialias(cairo.ANTIALIAS_NONE)
+    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
+    return [upc_img, upc_preimg]
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
