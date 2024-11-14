@@ -571,5 +571,5 @@ def create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54),
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "upce; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "upce; "+upc, imageoutlib)
     return True

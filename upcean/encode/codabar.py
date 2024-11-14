@@ -362,5 +362,5 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "codabar; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "codabar; "+upc, imageoutlib)
     return True

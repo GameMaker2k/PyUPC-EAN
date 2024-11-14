@@ -438,7 +438,7 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
         imageoutlib = None
     elif(imgout == "none" or imgout is None):
         return False
-    elif(not pilsupport and not cairosupport and not svgwritesupport):
+    elif(not pilsupport and not cairosupport and not qahirahsupport and not svgwritesupport):
         return False
     else:
         return False
@@ -463,6 +463,5 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
             if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
                 imageoutlib = "cairo"
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imageoutlib]
-    save_to_file(imgout, outfile, outfileext, imgcomment, imageoutlib)
-    return True
+        return [upc_img, upc_preimg, imageoutlib] 
+    return save_to_file(imgout, outfile, outfileext, imgcomment, imageoutlib)

@@ -341,7 +341,7 @@ def create_ean2sup_barcode(upc, outfile="./ean2.png", resize=1, barheight=(48, 5
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "ean2; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "ean2; "+upc, imageoutlib)
     return True
 
 def draw_upc2sup_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -413,7 +413,7 @@ def create_ean2_barcode(upc, outfile="./ean2.png", resize=1, barheight=(48, 54),
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "ean2; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "ean2; "+upc, imageoutlib)
     return True
 
 def encode_upc2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):

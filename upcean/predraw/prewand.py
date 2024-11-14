@@ -94,7 +94,7 @@ def get_save_filename(outfile):
         return outfile
 
     # Check if outfile is a file object
-    if isinstance(outfile, file):
+    if isinstance(outfile, file) or outfile=="-":
         return (outfile, "PNG")
 
     if isinstance(outfile, str):

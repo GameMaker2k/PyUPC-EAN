@@ -395,7 +395,7 @@ def create_code93_barcode(upc, outfile="./code93.png", resize=1, barheight=(48, 
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code93; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code93; "+upc, imageoutlib)
     return True
 
 
@@ -754,5 +754,5 @@ def create_code93extended_barcode(upc, outfile="./code93.png", resize=1, barheig
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code39; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code39; "+upc, imageoutlib)
     return True

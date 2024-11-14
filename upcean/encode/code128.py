@@ -675,7 +675,7 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code128; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code128; "+upc, imageoutlib)
     return True
 
 
@@ -1219,5 +1219,5 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, barheight=
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code128; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code128; "+upc, imageoutlib)
     return True

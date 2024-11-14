@@ -346,6 +346,6 @@ def create_stf_barcode(upc, outfile="./stf.png", resize=1, barheight=(48, 54), b
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "stf; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "stf; "+upc, imageoutlib)
     return True
 

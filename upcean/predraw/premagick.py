@@ -87,41 +87,33 @@ def get_save_filename(outfile):
     Returns:
         tuple: (filename, EXTENSION) or False if invalid.
     """
-    if outfile is None or isinstance(outfile, bool):
+    if outfile is None or isinstance(outfile, bool) or outfile=="-":
         return outfile
-
     if isinstance(outfile, str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
             return (outfile, None)
-
         base, ext = os.path.splitext(outfile)
         ext = ext[1:].upper() if ext else None
-
         if ext and ext in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
             return (outfile, PYTHONMAGICK_SUPPORTED_EXTENSIONS[ext])
         elif ext:
             return (outfile, "PNG")
         return (outfile, "PNG")
-
     if isinstance(outfile, (tuple, list)):
         if len(outfile) != 2:
             return False
-
         filename, ext = outfile
         if isinstance(filename, str):
             filename = filename.strip()
         else:
             return False
-
         ext = ext.strip().upper()
         if ext in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
             ext = PYTHONMAGICK_SUPPORTED_EXTENSIONS[ext]
         else:
             ext = "PNG"
-
         return (filename, ext)
-
     return False
 
 def get_save_file(outfile):
@@ -147,5 +139,4 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
             outfileext = oldoutfile[1]
     if oldoutfile is None or isinstance(oldoutfile, bool):
         return [imgout, "pythonmagick"]
-    save_to_file(imgout, outfile, outfileext, imgcomment)
-    return True
+    return save_to_file(imgout, outfile, outfileext, imgcomment)

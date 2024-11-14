@@ -301,5 +301,5 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, barheight=(48, 54), b
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "msi; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "msi; "+upc, imageoutlib)
     return True

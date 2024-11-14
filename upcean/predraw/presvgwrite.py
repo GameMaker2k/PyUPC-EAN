@@ -68,9 +68,9 @@ def get_save_filename(outfile):
         return outfile
     
     # Handle file objects directly
-    if isinstance(outfile, file):
+    if isinstance(outfile, file) or outfile=="-":
         return (outfile, "SVG")
-    
+
     # Handle string types
     if isinstance(outfile, str):
         outfile = outfile.strip()
@@ -334,8 +334,15 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
     uploadfile = None
+    outfiletovar = False
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         uploadfile = outfile
+        if(cairosvgsupport):
+            outfile = BytesIO()
+        else:
+            outfile = StringIO()
+    elif(outfile=="-"):
+        outfiletovar = True
         if(cairosvgsupport):
             outfile = BytesIO()
         else:
@@ -446,6 +453,11 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
             byte_buffer.seek(0, 0)
         upload_file_to_internet_file(byte_buffer, uploadfile)
         byte_buffer.close()
+    elif outfiletovar:
+        outfile.seek(0, 0)
+        outbyte = outfile.read()
+        outfile.close()
+        return outbyte
     return True
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):

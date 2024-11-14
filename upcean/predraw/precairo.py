@@ -255,7 +255,7 @@ def get_save_filename(outfile):
         return outfile
 
     # Handle file objects directly
-    if isinstance(outfile, file):
+    if isinstance(outfile, file) or outfile=="-":
         return (outfile, "PNG")
 
     # Handle string types
@@ -336,8 +336,12 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_preimg = inimage[1]
     x, y, width, height = upc_preimg.ink_extents()
     uploadfile = None
+    outfiletovar = False
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
         uploadfile = outfile
+        outfile = BytesIO()
+    elif(outfile=="-"):
+        outfiletovar = True
         outfile = BytesIO()
     if(outfileext == "SVG"):
         # Create an ImageSurface with the exact dimensions of the recorded content
@@ -394,6 +398,11 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         outfile.seek(0, 0)
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()
+    elif(outfiletovar):
+        outfile.seek(0, 0)
+        outbyte = outfile.read()
+        outfile.close()
+        return outbyte
     return True
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
@@ -412,6 +421,5 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
             outfileext = oldoutfile[1]
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, "cairo"]
-    save_to_file(imgout, outfile, outfileext, imgcomment)
-    return True
+    return save_to_file(imgout, outfile, outfileext, imgcomment)
 

@@ -548,5 +548,5 @@ def create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "ean13; "+upc, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "ean13; "+upc, imageoutlib)
     return True
