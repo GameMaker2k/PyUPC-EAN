@@ -120,92 +120,119 @@ def new_image_surface(sizex, sizey, bgcolor):
     drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
     return [upc_img, None]
 
-# Define supported extensions if not defined elsewhere
-WAND_SUPPORTED_EXTENSIONS = formats()
-
 def get_save_filename(outfile):
     """
     Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files. Uses WAND_SUPPORTED_EXTENSIONS as a reference for supported formats.
+    file extension for saving files. Returns a tuple (filename, EXTENSION),
+    the original `outfile` if it's of type None, bool, or a file object, or
+    False for unsupported input types.
 
     Parameters:
-        outfile (str, tuple, list, None, bool): The output file specification.
+        outfile (str, tuple, list, None, bool, file): The output file specification.
 
     Returns:
         tuple: (filename, EXTENSION) or False if invalid.
     """
+    # Get supported formats from wand and convert them to uppercase for comparison
+    wand_supported_formats = {fmt.upper() for fmt in formats()}
+
+    # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
-    if(isinstance(outfile, file) or outfile=="-"):
+    # Handle file objects directly (using the cross-version file compatibility you've defined)
+    if isinstance(outfile, file) or outfile == "-":
         return (outfile, "PNG")
 
-    if isinstance(outfile, str):
+    # Handle string types
+    if isinstance(outfile, (str, unicode) if 'unicode' in globals() else str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
             return (outfile, None)
 
+        # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
-        ext = ext[1:].upper() if ext else None
+        if ext:
+            ext = ext[1:].upper()  # Remove the dot and convert to uppercase
+        else:
+            # Check for custom format 'name:EXT'
+            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            if custom_match:
+                outfile = custom_match.group('name')
+                ext = custom_match.group('ext').upper()
+            else:
+                ext = None
 
-        if ext in WAND_SUPPORTED_EXTENSIONS:
-            return (outfile, ext)
-        elif ext:
-            return (outfile, "PNG")  # Default to PNG if unsupported
-        return (outfile, "PNG")  # Default to PNG if no extension
+        # Default to "PNG" if no valid extension was found or if unsupported
+        if not ext or ext not in wand_supported_formats:
+            ext = "PNG"
 
+        return (outfile, ext)
+
+    # Handle tuple or list types
     if isinstance(outfile, (tuple, list)) and len(outfile) == 2:
         filename, ext = outfile
-        filename = filename.strip() if isinstance(filename, str) else filename
-        ext = ext.strip().upper()
 
-        if ext not in WAND_SUPPORTED_EXTENSIONS:
-            ext = "PNG"  # Default to PNG if unsupported;
+        # Allow file objects or strings as the first element
+        if isinstance(filename, file) or filename == "-":
+            filename = filename  # file object is valid as-is
+        elif isinstance(filename, (str, unicode) if 'unicode' in globals() else str):
+            filename = filename.strip()
+        else:
+            return False  # Invalid first element type
+
+        # Ensure the extension is a valid string
+        if not isinstance(ext, (str, unicode) if 'unicode' in globals() else str):
+            return False
+
+        ext = ext.strip().upper()
+        if ext not in wand_supported_formats:
+            ext = "PNG"  # Default to PNG if unsupported
 
         return (filename, ext)
 
+    # Unsupported type
     return False
 
-def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
-    """
-    Saves the given image to a file with specified format and comment.
 
-    Parameters:
-        inimage (Image): The Wand image object to save.
-        outfile (str): The output filename.
-        outfileext (str): The format to save as, such as 'png' or 'jpeg'.
-        imgcomment (str): Optional comment to include in the image metadata.
-    """
+def get_save_file(outfile):
+    return get_save_filename
+
+def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
     upc_img.comment = imgcomment
-    upc_img.format = outfileext.upper()  # Ensure format is lowercase for compatibility
+    upc_img.format = outfileext.upper()  # Ensure format is uppercase for compatibility
+    
     uploadfile = None
     outfiletovar = False
-    if re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
+    
+    if re.match(r"^(ftp|ftps|sftp):\/\/", str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
-    elif outfile=="-":
+    elif outfile == "-":
         outfiletovar = True
         outfile = BytesIO()
+
     # Set specific options for certain formats
-    if outfileext.upper() == "WEBP":
+    if outfileext.upper() in {"WEBP", "JPEG", "JPG"}:
         upc_img.compression_quality = 100
-    elif outfileext.upper() == "JPEG" or outfileext.upper() == "JPG":
-        upc_img.compression_quality = 100
-    if(isinstance(outfile, file)):
+
+    if isinstance(outfile, file):
         upc_img.save(file=outfile)
     else:
         upc_img.save(filename=outfile)
-    if re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile)):
-        outfile.seek(0, 0)
+
+    if uploadfile:
+        outfile.seek(0)
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()
     elif outfiletovar:
-        outfile.seek(0, 0)
+        outfile.seek(0)
         outbyte = outfile.read()
         outfile.close()
         return outbyte
+
     return True
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
