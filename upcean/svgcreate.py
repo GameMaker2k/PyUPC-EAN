@@ -390,6 +390,21 @@ class Drawing(BaseElement):
         self.filename = filename
         self.save(pretty=pretty, indent=indent, encoding=encoding)
 
+    def write(self, fileobj, pretty=False, indent=2, encoding='utf-8'):
+        """
+        Write XML string to a file-like object.
+
+        Parameters:
+        - fileobj: a file-like object with a write method.
+        - pretty: True for pretty-printed output.
+        - indent: indentation level for pretty-printed output.
+        - encoding: character encoding for the output.
+        """
+        svg_string = self.tostring(pretty=pretty, indent=indent)
+        if isinstance(svg_string, str):
+            svg_string = svg_string.encode(encoding)
+        fileobj.write(svg_string)
+
     # Factory methods to create SVG elements
     def line(self, start, end, **kwargs):
         return Line(start, end, **kwargs)
