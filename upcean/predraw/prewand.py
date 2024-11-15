@@ -121,7 +121,7 @@ def new_image_surface(sizex, sizey, bgcolor):
     upc_img.alpha_channel = False  # Disable alpha channel
     upc_img.type = 'truecolor'  # Force truecolor (RGB)
     upc_img.colorspace = 'rgb'  # Set colorspace explicitly
-    upc_img.depth = 8  # Set bit depth to 8
+    upc_img.depth = 24  # Set bit depth to 8
     upc_img.options['png:color-type'] = '2'  # Force PNG to use truecolor (RGB)
     drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
     return [upc_img, preupc_img]
@@ -204,12 +204,6 @@ def get_save_filename(outfile):
 def get_save_file(outfile):
     return get_save_filename
 
-import re
-from io import BytesIO
-from wand.image import Image
-from PIL import Image as PILImage
-from PIL.PngImagePlugin import PngInfo
-
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
     Saves the given image to a file or other output, optionally adding metadata.
@@ -234,14 +228,29 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     elif outfile == "-":
         outfiletovar = True
         outfile = BytesIO()
-
     # Set specific options for formats
-    if outfileext.upper() in {"WEBP", "JPEG", "JPG"}:
-        upc_img.compression_quality = 100
-    elif outfileext.upper() == "PNG":
+    if outfileext.lower() == "PNG":
         upc_img.alpha_channel = False
+        upc_img.filter_type = 4
+        upc_img.compression = 100
         upc_img.options['png:color-type'] = '2'  # Ensure RGB
-
+        upc_img.interlace_scheme = 'line'
+    elif outfileext.lower() in ['JPG', 'JPEG', 'JPE']:
+        upc_img.interlace_scheme = 'plane'
+        upc_img.compression_quality = 100
+    elif outfileext.lower() == "WEBP":
+        upc_img.interlace_scheme = 'plane'
+        upc_img.compression_quality = 100
+        upc_img.method = 6
+        upc_img.lossless = True
+    elif outfileext.lower() == "TIFF":
+        upc_img.compression = 'lzw'
+        img.interlace_scheme = 'line'
+    elif outfileext.lower() == 'BMP':
+        upc_img.depth = 24
+    elif outfileext.lower() == 'GIF':
+        upc_img.type = 'palette'  # GIF limited to 256 colors
+        upc_img.interlace_scheme = 'line'
     # Save file using wand
     try:
         # Add comments directly for other formats
