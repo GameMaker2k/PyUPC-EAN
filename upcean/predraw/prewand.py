@@ -216,49 +216,48 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
     upc_img = inimage[0]
     upc_preimg = inimage[1]
-    upc_img.format = outfileext.upper()  # Ensure format is uppercase for compatibility
 
-    uploadfile = None
-    outfiletovar = False
+    # Set the format for the image
+    upc_img.magick(outfileext.upper())  # Ensure format is uppercase for compatibility
+
+    # Set image comment
+    upc_img.comment(imgcomment)
 
     # Handle output destinations
+    uploadfile = None
+    outfiletovar = False
     if re.match("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
     elif outfile == "-":
         outfiletovar = True
         outfile = BytesIO()
+
     # Set specific options for formats
-    if outfileext.lower() == "PNG":
-        upc_img.alpha_channel = False
-        upc_img.filter_type = 4
-        upc_img.compression = 100
-        upc_img.options['png:color-type'] = '2'  # Ensure RGB
-        upc_img.interlace_scheme = 'line'
-    elif outfileext.lower() in ['JPG', 'JPEG', 'JPE']:
-        upc_img.interlace_scheme = 'plane'
-        upc_img.compression_quality = 100
-    elif outfileext.lower() == "WEBP":
-        upc_img.interlace_scheme = 'plane'
-        upc_img.compression_quality = 100
-        upc_img.method = 6
-        upc_img.lossless = True
-    elif outfileext.lower() == "TIFF":
-        upc_img.compression = 'lzw'
-        img.interlace_scheme = 'line'
-    elif outfileext.lower() == 'BMP':
-        upc_img.depth = 24
-    elif outfileext.lower() == 'GIF':
-        upc_img.type = 'palette'  # GIF limited to 256 colors
-        upc_img.interlace_scheme = 'line'
-    # Save file using wand
+    if outfileext.lower() == "png":
+        upc_img.depth(8)  # Set bit depth
+        upc_img.interlaceType(PythonMagick.InterlaceType.LineInterlace)
+        upc_img.compressionQuality(100)  # Set to high quality for PNG
+    elif outfileext.lower() in ["jpg", "jpeg"]:
+        upc_img.interlaceType(PythonMagick.InterlaceType.PlaneInterlace)
+        upc_img.quality(100)  # Set high quality for JPEG
+    elif outfileext.lower() == "webp":
+        upc_img.quality(100)  # Set high quality for WEBP
+        # Note: `lossless` is not directly supported in PythonMagick
+    elif outfileext.lower() == "tiff":
+        upc_img.compression(PythonMagick.CompressionType.LZWCompression)  # Use LZW compression for TIFF
+        upc_img.interlaceType(PythonMagick.InterlaceType.LineInterlace)
+    elif outfileext.lower() == "bmp":
+        upc_img.depth(24)  # Set bit depth to 24 for BMP
+    elif outfileext.lower() == "gif":
+        upc_img.type(PythonMagick.ImageType.PaletteType)  # Set to palette type for GIF
+
+    # Save the image
     try:
-        # Add comments directly for other formats
-        upc_img.comment = imgcomment
         if isinstance(outfile, file):
-            upc_img.save(file=outfile)
+            upc_img.write(outfile)  # Save to a file-like object
         else:
-            upc_img.save(filename=outfile)
+            upc_img.write(outfile)  # Save to a file path
     except Exception as e:
         raise RuntimeError("Failed to save image: {0}".format(e))
 
