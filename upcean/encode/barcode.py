@@ -46,10 +46,6 @@ wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
 defaultdraw = upcean.support.defaultdraw
 import upcean.getprefix.getprefix
-import upcean.encode.stf as code25
-import upcean.encode.itf14 as itf6
-import upcean.encode.ean2 as upc2
-import upcean.encode.ean5 as upc5
 
 def validate_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 12 or len(upc) < 12):
