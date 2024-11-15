@@ -92,7 +92,7 @@ if wandsupport:
         import upcean.predraw.prewand
     except ImportError:
         wandsupport = False
-        logger.warning("Qahirah support failed to initialize.")
+        logger.warning("Wand support failed to initialize.")
 
 # Initialize Cairo support if available
 if magicksupport:
@@ -101,7 +101,7 @@ if magicksupport:
         import upcean.predraw.premagick
     except ImportError:
         magicksupport = False
-        logger.warning("Qahirah support failed to initialize.")
+        logger.warning("PythonMagick support failed to initialize.")
 
 # Initialize svgwrite support if available
 if svgwritesupport:
@@ -381,9 +381,9 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+        return upcean.predraw.prewand.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "magick" and svgwritesupport:
-        return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+        return upcean.predraw.premagick.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangleAlt: Selected library is not supported.")
     return False

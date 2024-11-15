@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 from upcean.xml.downloader import upload_file_to_internet_file
-from wand.image import Image, INTERLACE_LINE, INTERLACE_PANE
+from wand.image import Image
 from wand.drawing import Drawing
 from wand.color import Color
 from wand.version import formats
@@ -235,17 +235,17 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     # Set specific options for formats
     if outfileext.lower() == "png":
         upc_img.depth = 24  # Set bit depth
-        upc_img.interlace_scheme = INTERLACE_LINE  # Use LINE interlacing for PNG
+        upc_img.interlace_scheme = "line"  # Use LINE interlacing for PNG
         upc_img.compression_quality = 100  # Set to high quality for PNG
-    elif outfileext.lower() in ["jpg", "jpeg"]:
-        upc_img.interlace_scheme = INTERLACE_PLANE  # Use PLANE interlacing for JPEG
+    elif outfileext.lower() in ["jpg", "jpeg", "jpe"]:
+        upc_img.interlace_scheme = "plane"  # Use PLANE interlacing for JPEG
         upc_img.compression_quality = 100  # Set high quality for JPEG
     elif outfileext.lower() == "webp":
         upc_img.compression_quality = 100  # Set high quality for WEBP
         # Note: Lossless WEBP support depends on Wand/ImageMagick version.
     elif outfileext.lower() == "tiff":
         upc_img.compression = "lzw"  # Use LZW compression for TIFF
-        upc_img.interlace_scheme = INTERLACE_LINE  # Use LINE interlacing for TIFF
+        upc_img.interlace_scheme = "line"  # Use LINE interlacing for TIFF
     elif outfileext.lower() == "bmp":
         upc_img.depth = 24  # Set bit depth to 24 for BMP
     elif outfileext.lower() == "gif":
@@ -254,9 +254,9 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     # Save the image
     try:
         if isinstance(outfile, file):
-            upc_img.write(outfile)  # Save to a file-like object
+            upc_img.save(file=outfile)  # Save to a file-like object
         else:
-            upc_img.write(outfile)  # Save to a file path
+            upc_img.save(filename=outfile)  # Save to a file path
     except Exception as e:
         raise RuntimeError("Failed to save image: {0}".format(e))
 
