@@ -8,11 +8,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2023 Cool Dude 2k
-    Copyright 2011-2023 Game Maker 2k
-    Copyright 2011-2023 Kazuki Przyborowski
+    Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: svgcreate.py - Last Update: 04/27/2024 Ver. 1.0.0 - Author: ChatGPT $
+    $FileInfo: predraw.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes

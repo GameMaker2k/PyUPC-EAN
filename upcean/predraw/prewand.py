@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: prewand.py - Last Update: 10/30/2024 Ver. 2.10.8 RC 1 - Author: cooldude2k $
+    $FileInfo: prewand.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes

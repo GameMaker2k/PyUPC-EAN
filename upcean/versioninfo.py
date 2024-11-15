@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: versioninfo.py - Last Update: 10/30/2024 Ver. 2.10.8 RC 1 - Author: cooldude2k $
+    $FileInfo: versioninfo.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
@@ -67,7 +67,7 @@ __email__ = "kazuki.przyborowski@gmail.com"
 __status__ = "Production"
 __project__ = "PyUPC-EAN"
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN"
-__version_info__ = (2, 10, 8, "RC 1", 1)
+__version_info__ = (2, 12, 0, "RC 1", 1)
 __build_time__ = {"timestamp": None, "year": None, "month": None,
                   "day": None, "hour": None, "minute": None, "second": None}
 __build_time_utc__ = {"timestamp": None, "year": None, "month": None,
@@ -87,7 +87,7 @@ def get_build_python_info(infotype=None):
 
 
 __revision__ = __version_info__[3]
-__revision_id__ = "$Id: 7f5da003f889f59f6f12979ef2f7904f2144d45a $"
+__revision_id__ = "$Id$"
 if(__version_info__[3] is not None):
     __version__ = "{major}.{minor}.{build} {release}".format(major=__version_info__[
                                                              0], minor=__version_info__[1], build=__version_info__[2], release=__version_info__[3])
@@ -105,7 +105,7 @@ def version_info():
         return {"major": __version_info__[0], "minor": __version_info__[1], "build": __version_info__[2], "release": None}
 
 
-__version_date_info__ = (2024, 10, 30, "RC 1", 1)
+__version_date_info__ = (2024, 11, 15, "RC 1", 1)
 
 
 def version_date():

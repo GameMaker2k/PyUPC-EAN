@@ -12,7 +12,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pyverinfo.py - Last Update: 2/18/2023 Ver. 2.7.21 RC 1 - Author: cooldude2k $
+    $FileInfo: pyverinfo.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1 - Author: cooldude2k $
 '''
 
 import re
