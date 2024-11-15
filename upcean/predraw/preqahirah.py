@@ -179,7 +179,7 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, line_width=1):
     return True
 
 # Define valid Qahirah output formats
-cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "CAIRO"}
+cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "RAW", "CAIRO"}
 
 def get_save_filename(outfile):
     """
@@ -329,6 +329,23 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         image_context = qah.Context.create(proxy_surface)
         image_context.set_source_surface(upc_preimg, (-x, -y))
         image_context.paint()
+    elif(outfileext == "RAW"):
+        # Create an ImageSurface with the exact dimensions of the recorded content
+        image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
+        image_context = cairo.Context(image_surface)
+        # Transfer the content from the RecordingSurface to the ImageSurface
+        image_context.set_source_surface(upc_preimg, -x, -y)
+        image_context.paint()
+        image_surface.flush()
+        # Save as PNG
+        data = image_surface.get_data()
+        if isinstance(outfile, file):
+            outfile.write(data)
+        else:
+            dataout = open(outfile, "wb")
+            dataout.write(data)
+            dataout.close()
+        image_surface.finish()
     else:
         # Default to ImageSurface with FORMAT_RGB24 for RGB output
         image_surface = qah.ImageSurface.create(format=qah.CAIRO.FORMAT_RGB24, dimensions=(int(width), int(height)))

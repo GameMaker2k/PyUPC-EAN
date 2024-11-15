@@ -170,7 +170,8 @@ def get_save_filename(outfile):
         # Default to "PNG" if no valid extension was found
         if not outfileext:
             outfileext = "PNG"
-
+        if ext.strip().upper()==".RAW":
+            return (outfile, outfileext)
         # Check if the extension is supported by Pillow's registered extensions
         pil_extensions = {ext[1:].upper(): fmt.upper() for ext, fmt in Image.registered_extensions().items()}
         if outfileext in pil_extensions:
@@ -200,6 +201,8 @@ def get_save_filename(outfile):
             return False
 
         ext = ext.strip().upper()
+        if ext=="RAW":
+            return (filename, "RAW")
         # Check if the extension is supported by Pillow's registered extensions
         pil_extensions = {ext[1:].upper(): fmt.upper() for ext, fmt in Image.registered_extensions().items()}
         if ext in pil_extensions:
@@ -277,6 +280,14 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         # If image is RGBA, convert to RGB to discard transparency; otherwise, save as-is
         if upc_preimg.mode == "RGBA":
             upc_preimg.convert(mode="RGB").save(outfile, outfileext, **exargdict)
+        elif(outfileext=="RAW"):
+            data = upc_preimg.tobytes()
+            if isinstance(outfile, file):
+                outfile.write(data)
+            else:
+                dataout = open(outfile, "wb")
+                dataout.write(data)
+                dataout.close()
         else:
             upc_preimg.save(outfile, outfileext, **exargdict)
     if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile))):
