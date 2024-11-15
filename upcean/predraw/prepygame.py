@@ -33,6 +33,23 @@ try:
 except NameError:
     basestring = str
 
+try:
+    file
+except NameError:
+    from io import IOBase
+    file = IOBase
+from io import IOBase
+
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO
+        from StringIO import StringIO as BytesIO
+
 # Load font paths from upcean.fonts
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt

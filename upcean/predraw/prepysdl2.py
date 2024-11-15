@@ -39,6 +39,23 @@ except NameError:
     from io import IOBase
     file = IOBase
 
+try:
+    file
+except NameError:
+    from io import IOBase
+    file = IOBase
+from io import IOBase
+
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO
+        from StringIO import StringIO as BytesIO
+
 # Import PySDL2 modules
 import sdl2
 import sdl2.ext

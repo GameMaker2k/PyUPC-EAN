@@ -32,6 +32,7 @@ try:
 except NameError:
     from io import IOBase
     file = IOBase
+from io import IOBase
 
 try:
     from io import StringIO, BytesIO
@@ -134,7 +135,7 @@ def get_save_filename(outfile):
     if outfile is None or isinstance(outfile, bool):
         return outfile
     # Handle file objects directly
-    if isinstance(outfile, file) or outfile == "-":
+    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile == "-":
         return (outfile, "PNG")
     # Handle string types
     if isinstance(outfile, basestring):

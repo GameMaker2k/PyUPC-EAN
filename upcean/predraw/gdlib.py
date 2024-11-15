@@ -19,6 +19,23 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance, ImageOps
 import sys
 import math
 
+try:
+    file
+except NameError:
+    from io import IOBase
+    file = IOBase
+from io import IOBase
+
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO
+        from StringIO import StringIO as BytesIO
+
 # Compatibility between Python 2 and 3
 if sys.version_info[0] >= 3:
     xrange = range

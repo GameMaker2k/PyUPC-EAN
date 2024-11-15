@@ -35,11 +35,8 @@ try:
 except NameError:
     from io import IOBase
     file = IOBase
+from io import IOBase
 
-try:
-    file
-except NameError:
-    from io import IOBase as file
 try:
     from io import StringIO, BytesIO
 except ImportError:
@@ -147,7 +144,7 @@ def get_save_filename(outfile):
         return outfile
 
     # Handle file objects directly (using the cross-version file compatibility you've defined)
-    if isinstance(outfile, file) or outfile == "-":
+    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile == "-":
         return (outfile, "PNG")
 
     # Handle string types
@@ -253,7 +250,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
 
     # Save the image
     try:
-        if isinstance(outfile, file):
+        if isinstance(outfile, file) or isinstance(outfile, IOBase):
             upc_img.save(file=outfile)  # Save to a file-like object
         else:
             upc_img.save(filename=outfile)  # Save to a file path

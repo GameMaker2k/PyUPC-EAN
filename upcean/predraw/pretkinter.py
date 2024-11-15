@@ -34,7 +34,10 @@ except NameError:
 try:
     file
 except NameError:
-    from io import IOBase as file
+    from io import IOBase
+    file = IOBase
+from io import IOBase
+
 try:
     from io import StringIO, BytesIO
 except ImportError:

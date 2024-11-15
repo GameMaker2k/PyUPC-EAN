@@ -36,7 +36,10 @@ except NameError:
 try:
     file
 except NameError:
-    from io import IOBase as file
+    from io import IOBase
+    file = IOBase
+from io import IOBase
+
 try:
     from io import StringIO, BytesIO
 except ImportError:
@@ -199,7 +202,7 @@ def get_save_filename(outfile):
         return outfile
     
     # Handle file objects directly
-    if isinstance(outfile, file) or outfile=="-":
+    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile=="-":
         return (outfile, "PNG")
 
     # Handle string types
@@ -339,7 +342,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         image_surface.flush()
         # Save as PNG
         data = image_surface.get_data()
-        if isinstance(outfile, file):
+        if isinstance(outfile, file) or isinstance(outfile, IOBase):
             outfile.write(data)
         else:
             dataout = open(outfile, "wb")

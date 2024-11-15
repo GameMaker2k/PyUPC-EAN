@@ -29,7 +29,10 @@ import io  # For file object type checking
 try:
     file
 except NameError:
-    from io import IOBase as file
+    from io import IOBase
+    file = IOBase
+from io import IOBase
+
 try:
     from io import StringIO, BytesIO
 except ImportError:
@@ -68,7 +71,7 @@ def get_save_filename(outfile):
         return outfile
     
     # Handle file objects directly
-    if isinstance(outfile, file) or outfile=="-":
+    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile=="-":
         return (outfile, "SVG")
 
     # Handle string types
@@ -347,7 +350,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
             outfile = BytesIO()
         else:
             outfile = StringIO()
-    if isinstance(outfile, file):
+    if isinstance(outfile, file) or isinstance(outfile, IOBase):
        if(cairosvgsupport and outfileext=="PNG"):
            preoutfile = StringIO()
            preoutfile.seek(0, 0)

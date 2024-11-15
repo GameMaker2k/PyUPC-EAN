@@ -33,6 +33,17 @@ try:
 except NameError:
     from io import IOBase
     file = IOBase
+from io import IOBase
+
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO
+        from StringIO import StringIO as BytesIO
 
 # Font paths for different font types
 fontpathocra = upcean.fonts.fontpathocra
@@ -166,7 +177,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
 
     # Handle output destinations
     print(dir(upc_img))
-    if isinstance(outfile, file):
+    if isinstance(outfile, file) or isinstance(outfile, IOBase):
         upc_img.write(outfile)  # Save to a file-like object
     else:
         upc_img.write(outfile)  # Save to a file path
