@@ -19,6 +19,7 @@ from upcean.xml.downloader import upload_file_to_internet_file
 from wand.image import Image
 from wand.drawing import Drawing
 from wand.color import Color
+from wand.version import formats
 import os
 import re
 import upcean.fonts
@@ -121,12 +122,7 @@ def new_image_surface(sizex, sizey, bgcolor):
     return [upc_img, upc_preimg]
 
 # Define supported extensions if not defined elsewhere
-WAND_SUPPORTED_EXTENSIONS = {
-    "PNG": "png",
-    "JPEG": "jpeg",
-    "JPG": "jpeg",
-    "WEBP": "webp",
-}
+WAND_SUPPORTED_EXTENSIONS = formats()
 
 def get_save_filename(outfile):
     """
@@ -143,7 +139,7 @@ def get_save_filename(outfile):
         return outfile
 
     if(isinstance(outfile, file) or outfile=="-"):
-        return (outfile, "png")
+        return (outfile, "PNG")
 
     if isinstance(outfile, str):
         outfile = outfile.strip()
@@ -153,21 +149,19 @@ def get_save_filename(outfile):
         base, ext = os.path.splitext(outfile)
         ext = ext[1:].upper() if ext else None
 
-        if ext and ext in WAND_SUPPORTED_EXTENSIONS:
-            return (outfile, WAND_SUPPORTED_EXTENSIONS[ext])
+        if ext in WAND_SUPPORTED_EXTENSIONS:
+            return (outfile, ext)
         elif ext:
-            return (outfile, "png")  # Default to PNG if unsupported
-        return (outfile, "png")  # Default to PNG if no extension
+            return (outfile, "PNG")  # Default to PNG if unsupported
+        return (outfile, "PNG")  # Default to PNG if no extension
 
     if isinstance(outfile, (tuple, list)) and len(outfile) == 2:
         filename, ext = outfile
         filename = filename.strip() if isinstance(filename, str) else filename
         ext = ext.strip().upper()
 
-        if ext in WAND_SUPPORTED_EXTENSIONS:
-            ext = WAND_SUPPORTED_EXTENSIONS[ext]
-        else:
-            ext = "png"  # Default to PNG if unsupported
+        if ext not in WAND_SUPPORTED_EXTENSIONS:
+            ext = "PNG"  # Default to PNG if unsupported;
 
         return (filename, ext)
 
@@ -186,7 +180,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
     upc_img.comment = imgcomment
-    upc_img.format = outfileext.lower()  # Ensure format is lowercase for compatibility
+    upc_img.format = outfileext.upper()  # Ensure format is lowercase for compatibility
     uploadfile = None
     outfiletovar = False
     if re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
@@ -196,9 +190,9 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         outfiletovar = True
         outfile = BytesIO()
     # Set specific options for certain formats
-    if outfileext.lower() == "webp":
+    if outfileext.upper() == "WEBP":
         upc_img.compression_quality = 100
-    elif outfileext.lower() == "jpeg":
+    elif outfileext.upper() == "JPEG" or outfileext.upper() == "JPG":
         upc_img.compression_quality = 100
     if(isinstance(outfile, file)):
         upc_img.save(file=outfile)
