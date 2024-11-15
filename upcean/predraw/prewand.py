@@ -36,6 +36,20 @@ except NameError:
     file = IOBase
 
 try:
+    file
+except NameError:
+    from io import IOBase as file
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO
+        from StringIO import StringIO as BytesIO
+
+try:
     import pkg_resources
     pkgres = True
 except ImportError:
@@ -128,7 +142,7 @@ def get_save_filename(outfile):
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
-    if(isinstance(outfile, file)):
+    if(isinstance(outfile, file) or outfile=="-"):
         return (outfile, "png")
 
     if isinstance(outfile, str):
@@ -173,7 +187,14 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_preimg = inimage[1]
     upc_img.comment = imgcomment
     upc_img.format = outfileext.lower()  # Ensure format is lowercase for compatibility
-
+    uploadfile = None
+    outfiletovar = False
+    if re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
+        uploadfile = outfile
+        outfile = BytesIO()
+    elif outfile=="-":
+        outfiletovar = True
+        outfile = BytesIO()
     # Set specific options for certain formats
     if outfileext.lower() == "webp":
         upc_img.compression_quality = 100
@@ -183,6 +204,15 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         upc_img.save(file=outfile)
     else:
         upc_img.save(filename=outfile)
+    if re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile)):
+        outfile.seek(0, 0)
+        upload_file_to_internet_file(outfile, uploadfile)
+        outfile.close()
+    elif outfiletovar:
+        outfile.seek(0, 0)
+        outbyte = outfile.read()
+        outfile.close()
+        return outbyte
     return True
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
