@@ -49,6 +49,10 @@ if(qahirahsupport):
     import upcean.predraw.preqahirah
 if(svgwritesupport):
     import upcean.predraw.presvgwrite
+if(wandsupport):
+    import upcean.predraw.prewand
+if(magicksupport):
+    import upcean.predraw.premagick
 
 
 def get_code39_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
@@ -99,7 +103,7 @@ def encode_code39_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         imageoutlib = "qahirah"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif wandsupport and isinstance(upc_img, Image):
+    elif wandsupport and isinstance(upc_img, wImage):
         imageoutlib = "wand"
     elif magicksupport and isinstance(upc_img, PythonMagick.Image):
         imageoutlib = "magick"
@@ -459,7 +463,7 @@ def encode_code39extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         imageoutlib = "qahirah"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif wandsupport and isinstance(upc_img, Image):
+    elif wandsupport and isinstance(upc_img, wImage):
         imageoutlib = "wand"
     elif magicksupport and isinstance(upc_img, PythonMagick.Image):
         imageoutlib = "magick"

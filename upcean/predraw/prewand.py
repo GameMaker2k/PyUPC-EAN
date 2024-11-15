@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 from upcean.xml.downloader import upload_file_to_internet_file
-from wand.image import Image
+from wand.image import Image as wImage
 from wand.drawing import Drawing
 from wand.color import Color
 from wand.version import formats
@@ -116,7 +116,7 @@ def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
 def new_image_surface(sizex, sizey, bgcolor):
     if isinstance(bgcolor, tuple) and len(bgcolor) == 3:
         bgcolor = '#{:02x}{:02x}{:02x}'.format(*bgcolor)
-    upc_img = Image(width=sizex, height=sizey, background=Color(bgcolor))
+    upc_img = wImage(width=sizex, height=sizey, background=Color(bgcolor))
     preupc_img = Drawing()
     upc_img.alpha_channel = False  # Disable alpha channel
     upc_img.type = 'truecolor'  # Force truecolor (RGB)

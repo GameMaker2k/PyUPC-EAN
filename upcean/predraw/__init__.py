@@ -86,7 +86,7 @@ if qahirahsupport:
 # Initialize Cairo support if available
 if wandsupport:
     try:
-        from wand.image import Image
+        from wand.image import Image as wImage
         from wand.drawing import Drawing
         from wand.color import Color
         import upcean.predraw.prewand
@@ -492,7 +492,7 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
         imageoutlib = "cairo"
     elif qahirahsupport and isinstance(upc_img, qah.Context) and isinstance(upc_preimg, qah.Surface):
         imageoutlib = "qahirah"
-    elif wandsupport and isinstance(upc_img, Image):
+    elif wandsupport and isinstance(upc_img, wImage):
         imageoutlib = "wand"
     elif magicksupport and isinstance(upc_img, PythonMagick.Image):
         imageoutlib = "magick"
