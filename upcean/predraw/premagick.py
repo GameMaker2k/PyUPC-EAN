@@ -117,7 +117,7 @@ def get_save_filename(outfile):
     if isinstance(outfile, str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
-            return (outfile, None)
+            return (outfile, "PNG")
         base, ext = os.path.splitext(outfile)
         ext = ext[1:].upper() if ext else None
         if ext and ext in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
@@ -155,10 +155,32 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img.magick(outfileext.upper())
 
     # Handle output destinations
+    uploadfile = None
+    outfiletovar = False
+    if re.match("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
+        uploadfile = outfile
+        outfile = BytesIO()
+    elif outfile == "-":
+        outfiletovar = True
+        outfile = BytesIO()
+
+    # Handle output destinations
+    print(dir(upc_img))
     if isinstance(outfile, file):
         upc_img.write(outfile)  # Save to a file-like object
     else:
         upc_img.write(outfile)  # Save to a file path
+
+    # Handle FTP uploads or variable output
+    if uploadfile:
+        outfile.seek(0)
+        upload_file_to_internet_file(outfile, uploadfile)
+        outfile.close()
+    elif outfiletovar:
+        outfile.seek(0)
+        outbyte = outfile.read()
+        outfile.close()
+        return outbyte
 
     return True
 

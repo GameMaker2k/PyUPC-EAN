@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 from upcean.xml.downloader import upload_file_to_internet_file
-from wand.image import Image
+from wand.image import Image, INTERLACE_LINE, INTERLACE_PANE
 from wand.drawing import Drawing
 from wand.color import Color
 from wand.version import formats
@@ -217,11 +217,10 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
     upc_preimg = inimage[1]
 
-    # Set the format for the image
-    upc_img.magick(outfileext.upper())  # Ensure format is uppercase for compatibility
+    upc_img.format = outfileext.lower()
 
     # Set image comment
-    upc_img.comment(imgcomment)
+    upc_img.metadata["comment"] = imgcomment
 
     # Handle output destinations
     uploadfile = None
@@ -235,22 +234,22 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
 
     # Set specific options for formats
     if outfileext.lower() == "png":
-        upc_img.depth(8)  # Set bit depth
-        upc_img.interlaceType(PythonMagick.InterlaceType.LineInterlace)
-        upc_img.compressionQuality(100)  # Set to high quality for PNG
+        upc_img.depth = 24  # Set bit depth
+        upc_img.interlace_scheme = INTERLACE_LINE  # Use LINE interlacing for PNG
+        upc_img.compression_quality = 100  # Set to high quality for PNG
     elif outfileext.lower() in ["jpg", "jpeg"]:
-        upc_img.interlaceType(PythonMagick.InterlaceType.PlaneInterlace)
-        upc_img.quality(100)  # Set high quality for JPEG
+        upc_img.interlace_scheme = INTERLACE_PLANE  # Use PLANE interlacing for JPEG
+        upc_img.compression_quality = 100  # Set high quality for JPEG
     elif outfileext.lower() == "webp":
-        upc_img.quality(100)  # Set high quality for WEBP
-        # Note: `lossless` is not directly supported in PythonMagick
+        upc_img.compression_quality = 100  # Set high quality for WEBP
+        # Note: Lossless WEBP support depends on Wand/ImageMagick version.
     elif outfileext.lower() == "tiff":
-        upc_img.compression(PythonMagick.CompressionType.LZWCompression)  # Use LZW compression for TIFF
-        upc_img.interlaceType(PythonMagick.InterlaceType.LineInterlace)
+        upc_img.compression = "lzw"  # Use LZW compression for TIFF
+        upc_img.interlace_scheme = INTERLACE_LINE  # Use LINE interlacing for TIFF
     elif outfileext.lower() == "bmp":
-        upc_img.depth(24)  # Set bit depth to 24 for BMP
+        upc_img.depth = 24  # Set bit depth to 24 for BMP
     elif outfileext.lower() == "gif":
-        upc_img.type(PythonMagick.ImageType.PaletteType)  # Set to palette type for GIF
+        upc_img.type = "palette"  # Set to palette type for GIF
 
     # Save the image
     try:
