@@ -19,11 +19,15 @@ from upcean.predraw import *
 import re
 import sys
 import upcean.support
+
+import io
 try:
     file
 except NameError:
-    from io import IOBase as file
-import upcean.getprefix.getprefix
+    from io import IOBase
+    file = IOBase
+from io import IOBase
+
 try:
     from io import StringIO, BytesIO
 except ImportError:
@@ -33,6 +37,7 @@ except ImportError:
     except ImportError:
         from StringIO import StringIO
         from StringIO import StringIO as BytesIO
+
 import upcean.encode.ean2
 import upcean.encode.ean5
 from upcean.encode.upca import *

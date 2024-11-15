@@ -19,10 +19,15 @@ from upcean.predraw import *
 import re
 import sys
 import upcean.support
+
+import io
 try:
     file
 except NameError:
-    from io import IOBase as file
+    from io import IOBase
+    file = IOBase
+from io import IOBase
+
 try:
     from io import StringIO, BytesIO
 except ImportError:
@@ -32,6 +37,7 @@ except ImportError:
     except ImportError:
         from StringIO import StringIO
         from StringIO import StringIO as BytesIO
+
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
