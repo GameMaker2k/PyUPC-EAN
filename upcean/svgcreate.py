@@ -572,8 +572,9 @@ class Style(BaseElement):
 
     def to_xml(self, doc):
         el = super(Style, self).to_xml(doc)
-        text_node = doc.createTextNode(self.css_text)
-        el.appendChild(text_node)
+        # Wrap the CSS content in a CDATA section
+        cdata_section = doc.createCDATASection(self.css_text)
+        el.appendChild(cdata_section)
         return el
 
 class LinearGradient(BaseElement):
