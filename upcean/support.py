@@ -383,6 +383,10 @@ if(cairosupport and defaultdraw is None):
     defaultdraw = "cairo"
 if(qahirahsupport and defaultdraw is None):
     defaultdraw = "qahirah"
+if(wandsupport and defaultdraw is None):
+    defaultdraw = "wand"
+if(magicksupport and defaultdraw is None):
+    defaultdraw = "magick"
 if(svgwritesupport and defaultdraw is None):
     defaultdraw = "svgwrite"
 if(defaultdraw is None):

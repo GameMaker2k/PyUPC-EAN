@@ -23,6 +23,18 @@ import os
 import re
 import upcean.fonts
 
+# Compatibility for Python 2 and 3
+try:
+    basestring
+except NameError:
+    basestring = str
+
+try:
+    file
+except NameError:
+    from io import IOBase
+    file = IOBase
+
 try:
     import pkg_resources
     pkgres = True
@@ -46,38 +58,61 @@ WAND_SUPPORTED_EXTENSIONS = {
 def snapCoords(ctx, x, y):
     return (round(x) + 0.5, round(y) + 0.5)
 
-def drawColorRectangle(draw, x1, y1, x2, y2, color):
+def drawColorRectangle(image, x1, y1, x2, y2, color):
+    if isinstance(color, tuple) and len(color) == 3:
+        color = '#{:02x}{:02x}{:02x}'.format(*color)
     with Drawing() as draw:
         draw.fill_color = Color(color)
         draw.rectangle(left=x1, top=y1, width=x2 - x1, height=y2 - y1)
-        draw(draw)
+        draw(image)  # Apply drawing to the `image` (which should be an Image instance)
     return True
 
-def drawColorLine(draw, x1, y1, x2, y2, width, color):
+def drawColorLine(image, x1, y1, x2, y2, width, color):
+    if isinstance(color, tuple) and len(color) == 3:
+        color = '#{:02x}{:02x}{:02x}'.format(*color)
     with Drawing() as draw:
         draw.stroke_color = Color(color)
         draw.stroke_width = width
         draw.line((x1, y1), (x2, y2))
-        draw(draw)
+        draw(image)  # Apply drawing to the `image`
     return True
 
-def drawColorText(draw, size, x, y, text, color, ftype="ocrb"):
-    # Set the font path based on the specified type
+def drawColorText(image, size, x, y, text, color, ftype="ocrb"):
+    if isinstance(color, tuple) and len(color) == 3:
+        color = '#{:02x}{:02x}{:02x}'.format(*color)
     font_path = fontpathocrb if ftype == "ocrb" else fontpathocra
     with Drawing() as draw:
-        draw.font = font_path  # Directly use the font path
+        draw.font = font_path
         draw.font_size = size
         draw.fill_color = Color(color)
         draw.text(x, y, text)
-        draw(draw)
+        draw(image)  # Apply drawing to the `image`
     return True
 
-def drawColorRectangleAlt(draw, x1, y1, x2, y2, color):
+def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
+    if isinstance(color, tuple) and len(color) == 3:
+        color = '#{:02x}{:02x}{:02x}'.format(*color)
     with Drawing() as draw:
         draw.stroke_color = Color(color)
         draw.rectangle(left=x1, top=y1, width=x2 - x1, height=y2 - y1)
-        draw(draw)
+        draw(image)  # Apply drawing to the `image`
     return True
+
+def new_image_surface(sizex, sizey, bgcolor):
+    if isinstance(bgcolor, tuple) and len(bgcolor) == 3:
+        bgcolor = '#{:02x}{:02x}{:02x}'.format(*bgcolor)
+    upc_preimg = Image(width=sizex, height=sizey, background=Color(bgcolor))
+    upc_img = upc_preimg
+    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
+    return [upc_img, upc_preimg]
+
+# Define supported extensions if not defined elsewhere
+WAND_SUPPORTED_EXTENSIONS = {
+    "PNG": "png",
+    "JPEG": "jpeg",
+    "JPG": "jpeg",
+    "WEBP": "webp",
+}
 
 def get_save_filename(outfile):
     """
@@ -85,17 +120,13 @@ def get_save_filename(outfile):
     file extension for saving files. Uses WAND_SUPPORTED_EXTENSIONS as a reference for supported formats.
 
     Parameters:
-        outfile (str, tuple, list, None, bool, file): The output file specification.
+        outfile (str, tuple, list, None, bool): The output file specification.
 
     Returns:
         tuple: (filename, EXTENSION) or False if invalid.
     """
     if outfile is None or isinstance(outfile, bool):
         return outfile
-
-    # Check if outfile is a file object
-    if isinstance(outfile, file) or outfile=="-":
-        return (outfile, "PNG")
 
     if isinstance(outfile, str):
         outfile = outfile.strip()
@@ -108,57 +139,52 @@ def get_save_filename(outfile):
         if ext and ext in WAND_SUPPORTED_EXTENSIONS:
             return (outfile, WAND_SUPPORTED_EXTENSIONS[ext])
         elif ext:
-            return (outfile, "PNG")
-        return (outfile, "PNG")
+            return (outfile, "png")  # Default to PNG if unsupported
+        return (outfile, "png")  # Default to PNG if no extension
 
-    if isinstance(outfile, (tuple, list)):
-        if len(outfile) != 2:
-            return False
-
+    if isinstance(outfile, (tuple, list)) and len(outfile) == 2:
         filename, ext = outfile
-        if isinstance(filename, file):
-            filename = filename
-        elif isinstance(filename, str):
-            filename = filename.strip()
-        else:
-            return False
-
+        filename = filename.strip() if isinstance(filename, str) else filename
         ext = ext.strip().upper()
+
         if ext in WAND_SUPPORTED_EXTENSIONS:
             ext = WAND_SUPPORTED_EXTENSIONS[ext]
         else:
-            ext = "PNG"
+            ext = "png"  # Default to PNG if unsupported
 
         return (filename, ext)
 
     return False
 
-def get_save_file(outfile):
-    return get_save_filename(outfile)
-
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
-    img = inimage
-    with Image() as img:
-        img.comment = imgcomment
-        img.format = outfileext.upper()
-        if outfileext == "WEBP":
-            img.compression_quality = 100
-        elif outfileext == "JPEG":
-            img.compression_quality = 100
-        img.save(filename=outfile)
-        return True
+    """
+    Saves the given image to a file with specified format and comment.
+
+    Parameters:
+        inimage (Image): The Wand image object to save.
+        outfile (str): The output filename.
+        outfileext (str): The format to save as, such as 'png' or 'jpeg'.
+        imgcomment (str): Optional comment to include in the image metadata.
+    """
+    upc_img = inimage[0]
+    upc_preimg = inimage[1]
+    upc_img.comment = imgcomment
+    upc_img.format = outfileext.lower()  # Ensure format is lowercase for compatibility
+
+    # Set specific options for certain formats
+    if outfileext.lower() == "webp":
+        upc_img.compression_quality = 100
+    elif outfileext.lower() == "jpeg":
+        upc_img.compression_quality = 100
+
+    upc_img.save(filename=outfile)
+    return True
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
-    if outfile is None:
-        oldoutfile = None
-        outfile = None
-        outfileext = None
+    oldoutfile = get_save_filename(outfile)
+    if isinstance(oldoutfile, tuple):
+        outfile, outfileext = oldoutfile
     else:
-        oldoutfile = get_save_filename(outfile)
-        if isinstance(oldoutfile, tuple):
-            outfile = oldoutfile[0]
-            outfileext = oldoutfile[1]
-    if oldoutfile is None or isinstance(oldoutfile, bool):
         return [imgout, "wand"]
-    save_to_file(imgout, outfile, outfileext, imgcomment)
-    return True
+
+    return save_to_file(imgout, outfile, outfileext, imgcomment)

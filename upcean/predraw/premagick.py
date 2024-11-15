@@ -21,6 +21,18 @@ import os
 import re
 import upcean.fonts
 
+# Compatibility for Python 2 and 3
+try:
+    basestring
+except NameError:
+    basestring = str
+
+try:
+    file
+except NameError:
+    from io import IOBase
+    file = IOBase
+
 try:
     import pkg_resources
     pkgres = True
@@ -75,6 +87,12 @@ def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
     draw.rectangle(x1, y1, x2, y2)
     image.draw(draw)
     return True
+
+def new_image_surface(sizex, sizey, bgcolor):
+    upc_preimg = PythonMagick.Image(str(sizex)+"x"+str(sizey), bgcolor)
+    upc_img = upc_preimg
+    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
+    return [upc_img, upc_preimg]
 
 def get_save_filename(outfile):
     """

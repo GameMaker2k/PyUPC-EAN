@@ -96,7 +96,11 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         imageoutlib = "qahirah"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
+    elif wandsupport and isinstance(upc_img, Image):
+        imageoutlib = "wand"
+    elif magicksupport and isinstance(upc_img, PythonMagick.Image):
+        imageoutlib = "magick"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and inimage != "none" and inimage is not None):
         imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
@@ -271,7 +275,11 @@ def create_msi_barcode(upc, outfile="./msi.png", resize=1, barheight=(48, 54), b
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(not wandsupport and imageoutlib == "wand"):
+        imageoutlib = "svgwrite"
+    if(not magicksupport and imageoutlib == "magick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"

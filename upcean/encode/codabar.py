@@ -332,7 +332,11 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(not wandsupport and imageoutlib == "wand"):
+        imageoutlib = "svgwrite"
+    if(not magicksupport and imageoutlib == "magick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"

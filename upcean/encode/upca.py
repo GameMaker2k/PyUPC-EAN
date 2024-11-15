@@ -108,7 +108,11 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         imageoutlib = "qahirah"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
+    elif wandsupport and isinstance(upc_img, Image):
+        imageoutlib = "wand"
+    elif magicksupport and isinstance(upc_img, PythonMagick.Image):
+        imageoutlib = "magick"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and inimage != "none" and inimage is not None):
         imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
@@ -418,7 +422,11 @@ def draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(not wandsupport and imageoutlib == "wand"):
+        imageoutlib = "svgwrite"
+    if(not magicksupport and imageoutlib == "magick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"
@@ -455,7 +463,11 @@ def create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54),
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(not wandsupport and imageoutlib == "wand"):
+        imageoutlib = "svgwrite"
+    if(not magicksupport and imageoutlib == "magick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"
@@ -544,7 +556,11 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         imageoutlib = "qahirah"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and inimage != "none" and inimage is not None):
+    elif wandsupport and isinstance(upc_img, Image):
+        imageoutlib = "wand"
+    elif magicksupport and isinstance(upc_img, PythonMagick.Image):
+        imageoutlib = "magick"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and inimage != "none" and inimage is not None):
         imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
@@ -843,7 +859,11 @@ def draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(not wandsupport and imageoutlib == "wand"):
+        imageoutlib = "svgwrite"
+    if(not magicksupport and imageoutlib == "magick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"
@@ -880,7 +900,11 @@ def create_upcaean_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 5
         imageoutlib = "svgwrite"
     if(not svgwritesupport and imageoutlib == "svgwrite"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
+    if(not wandsupport and imageoutlib == "wand"):
+        imageoutlib = "svgwrite"
+    if(not magicksupport and imageoutlib == "magick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"
