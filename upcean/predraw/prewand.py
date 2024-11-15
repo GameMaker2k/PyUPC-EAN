@@ -117,8 +117,14 @@ def new_image_surface(sizex, sizey, bgcolor):
     if isinstance(bgcolor, tuple) and len(bgcolor) == 3:
         bgcolor = '#{:02x}{:02x}{:02x}'.format(*bgcolor)
     upc_img = Image(width=sizex, height=sizey, background=Color(bgcolor))
+    preupc_img = Drawing()
+    upc_img.alpha_channel = False  # Disable alpha channel
+    upc_img.type = 'truecolor'  # Force truecolor (RGB)
+    upc_img.colorspace = 'rgb'  # Set colorspace explicitly
+    upc_img.depth = 8  # Set bit depth to 8
+    upc_img.options['png:color-type'] = '2'  # Force PNG to use truecolor (RGB)
     drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
-    return [upc_img, None]
+    return [upc_img, preupc_img]
 
 def get_save_filename(outfile):
     """
@@ -198,31 +204,56 @@ def get_save_filename(outfile):
 def get_save_file(outfile):
     return get_save_filename
 
+import re
+from io import BytesIO
+from wand.image import Image
+from PIL import Image as PILImage
+from PIL.PngImagePlugin import PngInfo
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
+    """
+    Saves the given image to a file or other output, optionally adding metadata.
+
+    Parameters:
+        inimage (tuple): Tuple containing the main image and pre-image (if any).
+        outfile (str or file): Output file path, file object, or variable destination.
+        outfileext (str): The image format (e.g., 'PNG', 'JPEG').
+        imgcomment (str): Comment or metadata to embed in the image.
+    """
     upc_img = inimage[0]
     upc_preimg = inimage[1]
-    upc_img.comment = imgcomment
     upc_img.format = outfileext.upper()  # Ensure format is uppercase for compatibility
-    
+
     uploadfile = None
     outfiletovar = False
-    
-    if re.match(r"^(ftp|ftps|sftp):\/\/", str(outfile)):
+
+    # Handle output destinations
+    if re.match("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
     elif outfile == "-":
         outfiletovar = True
         outfile = BytesIO()
 
-    # Set specific options for certain formats
+    # Set specific options for formats
     if outfileext.upper() in {"WEBP", "JPEG", "JPG"}:
         upc_img.compression_quality = 100
+    elif outfileext.upper() == "PNG":
+        upc_img.alpha_channel = False
+        upc_img.options['png:color-type'] = '2'  # Ensure RGB
 
-    if isinstance(outfile, file):
-        upc_img.save(file=outfile)
-    else:
-        upc_img.save(filename=outfile)
+    # Save file using wand
+    try:
+        # Add comments directly for other formats
+        upc_img.comment = imgcomment
+        if isinstance(outfile, file):
+            upc_img.save(file=outfile)
+        else:
+            upc_img.save(filename=outfile)
+    except Exception as e:
+        raise RuntimeError("Failed to save image: {0}".format(e))
 
+    # Handle FTP uploads or variable output
     if uploadfile:
         outfile.seek(0)
         upload_file_to_internet_file(outfile, uploadfile)
