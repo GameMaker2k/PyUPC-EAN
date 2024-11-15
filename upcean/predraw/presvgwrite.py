@@ -75,7 +75,7 @@ def get_save_filename(outfile):
     if isinstance(outfile, str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
-            return (outfile, None)
+            return (outfile, "SVG")
     
         # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
