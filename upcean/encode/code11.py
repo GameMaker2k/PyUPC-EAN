@@ -123,9 +123,12 @@ def encode_code11_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     if(pilsupport and imageoutlib == "pillow"):
         pil_addon_fix = 0
         cairo_addon_fix = 0
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah") or (wandsupport and imageoutlib == "wand")):
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
         pil_addon_fix = 0
         cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
+    elif(wandsupport and imageoutlib == "wand"):
+        pil_addon_fix = 0
+        cairo_addon_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
         pil_addon_fix = 0
         cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
