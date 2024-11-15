@@ -116,10 +116,9 @@ def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
 def new_image_surface(sizex, sizey, bgcolor):
     if isinstance(bgcolor, tuple) and len(bgcolor) == 3:
         bgcolor = '#{:02x}{:02x}{:02x}'.format(*bgcolor)
-    upc_preimg = Image(width=sizex, height=sizey, background=Color(bgcolor))
-    upc_img = upc_preimg
+    upc_img = Image(width=sizex, height=sizey, background=Color(bgcolor))
     drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
-    return [upc_img, upc_preimg]
+    return [upc_img, None]
 
 # Define supported extensions if not defined elsewhere
 WAND_SUPPORTED_EXTENSIONS = formats()

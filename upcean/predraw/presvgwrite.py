@@ -142,7 +142,7 @@ def new_image_surface(sizex, sizey, bgcolor):
     upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(sizex, sizey))
     upc_preimg.close()
     drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
-    return [upc_img, upc_preimg]
+    return [upc_img, None]
 
 def drawColorRectangleAlt(dwg, x1, y1, x2, y2, color):
     """
