@@ -128,6 +128,9 @@ def get_save_filename(outfile):
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
+    if(isinstance(outfile, file)):
+        return (outfile, "png")
+
     if isinstance(outfile, str):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
@@ -176,8 +179,10 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         upc_img.compression_quality = 100
     elif outfileext.lower() == "jpeg":
         upc_img.compression_quality = 100
-
-    upc_img.save(filename=outfile)
+    if(isinstance(outfile, file)):
+        upc_img.save(file=outfile)
+    else:
+        upc_img.save(filename=outfile)
     return True
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
