@@ -19,6 +19,7 @@ from upcean.xml.downloader import upload_file_to_internet_file
 import PythonMagick
 import os
 import re
+from io import BytesIO
 import upcean.fonts
 
 # Compatibility for Python 2 and 3
@@ -33,20 +34,11 @@ except NameError:
     from io import IOBase
     file = IOBase
 
-try:
-    import pkg_resources
-    pkgres = True
-except ImportError:
-    pkgres = False
-
 # Font paths for different font types
 fontpathocra = upcean.fonts.fontpathocra
-fontpathocraalt = upcean.fonts.fontpathocraalt
 fontpathocrb = upcean.fonts.fontpathocrb
-fontpathocrbalt = upcean.fonts.fontpathocrbalt
-fontpath = upcean.fonts.fontpath
 
-# Common file extensions supported by PythonMagick (ImageMagick)
+# Common file extensions supported by PythonMagick
 PYTHONMAGICK_SUPPORTED_EXTENSIONS = {
     'PNG': 'PNG', 'JPG': 'JPEG', 'JPEG': 'JPEG', 'GIF': 'GIF', 'WEBP': 'WEBP',
     'BMP': 'BMP', 'ICO': 'ICO', 'TIFF': 'TIFF', 'HEIC': 'HEIC', 'XPM': 'XPM',
@@ -57,55 +49,70 @@ def snapCoords(ctx, x, y):
     return (round(x) + 0.5, round(y) + 0.5)
 
 def drawColorRectangle(image, x1, y1, x2, y2, color):
-    draw = PythonMagick.Draw()
-    draw.fillColor(PythonMagick.Color(color))
-    draw.rectangle(x1, y1, x2, y2)
-    image.draw(draw)
+    """Draws a filled rectangle on the image."""
+    r, g, b = [int(c * 257) for c in color]
+    draw_color = PythonMagick.Color(r, g, b)
+    image.fillColor(draw_color)
+    image.strokeColor("none")  # No border
+    drawable = PythonMagick.DrawableRectangle(x1, y1, x2, y2)
+    image.draw(drawable)
     return True
 
 def drawColorLine(image, x1, y1, x2, y2, width, color):
-    draw = PythonMagick.Draw()
-    draw.strokeColor(PythonMagick.Color(color))
-    draw.strokeWidth(width)
-    draw.line(x1, y1, x2, y2)
-    image.draw(draw)
+    """Draws a line on the image."""
+    r, g, b = [int(c * 257) for c in color]
+    stroke_color = PythonMagick.Color(r, g, b)
+    image.strokeColor(stroke_color)
+    image.strokeWidth(width)
+    drawable = PythonMagick.DrawableLine(x1, y1, x2, y2)
+    image.draw(drawable)
     return True
 
 def drawColorText(image, size, x, y, text, color, ftype="ocrb"):
+    """Draws text on the image with the specified color and minimal bold effect."""
+    # Convert color to "rgb(r, g, b)" format for PythonMagick
+    r, g, b = color
+    text_color = PythonMagick.Color("rgb({},{},{})".format(r, g, b))
+    
+    # Set font and size
     font_path = fontpathocrb if ftype == "ocrb" else fontpathocra
-    draw = PythonMagick.Draw()
-    draw.font(font_path)  # Directly use the font path
-    draw.fontPointsize(size)
-    draw.fillColor(PythonMagick.Color(color))
-    draw.text(x, y, text)
-    image.draw(draw)
+    image.font(font_path)
+    image.fontPointsize(size)
+    
+    # Set fill color for the text and apply a minimal stroke width
+    image.fillColor(text_color)
+    image.strokeColor(text_color)  # Use the same color for stroke
+    image.strokeWidth(0.5)  # Set a very thin stroke width
+
+    # Draw the text
+    drawable_text = PythonMagick.DrawableText(x, y, text)
+    image.draw(drawable_text)
+
     return True
 
 def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
-    draw = PythonMagick.Draw()
-    draw.strokeColor(PythonMagick.Color(color))
-    draw.rectangle(x1, y1, x2, y2)
-    image.draw(draw)
+    """Draws a rectangle outline on the image."""
+    r, g, b = [int(c * 257) for c in color]
+    stroke_color = PythonMagick.Color(r, g, b)
+    image.fillColor("none")  # No fill
+    image.strokeColor(stroke_color)
+    drawable = PythonMagick.DrawableRectangle(x1, y1, x2, y2)
+    image.draw(drawable)
     return True
 
 def new_image_surface(sizex, sizey, bgcolor):
-    upc_preimg = PythonMagick.Image(str(sizex)+"x"+str(sizey), bgcolor)
-    upc_img = upc_preimg
+    """Creates a new image surface with the given dimensions and background color."""
+    r, g, b = [int(c * 257) for c in bgcolor]
+    background_color = PythonMagick.Color(r, g, b)
+    geometry = PythonMagick.Geometry(sizex, sizey)
+    upc_img = PythonMagick.Image(geometry, background_color)
+    upc_img.depth(24)
     drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
-    return [upc_img, upc_preimg]
+    return [upc_img, None]
 
 def get_save_filename(outfile):
-    """
-    Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files. Uses PYTHONMAGICK_SUPPORTED_EXTENSIONS as a reference for supported formats.
-
-    Parameters:
-        outfile (str, tuple, list, None, bool, file): The output file specification.
-
-    Returns:
-        tuple: (filename, EXTENSION) or False if invalid.
-    """
-    if outfile is None or isinstance(outfile, bool) or outfile=="-":
+    """Processes the `outfile` parameter to determine a suitable filename and extension."""
+    if outfile is None or isinstance(outfile, bool):
         return outfile
     if isinstance(outfile, str):
         outfile = outfile.strip()
@@ -118,14 +125,10 @@ def get_save_filename(outfile):
         elif ext:
             return (outfile, "PNG")
         return (outfile, "PNG")
-    if isinstance(outfile, (tuple, list)):
-        if len(outfile) != 2:
-            return False
+    if isinstance(outfile, (tuple, list)) and len(outfile) == 2:
         filename, ext = outfile
         if isinstance(filename, str):
             filename = filename.strip()
-        else:
-            return False
         ext = ext.strip().upper()
         if ext in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
             ext = PYTHONMAGICK_SUPPORTED_EXTENSIONS[ext]
@@ -134,27 +137,36 @@ def get_save_filename(outfile):
         return (filename, ext)
     return False
 
-def get_save_file(outfile):
-    return get_save_filename(outfile)
+def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
+    """
+    Saves the given image to a file with the specified format.
 
-def save_to_file(image, outfile, outfileext, imgcomment="barcode"):
-    # Set file format and compression options based on `outfileext`
-    image.quality(100)  # Set high quality for formats like JPEG/WEBP
-    image.comment(imgcomment)
-    image.magick(outfileext.upper())
-    image.write(outfile)
+    Parameters:
+        inimage (list): List containing the main image and pre-image (if any).
+        outfile (str or file): Output file path or file-like object.
+        outfileext (str): The image format (e.g., 'PNG', 'JPEG').
+        imgcomment (str): Comment or metadata to embed in the image.
+    """
+    upc_img = inimage[0]  # Extract the main image (PythonMagick.Image)
+    upc_preimg = inimage[1]  # This may be None or additional image data
+
+    # Set the comment for the image
+    upc_img.comment(imgcomment)
+    upc_img.magick(outfileext.upper())
+
+    # Handle output destinations
+    if isinstance(outfile, file):
+        upc_img.write(outfile)  # Save to a file-like object
+    else:
+        upc_img.write(outfile)  # Save to a file path
+
     return True
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
-    if outfile is None:
-        oldoutfile = None
-        outfile = None
-        outfileext = None
+    """Saves the image to a filename."""
+    oldoutfile = get_save_filename(outfile)
+    if isinstance(oldoutfile, tuple):
+        outfile, outfileext = oldoutfile
     else:
-        oldoutfile = get_save_filename(outfile)
-        if isinstance(oldoutfile, tuple):
-            outfile = oldoutfile[0]
-            outfileext = oldoutfile[1]
-    if oldoutfile is None or isinstance(oldoutfile, bool):
         return [imgout, "pythonmagick"]
     return save_to_file(imgout, outfile, outfileext, imgcomment)
