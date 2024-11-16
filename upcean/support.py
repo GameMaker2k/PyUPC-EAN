@@ -36,6 +36,7 @@ if os.path.exists(__config_file__) and __use_ini_file__:
     enable_cairosvgsupport = config.getboolean('main', 'enable_cairosvgsupport')
     enable_wandsupport = config.getboolean('main', 'enable_wandsupport')
     enable_magicksupport = config.getboolean('main', 'enable_magicksupport')
+    enable_pgmagicksupport = config.getboolean('main', 'enable_magicksupport')
 else:
     enable_pilsupport = True
     enable_cairosupport = True
@@ -43,6 +44,7 @@ else:
     enable_cairosvgsupport = True
     enable_wandsupport = True
     enable_magicksupport = True
+    enable_pgmagicksupport = True
 
 ''' // Barcode Support List '''
 bctype_dict = {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCAEan': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
@@ -228,6 +230,20 @@ else:
         magicksupport = False
         return False
 
+if(enable_magicksupport):
+    def check_for_pgmagick():
+        pgmagicksupport = True
+        try:
+            import pgmagick
+            pgmagicksupport = True
+        except ImportError:
+            pgmagicksupport = False
+        return pgmagicksupport
+else:
+    def check_for_pgmagick():
+        pgmagicksupport = False
+        return False
+
 
 def check_pil_is_pillow():
     pilsupport = False
@@ -400,6 +416,7 @@ cairosvgsupport = check_for_cairosvg()
 svgwritesupport = check_for_svgwrite()
 wandsupport = check_for_wand()
 magicksupport = check_for_magick()
+pgmagicksupport = check_for_pgmagick()
 
 defaultdraw = None
 if((pilsupport or pillowsupport) and defaultdraw is None):
@@ -412,6 +429,8 @@ if(wandsupport and defaultdraw is None):
     defaultdraw = "wand"
 if(magicksupport and defaultdraw is None):
     defaultdraw = "magick"
+if(pgmagicksupport and defaultdraw is None):
+    defaultdraw = "pgmagick"
 if(svgwritesupport and defaultdraw is None):
     defaultdraw = "svgwrite"
 if(defaultdraw is None):

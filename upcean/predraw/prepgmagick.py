@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 from upcean.xml.downloader import upload_file_to_internet_file
-from pgmagick import Image, Geometry, DrawableRectangle, DrawableLine, DrawableText, DrawableList, Color, CompositeOperator, Blob, FilterTypes, InterlaceType, CompressionType, ImageType
+import pgmagick
 import os
 import re
 import upcean.fonts
@@ -67,11 +67,11 @@ def snapCoords(x, y):
 
 def drawColorRectangle(image, x1, y1, x2, y2, color):
     if isinstance(color, tuple) and len(color) == 3:
-        color = Color('#{:02x}{:02x}{:02x}'.format(*color))
+        color = pgmagick.Color('#{:02x}{:02x}{:02x}'.format(*color))
     else:
-        color = Color(color)
-    draw = DrawableRectangle(x1, y1, x2, y2)
-    dlist = DrawableList()
+        color = pgmagick.Color(color)
+    draw = pgmagick.DrawableRectangle(x1, y1, x2, y2)
+    dlist = pgmagick.DrawableList()
     dlist.append(draw)
     image.fillColor(color)
     image.draw(dlist)
@@ -79,31 +79,41 @@ def drawColorRectangle(image, x1, y1, x2, y2, color):
 
 def drawColorLine(image, x1, y1, x2, y2, width, color):
     if isinstance(color, tuple) and len(color) == 3:
-        color = Color('#{:02x}{:02x}{:02x}'.format(*color))
+        color = pgmagick.Color('#{:02x}{:02x}{:02x}'.format(*color))
     else:
-        color = Color(color)
+        color = pgmagick.Color(color)
     image.strokeColor(color)
     image.strokeWidth(width)
-    draw = DrawableLine(x1, y1, x2, y2)
-    dlist = DrawableList()
+    draw = pgmagick.DrawableLine(x1, y1, x2, y2)
+    dlist = pgmagick.DrawableList()
     dlist.append(draw)
     image.draw(dlist)
     return True
 
 def drawColorText(image, size, x, y, text, color, ftype="ocrb"):
+    # If color is a tuple of RGB values in the range 0-255
     if isinstance(color, tuple) and len(color) == 3:
-        color = Color('#{:02x}{:02x}{:02x}'.format(*color))
+        # Scale the color components to 0-65535
+        r, g, b = [int(c * 257) for c in color]
+        color = pgmagick.Color(r, g, b)
     else:
-        color = Color(color)
+        color = pgmagick.Color(color)  # For color names or hex strings
+
     if ftype == "ocrb":
         font_path = fontpathocrb
     else:
         font_path = fontpathocra
+
+    # Set the fill color, stroke color, and stroke width
     image.fillColor(color)
+    image.strokeColor('none')  # Disable stroke color
+    image.strokeWidth(0)       # Set stroke width to zero
+
     image.fontPointsize(size)
     image.font(font_path)
-    draw = DrawableText(x, y, text)
-    dlist = DrawableList()
+
+    draw = pgmagick.DrawableText(x, y, text)
+    dlist = pgmagick.DrawableList()
     dlist.append(draw)
     image.draw(dlist)
     return True
@@ -114,13 +124,13 @@ def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
 
 def new_image_surface(sizex, sizey, bgcolor):
     if isinstance(bgcolor, tuple) and len(bgcolor) == 3:
-        bgcolor = Color('#{:02x}{:02x}{:02x}'.format(*bgcolor))
+        bgcolor = pgmagick.Color('#{:02x}{:02x}{:02x}'.format(*bgcolor))
     else:
-        bgcolor = Color(bgcolor)
-    geometry = Geometry(sizex, sizey)
-    upc_img = Image(geometry, bgcolor)
-    upc_img.type(ImageType.TrueColorType)
-    upc_img.colorSpaceType(ColorspaceType.sRGBColorspace)
+        bgcolor = pgmagick.Color(bgcolor)
+    geometry = pgmagick.Geometry(sizex, sizey)
+    upc_img = pgmagick.Image(geometry, bgcolor)
+    upc_img.type(pgmagick.ImageType.TrueColorType)
+    upc_img.colorSpace(pgmagick.ColorspaceType.sRGBColorspace)
     upc_img.depth(24)
     return [upc_img, None]
 
@@ -209,26 +219,26 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img.quality(100)  # Set default quality
     if outfileext_upper == "PNG":
         upc_img.magick('PNG')
-        upc_img.interlaceType(InterlaceType.LineInterlace)
+        upc_img.interlaceType(pgmagick.InterlaceType.LineInterlace)
     elif outfileext_upper in ['JPG', 'JPEG', 'JPE']:
         upc_img.magick('JPEG')
-        upc_img.interlaceType(InterlaceType.PlaneInterlace)
+        upc_img.interlaceType(pgmagick.InterlaceType.PlaneInterlace)
     elif outfileext_upper == "WEBP":
         upc_img.magick('WEBP')
-        upc_img.interlaceType(InterlaceType.PlaneInterlace)
+        upc_img.interlaceType(pgmagick.InterlaceType.PlaneInterlace)
         upc_img.quality(100)
         upc_img.defineValue('webp', 'lossless', 'true')
     elif outfileext_upper == "TIFF":
         upc_img.magick('TIFF')
-        upc_img.compression(CompressionType.LZWCompression)
-        upc_img.interlaceType(InterlaceType.LineInterlace)
+        upc_img.compression(pgmagick.CompressionType.LZWCompression)
+        upc_img.interlaceType(pgmagick.InterlaceType.LineInterlace)
     elif outfileext_upper == 'BMP':
         upc_img.magick('BMP')
         upc_img.depth(24)
     elif outfileext_upper == 'GIF':
         upc_img.magick('GIF')
-        upc_img.type(ImageType.PaletteType)
-        upc_img.interlaceType(InterlaceType.LineInterlace)
+        upc_img.type(pgmagick.ImageType.PaletteType)
+        upc_img.interlaceType(pgmagick.InterlaceType.LineInterlace)
     else:
         upc_img.magick(outfileext_upper)
     # Add comment
@@ -236,7 +246,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     # Save image
     try:
         if isinstance(outfile, BytesIO):
-            blob = Blob()
+            blob = pgmagick.Blob()
             upc_img.write(blob)
             outfile.write(blob.data)
         else:

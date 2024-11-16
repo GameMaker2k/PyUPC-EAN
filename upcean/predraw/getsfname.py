@@ -24,6 +24,7 @@ cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
+pgmagicksupport = upcean.support.check_for_pgmagick()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or cairosupport or svgwritesupport):
     from upcean.predraw import get_save_filename

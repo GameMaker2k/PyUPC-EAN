@@ -80,26 +80,31 @@ def drawColorLine(image, x1, y1, x2, y2, width, color):
     return True
 
 def drawColorText(image, size, x, y, text, color, ftype="ocrb"):
-    """Draws text on the image with the specified color and minimal bold effect."""
-    # Convert color to "rgb(r, g, b)" format for PythonMagick
-    r, g, b = color
-    text_color = PythonMagick.Color("rgb({},{},{})".format(r, g, b))
-    
-    # Set font and size
-    font_path = fontpathocrb if ftype == "ocrb" else fontpathocra
-    image.font(font_path)
+    # If color is a tuple of RGB values in the range 0-255
+    if isinstance(color, tuple) and len(color) == 3:
+        # Scale the color components to 0-65535 (assuming 16-bit QuantumRange)
+        r, g, b = [int(c * 257) for c in color]
+        fill_color = PythonMagick.Color(r, g, b)
+    else:
+        fill_color = PythonMagick.Color(color)  # For color names or hex strings
+
+    if ftype == "ocrb":
+        font_path = fontpathocrb
+    else:
+        font_path = fontpathocra
+
+    # Set the fill color, stroke color, and stroke width
+    image.fillColor(fill_color)
+    image.strokeColor('none')  # Disable stroke color (outline)
+    image.strokeWidth(0)       # Set stroke width to zero
+
     image.fontPointsize(size)
-    
-    # Set fill color for the text and apply a minimal stroke width
-    image.fillColor(text_color)
-    image.strokeColor(text_color)  # Use the same color for stroke
-    image.strokeWidth(0.5)  # Set a very thin stroke width
+    image.font(font_path)
 
-    # Draw the text
-    drawable_text = PythonMagick.DrawableText(x, y, text)
-    image.draw(drawable_text)
-
+    draw = PythonMagick.DrawableText(x, y, text)
+    image.draw(draw)
     return True
+
 
 def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
     """Draws a rectangle outline on the image."""
@@ -176,7 +181,6 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         outfile = BytesIO()
 
     # Handle output destinations
-    print(dir(upc_img))
     if isinstance(outfile, file) or isinstance(outfile, IOBase):
         upc_img.write(outfile)  # Save to a file-like object
     else:

@@ -46,6 +46,7 @@ cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
+pgmagicksupport = upcean.support.check_for_pgmagick()
 defaultdraw = upcean.support.defaultdraw
 
 # Initialize Pillow support if available
@@ -99,6 +100,15 @@ if magicksupport:
     try:
         import PythonMagick
         import upcean.predraw.premagick
+    except ImportError:
+        magicksupport = False
+        logger.warning("PythonMagick support failed to initialize.")
+
+# Initialize Cairo support if available
+if pgmagicksupport:
+    try:
+        import pgmagick
+        import upcean.predraw.prepgmagick
     except ImportError:
         magicksupport = False
         logger.warning("PythonMagick support failed to initialize.")
@@ -171,8 +181,10 @@ def select_image_output_lib(imageoutlib="pillow"):
         logger.info("svgwrite not supported. Switching to svgwrite.")
     if not magicksupport and imageoutlib == "magick":
         imageoutlib = "svgwrite"
+    if not pgmagicksupport and imageoutlib == "pgmagick":
+        imageoutlib = "svgwrite"
         logger.info("svgwrite not supported. Switching to svgwrite.")
-    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "svgwrite", "wand", "magick"]:
+    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "svgwrite", "wand", "magick", "pgmagick"]:
         imageoutlib = "svgwrite"
         logger.info("Invalid library specified. Defaulting to svgwrite.")
 
@@ -218,8 +230,10 @@ def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
         return upcean.predraw.presvgwrite.snapCoords(ctx, x, y)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.snapCoords(ctx, x, y)
-    elif selected_lib == "magick" and svgwritesupport:
+    elif selected_lib == "magick" and magicksupport:
         return upcean.predraw.premagick.snapCoords(ctx, x, y)
+    elif selected_lib == "pgmagick" and pgmagicksupport:
+        return upcean.predraw.prepgmagick.snapCoords(ctx, x, y)
 
     logger.error("snapCoords: Selected library is not supported.")
     return False
@@ -259,8 +273,10 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=defaultdraw):
         return upcean.predraw.presvgwrite.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "magick" and svgwritesupport:
+    elif selected_lib == "magick" and magicksupport:
         return upcean.predraw.premagick.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+    elif selected_lib == "pgmagick" and pgmagicksupport:
+        return upcean.predraw.prepgmagick.drawColorLine(ctx, x1, y1, x2, y2, width, color)
 
     logger.error("drawColorLine: Selected library is not supported.")
     return False
@@ -299,8 +315,10 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.presvgwrite.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "magick" and svgwritesupport:
+    elif selected_lib == "magick" and magicksupport:
         return upcean.predraw.premagick.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "pgmagick" and pgmagicksupport:
+        return upcean.predraw.prepgmagick.drawColorRectangle(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangle: Selected library is not supported.")
     return False
@@ -342,8 +360,10 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib=defaul
         return upcean.predraw.presvgwrite.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "magick" and svgwritesupport:
+    elif selected_lib == "magick" and magicksupport:
         return upcean.predraw.premagick.drawColorText(ctx, size, x, y, text, color, ftype)
+    elif selected_lib == "pgmagick" and pgmagicksupport:
+        return upcean.predraw.prepgmagick.drawColorText(ctx, size, x, y, text, color, ftype)
 
     logger.error("drawColorText: Selected library is not supported.")
     return False
@@ -382,8 +402,10 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "magick" and svgwritesupport:
+    elif selected_lib == "magick" and magicksupport:
         return upcean.predraw.premagick.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "pgmagick" and pgmagicksupport:
+        return upcean.predraw.prepgmagick.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangleAlt: Selected library is not supported.")
     return False
@@ -423,8 +445,10 @@ def get_save_filename(outfile, imageoutlib=defaultdraw):
         return upcean.predraw.presvgwrite.get_save_filename(outfile)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.get_save_filename(outfile)
-    elif selected_lib == "magick" and svgwritesupport:
+    elif selected_lib == "magick" and magicksupport:
         return upcean.predraw.premagick.get_save_filename(outfile)
+    elif selected_lib == "pgmagick" and pgmagicksupport:
+        return upcean.predraw.prepgmagick.get_save_filename(outfile)
 
     logger.error("get_save_filename: Selected library is not supported.")
     return False
@@ -451,8 +475,10 @@ def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
         return upcean.predraw.presvgwrite.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "magick" and svgwritesupport:
+    elif selected_lib == "magick" and magicksupport:
         return upcean.predraw.premagick.new_image_surface(sizex, sizey, bgcolor)
+    elif selected_lib == "pgmagick" and pgmagicksupport:
+        return upcean.predraw.prepgmagick.new_image_surface(sizex, sizey, bgcolor)
 
     logger.error("save_to_file: Selected library is not supported.")
     return False
@@ -476,8 +502,10 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
         return upcean.predraw.presvgwrite.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "magick" and svgwritesupport:
+    elif selected_lib == "magick" and magicksupport:
         return upcean.predraw.premagick.save_to_file(inimage, outfile, outfileext, imgcomment)
+    elif selected_lib == "pgmagick" and pgmagicksupport:
+        return upcean.predraw.prepgmagick.save_to_file(inimage, outfile, outfileext, imgcomment)
 
     logger.error("save_to_file: Selected library is not supported.")
     return False
@@ -496,9 +524,11 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
         imageoutlib = "wand"
     elif magicksupport and isinstance(upc_img, PythonMagick.Image):
         imageoutlib = "magick"
+    elif pgmagicksupport and isinstance(upc_img, pgmagick.Image):
+        imageoutlib = "magick"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imgout != "none" and imgout is not None):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imgout != "none" and imgout is not None):
         imageoutlib = None
     elif(imgout == "none" or imgout is None):
         return False

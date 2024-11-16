@@ -17,9 +17,9 @@
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 from upcean.xml.downloader import upload_file_to_internet_file
 from wand.image import Image as wImage
-from wand.drawing import Drawing
-from wand.color import Color
-from wand.version import formats
+from wand.drawing import Drawing as wDrawing
+from wand.color import Color as wColor
+from wand.version import formats as wformats
 import os
 import re
 import upcean.fonts
@@ -73,8 +73,8 @@ def snapCoords(ctx, x, y):
 def drawColorRectangle(image, x1, y1, x2, y2, color):
     if isinstance(color, tuple) and len(color) == 3:
         color = '#{:02x}{:02x}{:02x}'.format(*color)
-    with Drawing() as draw:
-        draw.fill_color = Color(color)
+    with wDrawing() as draw:
+        draw.fill_color = wColor(color)
         draw.rectangle(left=x1, top=y1, width=x2 - x1, height=y2 - y1)
         draw(image)  # Apply drawing to the `image` (which should be an Image instance)
     return True
@@ -82,8 +82,8 @@ def drawColorRectangle(image, x1, y1, x2, y2, color):
 def drawColorLine(image, x1, y1, x2, y2, width, color):
     if isinstance(color, tuple) and len(color) == 3:
         color = '#{:02x}{:02x}{:02x}'.format(*color)
-    with Drawing() as draw:
-        draw.stroke_color = Color(color)
+    with wDrawing() as draw:
+        draw.stroke_color = wColor(color)
         draw.stroke_width = width
         draw.line((x1, y1), (x2, y2))
         draw(image)  # Apply drawing to the `image`
@@ -93,10 +93,10 @@ def drawColorText(image, size, x, y, text, color, ftype="ocrb"):
     if isinstance(color, tuple) and len(color) == 3:
         color = '#{:02x}{:02x}{:02x}'.format(*color)
     font_path = fontpathocrb if ftype == "ocrb" else fontpathocra
-    with Drawing() as draw:
+    with wDrawing() as draw:
         draw.font = font_path
         draw.font_size = size
-        draw.fill_color = Color(color)
+        draw.fill_color = wColor(color)
         draw.text(x, y, text)
         draw(image)  # Apply drawing to the `image`
     return True
@@ -104,8 +104,8 @@ def drawColorText(image, size, x, y, text, color, ftype="ocrb"):
 def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
     if isinstance(color, tuple) and len(color) == 3:
         color = '#{:02x}{:02x}{:02x}'.format(*color)
-    with Drawing() as draw:
-        draw.stroke_color = Color(color)
+    with wDrawing() as draw:
+        draw.stroke_color = wColor(color)
         draw.rectangle(left=x1, top=y1, width=x2 - x1, height=y2 - y1)
         draw(image)  # Apply drawing to the `image`
     return True
@@ -113,8 +113,8 @@ def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
 def new_image_surface(sizex, sizey, bgcolor):
     if isinstance(bgcolor, tuple) and len(bgcolor) == 3:
         bgcolor = '#{:02x}{:02x}{:02x}'.format(*bgcolor)
-    upc_img = wImage(width=sizex, height=sizey, background=Color(bgcolor))
-    preupc_img = Drawing()
+    upc_img = wImage(width=sizex, height=sizey, background=wColor(bgcolor))
+    preupc_img = wDrawing()
     upc_img.alpha_channel = False  # Disable alpha channel
     upc_img.type = 'truecolor'  # Force truecolor (RGB)
     upc_img.colorspace = 'rgb'  # Set colorspace explicitly
@@ -137,7 +137,7 @@ def get_save_filename(outfile):
         tuple: (filename, EXTENSION) or False if invalid.
     """
     # Get supported formats from wand and convert them to uppercase for comparison
-    wand_supported_formats = {fmt.upper() for fmt in formats()}
+    wand_supported_formats = {fmt.upper() for fmt in wformats()}
 
     # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):

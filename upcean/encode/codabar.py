@@ -46,6 +46,7 @@ cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
+pgmagicksupport = upcean.support.check_for_pgmagick()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
     import upcean.predraw.prepil
@@ -132,7 +133,7 @@ def encode_codabar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
         pil_addon_fix = 0
         cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
-    elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick")):
+    elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
         pil_addon_fix = 0
         cairo_addon_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
@@ -349,7 +350,9 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48
         imageoutlib = "svgwrite"
     if(not magicksupport and imageoutlib == "magick"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
+    if(not pgmagicksupport and imageoutlib == "pgmagick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"

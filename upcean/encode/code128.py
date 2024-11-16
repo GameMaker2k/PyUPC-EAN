@@ -46,6 +46,7 @@ cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
+pgmagicksupport = upcean.support.check_for_pgmagick()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
     import upcean.predraw.prepil
@@ -111,7 +112,9 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         imageoutlib = "wand"
     elif magicksupport and isinstance(upc_img, PythonMagick.Image):
         imageoutlib = "magick"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and inimage != "none" and inimage is not None):
+    elif pgmagicksupport and isinstance(upc_img, pgmagick.Image):
+        imageoutlib = "pgmagick"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and inimage != "none" and inimage is not None):
         imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
@@ -133,7 +136,7 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
         pil_addon_fix = 0
         cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
-    elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick")):
+    elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
         pil_addon_fix = 0
         cairo_addon_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
@@ -666,7 +669,9 @@ def create_code128_barcode(upc, outfile="./code128.png", resize=1, barheight=(48
         imageoutlib = "svgwrite"
     if(not magicksupport and imageoutlib == "magick"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
+    if(not pgmagicksupport and imageoutlib == "pgmagick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"
@@ -750,7 +755,9 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         imageoutlib = "wand"
     elif magicksupport and isinstance(upc_img, PythonMagick.Image):
         imageoutlib = "magick"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and inimage != "none" and inimage is not None):
+    elif pgmagicksupport and isinstance(upc_img, pgmagick.Image):
+        imageoutlib = "pgmagick"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and inimage != "none" and inimage is not None):
         imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
@@ -772,7 +779,7 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
         pil_addon_fix = 0
         cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
-    elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick")):
+    elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
         pil_addon_fix = 0
         cairo_addon_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
@@ -1221,7 +1228,9 @@ def create_code128old_barcode(upc, outfile="./code128.png", resize=1, barheight=
         imageoutlib = "svgwrite"
     if(not magicksupport and imageoutlib == "magick"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "svgwrite"):
+    if(not pgmagicksupport and imageoutlib == "pgmagick"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(not pilsupport and not cairosupport):
         imageoutlib = "svgwrite"
