@@ -245,7 +245,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img.attribute('comment', imgcomment)
     # Save image
     try:
-        if isinstance(outfile, BytesIO):
+        if isinstance(outfile, file) or isinstance(outfile, IOBase):
             blob = pgmagick.Blob()
             upc_img.write(blob)
             outfile.write(blob.data)
