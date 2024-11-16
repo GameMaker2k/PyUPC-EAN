@@ -36,7 +36,7 @@ if os.path.exists(__config_file__) and __use_ini_file__:
     enable_cairosvgsupport = config.getboolean('main', 'enable_cairosvgsupport')
     enable_wandsupport = config.getboolean('main', 'enable_wandsupport')
     enable_magicksupport = config.getboolean('main', 'enable_magicksupport')
-    enable_pgmagicksupport = config.getboolean('main', 'enable_magicksupport')
+    enable_pgmagicksupport = config.getboolean('main', 'enable_pgmagicksupport')
 else:
     enable_pilsupport = True
     enable_cairosupport = True
