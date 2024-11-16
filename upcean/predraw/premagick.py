@@ -182,7 +182,10 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
 
     # Handle output destinations
     if isinstance(outfile, file) or isinstance(outfile, IOBase):
-        upc_img.write(outfile)  # Save to a file-like object
+        blob = Blob()
+        upc_img.write(blob)
+        data = blob.data
+        outfile.write(data)  # Save to a file-like object
     else:
         upc_img.write(outfile)  # Save to a file path
 
