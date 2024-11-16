@@ -31,11 +31,11 @@ __use_ini_file__ = True
 
 if os.path.exists(__config_file__) and __use_ini_file__:
     enable_pilsupport = config.getboolean('main', 'enable_pilsupport')
-    enable_cairosupport = config.getboolean('main', 'enable_pilsupport')
-    enable_qahirahsupport = config.getboolean('main', 'enable_pilsupport')
-    enable_cairosvgsupport = config.getboolean('main', 'enable_pilsupport')
-    enable_wandsupport = config.getboolean('main', 'enable_pilsupport')
-    enable_magicksupport = config.getboolean('main', 'enable_pilsupport')
+    enable_cairosupport = config.getboolean('main', 'enable_cairosupport')
+    enable_qahirahsupport = config.getboolean('main', 'enable_qahirahsupport')
+    enable_cairosvgsupport = config.getboolean('main', 'enable_cairosvgsupport')
+    enable_wandsupport = config.getboolean('main', 'enable_wandsupport')
+    enable_magicksupport = config.getboolean('main', 'enable_magicksupport')
 else:
     enable_pilsupport = True
     enable_cairosupport = True
