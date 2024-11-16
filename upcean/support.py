@@ -230,7 +230,7 @@ else:
         magicksupport = False
         return False
 
-if(enable_magicksupport):
+if(enable_pgmagicksupport):
     def check_for_pgmagick():
         pgmagicksupport = True
         try:
