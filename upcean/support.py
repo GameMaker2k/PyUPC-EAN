@@ -16,15 +16,32 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import platform
+try:
+    import configparser
+except ImportError:
+    try:
+        import SafeConfigParser as configparser
+    except ImportError:
+        import ConfigParser as configparser
 from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, __build_python_is_set__, get_build_python_info, __revision__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date
 
+__config_file__ = 'upcean.ini'
+__use_ini_file__ = True
 
-enable_pilsupport = True
-enable_cairosupport = True
-enable_qahirahsupport = True
-enable_cairosvgsupport = True
-enable_wandsupport = True
-enable_magicksupport = True
+if os.path.exists(__config_file__) and __use_ini_file__:
+    enable_pilsupport = config.getboolean('main', 'enable_pilsupport')
+    enable_cairosupport = config.getboolean('main', 'enable_pilsupport')
+    enable_qahirahsupport = config.getboolean('main', 'enable_pilsupport')
+    enable_cairosvgsupport = config.getboolean('main', 'enable_pilsupport')
+    enable_wandsupport = config.getboolean('main', 'enable_pilsupport')
+    enable_magicksupport = config.getboolean('main', 'enable_pilsupport')
+else:
+    enable_pilsupport = True
+    enable_cairosupport = True
+    enable_qahirahsupport = True
+    enable_cairosvgsupport = True
+    enable_wandsupport = True
+    enable_magicksupport = True
 
 ''' // Barcode Support List '''
 bctype_dict = {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCAEan': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
@@ -72,7 +89,8 @@ if(enable_qahirahsupport):
             qahirahsupport = False
         return qahirahsupport
 else:
-    def check_for_cairo():
+    def check_for_qahirah():
+        qahirahsupport = False
         return False
 
 if(enable_cairosupport):
@@ -91,6 +109,7 @@ if(enable_cairosupport):
         return cairosupport
 else:
     def check_for_cairo():
+        cairosupport = False
         return False
 
 if(enable_cairosvgsupport):
@@ -104,6 +123,7 @@ if(enable_cairosvgsupport):
         return cairosvgsupport
 else:
     def check_for_cairosvg():
+        cairosvgsupport = False
         return False
 
 def check_for_svgwrite():
@@ -141,6 +161,7 @@ if(enable_pilsupport):
         return pilsupport
 else:
     def check_for_pil():
+        pilsupport = False
         return False
 
 if(enable_pillowsupport):
@@ -173,6 +194,7 @@ if(enable_pillowsupport):
         return pil_is_pillow
 else:
     def check_for_pillow():
+        pil_is_pillow = False
         return False
 
 
@@ -187,6 +209,7 @@ if(enable_wandsupport):
         return wandsupport
 else:
     def check_for_wand():
+        wandsupport = False
         return False
 
 
@@ -201,6 +224,7 @@ if(enable_magicksupport):
         return magicksupport
 else:
     def check_for_magick():
+        magicksupport = False
         return False
 
 
