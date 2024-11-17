@@ -150,21 +150,16 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
-        pil_addon_fix = 0
-        cairo_addon_fix = 0
+        vertical_text_fix = 0
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
-        pil_addon_fix = 0
-        cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
-        pil_addon_fix = 0
-        cairo_addon_fix = (10 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
-        pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (8 * (int(resize) * barwidth[1]))
     else:
-        pil_addon_fix = 0
-        cairo_addon_fix = 0
-    cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+        vertical_text_fix = 0
+    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upchalflen = int((len(upc) - 2) / 2)
     upc_matches = re.findall("(\\d{1})(\\d{"+str(upchalflen)+"})(\\d{"+str(upchalflen)+"})(\\d{1})", upc)
     if(len(upc_matches) <= 0):
@@ -372,8 +367,8 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
             texthidden = True
         if(not texthidden):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
-            barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
+            barheight[0] * int(resize)),  upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
         upc_array['text']['location'].append(LineTxtStartNorm)
         upc_array['text']['text'].append(upc_print[NumTxtZero])
         if(NumTxtZero == 0):
@@ -614,21 +609,16 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
-        pil_addon_fix = 0
-        cairo_addon_fix = 0
+        vertical_text_fix = 0
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
-        pil_addon_fix = 0
-        cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
-        pil_addon_fix = 0
-        cairo_addon_fix = (10 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
-        pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (8 * (int(resize) * barwidth[1]))
     else:
-        pil_addon_fix = 0
-        cairo_addon_fix = 0
-    cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+        vertical_text_fix = 0
+    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upchalflen = int((len(upc) - 2) / 2)
     upc_matches = re.findall("(\\d{1})(\\d{"+str(upchalflen)+"})(\\d{"+str(upchalflen)+"})(\\d{1})", upc)
     if(len(upc_matches) <= 0):
@@ -825,8 +815,8 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == len(upc_print)-1 and (hidecd is None or hidecd)):
             texthidden = True
         if(not texthidden):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], cairo_addon_fix + (
-            barheight[0] * int(resize)) + pil_addon_fix, upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
+            barheight[0] * int(resize)),  upc_print[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
         upc_array['text']['location'].append(LineTxtStartNorm)
         upc_array['text']['text'].append(upc_print[NumTxtZero])
         if(NumTxtZero == 0):

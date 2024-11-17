@@ -120,21 +120,16 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
-        pil_addon_fix = 0
-        cairo_addon_fix = 0
+        vertical_text_fix = 0
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
-        pil_addon_fix = 0
-        cairo_addon_fix = (9 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
-        pil_addon_fix = 0
-        cairo_addon_fix = (10 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
-        pil_addon_fix = 0
-        cairo_addon_fix = (8 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (8 * (int(resize) * barwidth[1]))
     else:
-        pil_addon_fix = 0
-        cairo_addon_fix = 0
-    cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+        vertical_text_fix = 0
+    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upc_size_add = (len([item for sublist in upc['code'] for item in sublist]) + shiftxy[0]) * (barwidth[0] * int(resize))
     drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), upc_size_add, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     bari = 0
@@ -172,8 +167,8 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         if hidetext or (upc['text']['type'][txtbari] == "sn" and (hidesn is None or hidesn)) or (upc['text']['type'][txtbari] == "cd" and (hidecd is None or hidecd)):
             texthidden = True
         if(not texthidden):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + (upc['text']['location'][txtbari] * int(resize))) * barwidth[0], cairo_addon_fix + (
-            barheight[0] * int(resize)) + pil_addon_fix, upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + (upc['text']['location'][txtbari] * int(resize))) * barwidth[0], vertical_text_fix + (
+            barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
         txtbari += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
