@@ -127,30 +127,59 @@ def new_image_surface(sizex, sizey, bgcolor):
     return [upc_img, None]
 
 def get_save_filename(outfile):
-    """Processes the `outfile` parameter to determine a suitable filename and extension."""
+    """
+    Processes the `outfile` parameter to determine a suitable filename and its corresponding
+    file extension for saving files. Returns a tuple (filename, EXTENSION),
+    the original `outfile` if it's of type None, bool, or a file object, or
+    False for unsupported input types.
+    """
+    # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
-    if isinstance(outfile, str):
+    # Handle file objects directly
+    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile == "-":
+        return (outfile, "PNG")
+    # Handle string types
+    if isinstance(outfile, basestring):
         outfile = outfile.strip()
         if outfile in ["-", ""]:
             return (outfile, "PNG")
+        # Extract extension using os.path.splitext
         base, ext = os.path.splitext(outfile)
-        ext = ext[1:].upper() if ext else None
-        if ext and ext in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
-            return (outfile, PYTHONMAGICK_SUPPORTED_EXTENSIONS[ext])
-        elif ext:
-            return (outfile, "PNG")
-        return (outfile, "PNG")
+        if ext:
+            ext = ext[1:].upper()  # Remove the dot and convert to uppercase
+        else:
+            # Check for custom format 'name:EXT'
+            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            if custom_match:
+                outfile = custom_match.group('name')
+                ext = custom_match.group('ext').upper()
+            else:
+                ext = None
+
+        # Default to "PNG" if no valid extension was found or if unsupported
+        if not ext or ext not in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
+            ext = "PNG"
+        return (outfile, ext)
+    # Handle tuple or list types
     if isinstance(outfile, (tuple, list)) and len(outfile) == 2:
         filename, ext = outfile
-        if isinstance(filename, str):
+        # Allow file objects or strings as the first element
+        if isinstance(filename, file) or filename == "-":
+            pass  # file object is valid as-is
+        elif isinstance(filename, basestring):
             filename = filename.strip()
-        ext = ext.strip().upper()
-        if ext in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
-            ext = PYTHONMAGICK_SUPPORTED_EXTENSIONS[ext]
         else:
-            ext = "PNG"
+            return False  # Invalid first element type
+        # Ensure the extension is a valid string
+        if not isinstance(ext, basestring):
+            return False
+
+        ext = ext.strip().upper()
+        if ext not in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
+            ext = "PNG"  # Default to PNG if unsupported
         return (filename, ext)
+    # Unsupported type
     return False
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
@@ -182,7 +211,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
 
     # Handle output destinations
     if isinstance(outfile, file) or isinstance(outfile, IOBase):
-        blob = Blob()
+        blob = PythonMagick.Blob()
         upc_img.write(blob)
         data = blob.data
         outfile.write(data)  # Save to a file-like object

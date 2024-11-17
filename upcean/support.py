@@ -26,10 +26,29 @@ except ImportError:
         import ConfigParser as configparser
 from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits__, __copyright_year__, __license__, __license_string__, __maintainer__, __email__, __status__, __project__, __project_url__, __version_info__, __build_time__, __build_time_utc__, __build_python_info__, __build_python_is_set__, get_build_python_info, __revision__, __version__, __version_alt__, version_info, __version_date_info__, __version_date__, __version_date_alt__, version_date
 
-__config_file__ = 'upcean.ini'
+def get_importing_script_path():
+    # Inspect the stack and get the frame of the caller
+    stack = inspect.stack()
+    for frame_info in stack:
+        # In Python 2, frame_info is a tuple; in Python 3, it's a named tuple
+        filename = frame_info[1] if isinstance(frame_info, tuple) else frame_info.filename
+        if filename != __file__:  # Ignore current module's file
+            return os.path.abspath(filename)
+    return None
+
+scriptconf = os.path.join(os.path.dirname(get_importing_script_path()), "upcean.ini")
+if os.path.exists(scriptconf)
+    __config_file__ = scriptconf
+else:
+    __config_file__ = os.path.join(os.path.dirname(os.path.realpath(__file__)), "upcean.ini")
 __use_ini_file__ = True
 
 if os.path.exists(__config_file__) and __use_ini_file__:
+    # Create a ConfigParser object
+    config = configparser.ConfigParser()
+    # Read the configuration file
+    config.read(__config_file__)
+    # Accessing values from the config file
     enable_pilsupport = config.getboolean('main', 'enable_pilsupport')
     enable_cairosupport = config.getboolean('main', 'enable_cairosupport')
     enable_qahirahsupport = config.getboolean('main', 'enable_qahirahsupport')
