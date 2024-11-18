@@ -38,7 +38,7 @@ def get_importing_script_path():
     return None
 
 scriptconf = os.path.join(os.path.dirname(get_importing_script_path()), "upcean.ini")
-if os.path.exists(scriptconf)
+if os.path.exists(scriptconf):
     __config_file__ = scriptconf
 else:
     __config_file__ = os.path.join(os.path.dirname(os.path.realpath(__file__)), "upcean.ini")
