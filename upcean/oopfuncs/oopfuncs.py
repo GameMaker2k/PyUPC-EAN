@@ -30,6 +30,7 @@ magicksupport = upcean.support.check_for_magick()
 pgmagicksupport = upcean.support.check_for_pgmagick()
 cv2support = upcean.support.check_for_cv2()
 skimagesupport = upcean.support.check_for_skimage()
+imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or cairosupport or svgwritesupport):
     import upcean.fonts
@@ -166,17 +167,17 @@ class encode:
         def encode_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
+            return upcean.encode.encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
 
         def validate_encode_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.validate_encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
+            return upcean.encode.validate_encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
 
         def fix_encode_barcode(self, size=None):
             if(size is None):
                 size = self.size
-            return upcean.encode.fix_encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext))
+            return upcean.encode.fix_encode_barcode(self.type, self.inimage, self.code, size, self.shiftxy, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
     ''' // validate/__init__.py funtions '''
 
     def validate_checksum(self):

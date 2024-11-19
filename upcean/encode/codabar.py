@@ -49,6 +49,7 @@ magicksupport = upcean.support.check_for_magick()
 pgmagicksupport = upcean.support.check_for_pgmagick()
 cv2support = upcean.support.check_for_cv2()
 skimagesupport = upcean.support.check_for_skimage()
+imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
     import upcean.predraw.prepil
@@ -92,7 +93,7 @@ def get_codabar_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), 
     return {'without_shift': reswoshift, 'with_shift': reswshift}
 
 
-def encode_codabar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
+def encode_codabar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     upc = str(upc)
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
@@ -329,32 +330,12 @@ def draw_codabar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
     upc_size_add = ((bcsize9 * 9) + (bcsize10 * 10) +
                     (bcsize12 * 12) + len(upc_matches) - 1) * barwidth[0]
     upc_img, upc_preimg = upcean.predraw.new_image_surface(((40 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    imgout = encode_codabar_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    imgout = encode_codabar_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "svgwrite"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "svgwrite"
-    if(not qahirahsupport and imageoutlib == "qahirah"):
-        imageoutlib = "svgwrite"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "svgwrite"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "svgwrite"
-    if(not wandsupport and imageoutlib == "wand"):
-        imageoutlib = "svgwrite"
-    if(not magicksupport and imageoutlib == "magick"):
-        imageoutlib = "svgwrite"
-    if(not pgmagicksupport and imageoutlib == "pgmagick"):
-        imageoutlib = "svgwrite"
-    if(not cv2support and imageoutlib == "cv2"):
-        imageoutlib = "svgwrite"
-    if(not skimagesupport and imageoutlib == "skimage"):
-        imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "svgwrite"):
-        imageoutlib = "svgwrite"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     if(outfile is None):
         if(imageoutlib == "cairosvg"):
             oldoutfile = None

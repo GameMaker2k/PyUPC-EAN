@@ -27,6 +27,7 @@ magicksupport = upcean.support.check_for_magick()
 pgmagicksupport = upcean.support.check_for_pgmagick()
 cv2support = upcean.support.check_for_cv2()
 skimagesupport = upcean.support.check_for_skimage()
+imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or cairosupport or svgwritesupport):
     from upcean.predraw import get_save_filename

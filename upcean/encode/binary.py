@@ -51,6 +51,7 @@ magicksupport = upcean.support.check_for_magick()
 pgmagicksupport = upcean.support.check_for_pgmagick()
 cv2support = upcean.support.check_for_cv2()
 skimagesupport = upcean.support.check_for_skimage()
+imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
     import upcean.predraw.prepil
@@ -81,7 +82,7 @@ def get_binary_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), b
     return {'without_shift': reswoshift, 'with_shift': reswshift}
 
 
-def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False)):
+def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     hidesn = hideinfo[0]
     hidecd = hideinfo[1]
     hidetext = hideinfo[2]
@@ -96,33 +97,8 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
-    imageoutlib = None
-    if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
-        imageoutlib = "pillow"
-    elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
-        imageoutlib = "cairo"
-    elif qahirahsupport and isinstance(upc_img, qah.Context) and isinstance(upc_preimg, qah.Surface):
-        imageoutlib = "qahirah"
-    elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
-        imageoutlib = "svgwrite"
-    elif wandsupport and isinstance(upc_img, wImage):
-        imageoutlib = "wand"
-    elif magicksupport and isinstance(upc_img, PythonMagick.Image):
-        imageoutlib = "magick"
-    elif pgmagicksupport and isinstance(upc_img, pgmagick.Image):
-        imageoutlib = "pgmagick"
-    elif cv2support and upc_preimg=="cv2":
-        imageoutlib = "cv2"
-    elif skimagesupport and upc_preimg=="skimage":
-        imageoutlib = "skimage"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and inimage != "none" and inimage is not None):
-        imageoutlib = None
-    elif(inimage == "none" or inimage is None):
-        imageoutlib = None
-    elif(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
-    else:
-        return False
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
@@ -189,56 +165,16 @@ def draw_binary_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "svgwrite"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "svgwrite"
-    if(not qahirahsupport and imageoutlib == "qahirah"):
-        imageoutlib = "svgwrite"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "svgwrite"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "svgwrite"
-    if(not wandsupport and imageoutlib == "wand"):
-        imageoutlib = "svgwrite"
-    if(not magicksupport and imageoutlib == "magick"):
-        imageoutlib = "svgwrite"
-    if(not pgmagicksupport and imageoutlib == "pgmagick"):
-        imageoutlib = "svgwrite"
-    if(not cv2support and imageoutlib == "cv2"):
-        imageoutlib = "svgwrite"
-    if(not skimagesupport and imageoutlib == "skimage"):
-        imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "svgwrite"):
-        imageoutlib = "svgwrite"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     upc_size_add = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
     upc_img, upc_preimg = upcean.predraw.new_image_surface(upc_size_add, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    imgout = encode_binary_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
+    imgout = encode_binary_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_binary_barcode(upc, outfile="./binary.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "svgwrite"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "svgwrite"
-    if(not qahirahsupport and imageoutlib == "qahirah"):
-        imageoutlib = "svgwrite"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "svgwrite"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "svgwrite"
-    if(not wandsupport and imageoutlib == "wand"):
-        imageoutlib = "svgwrite"
-    if(not magicksupport and imageoutlib == "magick"):
-        imageoutlib = "svgwrite"
-    if(not pgmagicksupport and imageoutlib == "pgmagick"):
-        imageoutlib = "svgwrite"
-    if(not cv2support and imageoutlib == "cv2"):
-        imageoutlib = "svgwrite"
-    if(not skimagesupport and imageoutlib == "skimage"):
-        imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "svgwrite"):
-        imageoutlib = "svgwrite"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     if(outfile is None):
         if(imageoutlib == "cairosvg"):
             oldoutfile = None

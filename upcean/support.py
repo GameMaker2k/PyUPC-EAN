@@ -463,18 +463,40 @@ def get_python_info(infotype=None):
     if(infotype is not None):
         return python_info.get(infotype, python_info)
 
-
+imagelibsupport = []
 pilsupport = check_for_pil()
+if(pilsupport):
+    imagelibsupport.append("pil")
 pillowsupport = check_for_pillow()
+if(pillowsupport):
+    imagelibsupport.append("pillow")
 cairosupport = check_for_cairo()
+if(cairosupport):
+    imagelibsupport.append("cairo")
 qahirahsupport = check_for_qahirah()
+if(qahirahsupport):
+    imagelibsupport.append("qahirah")
 cairosvgsupport = check_for_cairosvg()
+if(cairosvgsupport):
+    imagelibsupport.append("cairosvg")
 svgwritesupport = check_for_svgwrite()
+if(svgwritesupport):
+    imagelibsupport.append("svgwrite")
 wandsupport = check_for_wand()
+if(wandsupport):
+    imagelibsupport.append("wand")
 magicksupport = check_for_magick()
+if(magicksupport):
+    imagelibsupport.append("magick")
 pgmagicksupport = check_for_pgmagick()
+if(pgmagicksupport):
+    imagelibsupport.append("pgmagick")
 cv2support = check_for_cv2()
+if(cv2support):
+    imagelibsupport.append("cv2")
 skimagesupport = check_for_skimage()
+if(skimagesupport):
+    imagelibsupport.append("skimage")
 
 defaultdraw = None
 if((pilsupport or pillowsupport) and defaultdraw is None):
