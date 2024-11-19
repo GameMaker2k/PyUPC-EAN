@@ -53,6 +53,18 @@ cv2support = upcean.support.check_for_cv2()
 skimagesupport = upcean.support.check_for_skimage()
 imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
+if(pilsupport or pillowsupport):
+    import upcean.predraw.prepil
+if(cairosupport):
+    import upcean.predraw.precairo
+if(qahirahsupport):
+    import upcean.predraw.preqahirah
+if(svgwritesupport):
+    import upcean.predraw.presvgwrite
+if(wandsupport):
+    import upcean.predraw.prewand
+if(magicksupport):
+    import upcean.predraw.premagick
 
 
 def get_binary_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
@@ -195,5 +207,5 @@ def create_binary_barcode(upc, outfile="./binary.png", resize=1, barheight=(48, 
     else:
         if(imagecomment is None):
             imagecomment = upc['type']+"; "+upc['upc']
-        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment)
+        return pcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True
