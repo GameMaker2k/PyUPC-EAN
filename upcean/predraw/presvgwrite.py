@@ -17,6 +17,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 from upcean.xml.downloader import upload_file_to_internet_file
+import upcean.support
 try:
     import svgwrite
 except ImportError:
@@ -43,15 +44,19 @@ except ImportError:
         from StringIO import StringIO
         from StringIO import StringIO as BytesIO
 
-try:
-    import cairosvg
-    cairosvgsupport = True
-    # Define valid CairoSVG output formats
-    cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "PNG"}
-except ImportError:
+if(upcean.support.cairosvgsupport):
+    try:
+        import cairosvg
+        cairosvgsupport = True
+        # Define valid CairoSVG output formats
+        svgwrite_valid_extensions = {"SVG", "PDF", "PS", "EPS", "PNG"}
+    except ImportError:
+        cairosvgsupport = False
+        # Define valid SVGWrite output formats
+        svgwrite_valid_extensions = {"SVG"}
+else:
     cairosvgsupport = False
-    # Define valid SVGWrite output formats
-    cairo_valid_extensions = {"SVG"}
+    svgwrite_valid_extensions = {"SVG"}
 
 def get_save_filename(outfile):
     """
@@ -102,7 +107,7 @@ def get_save_filename(outfile):
             outfileext = "SVG"
     
         # Check if extension is supported by Qahirah
-        if outfileext not in cairo_valid_extensions:
+        if outfileext not in svgwrite_valid_extensions:
             outfileext = "SVG"
     
         return (outfile, outfileext)
@@ -129,7 +134,7 @@ def get_save_filename(outfile):
     
         ext = ext.strip().upper()
         # Check if extension is supported by Qahirah
-        if ext not in cairo_valid_extensions:
+        if ext not in svgwrite_valid_extensions:
             ext = "SVG"
     
         return (filename, ext)
