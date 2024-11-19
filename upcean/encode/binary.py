@@ -207,5 +207,5 @@ def create_binary_barcode(upc, outfile="./binary.png", resize=1, barheight=(48, 
     else:
         if(imagecomment is None):
             imagecomment = upc['type']+"; "+upc['upc']
-        return pcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True
