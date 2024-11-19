@@ -21,6 +21,7 @@ import numpy as np
 import re
 import os
 from io import BytesIO
+import upcean.fonts
 from upcean.xml.downloader import upload_file_to_internet_file  # Assuming this function is available
 
 try:
@@ -145,14 +146,14 @@ def get_save_filename(outfile):
         base, ext = os.path.splitext(outfile)
         if ext:
             # Match extension pattern and extract if valid
-            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
+            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
             else:
                 outfileext = None
         else:
             # Check for custom format 'name:EXT'
-            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
@@ -204,18 +205,18 @@ def new_image_surface(sizex, sizey, bgcolor):
     """
     img = np.zeros((sizey, sizex, 3), dtype=np.uint8)
     img[:, :] = bgcolor[::-1]  # OpenCV uses BGR, so reverse the color
-    return [img, None]
+    return [img, "opencv"]
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
     Saves the image to a file or stream using OpenCV, with support for FTP uploads
     and returning image data when outfile is '-'.
     """
-    img = inimage[1]
+    img = inimage[0]
     uploadfile = None
     outfiletovar = False
 
-    if re.match(r"^(ftp|ftps|sftp)://", str(outfile)):
+    if re.match("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
     elif outfile == "-":

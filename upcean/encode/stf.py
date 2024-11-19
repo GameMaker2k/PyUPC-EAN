@@ -47,6 +47,8 @@ svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
 pgmagicksupport = upcean.support.check_for_pgmagick()
+cv2support = upcean.support.check_for_cv2()
+skimagesupport = upcean.support.check_for_skimage()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
     import upcean.predraw.prepil
@@ -119,7 +121,11 @@ def encode_stf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         imageoutlib = "magick"
     elif pgmagicksupport and isinstance(upc_img, pgmagick.Image):
         imageoutlib = "pgmagick"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and inimage != "none" and inimage is not None):
+    elif cv2support and upc_preimg=="cv2":
+        imageoutlib = "cv2"
+    elif skimagesupport and upc_preimg=="skimage":
+        imageoutlib = "skimage"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and inimage != "none" and inimage is not None):
         imageoutlib = None
     elif(inimage == "none" or inimage is None):
         imageoutlib = None
@@ -337,9 +343,11 @@ def create_stf_barcode(upc, outfile="./stf.png", resize=1, barheight=(48, 54), b
         imageoutlib = "svgwrite"
     if(not pgmagicksupport and imageoutlib == "pgmagick"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "svgwrite"):
+    if(not cv2support and imageoutlib == "cv2"):
         imageoutlib = "svgwrite"
-    if(not pilsupport and not cairosupport):
+    if(not skimagesupport and imageoutlib == "skimage"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(outfile is None):
         if(imageoutlib == "cairosvg"):

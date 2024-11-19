@@ -57,6 +57,8 @@ if os.path.exists(__config_file__) and __use_ini_file__:
     enable_wandsupport = config.getboolean('main', 'enable_wandsupport')
     enable_magicksupport = config.getboolean('main', 'enable_magicksupport')
     enable_pgmagicksupport = config.getboolean('main', 'enable_pgmagicksupport')
+    enable_cv2support = config.getboolean('main', 'enable_cv2support')
+    enable_skimagesupport = config.getboolean('main', 'enable_skimagesupport')
 else:
     enable_pilsupport = True
     enable_cairosupport = True
@@ -65,6 +67,8 @@ else:
     enable_wandsupport = True
     enable_magicksupport = True
     enable_pgmagicksupport = True
+    enable_cv2support = True
+    enable_skimagesupport = True
 
 ''' // Barcode Support List '''
 bctype_dict = {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCAEan': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
@@ -265,6 +269,38 @@ else:
         return False
 
 
+if(enable_cv2support):
+    def check_for_cv2():
+        cv2support = True
+        try:
+            import cv2
+            import numpy as np
+            cv2support = True
+        except ImportError:
+            cv2support = False
+        return cv2support
+else:
+    def check_for_cv2():
+        cv2support = False
+        return False
+
+
+if(enable_skimagesupport):
+    def check_for_skimage():
+        skimagesupport = True
+        try:
+            import skimage
+            import numpy as np
+            skimagesupport = True
+        except ImportError:
+            skimagesupport = False
+        return skimagesupport
+else:
+    def check_for_skimage():
+        skimagesupport = False
+        return False
+
+
 def check_pil_is_pillow():
     pilsupport = False
     if(check_for_pil()):
@@ -437,6 +473,8 @@ svgwritesupport = check_for_svgwrite()
 wandsupport = check_for_wand()
 magicksupport = check_for_magick()
 pgmagicksupport = check_for_pgmagick()
+cv2support = check_for_cv2()
+skimagesupport = check_for_skimage()
 
 defaultdraw = None
 if((pilsupport or pillowsupport) and defaultdraw is None):
@@ -451,6 +489,10 @@ if(magicksupport and defaultdraw is None):
     defaultdraw = "magick"
 if(pgmagicksupport and defaultdraw is None):
     defaultdraw = "pgmagick"
+if(cv2support and defaultdraw is None):
+    defaultdraw = "cv2"
+if(skimagesupport and defaultdraw is None):
+    defaultdraw = "skimage"
 if(svgwritesupport and defaultdraw is None):
     defaultdraw = "svgwrite"
 if(defaultdraw is None):

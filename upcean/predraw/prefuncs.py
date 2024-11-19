@@ -28,6 +28,8 @@ svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
 pgmagicksupport = upcean.support.check_for_pgmagick()
+cv2support = upcean.support.check_for_cv2()
+skimagesupport = upcean.support.check_for_skimage()
 defaultdraw = upcean.support.defaultdraw
 
 # Initialize Pillow support if available
@@ -92,7 +94,27 @@ if pgmagicksupport:
         import upcean.predraw.prepgmagick
     except ImportError:
         magicksupport = False
-        logger.warning("PythonMagick support failed to initialize.")
+        logger.warning("pgmagick support failed to initialize.")
+
+# Initialize Cairo support if available
+if cv2support:
+    try:
+        import cv2
+        import numpy as np
+        import upcean.predraw.precv2
+    except ImportError:
+        magicksupport = False
+        logger.warning("cv2 support failed to initialize.")
+
+# Initialize Cairo support if available
+if skimagesupport:
+    try:
+        import numpy as np
+        import skimage
+        import upcean.predraw.preskimage
+    except ImportError:
+        magicksupport = False
+        logger.warning("skimage support failed to initialize.")
 
 # Initialize svgwrite support if available
 if svgwritesupport:

@@ -64,25 +64,32 @@ def select_image_output_lib(imageoutlib="pillow"):
     # Adjust imageoutlib based on support flags
     if not pilsupport and imageoutlib == "pillow":
         imageoutlib = "svgwrite"
-        logger.info("Pillow not supported. Switching to svgwrite.")
+        logger.info("pillow not supported. Switching to svgwrite.")
     if not cairosupport and imageoutlib in ["cairo", "cairosvg"]:
         imageoutlib = "svgwrite"
-        logger.info("Cairo not supported. Switching to svgwrite.")
+        logger.info("cairo not supported. Switching to svgwrite.")
     if not qahirahsupport and imageoutlib == "qahirah":
         imageoutlib = "svgwrite"
-        logger.info("Qahirah not supported. Switching to svgwrite.")
+        logger.info("qahirah not supported. Switching to svgwrite.")
     if not svgwritesupport and imageoutlib == "svgwrite":
         imageoutlib = "svgwrite"
         logger.info("svgwrite not supported. Switching to svgwrite.")
     if not wandsupport and imageoutlib == "wand":
         imageoutlib = "svgwrite"
-        logger.info("svgwrite not supported. Switching to svgwrite.")
+        logger.info("wand not supported. Switching to svgwrite.")
     if not magicksupport and imageoutlib == "magick":
         imageoutlib = "svgwrite"
+        logger.info("magick not supported. Switching to svgwrite.")
     if not pgmagicksupport and imageoutlib == "pgmagick":
         imageoutlib = "svgwrite"
-        logger.info("svgwrite not supported. Switching to svgwrite.")
-    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "svgwrite", "wand", "magick", "pgmagick"]:
+        logger.info("pgmagick not supported. Switching to svgwrite.")
+    if not cv2support and imageoutlib == "cv2":
+        imageoutlib = "svgwrite"
+        logger.info("cv2 not supported. Switching to svgwrite.")
+    if not skimagesupport and imageoutlib == "skimage":
+        imageoutlib = "svgwrite"
+        logger.info("skimage not supported. Switching to svgwrite.")
+    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "svgwrite", "wand", "magick", "pgmagick", "cv2", "skimage"]:
         imageoutlib = "svgwrite"
         logger.info("Invalid library specified. Defaulting to svgwrite.")
 
@@ -132,6 +139,10 @@ def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
         return upcean.predraw.premagick.snapCoords(ctx, x, y)
     elif selected_lib == "pgmagick" and pgmagicksupport:
         return upcean.predraw.prepgmagick.snapCoords(ctx, x, y)
+    elif selected_lib == "cv2" and cv2support:
+        return upcean.predraw.precv2.snapCoords(ctx, x, y)
+    elif selected_lib == "skimage" and skimagesupport:
+        return upcean.predraw.preskimage.snapCoords(ctx, x, y)
 
     logger.error("snapCoords: Selected library is not supported.")
     return False
@@ -175,6 +186,10 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=defaultdraw):
         return upcean.predraw.premagick.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "pgmagick" and pgmagicksupport:
         return upcean.predraw.prepgmagick.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+    elif selected_lib == "cv2" and cv2support:
+        return upcean.predraw.precv2.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+    elif selected_lib == "skimage" and skimagesupport:
+        return upcean.predraw.preskimage.drawColorLine(ctx, x1, y1, x2, y2, width, color)
 
     logger.error("drawColorLine: Selected library is not supported.")
     return False
@@ -217,6 +232,10 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.premagick.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "pgmagick" and pgmagicksupport:
         return upcean.predraw.prepgmagick.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "cv2" and cv2support:
+        return upcean.predraw.precv2.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "skimage" and skimagesupport:
+        return upcean.predraw.preskimage.drawColorRectangle(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangle: Selected library is not supported.")
     return False
@@ -262,6 +281,10 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib=defaul
         return upcean.predraw.premagick.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "pgmagick" and pgmagicksupport:
         return upcean.predraw.prepgmagick.drawColorText(ctx, size, x, y, text, color, ftype)
+    elif selected_lib == "cv2" and cv2support:
+        return upcean.predraw.precv2.drawColorText(ctx, size, x, y, text, color, ftype)
+    elif selected_lib == "skimage" and skimagesupport:
+        return upcean.predraw.preskimage.drawColorText(ctx, size, x, y, text, color, ftype)
 
     logger.error("drawColorText: Selected library is not supported.")
     return False
@@ -304,6 +327,10 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.premagick.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "pgmagick" and pgmagicksupport:
         return upcean.predraw.prepgmagick.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "cv2" and cv2support:
+        return upcean.predraw.precv2.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "skimage" and skimagesupport:
+        return upcean.predraw.preskimage.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangleAlt: Selected library is not supported.")
     return False
@@ -347,6 +374,10 @@ def get_save_filename(outfile, imageoutlib=defaultdraw):
         return upcean.predraw.premagick.get_save_filename(outfile)
     elif selected_lib == "pgmagick" and pgmagicksupport:
         return upcean.predraw.prepgmagick.get_save_filename(outfile)
+    elif selected_lib == "cv2" and cv2support:
+        return upcean.predraw.precv2.get_save_filename(outfile)
+    elif selected_lib == "skimage" and skimagesupport:
+        return upcean.predraw.preskimage.get_save_filename(outfile)
 
     logger.error("get_save_filename: Selected library is not supported.")
     return False
@@ -377,6 +408,10 @@ def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
         return upcean.predraw.premagick.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib == "pgmagick" and pgmagicksupport:
         return upcean.predraw.prepgmagick.new_image_surface(sizex, sizey, bgcolor)
+    elif selected_lib == "cv2" and cv2support:
+        return upcean.predraw.precv2.new_image_surface(sizex, sizey, bgcolor)
+    elif selected_lib == "skimage" and skimagesupport:
+        return upcean.predraw.preskimage.new_image_surface(sizex, sizey, bgcolor)
 
     logger.error("save_to_file: Selected library is not supported.")
     return False
@@ -404,6 +439,10 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
         return upcean.predraw.premagick.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "pgmagick" and pgmagicksupport:
         return upcean.predraw.prepgmagick.save_to_file(inimage, outfile, outfileext, imgcomment)
+    elif selected_lib == "cv2" and cv2support:
+        return upcean.predraw.precv2.save_to_file(inimage, outfile, outfileext, imgcomment)
+    elif selected_lib == "skimage" and skimagesupport:
+        return upcean.predraw.preskimage.save_to_file(inimage, outfile, outfileext, imgcomment)
 
     logger.error("save_to_file: Selected library is not supported.")
     return False
@@ -423,14 +462,16 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
     elif magicksupport and isinstance(upc_img, PythonMagick.Image):
         imageoutlib = "magick"
     elif pgmagicksupport and isinstance(upc_img, pgmagick.Image):
-        imageoutlib = "magick"
+        imageoutlib = "pgmagick"
+    elif cv2support and upc_preimg=="cv2":
+        imageoutlib = "cv2"
+    elif skimagesupport and upc_preimg=="skimage":
+        imageoutlib = "skimage"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
     elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imgout != "none" and imgout is not None):
         imageoutlib = None
     elif(imgout == "none" or imgout is None):
-        return False
-    elif(not pilsupport and not cairosupport and not qahirahsupport and not svgwritesupport):
         return False
     else:
         return False

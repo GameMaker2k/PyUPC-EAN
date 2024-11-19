@@ -11,7 +11,7 @@
     Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: precv2.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1 - Author: cooldude2k $
+    $FileInfo: preskimage.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
@@ -23,6 +23,7 @@ import matplotlib.font_manager as fm
 import re
 import os
 from io import BytesIO
+import upcean.fonts
 from upcean.xml.downloader import upload_file_to_internet_file  # Assuming this function is available
 
 try:
@@ -152,14 +153,14 @@ def get_save_filename(outfile):
         base, ext = os.path.splitext(outfile)
         if ext:
             # Match extension pattern and extract if valid
-            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
+            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
             if ext_match:
                 outfileext = ext_match.group('ext').upper()
             else:
                 outfileext = None
         else:
             # Check for custom format 'name:EXT'
-            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
+            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
             if custom_match:
                 outfile = custom_match.group('name')
                 outfileext = custom_match.group('ext').upper()
@@ -211,18 +212,18 @@ def new_image_surface(sizex, sizey, bgcolor):
     """
     img = np.zeros((sizey, sizex, 3), dtype=np.uint8)
     img[:, :] = bgcolor
-    return [img, None]
+    return [img, "skimage"]
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
     Saves the image to a file or stream using imageio, with support for FTP uploads
     and returning image data when outfile is '-'.
     """
-    img = inimage[1]
+    img = inimage[0]
     uploadfile = None
     outfiletovar = False
 
-    if re.match(r"^(ftp|ftps|sftp)://", str(outfile)):
+    if re.match("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
     elif outfile == "-":

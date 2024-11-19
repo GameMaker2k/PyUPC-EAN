@@ -208,7 +208,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     uploadfile = None
     outfiletovar = False
     # Handle output destinations
-    if re.match(r"^(ftp|ftps|sftp):\/\/", str(outfile)):
+    if re.match("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
     elif outfile == "-":

@@ -47,6 +47,8 @@ svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
 pgmagicksupport = upcean.support.check_for_pgmagick()
+cv2support = upcean.support.check_for_cv2()
+skimagesupport = upcean.support.check_for_skimage()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport):
     import upcean.predraw.prepil
@@ -347,9 +349,11 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48
         imageoutlib = "svgwrite"
     if(not pgmagicksupport and imageoutlib == "pgmagick"):
         imageoutlib = "svgwrite"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "svgwrite"):
+    if(not cv2support and imageoutlib == "cv2"):
         imageoutlib = "svgwrite"
-    if(not pilsupport and not cairosupport):
+    if(not skimagesupport and imageoutlib == "skimage"):
+        imageoutlib = "svgwrite"
+    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "svgwrite"):
         imageoutlib = "svgwrite"
     if(outfile is None):
         if(imageoutlib == "cairosvg"):
