@@ -119,6 +119,8 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
         vertical_text_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
         vertical_text_fix = (8 * (int(resize) * barwidth[1]))
+    elif(imageoutlib == "tkinter"):
+        vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
     vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
@@ -214,6 +216,8 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     NumTxtZero = 0
     LineTxtStart = ((shiftxy[0] + 16) * int(resize))
     LineTxtStartNorm = 16
+    if(imageoutlib == "tkinter"):
+        LineTxtStart += (4 * int(resize))
     while (NumTxtZero < len(upc_print)):
         texthidden = False
         if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):

@@ -213,13 +213,12 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     root = inimage[1]
     outfiletovar = False
 
-    # Get the canvas width and height
-    canvas.update_idletasks()  # Ensure the canvas has updated its size
-    c_width = canvas.winfo_width()
-    c_height = canvas.winfo_height()
+    # Get the canvas width and height from the canvas properties
+    c_width = int(canvas['width'])
+    c_height = int(canvas['height'])
 
     if isinstance(outfile, str):
-        if re.match(r"^(ftp|ftps|sftp):\/\/", outfile):
+        if re.match("^(ftp|ftps|sftp):\\/\\/", outfile):
             # Handle FTP upload (Not implemented in this code)
             ps_data = canvas.postscript(width=c_width, height=c_height)
             # upload_file_to_internet_file(ps_data, outfile)

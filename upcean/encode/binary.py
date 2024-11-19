@@ -97,10 +97,8 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
-    if(imageoutlib not in imagelibsupport and imageoutlib is not None):
+    if(imageoutlib not in imagelibsupport):
         imageoutlib = defaultdraw
-    if(imageoutlib is not None):
-        inimage = None
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):
@@ -111,6 +109,8 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         vertical_text_fix = (10 * (int(resize) * barwidth[1]))
     elif(svgwritesupport and imageoutlib == "svgwrite"):
         vertical_text_fix = (8 * (int(resize) * barwidth[1]))
+    elif(imageoutlib == "tkinter"):
+        vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
     vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
@@ -151,8 +151,10 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         if hidetext or (upc['text']['type'][txtbari] == "sn" and (hidesn is None or hidesn)) or (upc['text']['type'][txtbari] == "cd" and (hidecd is None or hidecd)):
             texthidden = True
         if(not texthidden):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + (upc['text']['location'][txtbari] * int(resize))) * barwidth[0], vertical_text_fix + (
-            barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
+            if(imageoutlib == "tkinter"):
+                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + ((upc['text']['location'][txtbari] + 4) * int(resize))) * barwidth[0], vertical_text_fix + (barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
+            else:
+                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + (upc['text']['location'][txtbari] * int(resize))) * barwidth[0], vertical_text_fix + (barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
         txtbari += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
