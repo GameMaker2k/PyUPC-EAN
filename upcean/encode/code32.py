@@ -294,16 +294,8 @@ def draw_code32_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     upc_matc = upc.upper()
     upc_matches = list(upc_matc)
     upc_size_add = ((len(upc_matches) * 15) +

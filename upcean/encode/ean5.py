@@ -364,16 +364,8 @@ def draw_ean5sup_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     upc_size_add = 0
     upc_img, upc_preimg = upcean.predraw.new_image_surface(((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     imgout = encode_ean5_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
@@ -425,16 +417,8 @@ def draw_ean5_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     upc_size_add = 0
     upc_img, upc_preimg = upcean.predraw.new_image_surface(((56 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     drawColorRectangle(upc_img, 0, 0, (((56 + 8) * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)

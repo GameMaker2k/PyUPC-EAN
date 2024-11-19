@@ -293,16 +293,8 @@ def draw_codabar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     pre_upc_matches = upc_matches = re.findall(
         "^([a-dA-DeEnN\\*tT])([0-9\\-\\$\\:\\/\\.\\+]+)([a-dA-DeEnN\\*tT])$", upc)
     pre_upc_matches = pre_upc_matches[0]

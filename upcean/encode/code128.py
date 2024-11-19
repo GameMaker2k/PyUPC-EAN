@@ -603,16 +603,8 @@ def draw_code128_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     upc_low = upc.lower()
     if(not re.findall("[0-9a-f]{2}", upc_low)):
         return False
@@ -1126,16 +1118,8 @@ def draw_code128old_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), 
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
-    if(not pilsupport and imageoutlib == "pillow"):
-        imageoutlib = "cairo"
-    if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
-        imageoutlib = "pillow"
-    if(not cairosupport and imageoutlib == "cairosvg"):
-        imageoutlib = "pillow"
-    if(not svgwritesupport and imageoutlib == "svgwrite"):
-        imageoutlib = "pillow"
-    if(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
     upc_low = upc.lower()
     if(not re.findall("[0-9a-f]{2}", upc_low)):
         return False
