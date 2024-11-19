@@ -43,6 +43,84 @@ def digital_root(number):
     else:
         return number % 9 if number % 9 != 0 else 9
 
+import re
+
+def validate_custum_checksum(serial, serial_len, return_check=False):
+    """
+    Validates the checksum of a U.S. bill serial number using a custom algorithm.
+    
+    :param serial: The serial number as a string or integer.
+    :param serial_len: The total length of the serial number including checksum.
+    :param return_check: Whether to return the calculated checksum instead of validating.
+    :return: True/False for validation or the checksum digit if return_check is True.
+    """
+    serial = str(serial)
+    serial_len = int(serial_len)
+    serial_trimmed_len = serial_len - 1
+
+    # Trim the serial number to the specified length if it's too long
+    if len(serial) > serial_len:
+        serial = re.findall("^\\d{" + str(serial_len) + "}", serial)[0]
+
+    # If the length is incorrect after trimming, return False
+    if len(serial) > serial_len or len(serial) < serial_trimmed_len:
+        return False
+
+    # Convert serial to a list of integers
+    serial_digits = [int(digit) for digit in serial]
+
+    # Calculate sums of odd and even positions
+    odd_sum = sum(serial_digits[0::2])
+    even_sum = sum(serial_digits[1::2])
+
+    # Adjust sums based on parity of serial_len
+    if serial_len % 2 == 0:
+        total_sum = (odd_sum * 3) + even_sum
+    else:
+        total_sum = odd_sum + (even_sum * 3)
+
+    # Calculate checksum digit
+    checksum = (10 - (total_sum % 10)) % 10
+
+    # Validate checksum or return it based on the `return_check` flag
+    if return_check:
+        return str(checksum)
+
+    # If the serial length matches serial_len, validate the checksum
+    return checksum == serial_digits[-1] if len(serial) == serial_len else str(checksum)
+
+
+def get_custum_checksum(serial, serial_len):
+    """
+    Gets the checksum digit for a U.S. bill serial number using the custom algorithm.
+    
+    :param serial: The serial number as a string or integer.
+    :param serial_len: The total length of the serial number including checksum.
+    :return: The checksum digit as a string.
+    """
+    serial = str(serial)
+    serial_len = int(serial_len)
+    return validate_custum_checksum(serial, serial_len, True)
+
+
+def fix_custum_checksum(serial, serial_len):
+    """
+    Fixes the checksum for a U.S. bill serial number using the custom algorithm.
+    
+    :param serial: The serial number as a string or integer.
+    :param serial_len: The total length of the serial number including checksum.
+    :return: The serial number with a corrected checksum digit.
+    """
+    serial = str(serial)
+    serial_len = int(serial_len)
+    
+    # Trim the serial to the length without checksum if it's too long
+    if len(serial) > serial_len - 1:
+        fix_matches = re.findall("^(\\d{" + str(serial_len - 1) + "})", serial)
+        serial = fix_matches[0]
+    
+    # Add the correct checksum digit
+    return serial + str(get_custum_checksum(serial, serial_len))
 
 '''
 // Luhn Algorithm ( Luhn Formula )
@@ -798,6 +876,62 @@ def fix_ean5_checksum(upc):
         fix_matches = re.findall("^(\\d{5})", upc)
         upc = fix_matches[0]
     return upc+str(get_ean5_checksum(upc))
+
+def validate_usbills_checksum(serial, return_check=False):
+    """
+    Validates the checksum of a U.S. bill serial number.
+    
+    :param serial: The serial number as a string or integer.
+    :param return_check: Whether to return the calculated checksum instead of validating.
+    :return: True/False for validation or the checksum digit if return_check is True.
+    """
+    serial = str(serial)
+    
+    # Ensure the serial number is at least 7 digits and no more than 10
+    if len(serial) < 7 or len(serial) > 10:
+        return False
+
+    # Convert the serial string to a list of integers
+    serial_digits = [int(digit) for digit in re.sub(r"\D", "", serial)]
+    
+    # Example: Custom checksum calculation for U.S. bills
+    odd_sum = sum(serial_digits[0::2])
+    even_sum = sum(serial_digits[1::2])
+    total_sum = odd_sum * 3 + even_sum
+    checksum = (10 - (total_sum % 10)) % 10
+
+    # Return the checksum if requested
+    if return_check:
+        return str(checksum)
+    
+    # Validate checksum
+    return checksum == serial_digits[-1] if len(serial_digits) == 10 else False
+
+
+def get_usbills_checksum(serial):
+    """
+    Gets the checksum digit for a U.S. bill serial number.
+    
+    :param serial: The serial number as a string or integer.
+    :return: The checksum digit as a string.
+    """
+    return validate_usbills_checksum(serial, True)
+
+
+def fix_usbills_checksum(serial):
+    """
+    Fixes the checksum for a U.S. bill serial number.
+    
+    :param serial: The serial number as a string or integer.
+    :return: The serial number with a corrected checksum digit.
+    """
+    serial = str(serial)
+    # Trim serial number to first 9 digits if it's too long
+    if len(serial) > 9:
+        serial = re.findall(r"^\d{9}", serial)[0]
+    
+    # Add the correct checksum digit
+    return serial + str(get_usbills_checksum(serial))
 
 
 '''
