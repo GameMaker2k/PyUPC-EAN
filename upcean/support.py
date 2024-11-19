@@ -463,7 +463,7 @@ def get_python_info(infotype=None):
     if(infotype is not None):
         return python_info.get(infotype, python_info)
 
-imagelibsupport = []
+imagelibsupport = ["tkinter"]
 pilsupport = check_for_pil()
 if(pilsupport):
     imagelibsupport.append("pil")

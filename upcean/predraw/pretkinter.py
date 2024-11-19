@@ -157,7 +157,125 @@ def new_image_surface(sizex, sizey, bgcolor):
     """
     bgcolor_hex = color_to_hex(bgcolor)
     root = tkinter.Tk()
+    root.withdraw()  # Hide the root window
     canvas = tkinter.Canvas(root, width=sizex, height=sizey)
     canvas.pack()
     canvas.create_rectangle(0, 0, sizex, sizey, fill=bgcolor_hex, outline=bgcolor_hex)
     return [canvas, root]
+
+def get_save_filename(outfile):
+    """
+    Processes the `outfile` parameter to determine a suitable filename and its corresponding file extension for saving PS files.
+    Returns a tuple (filename, "PS") or the original `outfile` if it's of type None, bool, or a file object.
+    Defaults to "PS" as the extension if none is provided or if an unsupported extension is detected.
+    Returns False for unsupported input types.
+
+    Parameters:
+        outfile (str, tuple, list, None, bool, file): The output file specification.
+
+    Returns:
+        tuple: (filename, "PS") or False if invalid.
+    """
+    svgwrite_valid_extensions = {"PS"}
+    # Handle None or boolean types directly
+    if outfile is None or isinstance(outfile, bool):
+        return outfile
+
+    # Handle file objects directly
+    if hasattr(outfile, 'write') or outfile == "-":
+        return (outfile, "PS")
+
+    # Handle string types
+    if isinstance(outfile, str):
+        outfile = outfile.strip()
+        if outfile in ["-", ""]:
+            return (outfile, "PS")
+
+        # Extract extension using os.path.splitext
+        base, ext = os.path.splitext(outfile)
+        if ext:
+            ext = ext[1:].upper()  # Remove the '.' and uppercase
+            if ext != "PS":
+                ext = "PS"
+        else:
+            ext = "PS"
+
+        return (outfile, ext)
+
+    # Unsupported type
+    return False
+
+def get_save_file(outfile):
+    return get_save_filename(outfile)
+
+def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
+    canvas = inimage[0]
+    root = inimage[1]
+    outfiletovar = False
+
+    # Get the canvas width and height
+    canvas.update_idletasks()  # Ensure the canvas has updated its size
+    c_width = canvas.winfo_width()
+    c_height = canvas.winfo_height()
+
+    if isinstance(outfile, str):
+        if re.match(r"^(ftp|ftps|sftp):\/\/", outfile):
+            # Handle FTP upload (Not implemented in this code)
+            ps_data = canvas.postscript(width=c_width, height=c_height)
+            # upload_file_to_internet_file(ps_data, outfile)
+            root.destroy()
+            raise NotImplementedError("FTP upload not implemented in this code")
+        elif outfile == "-":
+            outfiletovar = True
+            outfile = StringIO()
+        else:
+            # Save to file with specified width and height
+            canvas.postscript(file=outfile, width=c_width, height=c_height)
+            root.destroy()
+            return True
+    elif outfile is None:
+        # Return the PS data as a string
+        ps_data = canvas.postscript(width=c_width, height=c_height)
+        root.destroy()
+        return ps_data
+    elif hasattr(outfile, 'write'):
+        # outfile is a file-like object
+        ps_data = canvas.postscript(width=c_width, height=c_height)
+        outfile.write(ps_data)
+        root.destroy()
+        return True
+    else:
+        # Unsupported outfile type
+        root.destroy()
+        raise ValueError("Invalid outfile type")
+
+    # For the case when outfiletovar is True
+    if outfiletovar:
+        # Generate PostScript data and write to outfile
+        ps_data = canvas.postscript(width=c_width, height=c_height)
+        outfile.write(ps_data)
+        # Read from outfile and return the content
+        outfile.seek(0)
+        outbyte = outfile.read()
+        outfile.close()
+        root.destroy()
+        return outbyte
+
+def save_to_filename(imgout, outfile, imgcomment="barcode"):
+    canvas = imgout[0]
+    root = imgout[1]
+    if outfile is None:
+        outfile = None
+        outfileext = None
+    else:
+        outfile_info = get_save_filename(outfile)
+        if isinstance(outfile_info, tuple) or isinstance(outfile_info, list):
+            outfile = outfile_info[0]
+            outfileext = outfile_info[1]
+        else:
+            outfile = None
+            outfileext = None
+    if outfileext != "PS":
+        raise ValueError("Only PS output is supported")
+    result = save_to_file(imgout, outfile, outfileext, imgcomment)
+    return result

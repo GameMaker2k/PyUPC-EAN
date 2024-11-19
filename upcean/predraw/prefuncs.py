@@ -33,6 +33,14 @@ skimagesupport = upcean.support.check_for_skimage()
 imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 
+try:
+    import tkinter
+    from tkinter import font as tkFont
+except ImportError:
+    import Tkinter as tkinter
+    import tkFont
+import upcean.predraw.pretkinter
+
 # Initialize Pillow support if available
 if pilsupport:
     try:
