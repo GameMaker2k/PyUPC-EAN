@@ -22,8 +22,14 @@ import upcean.support
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
+qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
+wandsupport = upcean.support.check_for_wand()
+magicksupport = upcean.support.check_for_magick()
+pgmagicksupport = upcean.support.check_for_pgmagick()
+cv2support = upcean.support.check_for_cv2()
+skimagesupport = upcean.support.check_for_skimage()
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or cairosupport or svgwritesupport):
     import upcean.fonts
@@ -79,7 +85,7 @@ class encode:
         self.textcolor = (0, 0, 0)
         self.bgcolor = (255, 255, 255)
         self.imagecomment = None
-        self.imageoutlib = "pillow"
+        self.imageoutlib = defaultdraw
         self.return_check = False
         self.return_type = "dict"
     ''' // support.py funtions '''
