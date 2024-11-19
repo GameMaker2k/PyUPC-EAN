@@ -107,8 +107,10 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
-    if(imageoutlib not in imagelibsupport):
+    if(imageoutlib not in imagelibsupport and imageoutlib is not None):
         imageoutlib = defaultdraw
+    if(imageoutlib is not None):
+        inimage = None
     if(len(upc) % 2):
         return False
     if(len(upc) < 6):

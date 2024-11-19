@@ -115,8 +115,10 @@ def encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         upc_preimg = inimage[1]
     upc_pieces = None
     supplement = None
-    if(imageoutlib not in imagelibsupport):
+    if(imageoutlib not in imagelibsupport and imageoutlib is not None):
         imageoutlib = defaultdraw
+    if(imageoutlib is not None):
+        inimage = None
     if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
         upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
         upc_pieces = upc_pieces[0]

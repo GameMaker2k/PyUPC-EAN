@@ -109,19 +109,10 @@ def encode_codabar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
-    imageoutlib = "pillow"
-    if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
-        imageoutlib = "pillow"
-    elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
-        imageoutlib = "cairo"
-    elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
-        imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite"):
-        imageoutlib = "pillow"
-    elif(not pilsupport and not cairosupport and not svgwritesupport):
-        return False
-    else:
-        return False
+    if(imageoutlib not in imagelibsupport and imageoutlib is not None):
+        imageoutlib = defaultdraw
+    if(imageoutlib is not None):
+        inimage = None
     if(len(upc) < 1):
         return False
     if(barwidth[0] < 1):

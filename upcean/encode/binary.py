@@ -97,8 +97,10 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
-    if(imageoutlib not in imagelibsupport):
+    if(imageoutlib not in imagelibsupport and imageoutlib is not None):
         imageoutlib = defaultdraw
+    if(imageoutlib is not None):
+        inimage = None
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if(pilsupport and imageoutlib == "pillow"):

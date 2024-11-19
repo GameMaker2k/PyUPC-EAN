@@ -101,8 +101,10 @@ def encode_msi_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
-    if(imageoutlib not in imagelibsupport):
+    if(imageoutlib not in imagelibsupport and imageoutlib is not None):
         imageoutlib = defaultdraw
+    if(imageoutlib is not None):
+        inimage = None
     if(len(upc) < 1):
         return False
     if(not re.findall("([0-9]+)", upc)):

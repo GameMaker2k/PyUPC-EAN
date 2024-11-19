@@ -100,8 +100,10 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
     else:
         upc_img = inimage[0]
         upc_preimg = inimage[1]
-    if(imageoutlib not in imagelibsupport):
+    if(imageoutlib not in imagelibsupport and imageoutlib is not None):
         imageoutlib = defaultdraw
+    if(imageoutlib is not None):
+        inimage = None
     if(len(upc) > 5 or len(upc) < 5):
         return False
     upc_matches = re.findall("(\\d{5})", upc)
