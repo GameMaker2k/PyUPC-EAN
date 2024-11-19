@@ -332,7 +332,7 @@ def draw_codabar_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), bar
     imgout = encode_codabar_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
-def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
@@ -381,5 +381,7 @@ def create_codabar_barcode(upc, outfile="./codabar.png", resize=1, barheight=(48
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "codabar; "+upc, imageoutlib)
+        if(imagecomment is None):
+            imagecomment = "codabar; "+upc
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True

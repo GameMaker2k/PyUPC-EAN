@@ -78,6 +78,7 @@ class encode:
         self.barcolor = (0, 0, 0)
         self.textcolor = (0, 0, 0)
         self.bgcolor = (255, 255, 255)
+        self.imagecomment = None
         self.imageoutlib = "pillow"
         self.return_check = False
         self.return_type = "dict"
@@ -125,21 +126,21 @@ class encode:
                 filename = self.filename
             if(size is None):
                 size = self.size
-            return upcean.encode.create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
+            return upcean.encode.create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imagecomment, self.imageoutlib)
 
         def validate_create_barcode(self, filename=None, size=None):
             if(filename is None):
                 filename = self.filename
             if(size is None):
                 size = self.size
-            return upcean.encode.validate_create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
+            return upcean.encode.validate_create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imagecomment, self.imageoutlib)
 
         def fix_create_barcode(self, filename=None, size=None):
             if(filename is None):
                 filename = self.filename
             if(size is None):
                 size = self.size
-            return upcean.encode.fix_create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
+            return upcean.encode.fix_create_barcode(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imagecomment, self.imageoutlib)
 
         def draw_barcode(self, size=None):
             if(size is None):

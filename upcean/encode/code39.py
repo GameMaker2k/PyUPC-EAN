@@ -377,7 +377,7 @@ def draw_code39_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
     imgout = encode_code39_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
-def create_code39_barcode(upc, outfile="./code39.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+def create_code39_barcode(upc, outfile="./code39.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
@@ -426,7 +426,9 @@ def create_code39_barcode(upc, outfile="./code39.png", resize=1, barheight=(48, 
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code39; "+upc, imageoutlib)
+        if(imagecomment is None):
+            imagecomment = "code39; "+upc
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True
 
 def get_code39extended_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
@@ -754,7 +756,7 @@ def draw_code39extended_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 
     imgout = encode_code39extended_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo)
     return [upc_img, upc_preimg, imageoutlib]
 
-def create_code39extended_barcode(upc, outfile="./code39.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+def create_code39extended_barcode(upc, outfile="./code39.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(not pilsupport and imageoutlib == "pillow"):
         imageoutlib = "svgwrite"
     if(not cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
@@ -804,5 +806,7 @@ def create_code39extended_barcode(upc, outfile="./code39.png", resize=1, barheig
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
         return [upc_img, upc_preimg, imageoutlib]
     else:
-        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, "code39; "+upc, imageoutlib)
+        if(imagecomment is None):
+            imagecomment = "code39; "+upc
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True
