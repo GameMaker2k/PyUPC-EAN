@@ -53,18 +53,6 @@ cv2support = upcean.support.check_for_cv2()
 skimagesupport = upcean.support.check_for_skimage()
 imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
-if(pilsupport or pillowsupport):
-    import upcean.predraw.prepil
-if(cairosupport):
-    import upcean.predraw.precairo
-if(qahirahsupport):
-    import upcean.predraw.preqahirah
-if(svgwritesupport):
-    import upcean.predraw.presvgwrite
-if(wandsupport):
-    import upcean.predraw.prewand
-if(magicksupport):
-    import upcean.predraw.premagick
 
 
 def get_ean8_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
