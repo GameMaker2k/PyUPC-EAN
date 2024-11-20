@@ -74,6 +74,9 @@ def select_image_output_lib(imageoutlib="pillow"):
     if not svgwritesupport and imageoutlib == "svgwrite":
         imageoutlib = "svgwrite"
         logger.info("svgwrite not supported. Switching to svgwrite.")
+    if not tkintersupport and imageoutlib == "tkinter":
+        imageoutlib = "svgwrite"
+        logger.info("tkinter not supported. Switching to svgwrite.")
     if not wandsupport and imageoutlib == "wand":
         imageoutlib = "svgwrite"
         logger.info("wand not supported. Switching to svgwrite.")
@@ -143,7 +146,7 @@ def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
         return upcean.predraw.precv2.snapCoords(ctx, x, y)
     elif selected_lib == "skimage" and skimagesupport:
         return upcean.predraw.preskimage.snapCoords(ctx, x, y)
-    elif selected_lib == "tkinter":
+    elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.snapCoords(ctx, x, y)
 
     logger.error("snapCoords: Selected library is not supported.")
@@ -192,7 +195,7 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=defaultdraw):
         return upcean.predraw.precv2.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "skimage" and skimagesupport:
         return upcean.predraw.preskimage.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "tkinter":
+    elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.drawColorLine(ctx, x1, y1, x2, y2, width, color)
 
     logger.error("drawColorLine: Selected library is not supported.")
@@ -240,7 +243,7 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.precv2.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "skimage" and skimagesupport:
         return upcean.predraw.preskimage.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "tkinter":
+    elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.drawColorRectangle(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangle: Selected library is not supported.")
@@ -291,7 +294,7 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib=defaul
         return upcean.predraw.precv2.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "skimage" and skimagesupport:
         return upcean.predraw.preskimage.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "tkinter":
+    elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.drawColorText(ctx, size, x, y, text, color, ftype)
 
     logger.error("drawColorText: Selected library is not supported.")
@@ -339,7 +342,7 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.precv2.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "skimage" and skimagesupport:
         return upcean.predraw.preskimage.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "tkinter":
+    elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangleAlt: Selected library is not supported.")
@@ -388,7 +391,7 @@ def get_save_filename(outfile, imageoutlib=defaultdraw):
         return upcean.predraw.precv2.get_save_filename(outfile)
     elif selected_lib == "skimage" and skimagesupport:
         return upcean.predraw.preskimage.get_save_filename(outfile)
-    elif selected_lib == "tkinter":
+    elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.get_save_filename(outfile)
 
     logger.error("get_save_filename: Selected library is not supported.")
@@ -424,7 +427,7 @@ def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
         return upcean.predraw.precv2.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib == "skimage" and skimagesupport:
         return upcean.predraw.preskimage.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "tkinter":
+    elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.new_image_surface(sizex, sizey, bgcolor)
 
     logger.error("save_to_file: Selected library is not supported.")
@@ -457,7 +460,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
         return upcean.predraw.precv2.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "skimage" and skimagesupport:
         return upcean.predraw.preskimage.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "tkinter":
+    elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.save_to_file(inimage, outfile, outfileext, imgcomment)
 
     logger.error("save_to_file: Selected library is not supported.")
@@ -483,6 +486,8 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
         imageoutlib = "cv2"
     elif skimagesupport and upc_preimg=="skimage":
         imageoutlib = "skimage"
+    elif tkintersupport and upc_preimg=="tkinter":
+        imageoutlib = "tkinter"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
     elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "tkinter" and imgout != "none" and imgout is not None):

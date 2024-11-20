@@ -19,6 +19,7 @@ import upcean.fonts
 import upcean.support
 
 # Initialize support flags
+tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
@@ -33,13 +34,14 @@ skimagesupport = upcean.support.check_for_skimage()
 imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 
-try:
-    import tkinter
-    from tkinter import font as tkFont
-except ImportError:
-    import Tkinter as tkinter
-    import tkFont
-import upcean.predraw.pretkinter
+if tkintersupport:
+    try:
+        import tkinter
+        from tkinter import font as tkFont
+    except ImportError:
+        import Tkinter as tkinter
+        import tkFont
+    import upcean.predraw.pretkinter
 
 # Initialize Pillow support if available
 if pilsupport:
