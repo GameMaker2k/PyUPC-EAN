@@ -36,6 +36,7 @@ from upcean.encode.upcavar import *
 from upcean.encode.ean5 import *
 from upcean.encode.ean2 import *
 import upcean.support
+tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()

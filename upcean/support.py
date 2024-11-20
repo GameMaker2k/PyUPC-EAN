@@ -37,12 +37,16 @@ def get_importing_script_path():
             return os.path.abspath(filename)
     return None
 
-scriptconf = os.path.join(os.path.dirname(get_importing_script_path()), "upcean.ini")
+__use_env_file__ = True
+__use_ini_file__ = True
+if('PYUPCEAN_CONFIG_FILE' in os.environ and os.path.exists(os.environ['PYUPCEAN_CONFIG_FILE']) and __use_env_file__)
+    scriptconf = os.path.join(os.path.dirname(get_importing_script_path()), "upcean.ini")
+else:
+    scriptconf = os.path.join(os.path.dirname(get_importing_script_path()), "upcean.ini")
 if os.path.exists(scriptconf):
     __config_file__ = scriptconf
 else:
     __config_file__ = os.path.join(os.path.dirname(os.path.realpath(__file__)), "upcean.ini")
-__use_ini_file__ = True
 
 if os.path.exists(__config_file__) and __use_ini_file__:
     # Create a ConfigParser object
@@ -60,6 +64,7 @@ if os.path.exists(__config_file__) and __use_ini_file__:
     enable_pgmagicksupport = config.getboolean('main', 'enable_pgmagicksupport')
     enable_cv2support = config.getboolean('main', 'enable_cv2support')
     enable_skimagesupport = config.getboolean('main', 'enable_skimagesupport')
+    enable_internal_svgwrite = config.getboolean('main', 'enable_internal_svgwrite')
 else:
     enable_tkintersupport = True
     enable_pilsupport = True
@@ -70,6 +75,26 @@ else:
     enable_magicksupport = True
     enable_pgmagicksupport = True
     enable_cv2support = False
+    enable_skimagesupport = False
+    enable_internal_svgwrite = False
+
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "pretkinter.py")):
+    enable_tkintersupport = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "prepil.py")):
+    enable_pilsupport = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "precairo.py")):
+    enable_cairosupport = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "preqahirah.py")):
+    enable_qahirahsupport = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "prewand.py")):
+    enable_wandsupport = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "premagick.py")):
+    enable_magicksupport = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "prepgmagick.py")):
+    enable_pgmagicksupport = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "precv2.py")):
+    enable_cv2support = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "preskimage.py")):
     enable_skimagesupport = False
 
 ''' // Barcode Support List '''
@@ -155,19 +180,29 @@ else:
         cairosvgsupport = False
         return False
 
-def check_for_svgwrite():
-    # SVGWrite Support Check
-    svgwritesupport = True
-    try:
-        import svgwrite
+if(not enable_internal_svgwrite):
+    def check_for_svgwrite():
+        # SVGWrite Support Check
         svgwritesupport = True
-    except ImportError:
+        try:
+            import svgwrite
+            svgwritesupport = True
+        except ImportError:
+            try:
+                import upcean.svgcreate as svgwrite
+                svgwritesupport = True
+            except ImportError:
+                svgwritesupport = False
+        return svgwritesupport
+else:
+    def check_for_svgwrite():
+        svgwritesupport = True
         try:
             import upcean.svgcreate as svgwrite
             svgwritesupport = True
         except ImportError:
             svgwritesupport = False
-    return svgwritesupport
+        return svgwritesupport
 
 if enable_tkintersupport:
     def check_for_tkinter():

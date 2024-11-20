@@ -41,6 +41,7 @@ except ImportError:
 import upcean.encode.ean2
 import upcean.encode.ean5
 from upcean.encode.upca import *
+tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()

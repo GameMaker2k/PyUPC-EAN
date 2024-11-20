@@ -18,9 +18,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 from upcean.xml.downloader import upload_file_to_internet_file
 import upcean.support
-try:
-    import svgwrite
-except ImportError:
+enable_internal_svgwrite = upcean.support.enable_internal_svgwrite
+if(not enable_internal_svgwrite):
+    try:
+        import svgwrite
+    except ImportError:
+        import upcean.svgcreate as svgwrite
+else:
     import upcean.svgcreate as svgwrite
 import os
 import re

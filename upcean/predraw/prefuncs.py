@@ -18,7 +18,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import upcean.fonts
 import upcean.support
 
+enable_internal_svgwrite = upcean.support.enable_internal_svgwrite
 # Initialize support flags
+tkintersupport = upcean.support.check_for_tkinter()
 tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
@@ -128,7 +130,7 @@ if skimagesupport:
         logger.warning("skimage support failed to initialize.")
 
 # Initialize svgwrite support if available
-if svgwritesupport:
+if svgwritesupport and not enable_internal_svgwrite:
     try:
         import svgwrite
         import upcean.predraw.presvgwrite

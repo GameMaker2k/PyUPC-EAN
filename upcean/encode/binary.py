@@ -41,6 +41,8 @@ except ImportError:
 import upcean.encode.ean2
 import upcean.encode.ean5
 pilsupport = upcean.support.check_for_pil()
+tkintersupport = upcean.support.check_for_tkinter()
+pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
 qahirahsupport = upcean.support.check_for_qahirah()
@@ -53,18 +55,6 @@ cv2support = upcean.support.check_for_cv2()
 skimagesupport = upcean.support.check_for_skimage()
 imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
-if(pilsupport or pillowsupport):
-    import upcean.predraw.prepil
-if(cairosupport):
-    import upcean.predraw.precairo
-if(qahirahsupport):
-    import upcean.predraw.preqahirah
-if(svgwritesupport):
-    import upcean.predraw.presvgwrite
-if(wandsupport):
-    import upcean.predraw.prewand
-if(magicksupport):
-    import upcean.predraw.premagick
 
 
 def get_binary_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
@@ -107,9 +97,9 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
         vertical_text_fix = (10 * (int(resize) * barwidth[1]))
-    elif(svgwritesupport and imageoutlib == "svgwrite"):
+    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
         vertical_text_fix = (8 * (int(resize) * barwidth[1]))
-    elif(imageoutlib == "tkinter"):
+    elif(tkintersupport and imageoutlib == "tkinter"):
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
@@ -146,7 +136,7 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     txtbari = 0
     txtbarmax = len(upc['text']['text'])
     LineFixTxtStart = 0
-    if(imageoutlib == "tkinter"):
+    if(tkintersupport and imageoutlib == "tkinter"):
         LineFixTxtStart = 4
     while(txtbari < txtbarmax):
         texthidden = False

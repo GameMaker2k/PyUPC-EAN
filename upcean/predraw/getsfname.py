@@ -16,6 +16,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import upcean.support
+tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()

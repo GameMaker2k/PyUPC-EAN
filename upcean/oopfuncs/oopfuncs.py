@@ -19,6 +19,7 @@ import upcean.validate
 import upcean.convert
 import upcean.getprefix
 import upcean.support
+tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()

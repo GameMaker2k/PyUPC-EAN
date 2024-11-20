@@ -38,6 +38,7 @@ except ImportError:
         from StringIO import StringIO
         from StringIO import StringIO as BytesIO
 
+tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
 cairosupport = upcean.support.check_for_cairo()
@@ -115,9 +116,9 @@ def encode_codabar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
         vertical_text_fix = (10 * (int(resize) * barwidth[1]))
-    elif(svgwritesupport and imageoutlib == "svgwrite"):
+    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
         vertical_text_fix = (8 * (int(resize) * barwidth[1]))
-    elif(imageoutlib == "tkinter"):
+    elif(tkintersupport and imageoutlib == "tkinter"):
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
@@ -264,8 +265,10 @@ def encode_codabar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     NumTxtZero = 0
     LineTxtStart = ((shiftxy[0] + 20) * int(resize))
     LineTxtStartNorm = 20
-    if(imageoutlib == "tkinter"):
+    if(tkintersupport and imageoutlib == "tkinter"):
         LineTxtStart += (4 * int(resize))
+    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+        LineTxtStart += (1 * int(resize))
     while (NumTxtZero < len(upc_matches)):
         texthidden = False
         if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
