@@ -145,16 +145,16 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
                 upcean.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
     txtbari = 0
     txtbarmax = len(upc['text']['text'])
-    LineStart = (shiftxy[0] * barwidth[0]) * int(resize)
+    LineFixTxtStart = 0
+    if(imageoutlib == "tkinter"):
+        LineFixTxtStart = 4
     while(txtbari < txtbarmax):
         texthidden = False
         if hidetext or (upc['text']['type'][txtbari] == "sn" and (hidesn is None or hidesn)) or (upc['text']['type'][txtbari] == "cd" and (hidecd is None or hidecd)):
             texthidden = True
         if(not texthidden):
-            if(imageoutlib == "tkinter"):
-                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + ((upc['text']['location'][txtbari] + 4) * int(resize))) * barwidth[0], vertical_text_fix + (barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
-            else:
-                drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + (upc['text']['location'][txtbari] * int(resize))) * barwidth[0], vertical_text_fix + (barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + ((upc['text']['location'][txtbari] + LineFixTxtStart) * int(resize))) * barwidth[0], vertical_text_fix + (barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
+
         txtbari += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
