@@ -34,34 +34,86 @@ supported_image_formats = [
     ext.lstrip('.') for ext, fmt in Image.registered_extensions().items()
 ]
 
+# Enhanced argument parser
 parser = argparse.ArgumentParser(
-    description="A web server that draws barcodes with PyUPC-EAN powered by CherryPy web server."
+    description="PyUPC-EAN Barcode Generator Web Server using CherryPy."
 )
-parser.add_argument("--port", default=8080, help="Port number to use for the server.")
-parser.add_argument("--host", default="127.0.0.1", help="Host name to use for the server.")
-parser.add_argument("--verbose", help="Show log on terminal screen.", action="store_true")
-parser.add_argument("--gzip", help="Enable gzip HTTP requests.", action="store_true")
-parser.add_argument("--accesslog", help="Location to store access log file.")
-parser.add_argument("--errorlog", help="Location to store error log file.")
-parser.add_argument("--timeout", default=6000, help="Response timeout in seconds.")
-parser.add_argument("--environment", default="production", help="Server environment (production/development).")
+parser.add_argument(
+    "--port", "-p", default=8080, type=int,
+    help="Port number to use for the server. Default is 8080."
+)
+parser.add_argument(
+    "--host", "-H", default="127.0.0.1",
+    help="Host name or IP address to use for the server. Default is 127.0.0.1."
+)
+parser.add_argument(
+    "--timeout", "-t", default=6000, type=int,
+    help="Response timeout in seconds. Default is 6000."
+)
+parser.add_argument(
+    "--gzip", "-g", action="store_true",
+    help="Enable gzip compression for HTTP responses."
+)
+parser.add_argument(
+    "--log-access", "-a", default="./access.log",
+    help="File to store access logs. Default is './access.log'."
+)
+parser.add_argument(
+    "--log-error", "-e", default="./error.log",
+    help="File to store error logs. Default is './error.log'."
+)
+parser.add_argument(
+    "--environment", "-E", default="production",
+    choices=["production", "development"],
+    help="Set the server environment mode. Default is 'production'."
+)
+parser.add_argument(
+    "--verbose", "-v", action="store_true",
+    help="Enable verbose logging to the terminal."
+)
+parser.add_argument(
+    "--debug", "-d", action="store_true",
+    help="Enable debug mode for troubleshooting."
+)
+parser.add_argument(
+    "--output-dir", "-o", default=tempfile.gettempdir(),
+    help="Directory to store temporary output files. Default is the system's temp directory."
+)
+parser.add_argument(
+    "--max-size", "-m", type=int, default=5,
+    help="Maximum size multiplier for barcode generation (e.g., 5x). Default is 5."
+)
+parser.add_argument(
+    "--default-format", "-f", default="png",
+    choices=supported_image_formats,
+    help="Default output image format if none is specified. Default is 'png'."
+)
+parser.add_argument(
+    "--rotate-only", "-r", action="store_true",
+    help="Restrict barcode generation to only apply rotation."
+)
 
 getargs = parser.parse_args()
 
 # Set server configurations
-port = int(getargs.port)
+port = getargs.port
 host = getargs.host
-timeout = int(getargs.timeout)
-accesslog = getargs.accesslog or "./access.log"
-errorlog = getargs.errorlog or "./errors.log"
+timeout = getargs.timeout
+accesslog = getargs.log_access
+errorlog = getargs.log_error
 serv_environ = getargs.environment
+debug_mode = getargs.debug
+output_dir = getargs.output_dir
+max_size = getargs.max_size
+default_format = getargs.default_format
+rotate_only = getargs.rotate_only
 
 # Generate dynamic options for the form
+size_options = "".join(
+    '<option value="{0}">{0}x</option>'.format(i) for i in range(1, max_size + 1)
+)
 image_type_options = "".join(
     '<option value="{0}">{1}</option>'.format(fmt, fmt.upper()) for fmt in supported_image_formats
-)
-size_options = "".join(
-    '<option value="{0}">{0}x</option>'.format(i) for i in range(1, 6)
 )
 
 IndexHTMLCode = """<!DOCTYPE html>
@@ -147,17 +199,17 @@ IndexHTMLCode = """<!DOCTYPE html>
                 {0}
             </select>
             <label for="rotate">Rotate (degrees):</label>
-            <input type="number" id="rotate" name="rotate" value="0">
+            <input type="number" id="rotate" name="rotate" value="0" {1}>
             <label for="imgtype">Select Image Type:</label>
             <select id="imgtype" name="imgtype">
-                {1}
+                {2}
             </select>
             <button type="submit">Generate Barcode</button>
         </form>
     </div>
 </body>
 </html>
-""".format(size_options, image_type_options)
+""".format(size_options, 'readonly' if rotate_only else '', image_type_options)
 
 class GenerateIndexPage(object):
     def index(self):
@@ -172,19 +224,23 @@ class GenerateIndexPage(object):
         if '.' in upc_imgtype:
             upc, imgtype = upc_imgtype.rsplit('.', 1)
         else:
-            raise ValueError("Invalid format: UPC and image type must be separated by a dot.")
+            raise cherrypy.HTTPRedirect("/", 303)
 
         # Default values and validations
-        bcsize = int(bcsize) if bcsize.isdigit() else 1
+        bcsize = int(bcsize) if bcsize.isdigit() and int(bcsize) <= max_size else 1
         bcrotate = int(bcrotate) if bcrotate.isdigit() else 0
+
+        # Restrict to rotation-only mode if enabled
+        if rotate_only and bcrotate == 0:
+            raise cherrypy.HTTPRedirect("/", 303)
 
         # Check if barcode type is supported
         if bctype not in upcean.support.supported_barcodes("tuple"):
-            raise ValueError("Unsupported barcode type: {}".format(bctype))
+            raise cherrypy.HTTPRedirect("/", 303)
 
         # Check if image format is supported
         if imgtype.lower() not in supported_image_formats:
-            raise ValueError("Unsupported image format: {}".format(imgtype))
+            raise cherrypy.HTTPRedirect("/", 303)
 
         # Generate the barcode
         imgdraw = upcean.encode.validate_draw_barcode(bctype, upc, bcsize)
