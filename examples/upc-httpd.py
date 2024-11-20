@@ -1,170 +1,203 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the Revised BSD License.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    Revised BSD License for more details.
-
-    Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
-
-    $FileInfo: httpd.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1  - Author: cooldude2k $
-'''
-
+from __future__ import print_function, unicode_literals
 import tempfile
 import uuid
-import re
 import os
 import sys
 import cherrypy
 import upcean
 import argparse
-import time
-import datetime
-from PIL import Image, ImageDraw, ImageFont
-try:
-    from io import StringIO, BytesIO
-except ImportError:
-    try:
-        from cStringIO import StringIO
-        from cStringIO import StringIO as BytesIO
-    except ImportError:
-        from StringIO import StringIO
-        from StringIO import StringIO as BytesIO
-parser = argparse.ArgumentParser(
-    description="A web server that draws barcodes with PyUPC-EAN powered by CherryPy web server.")
-parser.add_argument("--port", "--port-number", default=8080,
-                    help="port number to use for server.")
-parser.add_argument("--host", "--host-name",
-                    default="127.0.0.1", help="host name to use for server.")
-parser.add_argument("--verbose", "--verbose-mode",
-                    help="show log on terminal screen.", action="store_true")
-parser.add_argument("--gzip", "--gzip-mode",
-                    help="enable gzip http requests.", action="store_true")
-parser.add_argument("--gzipfilter", "--gzipfilter-mode",
-                    help="enable gzipfilter mode.", action="store_true")
-parser.add_argument("--accesslog", "--accesslog-file",
-                    help="location to store access log file.")
-parser.add_argument("--errorlog", "--errorlog-file",
-                    help="location to store error log file.")
-parser.add_argument("--timeout", "--response-timeout", default=6000,
-                    help="the number of seconds to allow responses to run.")
-parser.add_argument("--environment", "--server-environment", default="production",
-                    help="The server.environment entry controls how CherryPy should run.")
-getargs = parser.parse_args()
-if(getargs.port is not None):
-    port = int(getargs.port)
-else:
-    port = 8080
-if(getargs.host is not None):
-    host = str(getargs.host)
-else:
-    host = "127.0.0.1"
-if(getargs.timeout is not None):
-    timeout = int(getargs.timeout)
-else:
-    timeout = 6000
-if(getargs.accesslog is not None):
-    accesslog = str(getargs.accesslog)
-else:
-    accesslog = "./access.log"
-if(getargs.errorlog is not None):
-    errorlog = str(getargs.errorlog)
-else:
-    errorlog = "./errors.log"
-if(getargs.environment is not None):
-    serv_environ = str(getargs.environment)
-else:
-    serv_environ = "production"
-pro_app_name = "Barcode Generator 2k"
-pro_app_subname = "(PyUPC-EAN)"
-pro_app_version = upcean.__version__
-radsta = 0
-radmax = 360
-radinc = 5
-radout = "\n"
-while(radsta <= radmax):
-    if(radsta == 0):
-        radout += "<option value=\"" + \
-            str(radsta)+"\" selected=\"selected\">" + \
-            str(radsta)+" &#176;</option>\n"
-    if(radsta > 0):
-        radout += "<option value=\"" + \
-            str(radsta)+"\">"+str(radsta)+" &#176;</option>\n"
-    radsta = radsta + radinc
-ServerSignature = "<address><a href=\"https://github.com/GameMaker2k/PyUPC-EAN\" title=\"PyUPC-EAN barcode generator\">PyUPC-EAN</a>/%s (<a href=\"http://www.cherrypy.org/\" title=\"CherryPy python web server\">CherryPy</a>/%s)</address>" % (
-    upcean.__version__, cherrypy.__version__)
-IndexHTMLCode = "<!DOCTYPE html>\n" \
-                "<html lang=\"en\">\n" \
-                "<head>\n" \
-                "<title> "+pro_app_name+" "+pro_app_subname+" </title>" \
-                "<meta charset=\"UTF-8\">\n" \
-                "<meta name=\"generator\" content=\"CherryPy\">\n" \
-                "<meta name=\"author\" content=\"Game Maker 2k\">\n" \
-                "<meta name=\"keywords\" content=\"barcode,upc,ean,stf,itf,itf14,upca,upce,ean2,ean5,ean8,ean13,code11,code39,code93,codabar,msi\">\n" \
-                "<meta name=\"description\" content=\"Barcode Generator with PyUPC-EAN\">" \
-                "<meta name=\"resource-type\" content=\"document\">\n" \
-                "<meta name=\"distribution\" content=\"global\">\n" \
-                "<link rel=\"Generator\" href=\"http://www.cherrypy.org/\" title=\"CherryPy\">\n" \
-                "</head>\n" \
-                "<body>\n" \
-                "<form name=\"upcean\" id=\"upcean\" method=\"get\" action=\"/upcean/\" onsubmit=\"location.href='/generate/'+upcean.bctype.value+'/'+upcean.size.value+'/'+upcean.rotate.value+'/'+upcean.upc.value+'.'+upcean.imgtype.value; return false;\">\n" \
-                "<fieldset>\n" \
-                "<legend>Barcode Info: </legend>\n" \
-                "<label style=\"cursor: pointer;\" for=\"upc\">Enter UPC/EAN: </label><br>\n" \
-                "<input type=\"text\" id=\"upc\" name=\"upc\"><br>\n" \
-                "<label style=\"cursor: pointer;\" for=\"imgtype\">Select a image type: </label><br>\n" \
-                "<select id=\"imgtype\" name=\"imgtype\">\n" \
-                "<option value=\"png\" selected>PNG Image</option>\n" \
-                "<option value=\"gif\">GIF Image</option>\n" \
-                "<option value=\"jpeg\">JPEG Image</option>\n" \
-                "<option value=\"bmp\">BMP Image</option>\n" \
-                "<option value=\"tiff\">TIFF Image</option>\n" \
-                "</select><br>\n" \
-                "<label style=\"cursor: pointer;\" for=\"size\">Select barcode size: </label><br>\n" \
-                "<select id=\"size\" name=\"size\">\n" \
-                "<option value=\"1\" selected>1x</option>\n" \
-                "<option value=\"2\">2x</option>\n" \
-                "<option value=\"3\">3x</option>\n" \
-                "<option value=\"4\">4x</option>\n" \
-                "<option value=\"5\">5x</option>\n" \
-                "<option value=\"6\">6x</option>\n" \
-                "<option value=\"7\">7x</option>\n" \
-                "<option value=\"8\">8x</option>\n" \
-                "<option value=\"9\">9x</option>\n" \
-                "<option value=\"10\">10x</option>\n" \
-                "</select><br>\n" \
-                "<label style=\"cursor: pointer;\" for=\"bctype\">Select barcode type: </label><br>\n" \
-                "<select id=\"bctype\" name=\"bctype\">\n" \
-                "<option value=\"upca\" selected>UPC-A</option>\n" \
-                "<option value=\"upce\">UPC-E</option>\n" \
-                "<option value=\"ean13\">EAN-13</option>\n" \
-                "<option value=\"ean8\">EAN-8</option>\n" \
-                "<option value=\"ean2\">EAN-2</option>\n" \
-                "<option value=\"ean5\">EAN-5</option>\n" \
-                "<option value=\"stf\">STF</option>\n" \
-                "<option value=\"itf\">ITF</option>\n" \
-                "<option value=\"itf14\">ITF-14</option>\n" \
-                "<option value=\"code11\">Code 11</option>\n" \
-                "<option value=\"code39\">Code 39</option>\n" \
-                "<option value=\"code93\">Code 93</option>\n" \
-                "<option value=\"codabar\">Codabar</option>\n" \
-                "<option value=\"msi\">MSI</option>\n" \
-                "</select><br>\n" \
-                "<label style=\"cursor: pointer;\" for=\"rotate\">Select degrees to rotate image by: </label><br>\n" \
-                "<select id=\"rotate\" name=\"rotate\">"+radout+"</select><br>\n" \
-                "<input type=\"submit\" value=\"Generate\">\n" \
-                "</fieldset>\n" \
-                "</form><br>\n" \
-                ""+ServerSignature+"\n" \
-                "</body>\n" \
-                "</html>"
+from PIL import Image
 
+# Handle StringIO for Python 2 and 3
+try:
+    from io import BytesIO
+except ImportError:
+    from StringIO import StringIO as BytesIO
+
+# Dynamically gather supported image types
+supported_image_formats = [
+    ext.lstrip('.') for ext, fmt in Image.registered_extensions().items()
+]
+
+# Enhanced argument parser
+parser = argparse.ArgumentParser(
+    description="PyUPC-EAN Barcode Generator Web Server using CherryPy."
+)
+parser.add_argument(
+    "--port", "-p", default=8080, type=int,
+    help="Port number to use for the server. Default is 8080."
+)
+parser.add_argument(
+    "--host", "-H", default="127.0.0.1",
+    help="Host name or IP address to use for the server. Default is 127.0.0.1."
+)
+parser.add_argument(
+    "--timeout", "-t", default=6000, type=int,
+    help="Response timeout in seconds. Default is 6000."
+)
+parser.add_argument(
+    "--gzip", "-g", action="store_true",
+    help="Enable gzip compression for HTTP responses."
+)
+parser.add_argument(
+    "--log-access", "-a", default="./access.log",
+    help="File to store access logs. Default is './access.log'."
+)
+parser.add_argument(
+    "--log-error", "-e", default="./error.log",
+    help="File to store error logs. Default is './error.log'."
+)
+parser.add_argument(
+    "--environment", "-E", default="production",
+    choices=["production", "development"],
+    help="Set the server environment mode. Default is 'production'."
+)
+parser.add_argument(
+    "--verbose", "-v", action="store_true",
+    help="Enable verbose logging to the terminal."
+)
+parser.add_argument(
+    "--debug", "-d", action="store_true",
+    help="Enable debug mode for troubleshooting."
+)
+parser.add_argument(
+    "--output-dir", "-o", default=tempfile.gettempdir(),
+    help="Directory to store temporary output files. Default is the system's temp directory."
+)
+parser.add_argument(
+    "--max-size", "-m", type=int, default=5,
+    help="Maximum size multiplier for barcode generation (e.g., 5x). Default is 5."
+)
+parser.add_argument(
+    "--default-format", "-f", default="png",
+    choices=supported_image_formats,
+    help="Default output image format if none is specified. Default is 'png'."
+)
+parser.add_argument(
+    "--rotate-only", "-r", action="store_true",
+    help="Restrict barcode generation to only apply rotation."
+)
+
+getargs = parser.parse_args()
+
+# Set server configurations
+port = getargs.port
+host = getargs.host
+timeout = getargs.timeout
+accesslog = getargs.log_access
+errorlog = getargs.log_error
+serv_environ = getargs.environment
+debug_mode = getargs.debug
+output_dir = getargs.output_dir
+max_size = getargs.max_size
+default_format = getargs.default_format
+rotate_only = getargs.rotate_only
+
+# Generate dynamic options for the form
+size_options = "".join(
+    '<option value="{0}">{0}x</option>'.format(i) for i in range(1, max_size + 1)
+)
+image_type_options = "".join(
+    '<option value="{0}">{1}</option>'.format(fmt, fmt.upper()) for fmt in supported_image_formats
+)
+
+IndexHTMLCode = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Barcode Generator</title>
+    <meta charset="UTF-8">
+    <meta name="author" content="Game Maker 2k">
+    <meta name="keywords" content="barcode,upc,ean,stf,itf,itf14,upca,upce,ean2,ean5,ean8,ean13,code11,code39,code93,codabar,msi">
+    <meta name="description" content="Barcode Generator with PyUPC-EAN">
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }}
+        .container {{
+            max-width: 600px;
+            margin: 50px auto;
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }}
+        h1 {{
+            text-align: center;
+            color: #343a40;
+        }}
+        form {{
+            margin-top: 20px;
+        }}
+        label {{
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }}
+        input, select, button {{
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }}
+        button {{
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }}
+        button:hover {{
+            background-color: #0056b3;
+        }}
+    </style>
+    <script>
+        function redirectToBarcode(event) {{
+            event.preventDefault();
+            var form = document.forms['upcean'];
+            var url = '/generate/' + form.bctype.value + '/' + form.size.value + '/' + form.rotate.value + '/' + form.upc.value + '.' + form.imgtype.value;
+            window.location.href = url;
+        }}
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Barcode Generator</h1>
+        <form name="upcean" id="upcean" method="get" onsubmit="redirectToBarcode(event);">
+            <label for="upc">Enter UPC/EAN:</label>
+            <input type="text" id="upc" name="upc" placeholder="Enter barcode value" required>
+            <label for="bctype">Select Barcode Type:</label>
+            <select id="bctype" name="bctype">
+                <option value="upca" selected>UPC-A</option>
+                <option value="upce">UPC-E</option>
+                <option value="ean13">EAN-13</option>
+                <option value="ean8">EAN-8</option>
+            </select>
+            <label for="size">Select Size:</label>
+            <select id="size" name="size">
+                {0}
+            </select>
+            <label for="rotate">Rotate (degrees):</label>
+            <input type="number" id="rotate" name="rotate" value="0" {1}>
+            <label for="imgtype">Select Image Type:</label>
+            <select id="imgtype" name="imgtype">
+                {2}
+            </select>
+            <button type="submit">Generate Barcode</button>
+        </form>
+    </div>
+</body>
+</html>
+""".format(size_options, 'readonly' if rotate_only else '', image_type_options)
 
 class GenerateIndexPage(object):
     def index(self):
@@ -172,193 +205,58 @@ class GenerateIndexPage(object):
         return IndexHTMLCode
     index.exposed = True
 
-    def generate(self, bctype, bcsize, bcrotate, imgtype):
-        if(sys.version[0] == "2"):
-            imgdata = StringIO()
-        if(sys.version[0] >= "3"):
-            imgdata = BytesIO()
-        try:
-            bctype
-        except KeyError:
-            bctype = "upca"
-        try:
-            bcsize
-        except KeyError:
-            bcsize = 1
-        try:
-            imgtype
-        except KeyError:
-            imgtype = "png"
-        upc = os.path.splitext(imgtype)[0]
-        try:
-            bcrotate
-        except KeyError:
-            bcrotate = 0
-        try:
-            upc
-        except KeyError:
-            upc = None
-        file_ext = upcean.predraw.getsfname.get_save_filename(tempfile.gettempdir(
-        )+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+imgtype.lower())
-        if(file_ext[1] == "PNG"):
-            cherrypy.response.headers['Content-Type'] = "image/png"
-        if(file_ext[1] == "GIF"):
-            cherrypy.response.headers['Content-Type'] = "image/gif"
-        if(file_ext[1] == "JPEG"):
-            cherrypy.response.headers['Content-Type'] = "image/jpeg"
-        if(file_ext[1] == "BMP"):
-            cherrypy.response.headers['Content-Type'] = "image/bmp"
-        if(file_ext[1] == "PS"):
-            cherrypy.response.headers['Content-Type'] = "application/postscript"
-        if(file_ext[1] == "EPS"):
-            cherrypy.response.headers['Content-Type'] = "application/postscript"
-        if(file_ext[1] == "PPM"):
-            cherrypy.response.headers['Content-Type'] = "image/x-portable-pixmap"
-        if(file_ext[1] == "TIFF"):
-            cherrypy.response.headers['Content-Type'] = "image/tiff"
-        if(upc is not None and (int(bcrotate) == 0 or bcrotate is None)):
-            if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
-                upcean.encode.validate_draw_barcode(
-                    bctype.lower(), upc, int(bcsize))[1].save(imgdata, file_ext[1])
-        if(upc is not None and (int(bcrotate) > 0 or int(bcrotate) < 0)):
-            if(bctype.lower() in upcean.support.supported_barcodes("tuple")):
-                upcean.encode.validate_draw_barcode(bctype.lower(), upc, int(bcsize))[1].rotate(
-                    int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1])
-        if(upc is not None):
-            imgdata.seek(0)
-            return imgdata.read()
+    def generate(self, bctype, bcsize, bcrotate, upc_imgtype):
+        imgdata = BytesIO()
+
+        # Split UPC and image type
+        if '.' in upc_imgtype:
+            upc, imgtype = upc_imgtype.rsplit('.', 1)
+        else:
+            raise cherrypy.HTTPRedirect("/", 303)
+
+        # Default values and validations
+        bcsize = int(bcsize) if bcsize.isdigit() and int(bcsize) <= max_size else 1
+        bcrotate = int(bcrotate) if bcrotate.isdigit() else 0
+
+        # Restrict to rotation-only mode if enabled
+        if rotate_only and bcrotate == 0:
+            raise cherrypy.HTTPRedirect("/", 303)
+
+        # Check if barcode type is supported
+        if bctype not in upcean.support.supported_barcodes("tuple"):
+            raise cherrypy.HTTPRedirect("/", 303)
+
+        # Check if image format is supported
+        if imgtype.lower() not in supported_image_formats:
+            raise cherrypy.HTTPRedirect("/", 303)
+
+        # Generate the barcode
+        imgdraw = upcean.encode.validate_draw_barcode(bctype, upc, bcsize)
+
+        # Apply rotation if required
+        if bcrotate != 0:
+            imgdraw[1].rotate(bcrotate, Image.BICUBIC, expand=True).save(imgdata, imgtype.lower())
+        else:
+            imgdraw[1].save(imgdata, imgtype.lower())
+
+        # Set content type based on file extension
+        cherrypy.response.headers['Content-Type'] = Image.MIME.get(imgtype.lower(), 'image/png')
+        imgdata.seek(0)
+        return imgdata.read()
     generate.exposed = True
 
 
-class GenerateBarcodes(object):
-    def index(self, **params):
-        if(sys.version[0] == "2"):
-            imgdata = StringIO()
-        if(sys.version[0] >= "3"):
-            imgdata = BytesIO()
-        try:
-            params['bctype']
-        except KeyError:
-            params['bctype'] = "upca"
-        try:
-            params['size']
-        except KeyError:
-            params['size'] = 1
-        try:
-            params['imgtype']
-        except KeyError:
-            params['imgtype'] = "png"
-        try:
-            params['rotate']
-        except KeyError:
-            params['rotate'] = 0
-        try:
-            params['upc']
-        except KeyError:
-            params['upc'] = None
-        file_ext = upcean.predraw.getsfname.get_save_filename(tempfile.gettempdir(
-        )+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+params['imgtype'].lower())
-        if(file_ext[1] == "PNG"):
-            cherrypy.response.headers['Content-Type'] = "image/png"
-        if(file_ext[1] == "GIF"):
-            cherrypy.response.headers['Content-Type'] = "image/gif"
-        if(file_ext[1] == "JPEG"):
-            cherrypy.response.headers['Content-Type'] = "image/jpeg"
-        if(file_ext[1] == "BMP"):
-            cherrypy.response.headers['Content-Type'] = "image/bmp"
-        if(file_ext[1] == "PS"):
-            cherrypy.response.headers['Content-Type'] = "application/postscript"
-        if(file_ext[1] == "EPS"):
-            cherrypy.response.headers['Content-Type'] = "application/postscript"
-        if(file_ext[1] == "PPM"):
-            cherrypy.response.headers['Content-Type'] = "image/x-portable-pixmap"
-        if(file_ext[1] == "TIFF"):
-            cherrypy.response.headers['Content-Type'] = "image/tiff"
-        if(params['upc'] is not None and (int(params['rotate']) == 0 or params['rotate'] is None)):
-            if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
-                upcean.encode.validate_draw_barcode(params['bctype'].lower(
-                ), params['upc'], int(params['size']))[1].save(imgdata, file_ext[1])
-        if(params['upc'] is not None and (int(params['rotate']) > 0 or int(params['rotate']) < 0)):
-            if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
-                upcean.encode.validate_draw_barcode(params['bctype'].lower(), params['upc'], int(
-                    params['size']))[1].rotate(int(params['rotate']), Image.BICUBIC, True).save(imgdata, file_ext[1])
-        if(params['upc'] is not None):
-            imgdata.seek(0)
-            return imgdata.read()
-        if(params['upc'] is None):
-            cherrypy.response.headers['Content-Type'] = 'text/html; charset=UTF-8'
-            return IndexHTMLCode
-    index.exposed = True
+# CherryPy configuration
+cherrypy.config.update({
+    "environment": serv_environ,
+    "log.error_file": errorlog,
+    "log.access_file": accesslog,
+    "log.screen": getargs.verbose,
+    "tools.gzip.on": getargs.gzip,
+    "server.socket_host": host,
+    "server.socket_port": port,
+    "response.timeout": timeout,
+})
 
-    def generate(self, bctype, bcsize, bcrotate, imgtype):
-        if(sys.version[0] == "2"):
-            imgdata = StringIO()
-        if(sys.version[0] >= "3"):
-            imgdata = BytesIO()
-        try:
-            bctype
-        except KeyError:
-            bctype = "upca"
-        try:
-            bcsize
-        except KeyError:
-            bcsize = 1
-        try:
-            imgtype
-        except KeyError:
-            imgtype = "png"
-        upc = os.path.splitext(imgtype)[0]
-        try:
-            bcrotate
-        except KeyError:
-            bcrotate = 0
-        try:
-            upc
-        except KeyError:
-            upc = None
-        file_ext = upcean.getsfname.get_save_filename(tempfile.gettempdir(
-        )+os.sep+"temp_"+str(uuid.uuid4()).replace("-", "")+imgtype.lower())
-        if(file_ext[1] == "PNG"):
-            cherrypy.response.headers['Content-Type'] = "image/png"
-        if(file_ext[1] == "GIF"):
-            cherrypy.response.headers['Content-Type'] = "image/gif"
-        if(file_ext[1] == "JPEG"):
-            cherrypy.response.headers['Content-Type'] = "image/jpeg"
-        if(file_ext[1] == "BMP"):
-            cherrypy.response.headers['Content-Type'] = "image/bmp"
-        if(file_ext[1] == "PS"):
-            cherrypy.response.headers['Content-Type'] = "application/postscript"
-        if(file_ext[1] == "EPS"):
-            cherrypy.response.headers['Content-Type'] = "application/postscript"
-        if(file_ext[1] == "PPM"):
-            cherrypy.response.headers['Content-Type'] = "image/x-portable-pixmap"
-        if(file_ext[1] == "TIFF"):
-            cherrypy.response.headers['Content-Type'] = "image/tiff"
-        if(upc is not None and (int(bcrotate) == 0 or bcrotate is None)):
-            if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
-                upcean.encode.validate_draw_barcode(
-                    params['bctype'].lower(), upc, int(bcsize))[1].save(imgdata, file_ext[1])
-        if(upc is not None and (int(bcrotate) > 0 or int(bcrotate) < 0)):
-            if(params['bctype'].lower() in upcean.support.supported_barcodes("tuple")):
-                upcean.encode.validate_draw_barcode(params['bctype'].lower(), upc, int(
-                    bcsize))[1].rotate(int(bcrotate), Image.BICUBIC, True).save(imgdata, file_ext[1])
-        if(upc is not None):
-            imgdata.seek(0)
-            return imgdata.read()
-    generate.exposed = True
-
-
-cherrypy.config.update({"environment": serv_environ,
-                        "log.error_file": errorlog,
-                        "log.access_file": accesslog,
-                        "log.screen": getargs.verbose,
-                        "gzipfilter.on": getargs.gzipfilter,
-                        "tools.gzip.on": getargs.gzip,
-                        "tools.gzip.mime_types": ['text/*'],
-                        "server.socket_host": host,
-                        "server.socket_port": port,
-                        "response.timeout": timeout,
-                        })
 cherrypy.root = GenerateIndexPage()
-cherrypy.root.upcean = GenerateBarcodes()
 cherrypy.quickstart(cherrypy.root)
