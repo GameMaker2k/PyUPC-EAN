@@ -167,6 +167,22 @@ def check_for_svgwrite():
             svgwritesupport = False
     return svgwritesupport
 
+def check_for_tkinter():
+    # tkinter Support Check
+    tkintersupport = True
+    try:
+        import tkinter
+        from tkinter import font as tkFont
+        tkintersupport = True
+    except ImportError:
+        try:
+            import Tkinter as tkinter
+            import tkFont
+            tkintersupport = True
+        except ImportError:
+            tkintersupport = False
+    return tkintersupport
+
 if(enable_pilsupport):
     def check_for_pil():
         # PIL Support Check
@@ -463,7 +479,10 @@ def get_python_info(infotype=None):
     if(infotype is not None):
         return python_info.get(infotype, python_info)
 
-imagelibsupport = ["tkinter"]
+imagelibsupport = []
+tkintersupport = check_for_tkinter()
+if(tkintersupport):
+    imagelibsupport.append("tkinter")
 pilsupport = check_for_pil()
 if(pilsupport):
     imagelibsupport.append("pil")
