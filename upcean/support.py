@@ -50,6 +50,7 @@ if os.path.exists(__config_file__) and __use_ini_file__:
     # Read the configuration file
     config.read(__config_file__)
     # Accessing values from the config file
+    enable_tkintersupport = config.getboolean('main', 'enable_tkintersupport')
     enable_pilsupport = config.getboolean('main', 'enable_pilsupport')
     enable_cairosupport = config.getboolean('main', 'enable_cairosupport')
     enable_qahirahsupport = config.getboolean('main', 'enable_qahirahsupport')
@@ -60,6 +61,7 @@ if os.path.exists(__config_file__) and __use_ini_file__:
     enable_cv2support = config.getboolean('main', 'enable_cv2support')
     enable_skimagesupport = config.getboolean('main', 'enable_skimagesupport')
 else:
+    enable_tkintersupport = True
     enable_pilsupport = True
     enable_cairosupport = True
     enable_qahirahsupport = True
@@ -167,21 +169,26 @@ def check_for_svgwrite():
             svgwritesupport = False
     return svgwritesupport
 
-def check_for_tkinter():
-    # tkinter Support Check
-    tkintersupport = True
-    try:
-        import tkinter
-        from tkinter import font as tkFont
+if enable_tkintersupport:
+    def check_for_tkinter():
+        # tkinter Support Check
         tkintersupport = True
-    except ImportError:
         try:
-            import Tkinter as tkinter
-            import tkFont
+            import tkinter
+            from tkinter import font as tkFont
             tkintersupport = True
         except ImportError:
-            tkintersupport = False
-    return tkintersupport
+            try:
+                import Tkinter as tkinter
+                import tkFont
+                tkintersupport = True
+            except ImportError:
+                tkintersupport = False
+        return tkintersupport
+else:
+    def check_for_tkinter():
+        tkintersupport = False
+        return False
 
 if(enable_pilsupport):
     def check_for_pil():
