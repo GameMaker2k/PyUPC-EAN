@@ -69,8 +69,8 @@ else:
     enable_wandsupport = True
     enable_magicksupport = True
     enable_pgmagicksupport = True
-    enable_cv2support = True
-    enable_skimagesupport = True
+    enable_cv2support = False
+    enable_skimagesupport = False
 
 ''' // Barcode Support List '''
 bctype_dict = {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCAEan': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
