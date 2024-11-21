@@ -239,7 +239,7 @@ def encode_plessey_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         LineTxtStart += (1 * int(resize))
     while (NumTxtZero < len(upc_matches)):
         texthidden = False
-        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+        if hidetext:
             texthidden = True
         if(not texthidden):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (

@@ -300,7 +300,7 @@ def encode_code39_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     LineTxtStartNorm += 15
     while (NumTxtZero < len(upc_matches)):
         texthidden = False
-        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+        if hidetext:
             texthidden = True
         if(not texthidden):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
@@ -634,7 +634,7 @@ def encode_code39extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         else:
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
             barheight[0] * int(resize)),  code39extended.get(upc_matches[NumTxtZero], upc_matches[NumTxtZero]), barcolor[1], "ocrb", imageoutlib)
-        if hidetext or (NumTxtZero == 0 and (hidesn is None or hidesn)) or (NumTxtZero == 11 and (hidecd is None or hidecd)):
+        if hidetext:
             texthidden = True
         if(not texthidden):
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
