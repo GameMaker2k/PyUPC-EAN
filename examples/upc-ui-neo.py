@@ -52,7 +52,7 @@ barcode_list = {
 # Initialize the main window
 rootwin = tk.Tk()
 rootwin.title("{}{} - Version: {}".format(pro_app_name, pro_app_subname, pro_app_version))
-rootwin.geometry("400x500")
+rootwin.geometry("400x600")
 rootwin.resizable(0, 0)
 
 def exit_ui(event=None):
@@ -110,9 +110,15 @@ def GenerateBarcode():
         barheight1 = int(entry2.get())
         barheight2 = int(entry3.get())
         magnify_value = int(magnify.get())
+        barwidth_value = int(entry_barwidth.get())
+        textsize_value = int(entry_textsize.get())
     except ValueError:
-        messagebox.showerror("Error", "Bar Heights and Magnify must be integer values.")
+        messagebox.showerror("Error", "Bar Heights, Bar Width, Text Size, and Magnify must be integer values.")
         return
+
+    hidesn_value = var_hidesn.get()
+    hidecd_value = var_hidecd.get()
+    hidetext_value = var_hidetext.get()
 
     barcode_value = preprocess_barcode_value(entry1.get())
 
@@ -121,9 +127,13 @@ def GenerateBarcode():
         barcode_list[listboxtxt1.get()], barcode_value)
     tmpbarcode.size = magnify_value
     tmpbarcode.barheight = (barheight1, barheight2)
+    tmpbarcode.barwidth = (barwidth_value, textsize_value)
     tmpbarcode.barcolor = barcode_bar_color
     tmpbarcode.textcolor = barcode_text_color
     tmpbarcode.bgcolor = barcode_bg_color
+    tmpbarcode.hidesn = hidesn_value
+    tmpbarcode.hidecd = hidecd_value
+    tmpbarcode.hidetext = hidetext_value
     tmpbarcode.filename = None
     validbc = tmpbarcode.validate_draw_barcode()[1]
 
@@ -146,9 +156,15 @@ def SaveGeneratedBarcode():
         barheight1 = int(entry2.get())
         barheight2 = int(entry3.get())
         magnify_value = int(magnify.get())
+        barwidth_value = int(entry_barwidth.get())
+        textsize_value = int(entry_textsize.get())
     except ValueError:
-        messagebox.showerror("Error", "Bar Heights and Magnify must be integer values.")
+        messagebox.showerror("Error", "Bar Heights, Bar Width, Text Size, and Magnify must be integer values.")
         return
+
+    hidesn_value = var_hidesn.get()
+    hidecd_value = var_hidecd.get()
+    hidetext_value = var_hidetext.get()
 
     barcode_value = preprocess_barcode_value(entry1.get())
 
@@ -156,9 +172,13 @@ def SaveGeneratedBarcode():
         barcode_list[listboxtxt1.get()], barcode_value)
     tmpbarcode.size = magnify_value
     tmpbarcode.barheight = (barheight1, barheight2)
+    tmpbarcode.barwidth = (barwidth_value, textsize_value)
     tmpbarcode.barcolor = barcode_bar_color
     tmpbarcode.textcolor = barcode_text_color
     tmpbarcode.bgcolor = barcode_bg_color
+    tmpbarcode.hidesn = hidesn_value
+    tmpbarcode.hidecd = hidecd_value
+    tmpbarcode.hidetext = hidetext_value
 
     savefname = filedialog.asksaveasfilename(
         title='Save Image As',
@@ -259,9 +279,38 @@ entry3.insert(0, "54")
 entry3.grid(row=4, column=1, padx=5, pady=5, sticky='w')
 entry3.bind("<Button-3>", show_ccp_menu)
 
+# Updated widgets for Bar Width and Text Size
+label_barwidth = tk.Label(rootwin, text="Bar Width:")
+label_barwidth.grid(row=5, column=0, sticky='e', padx=5, pady=5)
+entry_barwidth = tk.Entry(rootwin, width=5)
+entry_barwidth.insert(0, "1")
+entry_barwidth.grid(row=5, column=1, padx=5, pady=5, sticky='w')
+entry_barwidth.bind("<Button-3>", show_ccp_menu)
+
+label_textsize = tk.Label(rootwin, text="Text Size:")
+label_textsize.grid(row=6, column=0, sticky='e', padx=5, pady=5)
+entry_textsize = tk.Entry(rootwin, width=5)
+entry_textsize.insert(0, "1")
+entry_textsize.grid(row=6, column=1, padx=5, pady=5, sticky='w')
+entry_textsize.bind("<Button-3>", show_ccp_menu)
+
+# Checkboxes for hiding elements
+var_hidesn = tk.BooleanVar()
+var_hidecd = tk.BooleanVar()
+var_hidetext = tk.BooleanVar()
+
+check_hidesn = tk.Checkbutton(rootwin, text="Hide Start Number", variable=var_hidesn)
+check_hidesn.grid(row=7, column=0, columnspan=2, padx=5, pady=5, sticky='w')
+
+check_hidecd = tk.Checkbutton(rootwin, text="Hide Check Digit", variable=var_hidecd)
+check_hidecd.grid(row=8, column=0, columnspan=2, padx=5, pady=5, sticky='w')
+
+check_hidetext = tk.Checkbutton(rootwin, text="Hide Text", variable=var_hidetext)
+check_hidetext.grid(row=9, column=0, columnspan=2, padx=5, pady=5, sticky='w')
+
 # Buttons
 button_frame = tk.Frame(rootwin)
-button_frame.grid(row=5, column=0, columnspan=2, pady=10)
+button_frame.grid(row=10, column=0, columnspan=2, pady=10)
 
 button1 = tk.Button(button_frame, text="Generate", command=GenerateBarcode)
 button1.pack(side='left', padx=5)
@@ -280,7 +329,7 @@ button3.bind("<Button-3>", show_ccp_menu)
 
 # Canvas for barcode image
 imageframe1 = tk.Frame(rootwin, width=350, height=200)
-imageframe1.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+imageframe1.grid(row=11, column=0, columnspan=2, padx=5, pady=5)
 
 xscrollbar1 = tk.Scrollbar(imageframe1, orient=tk.HORIZONTAL)
 xscrollbar1.pack(side=tk.BOTTOM, fill=tk.X)
@@ -300,5 +349,7 @@ entry1.bind("<Return>", lambda event: GenerateBarcode())
 magnify.bind("<Return>", lambda event: GenerateBarcode())
 entry2.bind("<Return>", lambda event: GenerateBarcode())
 entry3.bind("<Return>", lambda event: GenerateBarcode())
+entry_barwidth.bind("<Return>", lambda event: GenerateBarcode())
+entry_textsize.bind("<Return>", lambda event: GenerateBarcode())
 
 rootwin.mainloop()
