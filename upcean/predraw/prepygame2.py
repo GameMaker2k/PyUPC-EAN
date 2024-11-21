@@ -56,11 +56,6 @@ except ImportError:
         from StringIO import StringIO
         from StringIO import StringIO as BytesIO
 
-# Set up the display
-screen_width, screen_height = 800, 600
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)  # Using RESIZABLE flag as a Pygame 2 feature
-pygame.display.set_caption("Pygame 2 Drawing Example")
-
 # Load font paths from upcean.fonts
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
