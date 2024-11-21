@@ -39,7 +39,7 @@ def get_importing_script_path():
 
 __use_env_file__ = True
 __use_ini_file__ = True
-if('PYUPCEAN_CONFIG_FILE' in os.environ and os.path.exists(os.environ['PYUPCEAN_CONFIG_FILE']) and __use_env_file__)
+if('PYUPCEAN_CONFIG_FILE' in os.environ and os.path.exists(os.environ['PYUPCEAN_CONFIG_FILE']) and __use_env_file__):
     scriptconf = os.path.join(os.path.dirname(get_importing_script_path()), "upcean.ini")
 else:
     scriptconf = os.path.join(os.path.dirname(get_importing_script_path()), "upcean.ini")
