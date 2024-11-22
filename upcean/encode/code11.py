@@ -267,19 +267,7 @@ def draw_code11_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
     bcsize7 = len(re.findall("([1-8])", "".join(upc_matches)))
     upc_size_add = ((bcsize6 * 6) + (bcsize7 * 7) +
                     len(upc_matches) - 1) * barwidth[0]
-    if(pilsupport and imageoutlib == "pillow"):
-        upc_preimg = Image.new(
-            "RGB", (((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_img = ImageDraw.Draw(upc_preimg)
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
-        upc_preimg = cairo.RecordingSurface(
-                cairo.CONTENT_COLOR, (0.0, 0.0, float(((34 * barwidth[0]) + upc_size_add) * int(resize)), float((barheightadd + (9 * barwidth[1])) * int(resize))))
-        upc_img = cairo.Context(upc_preimg)
-        upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    elif(svgwritesupport and imageoutlib=="svgwrite"):
-        upc_preimg = StringIO()
-        upc_img = svgwrite.Drawing(upc_preimg, profile='full', size=(((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize)))
-        upc_preimg.close()
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(((34 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     imgout = encode_code11_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, imageoutlib]
 

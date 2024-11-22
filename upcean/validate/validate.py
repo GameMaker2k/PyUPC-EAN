@@ -1288,7 +1288,8 @@ CODE93_VALUES.update({chr(65 + i): 10 + i for i in range(26)})  # A-Z
 CODE93_VALUES.update({"-": 36, ".": 37, " ": 38, "$": 39, "/": 40, "+": 41, "%": 42, "($)": 43, "(%)": 44, "(/)": 45, "(+)": 46})
 CODE93_ARRAY = {v: k for k, v in CODE93_VALUES.items()}
 
-def get_code93_alt_checksum(upc):
+def get_code93_checksum(upc):
+    import re
     # Validate input
     if len(upc) < 1 or not re.match("^[0-9A-Z\\-\\.\\$\\/\\+% ]+$", upc, re.IGNORECASE):
         return False
@@ -1299,14 +1300,51 @@ def get_code93_alt_checksum(upc):
 
     # Calculate first checksum with max weight of 20
     upc_reversed = upc[::-1].upper()
-    checksum1 = CODE93_ARRAY[calculate_weighted_sum(upc_reversed, 20) % 47]
+    checksum1_value = calculate_weighted_sum(upc_reversed, 20) % 47
+    checksum1 = CODE93_ARRAY[checksum1_value]
+
+    # Append the first checksum to the reversed input for the second calculation
+    upc_with_checksum1 = checksum1 + upc_reversed
 
     # Calculate second checksum with max weight of 15
-    checksum2 = CODE93_ARRAY[calculate_weighted_sum(upc_reversed, 15) % 47]
+    checksum2_value = calculate_weighted_sum(upc_with_checksum1, 15) % 47
+    checksum2 = CODE93_ARRAY[checksum2_value]
 
     # Return concatenated checksums
     return checksum1 + checksum2
 
+def get_code93extended_checksum(upc):
+    # Validate input
+    pattern = "^[0-9A-Z\\-\\.\\$\\/\\+\\%]+|(\\(\\$\\)|\\(\\%\\)|\\(\\+\\)|\\(\\/\\))+$"
+    if len(upc) < 1 or not re.match(pattern, upc, re.IGNORECASE):
+        return False
+
+    # Normalize the input to uppercase
+    upc = upc.upper()
+
+    # Parse sequences like ($), (%) into single characters for computation
+    extended_map = {"($)": "$", "(%)": "%", "(+)": "+", "(/)": "/"}
+    for key, value in extended_map.items():
+        upc = upc.replace(key, value)
+
+    # Helper function to calculate weighted sum with specified max weight
+    def calculate_weighted_sum(upc_reversed, max_weight):
+        return sum(((i % max_weight) + 1) * CODE93_VALUES[char] for i, char in enumerate(upc_reversed))
+
+    # Calculate first checksum with max weight of 20
+    upc_reversed = upc[::-1]
+    checksum1_value = calculate_weighted_sum(upc_reversed, 20) % 47
+    checksum1 = CODE93_ARRAY[checksum1_value]
+
+    # Append the first checksum to the reversed input for the second calculation
+    upc_with_checksum1 = checksum1 + upc_reversed
+
+    # Calculate second checksum with max weight of 15
+    checksum2_value = calculate_weighted_sum(upc_with_checksum1, 15) % 47
+    checksum2 = CODE93_ARRAY[checksum2_value]
+
+    # Return concatenated checksums
+    return checksum1 + checksum2
 
 '''
 // Code 93
@@ -1315,7 +1353,7 @@ def get_code93_alt_checksum(upc):
 '''
 
 
-def get_code93_checksum(upc):
+def get_code93_alt_checksum(upc):
     # Validate input
     if len(upc) < 1 or not re.match(r"^[0-9A-Z\\-\\.\\$\\/\\+% ]+$", upc, re.IGNORECASE):
         return False

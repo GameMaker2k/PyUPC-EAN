@@ -388,7 +388,8 @@ def get_code93extended_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     upc = upc.upper()
-    upc_matches = list(upc)
+    pattern = '\\(\\$\\)|\\(%\\)|\\(/\\)|\\(\\+\\)|[0-9A-Z\\-\\. \\$\\/\\+%]'
+    upc_matches = re.findall(pattern, upc)
     if(len(upc_matches) <= 0):
         return False
     upc_size_add = (len(upc_matches) * 9) * barwidth[0]
@@ -437,7 +438,8 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         vertical_text_fix = 0
     vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upc = upc.upper()
-    upc_matches = list(upc)
+    pattern = '\\(\\$\\)|\\(%\\)|\\(/\\)|\\(\\+\\)|[0-9A-Z\\-\\. \\$\\/\\+%]'
+    upc_matches = re.findall(pattern, upc)
     if(len(upc_matches) <= 0):
         return False
     Code93Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K", 21: "L", 22: "M", 23: "N",
@@ -615,8 +617,8 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
-    code93extended = {'%U': " ", '$A': " ", '$B': " ", '$C': " ", '$D': " ", '$E': " ", '$F': " ", '$G': " ", '$H': " ", '$I': " ", '$J': " ", '$K': " ", '$L': " ", '$M': " ", '$N': " ", '$O': " ", '$P': " ", '$Q': " ", '$R': " ", '$S': " ", '$T': " ", '$U': " ", '$V': " ", '$W': " ", '$X': " ", '$Y': " ", '$Z': " ", '%A': " ", '%B': " ", '%C': " ", '%D': " ", '%E': " ", ' ': " ", '/A': "!", '/B': "\"", '/C': "#", '$': "$", '%': "%", '/F': "&", '/G': "'", '/H': "(", '/I': "", '/J': "*", '+': "+", '/L': ",", '-': "-", '.': ".", '/': "/", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '/Z': ":", '%F': ";", '%G': "<", '%H': "=", '%I': ">", '%J': "?",
-                      '%V': "@", 'A': "A", 'B': "B", 'C': "C", 'D': "D", 'E': "E", 'F': "F", 'G': "G", 'H': "H", 'I': "I", 'J': "J", 'K': "K", 'L': "L", 'M': "M", 'N': "N", 'O': "O", 'P': "P", 'Q': "Q", 'R': "R", 'S': "S", 'T': "T", 'U': "U", 'V': "V", 'W': "W", 'X': "X", 'Y': "Y", 'Z': "Z", '%K': "[", '%L': "\\", '%M': "]", '%N': "^", '%O': "_", '%W': "`", '+A': "a", '+B': "b", '+C': "c", '+D': "d", '+E': "e", '+F': "f", '+G': "g", '+H': "h", '+I': "i", '+J': "j", '+K': "k", '+L': "l", '+M': "m", '+N': "n", '+O': "o", '+P': "p", '+Q': "q", '+R': "r", '+S': "s", '+T': "t", '+U': "u", '+V': "v", '+W': "w", '+X': "x", '+Y': "y", '+Z': "z", '%P': "{", '%Q': "|", '%R': "}", '%S': "~", '%T': " ", '%X': " ", '%Y': " ", '%Z': " "}
+    code93extended = {'(%)U': " ", '($)A': " ", '($)B': " ", '($)C': " ", '($)D': " ", '($)E': " ", '($)F': " ", '($)G': " ", '($)H': " ", '($)I': " ", '($)J': " ", '($)K': " ", '($)L': " ", '($)M': " ", '($)N': " ", '($)O': " ", '($)P': " ", '($)Q': " ", '($)R': " ", '($)S': " ", '($)T': " ", '($)U': " ", '($)V': " ", '($)W': " ", '($)X': " ", '($)Y': " ", '($)Z': " ", '(%)A': " ", '(%)B': " ", '(%)C': " ", '(%)D': " ", '(%)E': " ", ' ': " ", '(/)A': "!", '(/)B': "\"", '(/)C': "#", '($)': "$", '(/)F': "&", '(/)G': "'", '(/)H': "(", '(/)I': "", '(/)J': "*", '(/)L': ",", '-': "-", '.': ".", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '(/)Z': ":", '(/)': "/", '(%)F': ";", '(%)G': "<", '(%)H': "=", '(%)I': ">", '(%)J': "?",
+                      '(%)V': "@", '(%)K': "[", '(%)L': "\\", '(%)M': "]", '(%)N': "^", '(%)O': "_", '(%)W': "`", '(+)A': "a", '(+)B': "b", '(+)C': "c", '(+)D': "d", '(+)E': "e", '(+)F': "f", '(+)G': "g", '(+)H': "h", '(+)I': "i", '(+)J': "j", '(+)K': "k", '(+)L': "l", '(+)M': "m", '(+)N': "n", '(+)O': "o", '(+)P': "p", '(+)Q': "q", '(+)R': "r", '(+)S': "s", '(+)T': "t", '(+)U': "u", '(+)V': "v", '(+)W': "w", '(+)X': "x", '(+)Y': "y", '(+)Z': "z", '(+)': "+", '(%)P': "{", '(%)Q': "|", '(%)R': "}", '(%)S': "~", '(%)T': " ", '(%)X': " ", '(%)Y': " ", '(%)Z': " ", '(%)': "%"}
     NumTxtZero = 0
     LineTxtStart = ((shiftxy[0] + 18) * int(resize))
     LineTxtStartNorm = 18
@@ -626,21 +628,20 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         LineTxtStart += (1 * int(resize))
     while (NumTxtZero < len(upc_matches)):
         texthidden = False
-        NumTxtZeroNext = NumTxtZero + 1
-        if(NumTxtZeroNext < len(upc_matches) and code93extended.get(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext], False)):
-            LineTxtStart += 16 * int(resize)
-            LineTxtStartNorm += 16
+        if(len(upc_matches[NumTxtZero])==3):
+            NumTxtZeroNext = NumTxtZero + 1
+            nextchar = code93extended.get(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext], "  ")
+            LineTxtStart += 9 * int(resize)
+            LineTxtStartNorm += 9
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
-            barheight[0] * int(resize)),  code93extended.get(upc_matches[NumTxtZero]+upc_matches[NumTxtZeroNext], " "), barcolor[1], "ocrb", imageoutlib)
+            barheight[0] * int(resize)),  nextchar, barcolor[1], "ocrb", imageoutlib)
             NumTxtZero += 1
         else:
             drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
             barheight[0] * int(resize)),  code93extended.get(upc_matches[NumTxtZero], upc_matches[NumTxtZero]), barcolor[1], "ocrb", imageoutlib)
+            #print(upc_matches[NumTxtZero], NumTxtZero)
         if hidetext:
             texthidden = True
-        if(not texthidden):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
-            barheight[0] * int(resize)),  upc_matches[NumTxtZero], barcolor[1], "ocrb", imageoutlib)
         upc_array['text']['location'].append(LineTxtStartNorm)
         upc_array['text']['text'].append(upc_matches[NumTxtZero])
         upc_array['text']['type'].append("txt")
@@ -660,8 +661,9 @@ def draw_code93extended_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 
         barheightadd = barheight[1]
     if(imageoutlib not in imagelibsupport):
         imageoutlib = defaultdraw
-    upc_up = upc.upper()
-    upc_matches = list(upc_up)
+    upc = upc.upper()
+    pattern = '\\(\\$\\)|\\(%\\)|\\(/\\)|\\(\\+\\)|[0-9A-Z\\-\\. \\$\\/\\+%]'
+    upc_matches = re.findall(pattern, upc)
     if(len(upc_matches) <= 0):
         return False
     Code93Array = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F", 16: "G", 17: "H", 18: "I", 19: "J", 20: "K", 21: "L", 22: "M", 23: "N",
