@@ -70,7 +70,7 @@ else:
     enable_pilsupport = True
     enable_cairosupport = True
     enable_qahirahsupport = True
-    enable_cairosvgsupport = True
+    enable_cairosvgsupport = False
     enable_wandsupport = True
     enable_magicksupport = True
     enable_pgmagicksupport = True

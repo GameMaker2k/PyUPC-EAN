@@ -338,7 +338,7 @@ def encode_upcavar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     LineTxtStartNorm = 1
     if(tkintersupport and imageoutlib == "tkinter"):
         LineTxtStart += (4 * int(resize))
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
         LineTxtStart += (1 * int(resize))
     upc_print = list(re.findall("(\\d+)", upc)[0])
     while (NumTxtZero < len(upc_print)):
@@ -739,7 +739,7 @@ def encode_upcaeanvar_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
     LineTxtStartNorm = 2
     if(tkintersupport and imageoutlib == "tkinter"):
         LineTxtStart += (4 * int(resize))
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
         LineTxtStart += (1 * int(resize))
     upc_print = [0]+list(re.findall("(\\d+)", upc)[0])+[">"]
     while (NumTxtZero < len(upc_print)):

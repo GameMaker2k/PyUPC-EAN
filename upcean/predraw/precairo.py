@@ -238,7 +238,7 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, line_width=1):
     return True
 
 # Define valid PyCairo output formats
-cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "RAW", "CAIRO"}
+cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "RAW", "CAIRO", "QAHIRAH"}
 
 def get_save_filename(outfile):
     """
@@ -377,7 +377,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         image_context.paint()
         image_surface.flush()
         image_surface.finish()
-    elif(outfileext == "CAIRO"):
+    elif(outfileext == "CAIRO" or outfileext == "QAHIRAH"):
         # Create an ScriptSurface with the exact dimensions of the recorded content
         image_surface = cairo.ScriptSurface(cairo.ScriptDevice(outfile), cairo.FORMAT_RGB24, int(width), int(height))
         image_context = cairo.Context(image_surface)

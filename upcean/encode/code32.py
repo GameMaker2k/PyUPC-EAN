@@ -267,7 +267,7 @@ def encode_code32_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     LineTxtStartNorm = 30
     if(tkintersupport and imageoutlib == "tkinter"):
         LineTxtStart += (4 * int(resize))
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
         LineTxtStart += (1 * int(resize))
     while (NumTxtZero < len(upc_matches)):
         texthidden = False

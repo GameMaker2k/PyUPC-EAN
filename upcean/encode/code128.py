@@ -555,7 +555,7 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     LineTxtStartNorm = 16
     if(tkintersupport and imageoutlib == "tkinter"):
         LineTxtStart += (4 * int(resize))
-    elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
+    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
         LineTxtStart += (1 * int(resize))
     if(barcode_is_rev):
         upc_print.reverse()

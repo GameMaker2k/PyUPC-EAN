@@ -138,6 +138,8 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     LineFixTxtStart = 0
     if(tkintersupport and imageoutlib == "tkinter"):
         LineFixTxtStart = 4
+    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
+        LineTxtStart = 1
     while(txtbari < txtbarmax):
         texthidden = False
         if hidetext or (upc['text']['type'][txtbari] == "sn" and (hidesn is None or hidesn)) or (upc['text']['type'][txtbari] == "cd" and (hidecd is None or hidecd)):
