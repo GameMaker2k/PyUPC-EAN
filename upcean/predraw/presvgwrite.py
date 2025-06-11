@@ -8,9 +8,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2023 Cool Dude 2k
-    Copyright 2011-2023 Game Maker 2k
-    Copyright 2011-2023 Kazuki Przyborowski
+    Copyright 2011-2025 Cool Dude 2k
+    Copyright 2011-2025 Game Maker 2k
+    Copyright 2011-2025 Kazuki Przyborowski
 
     $FileInfo: presvgwrite.py - Last Update: 04/27/2024 Ver. 1.0.0 - Author: ChatGPT $
 '''

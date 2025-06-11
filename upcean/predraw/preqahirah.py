@@ -8,11 +8,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2023 Cool Dude 2k
-    Copyright 2011-2023 Game Maker 2k
-    Copyright 2011-2023 Kazuki Przyborowski
+    Copyright 2011-2025 Cool Dude 2k
+    Copyright 2011-2025 Game Maker 2k
+    Copyright 2011-2025 Kazuki Przyborowski
 
-    $FileInfo: preqahirah.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1  - Author: cooldude2k $
+    $FileInfo: preqahirah.py - Last Update: 6/11/2025 Ver. 2.12.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes

@@ -8,10 +8,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
 
-    Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    Copyright 2011-2025 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2025 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: itf14.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1 - Author: cooldude2k $
+    $FileInfo: itf14.py - Last Update: 6/11/2025 Ver. 2.12.0 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals
