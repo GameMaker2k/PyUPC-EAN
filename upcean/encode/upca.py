@@ -538,7 +538,6 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
     else:
         vertical_text_fix = 0
     vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
-    cairo_addon_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
     upc_matches = re.findall("(\\d{1})(\\d{5})(\\d{5})(\\d{1})", upc)
     if(len(upc_matches) <= 0):
         return False
