@@ -92,7 +92,10 @@ def select_image_output_lib(imageoutlib="pillow"):
     if not skimagesupport and imageoutlib == "skimage":
         imageoutlib = "svgwrite"
         logger.info("skimage not supported. Switching to svgwrite.")
-    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "svgwrite", "wand", "magick", "pgmagick", "cv2", "skimage", "tkinter"]:
+    if not drawlibsupport and imageoutlib == "drawlib":
+        imageoutlib = "svgwrite"
+        logger.info("drawlib not supported. Switching to svgwrite.")
+    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "svgwrite", "wand", "magick", "pgmagick", "cv2", "skimage", "tkinter", "drawlib"]:
         imageoutlib = "svgwrite"
         logger.info("Invalid library specified. Defaulting to svgwrite.")
 
@@ -148,6 +151,8 @@ def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
         return upcean.predraw.preskimage.snapCoords(ctx, x, y)
     elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.snapCoords(ctx, x, y)
+    elif selected_lib == "drawlib" and drawlibsupport:
+        return upcean.predraw.predrawlib.snapCoords(ctx, x, y)
 
     logger.error("snapCoords: Selected library is not supported.")
     return False
@@ -197,6 +202,8 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=defaultdraw):
         return upcean.predraw.preskimage.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+    elif selected_lib == "drawlib" and drawlibsupport:
+        return upcean.predraw.predrawlib.drawColorLine(ctx, x1, y1, x2, y2, width, color)
 
     logger.error("drawColorLine: Selected library is not supported.")
     return False
@@ -245,6 +252,8 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.preskimage.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "drawlib" and drawlibsupport:
+        return upcean.predraw.predrawlib.drawColorRectangle(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangle: Selected library is not supported.")
     return False
@@ -296,6 +305,8 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib=defaul
         return upcean.predraw.preskimage.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.drawColorText(ctx, size, x, y, text, color, ftype)
+    elif selected_lib == "drawlib" and drawlibsupport:
+        return upcean.predraw.predrawlib.drawColorText(ctx, size, x, y, text, color, ftype)
 
     logger.error("drawColorText: Selected library is not supported.")
     return False
@@ -344,6 +355,8 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.preskimage.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "drawlib" and drawlibsupport:
+        return upcean.predraw.predrawlib.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
 
     logger.error("drawColorRectangleAlt: Selected library is not supported.")
     return False
@@ -393,6 +406,8 @@ def get_save_filename(outfile, imageoutlib=defaultdraw):
         return upcean.predraw.preskimage.get_save_filename(outfile)
     elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.get_save_filename(outfile)
+    elif selected_lib == "drawlib" and drawlibsupport:
+        return upcean.predraw.predrawlib.get_save_filename(outfile)
 
     logger.error("get_save_filename: Selected library is not supported.")
     return False
@@ -429,6 +444,8 @@ def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
         return upcean.predraw.preskimage.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.new_image_surface(sizex, sizey, bgcolor)
+    elif selected_lib == "drawlib" and drawlibsupport:
+        return upcean.predraw.predrawlib.new_image_surface(sizex, sizey, bgcolor)
 
     logger.error("save_to_file: Selected library is not supported.")
     return False
@@ -462,6 +479,8 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
         return upcean.predraw.preskimage.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "tkinter" and tkintersupport:
         return upcean.predraw.pretkinter.save_to_file(inimage, outfile, outfileext, imgcomment)
+    elif selected_lib == "drawlib" and drawlibsupport:
+        return upcean.predraw.predrawlib.save_to_file(inimage, outfile, outfileext, imgcomment)
 
     logger.error("save_to_file: Selected library is not supported.")
     return False
@@ -490,7 +509,9 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
         imageoutlib = "tkinter"
     elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
         imageoutlib = "svgwrite"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "tkinter" and imgout != "none" and imgout is not None):
+    elif drawlibsupport and upc_preimg=="drawlib":
+        imageoutlib = "drawlib"
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "tkinter" and imageoutlib != "drawlib" and imgout != "none" and imgout is not None):
         imageoutlib = None
     elif(imgout == "none" or imgout is None):
         return False

@@ -15,14 +15,17 @@
 '''
 
 from drawlib.apis import (
-    config, rectangle, line, text, save,
-    ShapeStyle, LineStyle, TextStyle, Colors
+    clear, config, rectangle, line, text, save,
+    ShapeStyle, LineStyle, TextStyle, Colors, FontFile
 )
 from upcean.xml.downloader import upload_file_to_internet_file
-from io import BytesIO, IOBase
 import os, re
+try:
+    from io import BytesIO, IOBase
+except ImportError:
+    from StringIO import StringIO as BytesIO
+    from StringIO import StringIO as IOBase
 import upcean.fonts
-from PIL import ImageFont  # only for font loading
 
 # font paths
 fontpathocra    = upcean.fonts.fontpathocra
@@ -30,154 +33,136 @@ fontpathocraalt = upcean.fonts.fontpathocraalt
 fontpathocrb    = upcean.fonts.fontpathocrb
 fontpathocrbalt = upcean.fonts.fontpathocrbalt
 
-def snapCoords(x, y):
-    """Snap to the nearest half-pixel grid."""
-    return (round(x) + 0.5, round(y) + 0.5)
+class DrawlibContext(object):
+    """Dummy context so existing code can unpack ctx, img and draw into drawlib."""
+    def __init__(self):
+        pass
+    def user_to_device(self, x, y):
+        return x, y
+    def rectangle(self, coords, fill=None, outline=None):
+        (x1, y1), (x2, y2) = coords
+        w = x2 - x1; h = y2 - y1
+        if fill is not None:
+            style = ShapeStyle(halign="left", valign="top", fcolor=fill, lwidth=0)
+        else:
+            style = ShapeStyle(halign="left", valign="top", fcolor=Colors.Transparent, lcolor=outline, lwidth=1)
+        rectangle(xy=(x1, y1), width=w, height=h, style=style)
+    def line(self, pts, fill, width):
+        (x1, y1), (x2, y2) = pts
+        style = LineStyle(width=max(1, int(width)), color=fill)
+        line((x1, y1), (x2, y2), style=style)
+    def text(self, pos, txt, font=None, fill=None):
+        x, y = pos
+        style = TextStyle(color=fill, font=font)
+        text(xy=(x, y), text=str(txt), style=style)
 
-def drawColorRectangle(x1, y1, x2, y2, color):
-    """Filled rectangle from (x1,y1) to (x2,y2)."""
-    w = x2 - x1
-    h = y2 - y1
-    style = ShapeStyle(
-        halign="left", valign="top",
-        fcolor=color,
-        lwidth=0
-    )
-    rectangle(xy=(x1, y1), width=w, height=h, style=style)
+
+def snapCoords(ctx, x, y):
+    return round(x) + 0.5, round(y) + 0.5
+
+
+def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=None):
+    ctx.rectangle([(x1, y1), (x2, y2)], fill=color)
     return True
 
-def drawColorLine(x1, y1, x2, y2, width, color):
-    """Line from (x1,y1) to (x2,y2)."""
-    style = LineStyle(
-        width=max(1, int(width)),
-        color=color
-    )
-    line((x1, y1), (x2, y2), style=style)
+
+def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=None):
+    ctx.line([(x1, y1), (x2, y2)], fill=color, width=width)
     return True
 
-def drawColorText(size, x, y, txt, color, ftype="ocrb"):
-    """Draw text at (x,y) with OCR-style font."""
-    # pick the right font file
+
+def drawColorText(ctx, size, x, y, txt, color, ftype="ocrb", imageoutlib=None):
+    # pick OCR font path
     if ftype.lower() == "ocra":
-        path = fontpathocra if os.path.exists(fontpathocra) else fontpathocraalt
+        ttf = fontpathocra if os.path.exists(fontpathocra) else fontpathocraalt
     else:
-        path = fontpathocrb if os.path.exists(fontpathocrb) else fontpathocrbalt
-    font = ImageFont.truetype(path, size)
-    style = TextStyle(color=color, font=font)
+        ttf = fontpathocrb if os.path.exists(fontpathocrb) else fontpathocrbalt
+    # wrap in drawlib FontFile
+    font_file = FontFile(ttf)
+    style = TextStyle(color=color, size=size, font=font_file)
     text(xy=(x, y), text=str(txt), style=style)
     return True
 
-def drawColorRectangleAlt(x1, y1, x2, y2, color):
-    """Outline-only rectangle."""
-    w = x2 - x1
-    h = y2 - y1
-    style = ShapeStyle(
-        halign="left", valign="top",
-        fcolor=Colors.Transparent,
-        lcolor=color,
-        lwidth=1
-    )
-    rectangle(xy=(x1, y1), width=w, height=h, style=style)
+
+def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=None):
+    ctx.rectangle([(x1, y1), (x2, y2)], outline=color)
     return True
 
-def setup_canvas(width, height, bgcolor=(255,255,255)):
-    """
-    Initialize the global drawlib canvas.
-    """
-    config(width=width, height=height, background_color=bgcolor)
 
-def get_save_filename(outfile):
-    """
-    Parse `outfile` into (filename, format) or return None/False.
-    """
+def get_save_filename(outfile, imageoutlib=None):
     if outfile is None or isinstance(outfile, bool):
         return outfile
-    # file-object or stdout
     if isinstance(outfile, IOBase) or outfile == "-":
         return (outfile, "png")
-    # string path or URL
     if isinstance(outfile, str):
         s = outfile.strip()
-        # stdout
-        if s in ("", "-"):
+        if s == "" or s == "-":
             return (s, "png")
-        # FTP/SFTP upload
         if re.match(r"^(ftp|ftps|sftp)://", s):
             return (s, "png")
         base, ext = os.path.splitext(s)
         if ext:
             ext = ext.lstrip(".").lower()
         else:
-            # custom "name:EXT" syntax
             m = re.match(r"^(.+):([A-Za-z]+)$", s)
             if m:
                 base, ext = m.group(1), m.group(2).lower()
             else:
                 ext = "png"
         return (base, ext)
-    # tuple/list
     if isinstance(outfile, (tuple, list)) and len(outfile) == 2:
-        name, ext = outfile
-        if not isinstance(ext, str):
-            return False
-        ext = ext.strip().lower()
-        return (name, ext)
+        return (outfile[0], str(outfile[1]).lower())
     return False
 
-# alias
+
 get_save_file = get_save_filename
 
-def new_image_surface(sizex, sizey, bgcolor=(255,255,255)):
-    """
-    Create+clear the canvas.
-    """
-    setup_canvas(sizex, sizey, bgcolor)
 
-def save_to_file(outfile, fmt=None, imgcomment=None):
-    """
-    Save global canvas to `outfile`.
-    Supports FTP URLs and "-" (returns bytes).
-    """
-    target = outfile
-    upload_dest = None
-    is_stdout = False
+def new_image_surface(sizex, sizey, bgcolor, imageoutlib=None):
+    # clear old canvas, init new one
+    clear()
+    config(width=sizex, height=sizey, background_color=bgcolor)
+    return [DrawlibContext(), None]
 
-    # handle FTP
+
+def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib=None):
+    upload_target = None
+    is_bytes_out = False
+    # handle remote upload
     if isinstance(outfile, str) and re.match(r"^(ftp|ftps|sftp)://", outfile):
-        upload_dest = outfile
-        target = BytesIO()
-    # handle stdout
+        upload_target = outfile
+        outfile = BytesIO()
     elif outfile == "-":
-        target = BytesIO()
-        is_stdout = True
-
-    # default format
-    fmt = (fmt or "png").lower()
-    save(file=target, format=fmt)
-
-    # perform upload if needed
-    if upload_dest:
-        target.seek(0)
-        upload_file_to_internet_file(target, upload_dest)
-        target.close()
+        outfile = BytesIO()
+        is_bytes_out = True
+    # normalize path
+    if isinstance(outfile, str):
+        outfile = os.path.expanduser(outfile)
+        outfile = os.path.expandvars(outfile)
+        outfile = os.path.abspath(outfile)
+        # attach extension if missing
+        if not outfile.lower().endswith("." + str(outfileext).lower()):
+            outfile = outfile + "." + str(outfileext).lower()
+    # drawlib save: positional args
+    save(file=outfile, format=str(outfileext).lower())
+    # handle remote upload
+    if upload_target:
+        outfile.seek(0)
+        upload_file_to_internet_file(outfile, upload_target)
+        outfile.close()
         return True
-
-    # return bytes on stdout
-    if is_stdout:
-        target.seek(0)
-        data = target.read()
-        target.close()
+    # return bytes for "-"
+    if is_bytes_out:
+        outfile.seek(0)
+        data = outfile.read()
+        outfile.close()
         return data
-
     return True
 
-def save_to_filename(outfile, imgcomment=None):
-    """
-    Figure out filename+format, then call save_to_file().
-    """
-    parsed = get_save_filename(outfile)
+
+def save_to_filename(imgout, outfile, imgcomment="barcode", imageoutlib=None):
+    parsed = get_save_filename(outfile, imageoutlib)
     if not parsed or isinstance(parsed, bool):
-        # e.g. None or False
-        return False if parsed is False else [None, None, "drawlib"]
-    name, fmt = parsed
-    return save_to_file(name, fmt, imgcomment)
+        return False if parsed is False else [None, None, imageoutlib]
+    name, ext = parsed
+    return save_to_file(imgout, name, ext, imgcomment, imageoutlib)

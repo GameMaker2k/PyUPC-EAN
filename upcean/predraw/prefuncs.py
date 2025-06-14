@@ -33,6 +33,7 @@ magicksupport = upcean.support.check_for_magick()
 pgmagicksupport = upcean.support.check_for_pgmagick()
 cv2support = upcean.support.check_for_cv2()
 skimagesupport = upcean.support.check_for_skimage()
+drawlibsupport = upcean.support.check_for_drawlib()
 imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 
@@ -148,6 +149,16 @@ else:
     except ImportError:
         svgwritesupport = False
         logger.warning("svgwrite support failed to initialize.")
+
+# Initialize Cairo support if available
+if drawlibsupport:
+    try:
+        import drawlib
+        import drawlib.apis
+        import upcean.predraw.predrawlib
+    except ImportError:
+        drawlibsupport = False
+        logger.warning("drawlib support failed to initialize.")
 
 # Initialize pkg_resources support
 try:
