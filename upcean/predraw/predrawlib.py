@@ -54,8 +54,8 @@ class DrawlibContext(object):
     def text(self, pos, txt, font=None, fill=None, size=None):
         x, y = pos
         style = TextStyle(color=fill, font=font)
-        if size:
-            style.size = size
+        if size is not None:
+            style.size = size  # <-- this line ensures sizing works
         text(xy=(x, y), text=str(txt), style=style)
 
 
@@ -74,19 +74,14 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=None):
 
 
 def drawColorText(ctx, size, x, y, txt, color, ftype="ocrb", imageoutlib=None):
-    # Pick correct font path
     if ftype.lower() == "ocra":
         ttf = fontpathocra if os.path.exists(fontpathocra) else fontpathocraalt
     else:
         ttf = fontpathocrb if os.path.exists(fontpathocrb) else fontpathocrbalt
 
-    # Wrap TTF in FontFile and apply size
     font_file = FontFile(ttf)
-    style = TextStyle(color=color, size=size, font=font_file)
 
-    # Call ctx.text, not global text()
-    ctx.text((x, y), str(txt), font=font_file, fill=color)
-
+    ctx.text((x, y), str(txt), font=font_file, fill=color, size=size)
     return True
 
 
