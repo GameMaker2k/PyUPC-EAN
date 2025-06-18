@@ -99,13 +99,13 @@ def get_save_filename(outfile, imageoutlib=None):
         s = outfile.strip()
         if s == "" or s == "-":
             return (s, "png")
-        if re.match(r"^(ftp|ftps|sftp)://", s):
+        if re.match("^(ftp|ftps|sftp):\\/\\/", s):
             return (s, "png")
         base, ext = os.path.splitext(s)
         if ext:
             ext = ext.lstrip(".").lower()
         else:
-            m = re.match(r"^(.+):([A-Za-z]+)$", s)
+            m = re.match("^(.+):([A-Za-z]+)$", s)
             if m:
                 base, ext = m.group(1), m.group(2).lower()
             else:
@@ -130,7 +130,7 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
     upload_target = None
     is_bytes_out = False
     # handle remote upload
-    if isinstance(outfile, str) and re.match(r"^(ftp|ftps|sftp)://", outfile):
+    if isinstance(outfile, str) and re.match("^(ftp|ftps|sftp):\\/\\/", outfile):
         upload_target = outfile
         outfile = BytesIO()
     elif outfile == "-":
