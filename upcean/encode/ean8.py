@@ -442,7 +442,7 @@ def encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             supimgout = None
         else:
             supimgout = (upc_img, upc_preimg)
-        supout = upcean.encode.ean2.encode_ean2_barcode(supimgout, supplement, resize, (83, shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        supout = upcean.encode.ean2.encode_ean2_barcode(supimgout, supplement, resize, (83 + shiftxy[0], shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
         if(imageoutlib is None):
             upc_array['code'] += supout['code']
             upc_array['barsize'] += supout['barsize']
@@ -456,7 +456,7 @@ def encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
             supimgout = None
         else:
             supimgout = (upc_img, upc_preimg)
-        supout = upcean.encode.ean5.encode_ean5_barcode(supimgout, supplement, resize, (83, shiftxy[1]), barheight, barwidth, barcolor, hideinfo)
+        supout = upcean.encode.ean5.encode_ean5_barcode(supimgout, supplement, resize, (83 + shiftxy[0], shiftxy[1]), barheight, barwidth, barcolor, hideinfo, imageoutlib)
         if(imageoutlib is None):
             upc_array['code'] += supout['code']
             upc_array['barsize'] += supout['barsize']
