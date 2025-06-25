@@ -586,7 +586,7 @@ def draw_upce_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), 
         shift_x_pos = 0
     return [upc_img, upc_preimg, imageoutlib]
 
-def create_upce_barcode_sheet(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+def create_upce_barcode_sheet(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(imageoutlib not in imagelibsupport):
         imageoutlib = defaultdraw
     if(outfile is None):
