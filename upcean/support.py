@@ -551,12 +551,13 @@ if(pillowsupport):
 cairosupport = check_for_cairo()
 if(cairosupport):
     imagelibsupport.append("cairo")
+    imagelibsupport.append("cairosvg")
 qahirahsupport = check_for_qahirah()
 if(qahirahsupport):
     imagelibsupport.append("qahirah")
 cairosvgsupport = check_for_cairosvg()
-if(cairosvgsupport):
-    imagelibsupport.append("cairosvg")
+#if(cairosvgsupport):
+#    imagelibsupport.append("cairosvg")
 svgwritesupport = check_for_svgwrite()
 if(svgwritesupport):
     imagelibsupport.append("svgwrite")
