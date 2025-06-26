@@ -406,6 +406,6 @@ def create_codabar_barcode_sheet(upc, outfile="./codabar.png", resize=1, barheig
         return [upc_img, upc_preimg, imageoutlib]
     else:
         if(imagecomment is None):
-            imagecomment = "upca; "+upc
+            imagecomment = "codabar; "+upc
         return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True

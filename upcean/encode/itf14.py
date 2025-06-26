@@ -454,7 +454,7 @@ def create_itf14_barcode_sheet(upc, outfile="./itf.png", resize=1, barheight=(48
         return [upc_img, upc_preimg, imageoutlib]
     else:
         if(imagecomment is None):
-            imagecomment = "upca; "+upc
+            imagecomment = "itf14; "+upc
         return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True
 

@@ -335,6 +335,6 @@ def create_msi_barcode_sheet(upc, outfile="./msi.png", resize=1, barheight=(48, 
         return [upc_img, upc_preimg, imageoutlib]
     else:
         if(imagecomment is None):
-            imagecomment = "upca; "+upc
+            imagecomment = "msi; "+upc
         return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True

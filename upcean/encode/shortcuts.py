@@ -52,6 +52,24 @@ def create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48
         return False
     return False
 
+def draw_barcode_sheet(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    if(bctype not in upcean.support.supported_barcodes("tuple")):
+        return False
+    if(hasattr(upcean.encode.barcode, "draw_"+bctype+"_barcode_sheet") and callable(getattr(upcean.encode.barcode, "draw_"+bctype+"_barcode_sheet"))):
+        return getattr(upcean.encode.barcode, "draw_"+bctype+"_barcode_sheet")(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    if(not hasattr(upcean.encode.barcode, "draw_"+bctype+"_barcode_sheet") or not callable(getattr(upcean.encode.barcode, "draw_"+bctype+"_barcode_sheet"))):
+        return False
+    return False
+
+
+def create_barcode_sheet(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    if(bctype not in upcean.support.supported_barcodes("tuple")):
+        return False
+    if(hasattr(upcean.encode.barcode, "create_"+bctype+"_barcode_sheet") and callable(getattr(upcean.encode.barcode, "create_"+bctype+"_barcode_sheet"))):
+        return getattr(upcean.encode.barcode, "create_"+bctype+"_barcode_sheet")(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(not hasattr(upcean.encode.barcode, "create_"+bctype+"_barcode_sheet") or not callable(getattr(upcean.encode.barcode, "create_"+bctype+"_barcode_sheet"))):
+        return False
+    return False
 
 def validate_encode_barcode(bctype, inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     if(bctype not in upcean.support.supported_barcodes("tuple")):
@@ -91,6 +109,30 @@ def validate_create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barh
     if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
         return create_barcode(bctype, upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
+def validate_draw_barcode_sheet(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    if(bctype not in upcean.support.supported_barcodes("tuple")):
+        return False
+    if(bctype == "upca" or bctype == "upcaean" or bctype == "goodwill" or bctype == "upce" or bctype == "ean13" or bctype == "ean8" or bctype == "itf" or bctype == "itf6" or bctype == "itf14"):
+        if(hasattr(upcean.encode.barcode, "validate_draw_"+bctype+"_barcode_sheet") and callable(getattr(upcean.encode.barcode, "validate_draw_"+bctype+"_barcode_sheet"))):
+            return getattr(upcean.encode.barcode, "validate_draw_"+bctype+"_barcode_sheet")(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+        if(not hasattr(upcean.encode.barcode, "validate_draw_"+bctype+"_barcode_sheet") or not callable(getattr(upcean.encode.barcode, "validate_draw_"+bctype+"_barcode_sheet"))):
+            return False
+        return False
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+        return draw_barcode_sheet(bctype, upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+
+
+def validate_create_barcode_sheet(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    if(bctype not in upcean.support.supported_barcodes("tuple")):
+        return False
+    if(bctype == "upca" or bctype == "upcaean" or bctype == "goodwill" or bctype == "upce" or bctype == "ean13" or bctype == "ean8" or bctype == "itf" or bctype == "itf6" or bctype == "itf14"):
+        if(hasattr(upcean.encode.barcode, "validate_create_"+bctype+"_barcode_sheet") and callable(getattr(upcean.encode.barcode, "validate_create_"+bctype+"_barcode_sheet"))):
+            return getattr(upcean.encode.barcode, "validate_create_"+bctype+"_barcode_sheet")(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+        if(not hasattr(upcean.encode.barcode, "validate_create_"+bctype+"_barcode_sheet") or not callable(getattr(upcean.encode.barcode, "validate_create_"+bctype+"_barcode_sheet"))):
+            return False
+        return False
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+        return create_barcode_sheet(bctype, upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 def fix_encode_barcode(bctype, inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     if(bctype not in upcean.support.supported_barcodes("tuple")):
@@ -129,3 +171,28 @@ def fix_create_barcode(bctype, upc, outfile="./barcode.png", resize=1, barheight
         return False
     if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
         return create_barcode(bctype, upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+
+def fix_draw_barcode_sheet(bctype, upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    if(bctype not in upcean.support.supported_barcodes("tuple")):
+        return False
+    if(bctype == "upca" or bctype == "upcaean" or bctype == "goodwill" or bctype == "upce" or bctype == "ean13" or bctype == "ean8" or bctype == "itf" or bctype == "itf6" or bctype == "itf14"):
+        if(hasattr(upcean.encode.barcode, "fix_draw_"+bctype+"_barcode_sheet") and callable(getattr(upcean.encode.barcode, "fix_draw_"+bctype+"_barcode_sheet"))):
+            return getattr(upcean.encode.barcode, "fix_draw_"+bctype+"_barcode_sheet")(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+        if(not hasattr(upcean.encode.barcode, "fix_draw_"+bctype+"_barcode_sheet") or not callable(getattr(upcean.encode.barcode, "fix_draw_"+bctype+"_barcode_sheet"))):
+            return False
+        return False
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+        return draw_barcode_sheet(bctype, upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+
+
+def fix_create_barcode_sheet(bctype, upc, outfile="./barcode.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    if(bctype not in upcean.support.supported_barcodes("tuple")):
+        return False
+    if(bctype == "upca" or bctype == "upcaean" or bctype == "goodwill" or bctype == "upce" or bctype == "ean13" or bctype == "ean8" or bctype == "itf" or bctype == "itf6" or bctype == "itf14"):
+        if(hasattr(upcean.encode.barcode, "fix_create_"+bctype+"_barcode_sheet") and callable(getattr(upcean.encode.barcode, "fix_create_"+bctype+"_barcode_sheet"))):
+            return getattr(upcean.encode.barcode, "fix_create_"+bctype+"_barcode_sheet")(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+        if(not hasattr(upcean.encode.barcode, "fix_create_"+bctype+"_barcode_sheet") or not callable(getattr(upcean.encode.barcode, "fix_create_"+bctype+"_barcode_sheet"))):
+            return False
+        return False
+    if(bctype != "upca" and bctype != "upcaean" and bctype != "upce" and bctype != "ean13" and bctype != "ean8" and bctype != "itf" and bctype != "itf6" and bctype != "itf14"):
+        return create_barcode_sheet(bctype, upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)

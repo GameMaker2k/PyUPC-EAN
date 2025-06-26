@@ -57,7 +57,7 @@ imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 
 
-def get_upcaean_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
+def get_ean13_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1)):
     barheightadd = barheight[1]
     if(barheight[0] >= barheight[1]):
         barheightadd = barheight[0] + 6
@@ -597,6 +597,6 @@ def create_ean13_barcode_sheet(upc, outfile="./ean13.png", resize=1, barheight=(
         return [upc_img, upc_preimg, imageoutlib]
     else:
         if(imagecomment is None):
-            imagecomment = "upca; "+upc
+            imagecomment = "ean13; "+upc
         return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True

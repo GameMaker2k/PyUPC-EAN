@@ -366,6 +366,6 @@ def create_code11_barcode_sheet(upc, outfile="./code11.png", resize=1, barheight
         return [upc_img, upc_preimg, imageoutlib]
     else:
         if(imagecomment is None):
-            imagecomment = "upca; "+upc
+            imagecomment = "code11; "+upc
         return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True

@@ -461,7 +461,7 @@ def create_ean5sup_barcode_sheet(upc, outfile="./ean5.png", resize=1, barheight=
         return [upc_img, upc_preimg, imageoutlib]
     else:
         if(imagecomment is None):
-            imagecomment = "upca; "+upc
+            imagecomment = "ean5; "+upc
         return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True
 
@@ -577,7 +577,7 @@ def create_ean5_barcode_sheet(upc, outfile="./ean5.png", resize=1, barheight=(48
         return [upc_img, upc_preimg, imageoutlib]
     else:
         if(imagecomment is None):
-            imagecomment = "upca; "+upc
+            imagecomment = "ean5; "+upc
         return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True
 
