@@ -467,7 +467,7 @@ def draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcol
 def create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     return create_itf14_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
-def draw_itf6_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), numxy=(1, 1), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+def draw_itf6_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
  return draw_itf14_barcode_sheet(upc, resize, barheight, barwidth, barcolor, numxy, hideinfo, imageoutlib)
 
 def create_itf6_barcode_sheet(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
