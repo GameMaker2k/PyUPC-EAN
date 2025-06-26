@@ -343,3 +343,64 @@ def create_code32_barcode(upc, outfile="./code32.png", resize=1, barheight=(48, 
             imagecomment = "code32; "+upc
         return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
     return True
+
+def draw_code32_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    barheightadd = barheight[1]
+    if(barheight[0] >= barheight[1]):
+        barheightadd = barheight[0] + 6
+    else:
+        barheightadd = barheight[1]
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
+    upc_matc = upc.upper()
+    upc_matches = list(upc_matc)
+    upc_size_add = ((len(upc_matches) * 15) +
+                    (len(upc_matches) + 1)) * barwidth[0]
+    if(len(upc_matches) <= 0):
+        return False
+    upc_img, upc_preimg = upcean.predraw.new_image_surface((((50 * barwidth[0]) + upc_size_add) * int(resize)) * int(numxy[0]), ((barheightadd + (9 * barwidth[1])) * int(resize)) * int(numxy[1]), barcolor[2], imageoutlib)
+    shift_x = 0
+    shift_y = 0
+    shift_x_pos = 0
+    shift_y_pos = 0
+    for shift_y in range(numxy[1]):
+        for shift_x in range(numxy[0]):
+            imgout = encode_code32_barcode([upc_img, upc_preimg], upc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
+            shift_x_pos += ((50 * barwidth[0]) + upc_size_add)
+        shift_y_pos += (barheightadd + (9 * barwidth[1]))
+        shift_x_pos = 0
+    return [upc_img, upc_preimg, imageoutlib]
+
+def create_code32_barcode_sheet(upc, outfile="./code32.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    if(imageoutlib not in imagelibsupport):
+        imageoutlib = defaultdraw
+    if(outfile is None):
+        if(imageoutlib == "cairosvg"):
+            oldoutfile = None
+            outfile = None
+            outfileext = "SVG"
+        else:
+            oldoutfile = None
+            outfile = None
+            outfileext = None
+    else:
+        oldoutfile = upcean.predraw.get_save_filename(
+            outfile, imageoutlib)
+        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
+            del(outfile)
+            outfile = oldoutfile[0]
+            outfileext = oldoutfile[1]
+            if(cairosupport and imageoutlib == "cairo" and outfileext == "SVG"):
+                imageoutlib = "cairosvg"
+            if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
+                imageoutlib = "cairo"
+    imgout = draw_code32_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    upc_img = imgout[0]
+    upc_preimg = imgout[1]
+    if(oldoutfile is None or isinstance(oldoutfile, bool)):
+        return [upc_img, upc_preimg, imageoutlib]
+    else:
+        if(imagecomment is None):
+            imagecomment = "upca; "+upc
+        return upcean.predraw.save_to_file([upc_img, upc_preimg], outfile, outfileext, imagecomment, imageoutlib)
+    return True
