@@ -36,6 +36,7 @@ from upcean.encode.upcavar import *
 from upcean.encode.ean5 import *
 from upcean.encode.ean2 import *
 import upcean.support
+import upcean.getprefix.getprefix
 tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
@@ -51,7 +52,6 @@ skimagesupport = upcean.support.check_for_skimage()
 drawlibsupport = upcean.support.check_for_drawlib()
 imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
-import upcean.getprefix.getprefix
 
 def validate_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     upc_pieces = None
