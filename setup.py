@@ -197,6 +197,26 @@ if(pygenbuildinfo):
     verinfofile.write(verinfodata)
     verinfofile.close()
 
+if(len(sys.argv) > 1 and (sys.argv[1] == "buildcfg" or sys.argv[1] == "makecfg")):
+    outcfgvar = """[project]
+    name = "{}"
+    version = "{}"
+    readme = "README.md"
+    license = {{ text = "BSD-3-Clause" }}
+    keywords = []
+    description = "{}"
+    authors = [
+        {{ name = "{}", email = "{}" }},
+    ]
+    """.format(pymodule['name'], pymodule['version'], pymodule['description'], pymodule['author'], pymodule['authoremail'])
+    mytoml = open("./pyproject.toml", "w")
+    mytoml.write(outcfgvar)
+    mytoml.flush()
+    if(hasattr(os, "sync")):
+        os.fsync(mytoml.fileno())
+    mytoml.close()
+    sys.exit()
+
 setup(
     name=pymodule['name'],
     version=pymodule['version'],

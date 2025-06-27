@@ -1,0 +1,11 @@
+[project]
+    name = "PyUPC-EAN"
+    version = "2.20.0"
+    readme = "README.md"
+    license = { text = "BSD-3-Clause" }
+    keywords = []
+    description = "A barcode library/module for python."
+    authors = [
+        { name = "Kazuki Przyborowski", email = "kazuki.przyborowski@gmail.com" },
+    ]
+    
