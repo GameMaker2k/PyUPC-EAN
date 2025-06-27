@@ -77,6 +77,8 @@ class encode:
         self.filename = "./barcode.png"
         self.inimage = None
         self.size = 1
+        self.numx = 1
+        self.numy = 1
         self.hidesn = False
         self.hidecd = False
         self.hidetext = False
@@ -164,6 +166,42 @@ class encode:
             if(size is None):
                 size = self.size
             return upcean.encode.fix_draw_barcode(self.type, self.code, size, self.barheight, self.barwidth, (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
+
+        def create_barcode_sheet(self, filename=None, size=None):
+            if(filename is None):
+                filename = self.filename
+            if(size is None):
+                size = self.size
+            return upcean.encode.create_barcode_sheet(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.numx, self.numy), (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imagecomment, self.imageoutlib)
+
+        def validate_create_barcode_sheet(self, filename=None, size=None):
+            if(filename is None):
+                filename = self.filename
+            if(size is None):
+                size = self.size
+            return upcean.encode.validate_create_barcode_sheet(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.numx, self.numy), (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imagecomment, self.imageoutlib)
+
+        def fix_create_barcode_sheet(self, filename=None, size=None):
+            if(filename is None):
+                filename = self.filename
+            if(size is None):
+                size = self.size
+            return upcean.encode.fix_create_barcode_sheet(self.type, self.code, filename, size, self.barheight, self.barwidth, (self.numx, self.numy), (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imagecomment, self.imageoutlib)
+
+        def draw_barcode_sheet(self, size=None):
+            if(size is None):
+                size = self.size
+            return upcean.encode.draw_barcode_sheet(self.type, self.code, size, self.barheight, self.barwidth, (self.numx, self.numy), (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
+
+        def validate_draw_barcode_sheet(self, size=None):
+            if(size is None):
+                size = self.size
+            return upcean.encode.validate_draw_barcode_sheet(self.type, self.code, size, self.barheight, self.barwidth, (self.numx, self.numy), (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
+
+        def fix_draw_barcode_sheet(self, size=None):
+            if(size is None):
+                size = self.size
+            return upcean.encode.fix_draw_barcode_sheet(self.type, self.code, size, self.barheight, self.barwidth, (self.numx, self.numy), (self.barcolor, self.textcolor, self.bgcolor), (self.hidesn, self.hidecd, self.hidetext), self.imageoutlib)
 
         def encode_barcode(self, size=None):
             if(size is None):
