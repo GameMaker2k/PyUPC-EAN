@@ -54,200 +54,525 @@ defaultdraw = upcean.support.defaultdraw
 import upcean.getprefix.getprefix
 
 def validate_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return create_upca_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_upca_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return draw_upca_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_upca_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_upca_barcode_sheet(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return create_upca_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_upca_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_upca_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return draw_upca_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_upca_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 def validate_encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return encode_upca_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_upca_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return create_upcaean_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_upcaean_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return draw_upcaean_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_upcaean_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_upcaean_barcode_sheet(upc, outfile="./goodwill.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return create_upcaean_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_upcaean_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_upcaean_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return draw_upcaean_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_upcaean_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 12):
         return False
     if(not upcean.validate.validate_upca_checksum(upc)):
         return False
-    return encode_upcaean_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_upcaean_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_upce_checksum(upc)):
         return False
-    return create_upce_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_upce_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_upce_checksum(upc)):
         return False
-    return draw_upce_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_upce_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 def validate_create_upce_barcode_sheet(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_upce_checksum(upc)):
         return False
-    return create_upce_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_upce_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_upce_barcod_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_upce_checksum(upc)):
         return False
-    return draw_upce_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_upce_barcode_sheet(fullfullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 def validate_encode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_upce_checksum(upc)):
         return False
-    return encode_upce_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_upce_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 13):
         return False
     if(not upcean.validate.validate_ean13_checksum(upc)):
         return False
-    return create_ean13_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_ean13_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 13):
         return False
     if(not upcean.validate.validate_ean13_checksum(upc)):
         return False
-    return draw_ean13_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_ean13_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_ean13_barcode_sheet(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 13):
         return False
     if(not upcean.validate.validate_ean13_checksum(upc)):
         return False
-    return create_ean13_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_ean13_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_ean13_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 13):
         return False
     if(not upcean.validate.validate_ean13_checksum(upc)):
         return False
-    return draw_ean13_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_ean13_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 13):
         return False
     if(not upcean.validate.validate_ean13_checksum(upc)):
         return False
-    return encode_ean13_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_ean13_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
         return False
-    return create_ean8_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_ean8_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
         return False
-    return draw_ean8_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_ean8_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_ean8_barcode_sheet(upc, outfile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
         return False
-    return create_ean8_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_ean8_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_ean8_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
         return False
-    return draw_ean8_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_ean8_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 8):
         return False
     if(not upcean.validate.validate_ean8_checksum(upc)):
         return False
-    return encode_ean8_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_ean8_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -255,7 +580,7 @@ def validate_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(4
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return create_itf_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -263,7 +588,7 @@ def validate_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1)
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return draw_itf_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_itf_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf_barcode_sheet(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -271,7 +596,7 @@ def validate_create_itf_barcode_sheet(upc, outfile="./itf.png", resize=1, barhei
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return create_itf_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -279,7 +604,7 @@ def validate_draw_itf_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return draw_itf_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_itf_barcode_sheet(fullfullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
@@ -287,7 +612,7 @@ def validate_encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheigh
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return encode_itf_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_itf_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -295,7 +620,7 @@ def validate_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return create_itf6_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf6_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -303,7 +628,7 @@ def validate_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return draw_itf6_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_itf6_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf6_barcode_sheet(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -311,7 +636,7 @@ def validate_create_itf6_barcode_sheet(upc, outfile="./itf6.png", resize=1, barh
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return create_itf6_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf6_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf6_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -319,7 +644,7 @@ def validate_draw_itf6_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return draw_itf6_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_itf6_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
@@ -327,7 +652,7 @@ def validate_encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheig
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return encode_itf6_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_itf6_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -335,7 +660,7 @@ def validate_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheigh
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return create_itf14_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf14_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -343,7 +668,7 @@ def validate_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return draw_itf14_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_itf14_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf14_barcode_sheet(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -351,7 +676,7 @@ def validate_create_itf14_barcode_sheet(upc, outfile="./itf14.png", resize=1, ba
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return create_itf14_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf14_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf14_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -359,7 +684,7 @@ def validate_draw_itf14_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidt
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return draw_itf14_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_itf14_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
@@ -367,283 +692,708 @@ def validate_encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return encode_itf14_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_itf14_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return create_upca_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_upca_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_upca_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return draw_upca_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_upca_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_upca_barcode_sheet(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return create_upca_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_upca_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_upca_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return draw_upca_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_upca_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def fix_encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return encode_upca_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return encode_upca_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_upcaean_barcode(upc, outfile="./goodwill.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return create_upcaean_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_upcaean_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_upcaean_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return draw_upcaean_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_upcaean_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_upcaean_barcode_sheet(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return create_upcaean_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_upcaean_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_upcaean_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return draw_upcaean_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_upcaean_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def fix_encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 12 or len(upc) < 11):
         return False
     upc = upcean.validate.fix_upca_checksum(upc)
-    return encode_upcaean_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return encode_upcaean_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_upce_barcode(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_upce_checksum(upc)
-    return create_upce_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_upce_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_upce_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_upce_checksum(upc)
-    return draw_upce_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_upce_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_upce_barcode_sheet(upc, outfile="./upce.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_upce_checksum(upc)
-    return create_upce_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_upce_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_upce_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_upce_checksum(upc)
-    return draw_upce_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_upce_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def fix_encode_upce_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_upce_checksum(upc)
-    return encode_upce_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return encode_upce_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_ean13_barcode(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 12):
         return False
     upc = upcean.validate.fix_ean13_checksum(upc)
-    return create_ean13_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_ean13_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_ean13_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 12):
         return False
     upc = upcean.validate.fix_ean13_checksum(upc)
-    return draw_ean13_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_ean13_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_ean13_barcode_sheet(upc, outfile="./ean13.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 12):
         return False
     upc = upcean.validate.fix_ean13_checksum(upc)
-    return create_ean13_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_ean13_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_ean13_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 12):
         return False
     upc = upcean.validate.fix_ean13_checksum(upc)
-    return draw_ean13_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_ean13_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def fix_encode_ean13_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 13 or len(upc) < 12):
         return False
     upc = upcean.validate.fix_ean13_checksum(upc)
-    return encode_ean13_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return encode_ean13_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_ean8_barcode(upc, outfile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_ean8_checksum(upc)
-    return create_ean8_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_ean8_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_ean8_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_ean8_checksum(upc)
-    return draw_ean8_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_ean8_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_ean8_barcode_sheet(upc, outfile="./ean8.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_ean8_checksum(upc)
-    return create_ean8_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return create_ean8_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def fix_draw_ean8_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_ean8_checksum(upc)
-    return draw_ean8_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return draw_ean8_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def fix_encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
+    upc_pieces = None
+    supplement = None
+    fullupc = upc
+    if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
+    if(re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)):
+        upc_pieces = re.findall("([0-9]+)([ |\\|]){1}([0-9]{5})$", upc)
+        upc_pieces = upc_pieces[0]
+        upc = upc_pieces[0]
+        supplement = upc_pieces[2]
     if(len(upc) > 8 or len(upc) < 7):
         return False
     upc = upcean.validate.fix_ean8_checksum(upc)
-    return encode_ean8_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    if(supplement is not None):
+        fullupc = upc+supplement
+    else:
+        fullupc = upc
+    return encode_ean8_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return create_itf_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return create_itf_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return draw_itf_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return draw_itf_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 def fix_create_itf_barcode_sheet(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return create_itf_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return create_itf_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return draw_itf_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return draw_itf_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return encode_itf_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return encode_itf_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return create_itf6_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return create_itf6_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return draw_itf6_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return draw_itf6_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_create_itf6_barcode_sheet(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return create_itf6_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return create_itf6_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf6_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return draw_itf6_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return draw_itf6_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return encode_itf6_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return encode_itf6_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return create_itf14_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return create_itf14_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return draw_itf14_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return draw_itf14_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_create_itf14_barcode_sheet(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return create_itf14_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return create_itf14_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf14_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return draw_itf14_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return draw_itf14_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return encode_itf14_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return encode_itf14_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
