@@ -8,9 +8,9 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
-    Copyright 2011-2023 Game Maker 2k - https://github.com/GameMaker2k
-    Copyright 2011-2023 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
-    $FileInfo: upc-httpd.py - Last Update: 11/15/2024 Ver. 2.12.0 RC 1  - Author: cooldude2k $
+    Copyright 2011-2025 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2011-2025 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+    $FileInfo: upc-httpd.py - Last Update: 6/27/2025 Ver. 2.20.0 RC 1  - Author: cooldude2k $
 '''
 
 from __future__ import print_function, unicode_literals
