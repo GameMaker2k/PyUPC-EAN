@@ -48,7 +48,7 @@ def generate_barcode_test_image():
         output.paste(img, (10, y))
         y += img.height + spacing
 
-    output.save("upca_test_sheet.png")
-    print("Test sheet saved as upca_test_sheet.png")
+    output.save("upc_test_sheet.png")
+    print("Test sheet saved as upc_test_sheet.png")
 
 generate_barcode_test_image()
