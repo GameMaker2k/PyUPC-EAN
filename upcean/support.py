@@ -40,14 +40,19 @@ def get_importing_script_path():
 
 __use_env_file__ = True
 __use_ini_file__ = True
+__use_ini_name__ = "upcean.ini"
 if('PYUPCEAN_CONFIG_FILE' in os.environ and os.path.exists(os.environ['PYUPCEAN_CONFIG_FILE']) and __use_env_file__):
     scriptconf = os.environ['PYUPCEAN_CONFIG_FILE']
 else:
-    scriptconf = os.path.join(os.path.dirname(get_importing_script_path()), "upcean.ini")
+    prescriptpath = get_importing_script_path()
+    if(prescriptpath is not None):
+        scriptconf = os.path.join(os.path.dirname(prescriptpath), __use_ini_name__)
+    else:
+        scriptconf = ""
 if os.path.exists(scriptconf):
     __config_file__ = scriptconf
 else:
-    __config_file__ = os.path.join(os.path.dirname(os.path.realpath(__file__)), "upcean.ini")
+    __config_file__ = os.path.join(os.path.dirname(os.path.realpath(__file__)), __use_ini_name__)
 
 if os.path.exists(__config_file__) and __use_ini_file__:
     # Create a ConfigParser object
