@@ -466,20 +466,20 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
                 cur_set = old_cur_set
         # Append to upc_print based on cur_set and upc_to_dec
         dec_num = upc_to_dec[NumZero]
-        if cur_set < len(codecharset):
+        if cur_set == 2 and old_cur_set == 2:
+            print(dec_num, cur_set, old_cur_set)
+            upc_print.append(str(dec_num))  # ← literal pair
+        elif cur_set == 2 and (old_cur_set == 1 or old_cur_set == 3):
+                pass
+        else:
             charset = codecharset[cur_set]
             if upc_value in charset:
-                if (cur_set == 0 and dec_num < 64) or \
-                   (cur_set == 1 and dec_num < 95) or \
-                   (cur_set == 2 and dec_num < 100):
+                if (cur_set == 0 and dec_num < 64) or (cur_set == 1 and dec_num < 95):
                     upc_print.append(charset[upc_value])
                 else:
                     upc_print.append(" ")
             else:
                 upc_print.append(" ")
-        else:
-            upc_print.append(" ")
-        # Handle post-processing cur_set changes
         if upc_value in ["63", "64", "65", "66", "67", "68", "69", "6a", "6b", "6c", "6d"]:
             if upc_value == "63":
                 left_barcolor = [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0]
