@@ -467,7 +467,6 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         # Append to upc_print based on cur_set and upc_to_dec
         dec_num = upc_to_dec[NumZero]
         if cur_set == 2 and old_cur_set == 2:
-            print(dec_num, cur_set, old_cur_set)
             upc_print.append(str(dec_num))  # ← literal pair
         elif cur_set == 2 and (old_cur_set == 1 or old_cur_set == 3):
                 pass
@@ -476,8 +475,6 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             if upc_value in charset:
                 if (cur_set == 0 and dec_num < 64) or (cur_set == 1 and dec_num < 95):
                     upc_print.append(charset[upc_value])
-                else:
-                    upc_print.append(" ")
             else:
                 upc_print.append(" ")
         if upc_value in ["63", "64", "65", "66", "67", "68", "69", "6a", "6b", "6c", "6d"]:
@@ -571,18 +568,17 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             upc_array['text']['location'].append(LineTxtStartNorm)
             upc_array['text']['text'].append(upc_print[NumTxtZero])
             upc_array['text']['type'].append("txt")
-            LineTxtStart += 11 * int(resize)
-            LineTxtStartNorm += 11
+            LineTxtStart += 9 * int(resize)
+            LineTxtStartNorm += 9
         if(len(upc_print[NumTxtZero]) == 2):
             if(not texthidden):
                 drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
         barheight[0] * int(resize)),  upc_print[NumTxtZero][0], barcolor[1], "ocrb", imageoutlib)
-            LineTxtStart += 6 * int(resize)
             upc_array['text']['location'].append(LineTxtStartNorm)
             upc_array['text']['text'].append(upc_print[NumTxtZero][0])
             upc_array['text']['type'].append("txt")
-            LineTxtStart += 11 * int(resize)
-            LineTxtStartNorm += 6
+            LineTxtStart += 7 * int(resize)
+            LineTxtStartNorm += 7
             if(not texthidden):
                 drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
         barheight[0] * int(resize)),  upc_print[NumTxtZero][1], barcolor[1], "ocrb", imageoutlib)
@@ -590,8 +586,8 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
             upc_array['text']['location'].append(LineTxtStartNorm)
             upc_array['text']['text'].append(upc_print[NumTxtZero][1])
             upc_array['text']['type'].append("txt")
-            LineTxtStart += 11 * int(resize)
-            LineTxtStartNorm += 5
+            LineTxtStart += 9 * int(resize)
+            LineTxtStartNorm += 9
         NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
@@ -1053,8 +1049,6 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
             upc_print.append(codecharset[cur_set][upc_matches[NumZero]])
         elif(cur_set == 2 and upc_to_dec[NumZero] < 100):
             upc_print.append(codecharset[cur_set][upc_matches[NumZero]])
-        else:
-            upc_print.append(" ")
         if(upc_matches[NumZero] == "63"):
             left_barcolor = [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0]
             if(cur_set == 0 or cur_set == 1):
@@ -1150,25 +1144,23 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
                 upc_array['text']['location'].append(LineTxtStartNorm)
                 upc_array['text']['text'].append(upc_print[NumTxtZero])
                 upc_array['text']['type'].append("txt")
-                LineTxtStart += 11 * int(resize)
-                LineTxtStartNorm += 11
+                LineTxtStart += 9 * int(resize)
+                LineTxtStartNorm += 9
             if(len(upc_print[NumTxtZero]) == 2):
                 drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
             barheight[0] * int(resize)),  upc_print[NumTxtZero][0], barcolor[1], "ocrb", imageoutlib)
-                LineTxtStart += 6 * int(resize)
                 upc_array['text']['location'].append(LineTxtStartNorm)
                 upc_array['text']['text'].append(upc_print[NumTxtZero][0])
                 upc_array['text']['type'].append("txt")
-                LineTxtStart += 11 * int(resize)
-                LineTxtStartNorm += 6
+                LineTxtStart += 7 * int(resize)
+                LineTxtStartNorm += 7
                 drawColorText(upc_img, 10 * int(resize * barwidth[1]), LineTxtStart * barwidth[0], vertical_text_fix + (
             barheight[0] * int(resize)),  upc_print[NumTxtZero][1], barcolor[1], "ocrb", imageoutlib)
-                LineTxtStart += 5 * int(resize)
                 upc_array['text']['location'].append(LineTxtStartNorm)
                 upc_array['text']['text'].append(upc_print[NumTxtZero][1])
                 upc_array['text']['type'].append("txt")
-                LineTxtStart += 11 * int(resize)
-                LineTxtStartNorm += 5
+                LineTxtStart += 9 * int(resize)
+                LineTxtStartNorm += 9
             NumTxtZero += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
