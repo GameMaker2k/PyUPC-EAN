@@ -11,7 +11,7 @@
     Copyright 2011-2025 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2025 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: functions.py - Last Update: 6/27/2025 Ver. 2.20.0 RC 1 - Author: cooldude2k $
+    $FileInfo: functions.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
 import os

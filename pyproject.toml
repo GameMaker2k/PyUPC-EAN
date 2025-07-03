@@ -1,6 +1,6 @@
 [project]
     name = "PyUPC-EAN"
-    version = "2.20.0"
+    version = "2.20.2"
     readme = "README.md"
     license = { text = "BSD-3-Clause" }
     keywords = []

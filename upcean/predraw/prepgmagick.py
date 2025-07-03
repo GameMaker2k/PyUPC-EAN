@@ -11,11 +11,11 @@
     Copyright 2011-2025 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2025 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: prepgmagick.py - Last Update: 6/27/2025 Ver. 2.20.0 RC 1 - Author: cooldude2k $
+    $FileInfo: prepgmagick.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-from upcean.xml.downloader import upload_file_to_internet_file
+from upcean.downloader import upload_file_to_internet_file
 import pgmagick
 import os
 import re
