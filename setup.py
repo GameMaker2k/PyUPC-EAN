@@ -22,7 +22,6 @@ import sys
 import time
 import datetime
 import platform
-import pkg_resources
 from setuptools import setup, find_packages
 
 install_requires = []
@@ -146,8 +145,8 @@ if(len(sys.argv) > 1 and (sys.argv[1] == "versioninfo" or sys.argv[1] == "getver
     print(pymodule_data)
     sys.exit()
 if(len(sys.argv) > 1 and (sys.argv[1] == "sourceinfo" or sys.argv[1] == "getsourceinfo")):
-    srcinfofilename = os.path.realpath("."+os.path.sep+pkg_resources.to_filename(
-        pymodule['name'])+".egg-info"+os.path.sep+"SOURCES.txt")
+    srcinfofilename = os.path.realpath("."+os.path.sep+
+              pymodule['name'].replace('-', '_')+".egg-info"+os.path.sep+"SOURCES.txt")
     srcinfofile = open(srcinfofilename, "r")
     srcinfodata = srcinfofile.read()
     srcinfofile.close()
@@ -161,7 +160,7 @@ if(len(sys.argv) > 1 and (sys.argv[1] == "sourceinfo" or sys.argv[1] == "getsour
 if(len(sys.argv) > 1 and sys.argv[1] == "cleansourceinfo"):
     os.system("rm -rfv \""+os.path.realpath("."+os.path.sep+"dist\""))
     os.system("rm -rfv \""+os.path.realpath("."+os.path.sep +
-              pkg_resources.to_filename(pymodule['name'])+".egg-info\""))
+              pymodule['name'].replace('-', '_')+".egg-info\""))
     sys.exit()
 
 if(pygenbuildinfo):
