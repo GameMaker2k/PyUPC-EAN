@@ -30,21 +30,11 @@ extras_requires = []
 
 
 def pillow_installed():
-    """Check if Pillow is installed"""
-    pillow_req = pkg_resources.Requirement.parse('Pillow')
-    try:
-        pkg_resources.get_provider(pillow_req)
-    except pkg_resources.DistributionNotFound:
-        return False
-    else:
-        return True
+    return True
 
 
 # depend in Pillow if it is installed, otherwise depend on PIL
-if pillow_installed():
-    extras_requires.append('Pillow')
-else:
-    extras_requires.append('PIL')
+extras_requires.append('Pillow')
 extras_requires.append('pycairo')
 extras_requires_dict = {'drawing_barcodes':  extras_requires}
 
