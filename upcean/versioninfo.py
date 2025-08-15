@@ -67,7 +67,7 @@ __email__ = "kazuki.przyborowski@gmail.com"
 __status__ = "Production"
 __project__ = "PyUPC-EAN"
 __project_url__ = "https://pypi.python.org/pypi/PyUPC-EAN"
-__version_info__ = (2, 20, 8, "RC 1", 1)
+__version_info__ = (2, 20, 10, "RC 1", 1)
 __build_time__ = {"timestamp": None, "year": None, "month": None,
                   "day": None, "hour": None, "minute": None, "second": None}
 __build_time_utc__ = {"timestamp": None, "year": None, "month": None,
