@@ -308,10 +308,10 @@ def download_file_from_http_file(url, headers=None, usehttp=__use_http_lib__):
     if usehttp == 'requests' and haverequests:
         if username and password:
             response = requests.get(
-                rebuilt_url, headers=headers, auth=(username, password), stream=True
+                rebuilt_url, headers=headers, auth=(username, password), timeout=(5, 30)), stream=True
             )
         else:
-            response = requests.get(rebuilt_url, headers=headers, stream=True)
+            response = requests.get(rebuilt_url, headers=headers, timeout=(5, 30)), stream=True)
         response.raw.decode_content = True
         shutil.copyfileobj(response.raw, httpfile)
 
@@ -481,7 +481,7 @@ else:
 if(haveparamiko):
     def upload_file_to_sftp_string(sftpstring, url):
         sftpfileo = BytesIO(sftpstring)
-        sftpfile = upload_file_to_sftp_files(ftpfileo, url)
+        sftpfile = upload_file_to_sftp_files(sftpfileo, url)
         sftpfileo.close()
         return sftpfile
 else:
@@ -594,7 +594,7 @@ else:
 if(havepysftp):
     def upload_file_to_pysftp_string(sftpstring, url):
         sftpfileo = BytesIO(sftpstring)
-        sftpfile = upload_file_to_pysftp_files(ftpfileo, url)
+        sftpfile = upload_file_to_pysftp_file(sftpfileo, url)
         sftpfileo.close()
         return sftpfile
 else:
@@ -618,10 +618,10 @@ def download_file_from_internet_file(url, headers=geturls_headers_upcean_python_
     return False
 
 
-def download_file_from_internet_string(url, headers=geturls_headers_upcean_python_alt):
+def download_file_from_internet_string(url, headers=geturls_headers_upcean_python_alt, usehttp=__use_http_lib__):
     urlparts = urlparse(url)
     if(urlparts.scheme == "http" or urlparts.scheme == "https"):
-        return download_file_from_http_string(url, headers)
+        return download_file_from_http_string(url, headers, usehttp)
     elif(urlparts.scheme == "ftp" or urlparts.scheme == "ftps"):
         return download_file_from_ftp_string(url)
     elif(urlparts.scheme == "sftp"):
@@ -664,4 +664,3 @@ def upload_file_to_internet_string(ifp, url):
     else:
         return False
     return False
-
