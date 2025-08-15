@@ -308,10 +308,10 @@ def download_file_from_http_file(url, headers=None, usehttp=__use_http_lib__):
     if usehttp == 'requests' and haverequests:
         if username and password:
             response = requests.get(
-                rebuilt_url, headers=headers, auth=(username, password), timeout=(5, 30)), stream=True
+                rebuilt_url, headers=headers, auth=(username, password), timeout=(5, 30), stream=True
             )
         else:
-            response = requests.get(rebuilt_url, headers=headers, timeout=(5, 30)), stream=True)
+            response = requests.get(rebuilt_url, headers=headers, timeout=(5, 30), stream=True)
         response.raw.decode_content = True
         shutil.copyfileobj(response.raw, httpfile)
 
