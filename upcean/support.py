@@ -195,7 +195,7 @@ if(not enable_internal_svgwrite):
         # SVGWrite Support Check
         svgwritesupport = True
         try:
-            import upcean.svgwrite
+            import upcean.svgwrite as svgwrite
             svgwritesupport = True
         except ImportError:
             try:
