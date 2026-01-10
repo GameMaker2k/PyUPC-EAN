@@ -20,7 +20,7 @@ import upcean.support
 enable_internal_svgwrite = upcean.support.enable_internal_svgwrite
 if(not enable_internal_svgwrite):
     try:
-        import upcean.svgwrite
+        import upcean.svgwrite as svgwrite
     except ImportError:
         import upcean.svgcreate as svgwrite
 else:
