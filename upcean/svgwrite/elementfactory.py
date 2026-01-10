@@ -6,17 +6,17 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite import container
-from svgwrite import shapes
-from svgwrite import path
-from svgwrite import image
-from svgwrite import text
-from svgwrite import gradients
-from svgwrite import pattern
-from svgwrite import masking
-from svgwrite import animate
-from svgwrite import filters
-from svgwrite import solidcolor
+from upcean.svgwrite import container
+from upcean.svgwrite import shapes
+from upcean.svgwrite import path
+from upcean.svgwrite import image
+from upcean.svgwrite import text
+from upcean.svgwrite import gradients
+from upcean.svgwrite import pattern
+from upcean.svgwrite import masking
+from upcean.svgwrite import animate
+from upcean.svgwrite import filters
+from upcean.svgwrite import solidcolor
 
 factoryelements = {
     'g': container.Group,
