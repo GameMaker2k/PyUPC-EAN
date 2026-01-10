@@ -6,8 +6,8 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.base import BaseElement
-from svgwrite.mixins import Transform
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import Transform
 
 
 class ClipPath(BaseElement, Transform):

@@ -6,9 +6,9 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.base import BaseElement
-from svgwrite.mixins import XLink, Presentation
-from svgwrite.utils import strlist, is_string
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import XLink, Presentation
+from upcean.svgwrite.utils import strlist, is_string
 
 __all__ = ['Filter']
 

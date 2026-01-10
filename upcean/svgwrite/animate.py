@@ -6,9 +6,9 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.base import BaseElement
-from svgwrite.mixins import XLink
-from svgwrite.utils import strlist, is_string
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import XLink
+from upcean.svgwrite.utils import strlist, is_string
 
 
 class Set(BaseElement, XLink):

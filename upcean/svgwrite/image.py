@@ -6,8 +6,8 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.base import BaseElement
-from svgwrite.mixins import Transform, _vert, _horiz, Clipping
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import Transform, _vert, _horiz, Clipping
 
 class Image(BaseElement, Transform, Clipping):
     """ The **image** element indicates that the contents of a complete file are

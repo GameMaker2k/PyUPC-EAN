@@ -6,8 +6,8 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.base import BaseElement
-from svgwrite.mixins import Presentation, Markers, Transform
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import Presentation, Markers, Transform
 
 
 class Line(BaseElement, Transform, Presentation, Markers):
@@ -153,7 +153,7 @@ class Polygon(Polyline):
     """ The **polygon** element defines a closed shape consisting of a set of
     connected straight line segments.
 
-    Same as :class:`~svgwrite.shapes.Polyline` but closed.
+    Same as :class:`~upcean.svgwrite.shapes.Polyline` but closed.
     """
     elementname = 'polygon'
 

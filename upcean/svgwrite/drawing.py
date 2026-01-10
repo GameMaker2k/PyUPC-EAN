@@ -25,9 +25,9 @@ section by::
 """
 import io
 
-from svgwrite.container import SVG, Defs
-from svgwrite.elementfactory import ElementFactory
-from svgwrite.utils import pretty_xml
+from upcean.svgwrite.container import SVG, Defs
+from upcean.svgwrite.elementfactory import ElementFactory
+from upcean.svgwrite.utils import pretty_xml
 
 
 class Drawing(SVG, ElementFactory):

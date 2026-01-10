@@ -6,8 +6,8 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.utils import strlist
-from svgwrite.utils import is_string
+from upcean.svgwrite.utils import strlist
+from upcean.svgwrite.utils import is_string
 
 _horiz = {'center': 'xMid', 'left': 'xMin', 'right': 'xMax'}
 _vert  = {'middle': 'YMid', 'top': 'YMin', 'bottom':'YMax'}

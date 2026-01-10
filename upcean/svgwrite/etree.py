@@ -8,7 +8,7 @@
 
 # usage:
 #
-# from svgwrite.etree import etree, CDATA
+# from upcean.svgwrite.etree import etree, CDATA
 #
 # element = etree.Element('myTag')
 # element.append(CDATA("< and >"))

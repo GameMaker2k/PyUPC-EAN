@@ -6,7 +6,7 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.validator2 import get_validator
+from upcean.svgwrite.validator2 import get_validator
 
 
 class Parameter(object):

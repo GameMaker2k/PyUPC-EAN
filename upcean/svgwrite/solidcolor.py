@@ -6,8 +6,8 @@
 # Copyright (C) 2016, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.base import BaseElement
-from svgwrite.mixins import XLink
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import XLink
 
 
 class SolidColor(BaseElement, XLink):

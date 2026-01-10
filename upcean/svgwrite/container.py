@@ -7,15 +7,15 @@
 """
 The **container** module provides following structural objects:
 
-* :class:`svgwrite.Group`
-* :class:`svgwrite.SVG`
-* :class:`svgwrite.Defs`
-* :class:`svgwrite.Symbol`
-* :class:`svgwrite.Marker`
-* :class:`svgwrite.Use`
-* :class:`svgwrite.Hyperlink`
-* :class:`svgwrite.Script`
-* :class:`svgwrite.Style`
+* :class:`upcean.svgwrite.Group`
+* :class:`upcean.svgwrite.SVG`
+* :class:`upcean.svgwrite.Defs`
+* :class:`upcean.svgwrite.Symbol`
+* :class:`upcean.svgwrite.Marker`
+* :class:`upcean.svgwrite.Use`
+* :class:`upcean.svgwrite.Hyperlink`
+* :class:`upcean.svgwrite.Script`
+* :class:`upcean.svgwrite.Style`
 
 set/get SVG attributes::
 
@@ -24,11 +24,11 @@ set/get SVG attributes::
 
 """
 from urllib.request import urlopen
-from svgwrite.utils import font_mimetype, base64_data, find_first_url
-from svgwrite.base import BaseElement
-from svgwrite.mixins import ViewBox, Transform, XLink
-from svgwrite.mixins import Presentation, Clipping
-from svgwrite.etree import CDATA
+from upcean.svgwrite.utils import font_mimetype, base64_data, find_first_url
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import ViewBox, Transform, XLink
+from upcean.svgwrite.mixins import Presentation, Clipping
+from upcean.svgwrite.etree import CDATA
 
 
 class Group(BaseElement, Transform, Presentation):
@@ -137,7 +137,7 @@ class SVG(Symbol):
         """ Add <style> tag to the defs section.
 
         :param content: style sheet content as string
-        :return: :class:`~svgwrite.container.Style` object
+        :return: :class:`~upcean.svgwrite.container.Style` object
         """
         return self.defs.add(Style(content))
 

@@ -6,9 +6,9 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.base import BaseElement
-from svgwrite.mixins import XLink, ViewBox, Transform, Presentation
-from svgwrite.utils import is_string
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import XLink, ViewBox, Transform, Presentation
+from upcean.svgwrite.utils import is_string
 
 class Pattern(BaseElement, XLink, ViewBox, Transform, Presentation):
     """

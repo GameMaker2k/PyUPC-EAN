@@ -26,7 +26,7 @@
 """
 import base64
 from pathlib import Path
-from svgwrite.data import pattern
+from upcean.svgwrite.data import pattern
 
 
 def is_string(value):

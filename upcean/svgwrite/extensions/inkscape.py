@@ -3,7 +3,7 @@
 # based on work of:
 # Copyright (c) 2018 Antonio Ospite <ao2@ao2.it>
 
-from svgwrite.data.types import SVGAttribute
+from upcean.svgwrite.data.types import SVGAttribute
 
 INKSCAPE_NAMESPACE = 'http://www.inkscape.org/namespaces/inkscape'
 SODIPODI_NAMESPACE = 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd'

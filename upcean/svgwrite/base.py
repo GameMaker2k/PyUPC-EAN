@@ -9,12 +9,12 @@
 The **BaseElement** is the root for all SVG elements.
 """
 
-from svgwrite.etree import etree
+from upcean.svgwrite.etree import etree
 
 import copy
 
-from svgwrite.params import Parameter
-from svgwrite.utils import AutoID
+from upcean.svgwrite.params import Parameter
+from upcean.svgwrite.utils import AutoID
 
 
 class BaseElement(object):

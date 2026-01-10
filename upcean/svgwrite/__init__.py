@@ -26,8 +26,8 @@ a simple example::
 
     import svgwrite
 
-    dwg = svgwrite.Drawing('test.svg', profile='tiny')
-    dwg.add(dwg.line((0, 0), (10, 0), stroke=svgwrite.rgb(10, 10, 16, '%')))
+    dwg = upcean.svgwrite.Drawing('test.svg', profile='tiny')
+    dwg.add(dwg.line((0, 0), (10, 0), stroke=upcean.svgwrite.rgb(10, 10, 16, '%')))
     dwg.add(dwg.text('Test', insert=(0, 0.2)))
     dwg.save()
 
@@ -50,8 +50,8 @@ AUTHOR_EMAIL = 'me@mozman.at'
 CYEAR = '2014-2019'
 
 
-from svgwrite.drawing import Drawing
-from svgwrite.utils import rgb
+from upcean.svgwrite.drawing import Drawing
+from upcean.svgwrite.utils import rgb
 
 
 class Unit(object):

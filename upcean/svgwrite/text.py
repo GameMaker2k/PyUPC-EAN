@@ -12,9 +12,9 @@ character data inside the **text** element.
 
 """
 
-from svgwrite.base import BaseElement
-from svgwrite.mixins import Presentation, Transform, XLink
-from svgwrite.utils import iterflatlist, strlist, is_string
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.mixins import Presentation, Transform, XLink
+from upcean.svgwrite.utils import iterflatlist, strlist, is_string
 
 
 class TSpan(BaseElement, Presentation):
@@ -95,7 +95,7 @@ class TRef(BaseElement, XLink, Presentation):
         """
         :param element: create a reference this element, if element is a \
                         `string` its the **id** name of the referenced element, \
-                        if element is a :class:`~svgwrite.base.BaseElement` \
+                        if element is a :class:`~upcean.svgwrite.base.BaseElement` \
                         the **id** SVG Attribute is used to create the reference.
 
         """

@@ -6,9 +6,9 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
 
-from svgwrite.data import full11
-from svgwrite.data import tiny12
-from svgwrite.data import pattern
+from upcean.svgwrite.data import full11
+from upcean.svgwrite.data import tiny12
+from upcean.svgwrite.data import pattern
 
 validator_cache = {}
 

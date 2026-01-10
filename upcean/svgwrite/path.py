@@ -4,9 +4,9 @@
 # Created: 08.09.2010
 # License: MIT License
 
-from svgwrite.base import BaseElement
-from svgwrite.utils import strlist
-from svgwrite.mixins import Presentation, Markers, Transform
+from upcean.svgwrite.base import BaseElement
+from upcean.svgwrite.utils import strlist
+from upcean.svgwrite.mixins import Presentation, Markers, Transform
 
 
 class Path(BaseElement, Transform, Presentation, Markers):
