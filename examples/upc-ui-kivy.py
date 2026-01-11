@@ -38,6 +38,7 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.image import Image as KivyImage
 from kivy.uix.scrollview import ScrollView
 from kivy.core.image import Image as CoreImage
+from kivy.uix.filechooser import FileChooserListView  # needed for Builder KV
 
 KV = '''
 <MainWidget>:
@@ -56,7 +57,6 @@ KV = '''
             padding: 5
             row_default_height: '40dp'
             row_force_default: True
-            # rows will adjust automatically
 
     BoxLayout:
         size_hint_y: None
@@ -99,11 +99,14 @@ KV = '''
     ScrollView:
         do_scroll_x: True
         do_scroll_y: True
-        KivyImage:
+        Image:   # <-- FIX: use Kivy class name, not Python alias
             id: barcode_image
             size_hint: None, None
             allow_stretch: False
 '''
+
+# Load KV before creating MainWidget()
+Builder.load_string(KV)
 
 # barcode types mapping
 barcode_list = {
@@ -116,39 +119,47 @@ barcode_list = {
 class MainWidget(BoxLayout):
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
-        Builder.load_string(KV)
+
         # initial colors
         self.barcode_bg_color = (255, 255, 255)
         self.barcode_bar_color = (0, 0, 0)
         self.barcode_text_color = (0, 0, 0)
         self.last_pil = None
+
         # build input grid
         self.build_inputs()
 
     def build_inputs(self):
         grid = self.ids.input_grid
+
         # Value
         grid.add_widget(Label(text='Value:'))
         self.value_input = TextInput(multiline=False)
         grid.add_widget(self.value_input)
+
         # Symbology
         grid.add_widget(Label(text='Symbology:'))
         self.symbology = Spinner(text='UPC-A', values=list(barcode_list.keys()))
         grid.add_widget(self.symbology)
+
         # Magnify
         grid.add_widget(Label(text='Magnify:'))
         self.magnify = Spinner(text='1', values=[str(i) for i in range(1, 11)])
         grid.add_widget(self.magnify)
+
         # Bar heights / widths
         grid.add_widget(Label(text='Bar 1 Height:'))
         self.entry2 = TextInput(text='48', multiline=False, input_filter='int')
         grid.add_widget(self.entry2)
+
         grid.add_widget(Label(text='Bar 2 Height:'))
         self.entry3 = TextInput(text='54', multiline=False, input_filter='int')
         grid.add_widget(self.entry3)
+
         grid.add_widget(Label(text='Bar Width:'))
         self.entry_barwidth = TextInput(text='1', multiline=False, input_filter='int')
         grid.add_widget(self.entry_barwidth)
+
         grid.add_widget(Label(text='Text Size:'))
         self.entry_textsize = TextInput(text='1', multiline=False, input_filter='int')
         grid.add_widget(self.entry_textsize)
@@ -177,14 +188,13 @@ class MainWidget(BoxLayout):
         data.seek(0)
         core = CoreImage(data, ext='png')
         tex = core.texture
-        # set image size to natural size
+
         img = self.ids.barcode_image
         img.texture = tex
         img.width, img.height = tex.size
         return tex
 
     def generate_barcode(self):
-        # validate inputs
         try:
             bh1 = int(self.entry2.text)
             bh2 = int(self.entry3.text)
@@ -194,11 +204,12 @@ class MainWidget(BoxLayout):
         except ValueError:
             self.show_popup('Error', 'Heights, Width, Text Size, and Magnify must be integers.')
             return
+
         hidesn = self.ids.cb_hidesn.active
         hidecd = self.ids.cb_hidecd.active
         hidetext = self.ids.cb_hidetext.active
         val = self.preprocess_value(self.value_input.text)
-        # generate barcode
+
         bc = upcean.oopfuncs.barcode(barcode_list[self.symbology.text], val)
         bc.size = mag
         bc.barheight = (bh1, bh2)
@@ -210,50 +221,81 @@ class MainWidget(BoxLayout):
         bc.hidecd = hidecd
         bc.hidetext = hidetext
         bc.filename = None
+
         valid = bc.validate_draw_barcode()[1]
         if not valid:
             self.show_popup('Error', 'Could not generate barcode.')
             return
+
         self.last_pil = valid
         self.pil_to_texture(valid)
 
     def change_colors(self):
-        # sequential color pickers
         from kivy.uix.colorpicker import ColorPicker
+
         def pick(title, initial, callback):
             content = BoxLayout(orientation='vertical')
             cp = ColorPicker()
-            cp.hsv = (initial[0]/255., initial[1]/255., initial[2]/255.)
+            cp.hsv = (initial[0] / 255., initial[1] / 255., initial[2] / 255.)
             btn = Button(text='Select', size_hint_y=None, height='40dp')
             content.add_widget(cp)
             content.add_widget(btn)
-            popup = Popup(title=title, content=content, size_hint=(0.8,0.8))
-            btn.bind(on_release=lambda *a: (callback(tuple(int(c*255) for c in cp.color[:3])), popup.dismiss()))
+            popup = Popup(title=title, content=content, size_hint=(0.8, 0.8))
+            btn.bind(
+                on_release=lambda *a: (
+                    callback(tuple(int(c * 255) for c in cp.color[:3])),
+                    popup.dismiss()
+                )
+            )
             popup.open()
-        # chain callbacks
-        pick('Background Color', self.barcode_bg_color, lambda c: (setattr(self, 'barcode_bg_color', c), pick('Bar Color', self.barcode_bar_color, lambda c2: (setattr(self, 'barcode_bar_color', c2), pick('Text Color', self.barcode_text_color, lambda c3: (setattr(self, 'barcode_text_color', c3), self.generate_barcode()))))))
+
+        pick(
+            'Background Color', self.barcode_bg_color,
+            lambda c: (
+                setattr(self, 'barcode_bg_color', c),
+                pick(
+                    'Bar Color', self.barcode_bar_color,
+                    lambda c2: (
+                        setattr(self, 'barcode_bar_color', c2),
+                        pick(
+                            'Text Color', self.barcode_text_color,
+                            lambda c3: (
+                                setattr(self, 'barcode_text_color', c3),
+                                self.generate_barcode()
+                            )
+                        )
+                    )
+                )
+            )
+        )
 
     def open_save_popup(self):
         if not self.last_pil:
             self.generate_barcode()
             if not self.last_pil:
                 return
+
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+
         chooser = Builder.load_string("""
 FileChooserListView:
     path: '.'
     filters: ['*.png','*.jpg','*.jpeg','*.gif','*.bmp','*.tif','*.tiff']
 """)
+
         fname_input = TextInput(text='barcode.png', size_hint_y=None, height='40dp', multiline=False)
+
         btn_box = BoxLayout(size_hint_y=None, height='40dp', spacing=10)
         save_btn = Button(text='Save')
         cancel_btn = Button(text='Cancel')
         btn_box.add_widget(save_btn)
         btn_box.add_widget(cancel_btn)
+
         content.add_widget(chooser)
         content.add_widget(fname_input)
         content.add_widget(btn_box)
-        popup = Popup(title='Save Image As', content=content, size_hint=(0.9,0.9))
+
+        popup = Popup(title='Save Image As', content=content, size_hint=(0.9, 0.9))
         save_btn.bind(on_release=lambda *a: self.perform_save(chooser.path, fname_input.text, popup))
         cancel_btn.bind(on_release=lambda *a: popup.dismiss())
         popup.open()
