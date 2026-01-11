@@ -71,7 +71,6 @@ if cairosupport:
         import upcean.predraw.precairo
     except ImportError:
         cairosupport = False
-        logger.warning("Cairo support failed to initialize.")
 
 # Initialize Cairo support if available
 if qahirahsupport:
@@ -80,7 +79,6 @@ if qahirahsupport:
         import upcean.predraw.preqahirah
     except ImportError:
         qahirahsupport = False
-        logger.warning("Qahirah support failed to initialize.")
 
 # Initialize Cairo support if available
 if wandsupport:
@@ -91,7 +89,6 @@ if wandsupport:
         import upcean.predraw.prewand
     except ImportError:
         wandsupport = False
-        logger.warning("Wand support failed to initialize.")
 
 # Initialize Cairo support if available
 if magicksupport:
@@ -100,7 +97,6 @@ if magicksupport:
         import upcean.predraw.premagick
     except ImportError:
         magicksupport = False
-        logger.warning("PythonMagick support failed to initialize.")
 
 # Initialize Cairo support if available
 if pgmagicksupport:
@@ -109,7 +105,6 @@ if pgmagicksupport:
         import upcean.predraw.prepgmagick
     except ImportError:
         magicksupport = False
-        logger.warning("pgmagick support failed to initialize.")
 
 # Initialize Cairo support if available
 if cv2support:
@@ -119,7 +114,6 @@ if cv2support:
         import upcean.predraw.precv2
     except ImportError:
         magicksupport = False
-        logger.warning("cv2 support failed to initialize.")
 
 # Initialize Cairo support if available
 if skimagesupport:
@@ -129,7 +123,6 @@ if skimagesupport:
         import upcean.predraw.preskimage
     except ImportError:
         magicksupport = False
-        logger.warning("skimage support failed to initialize.")
 
 # Initialize drawsvg support if available
 if drawsvgsupport:
@@ -138,7 +131,6 @@ if drawsvgsupport:
         import upcean.predraw.predrawsvg
     except ImportError:
         drawsvgsupport = False
-        logger.warning("drawsvg support failed to initialize.")
 
 # Initialize svgwrite support if available
 if svgwritesupport and not enable_internal_svgwrite:
@@ -151,14 +143,12 @@ if svgwritesupport and not enable_internal_svgwrite:
             import upcean.predraw.presvgwrite
         except ImportError:
             svgwritesupport = False
-            logger.warning("svgwrite support failed to initialize.")
 else:
     try:
         import upcean.svgcreate as svgwrite
         import upcean.predraw.presvgwrite
     except ImportError:
         svgwritesupport = False
-        logger.warning("svgwrite support failed to initialize.")
 
 # Initialize Cairo support if available
 if drawlibsupport:
@@ -168,7 +158,6 @@ if drawlibsupport:
         import upcean.predraw.predrawlib
     except ImportError:
         drawlibsupport = False
-        logger.warning("drawlib support failed to initialize.")
 
 # Initialize pkg_resources support
 try:
