@@ -43,14 +43,21 @@ from upcean.versioninfo import getcuryear, __author__, __copyright__, __credits_
 // Source: http://www.barcodeisland.com/
 '''
 
+tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
+drawsvgsupport = upcean.support.check_for_drawsvg()
 cairosupport = upcean.support.check_for_cairo()
 qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()
 svgwritesupport = upcean.support.check_for_svgwrite()
 wandsupport = upcean.support.check_for_wand()
 magicksupport = upcean.support.check_for_magick()
+pgmagicksupport = upcean.support.check_for_pgmagick()
+cv2support = upcean.support.check_for_cv2()
+skimagesupport = upcean.support.check_for_skimage()
+drawlibsupport = upcean.support.check_for_drawlib()
+imagelibsupport = upcean.support.imagelibsupport
 defaultdraw = upcean.support.defaultdraw
 if(pilsupport or pillowsupport or cairosupport or qahirahsupport or svgwritesupport):
     import upcean.fonts
