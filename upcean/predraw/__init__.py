@@ -71,6 +71,9 @@ def select_image_output_lib(imageoutlib="pillow"):
     if not qahirahsupport and imageoutlib == "qahirah":
         imageoutlib = "svgwrite"
         logger.info("qahirah not supported. Switching to svgwrite.")
+    if not drawsvgsupport and imageoutlib == "drawsvg":
+        imageoutlib = "svgwrite"
+        logger.info("drawsvg not supported. Switching to svgwrite.")
     if not svgwritesupport and imageoutlib == "svgwrite":
         imageoutlib = "svgwrite"
         logger.info("svgwrite not supported. Switching to svgwrite.")
@@ -95,7 +98,7 @@ def select_image_output_lib(imageoutlib="pillow"):
     if not drawlibsupport and imageoutlib == "drawlib":
         imageoutlib = "svgwrite"
         logger.info("drawlib not supported. Switching to svgwrite.")
-    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "svgwrite", "wand", "magick", "pgmagick", "cv2", "skimage", "tkinter", "drawlib"]:
+    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "drawsvg", "svgwrite", "wand", "magick", "pgmagick", "cv2", "skimage", "tkinter", "drawlib"]:
         imageoutlib = "svgwrite"
         logger.info("Invalid library specified. Defaulting to svgwrite.")
 
@@ -137,6 +140,8 @@ def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
         return upcean.predraw.precairo.snapCoords(ctx, x, y)
     if selected_lib == "qahirah" and qahirahsupport:
         return upcean.predraw.preqahirah.snapCoords(ctx, x, y)
+    elif selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.snapCoords(ctx, x, y)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.snapCoords(ctx, x, y)
     elif selected_lib == "wand" and wandsupport:
@@ -188,6 +193,8 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=defaultdraw):
         return upcean.predraw.precairo.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "qahirah" and qahirahsupport:
         return upcean.predraw.preqahirah.drawColorLine(ctx, x1, y1, x2, y2, width, color)
+    elif selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.drawColorLine(ctx, x1, y1, x2, y2, width, color)
     elif selected_lib == "wand" and wandsupport:
@@ -238,6 +245,8 @@ def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.precairo.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "qahirah" and qahirahsupport:
         return upcean.predraw.preqahirah.drawColorRectangle(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.drawColorRectangle(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "wand" and wandsupport:
@@ -291,6 +300,8 @@ def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib=defaul
         return upcean.predraw.precairo.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "qahirah" and qahirahsupport:
         return upcean.predraw.preqahirah.drawColorText(ctx, size, x, y, text, color, ftype)
+    elif selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.drawColorText(ctx, size, x, y, text, color, ftype)
     elif selected_lib == "wand" and wandsupport:
@@ -341,8 +352,10 @@ def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
         return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "qahirah" and qahirahsupport:
         return upcean.predraw.preqahirah.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+    elif selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
+        return upcean.predraw.presvgwrite.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "wand" and wandsupport:
         return upcean.predraw.prewand.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
     elif selected_lib == "magick" and magicksupport:
@@ -392,6 +405,8 @@ def get_save_filename(outfile, imageoutlib=defaultdraw):
         return upcean.predraw.precairo.get_save_filename(outfile)
     elif selected_lib == "qahirah" and qahirahsupport:
         return upcean.predraw.preqahirah.get_save_filename(outfile)
+    elif selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.get_save_filename(outfile)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.get_save_filename(outfile)
     elif selected_lib == "wand" and wandsupport:
@@ -430,6 +445,8 @@ def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
         return upcean.predraw.precairo.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib == "qahirah" and qahirahsupport:
         return upcean.predraw.preqahirah.new_image_surface(sizex, sizey, bgcolor)
+    elif selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.new_image_surface(sizex, sizey, bgcolor)
     elif selected_lib == "wand" and wandsupport:
@@ -450,6 +467,25 @@ def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
     logger.error("save_to_file: Selected library is not supported.")
     return False
 
+def embed_font(dwg, font_path, font_family, imageoutlib=defaultdraw):
+    try:
+        selected_lib = select_image_output_lib(imageoutlib)
+    except UnsupportedLibraryError as e:
+        logger.error("new_image_surface failed: {}".format(e))
+        return False
+
+    if selected_lib == "none" or selected_lib == None:
+        return True
+    if selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.embed_font(dwg, font_path, font_family)
+    elif selected_lib == "svgwrite" and svgwritesupport:
+        return upcean.predraw.presvgwrite.embed_font(dwg, font_path, font_family)
+    else:
+        return True
+
+    logger.error("save_to_file: Selected library is not supported.")
+    return False
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib=defaultdraw):
     try:
         selected_lib = select_image_output_lib(imageoutlib)
@@ -465,6 +501,8 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
         return upcean.predraw.precairo.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "qahirah" and qahirahsupport:
         return upcean.predraw.preqahirah.save_to_file(inimage, outfile, outfileext, imgcomment)
+    elif selected_lib == "drawsvg" and drawsvgsupport:
+        return upcean.predraw.predrawsvg.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "svgwrite" and svgwritesupport:
         return upcean.predraw.presvgwrite.save_to_file(inimage, outfile, outfileext, imgcomment)
     elif selected_lib == "wand" and wandsupport:
@@ -507,11 +545,11 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
         imageoutlib = "skimage"
     elif tkintersupport and upc_preimg=="tkinter":
         imageoutlib = "tkinter"
-    elif svgwritesupport and isinstance(upc_img, svgwrite.Drawing):
+    elif drawsvgsupport and isinstance(upc_img, drawsvg.Drawing):
         imageoutlib = "svgwrite"
     elif drawlibsupport and upc_preimg=="drawlib":
         imageoutlib = "drawlib"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "tkinter" and imageoutlib != "drawlib" and imgout != "none" and imgout is not None):
+    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "drawsvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "tkinter" and imageoutlib != "drawlib" and imgout != "none" and imgout is not None):
         imageoutlib = None
     elif(imgout == "none" or imgout is None):
         return False

@@ -41,6 +41,7 @@ except ImportError:
 tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
+drawsvgsupport = upcean.support.check_for_drawsvg()
 cairosupport = upcean.support.check_for_cairo()
 qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()
@@ -102,11 +103,11 @@ def encode_ean2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         resize = 1
     if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
         vertical_text_fix = 0
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and cairosvgsupport and imageoutlib == "drawsvg") or (qahirahsupport and imageoutlib == "qahirah")):
         vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
         vertical_text_fix = (10 * (int(resize) * barwidth[1]))
-    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
+    elif((svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and not cairosvgsupport and imageoutlib == "drawsvg")):
         vertical_text_fix = (8 * (int(resize) * barwidth[1]))
     elif(tkintersupport and imageoutlib == "tkinter"):
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
@@ -241,17 +242,17 @@ def encode_ean2_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
     if(not hidetext):
-        if(svgwritesupport and imageoutlib == "svgwrite"):
+        if((svgwritesupport and imageoutlib == "svgwrite") or (drawsvgsupport and imageoutlib == "drawsvg")):
             try:
-                upcean.predraw.presvgwrite.embed_font(upc_img, fontpathocrb, "OCRB")
+                embed_font(upc_img, fontpathocrb, "OCRB", imageoutlib)
             except OSError:
-                upcean.predraw.presvgwrite.embed_font(upc_img, fontpathocrbalt, "OCRB")
+                embed_font(upc_img, fontpathocrbalt, "OCRB", imageoutlib)
     NumTxtZero = 0
     LineTxtStart = ((shiftxy[0] + 6) * int(resize))
     LineTxtStartNorm = 6
     if(tkintersupport and imageoutlib == "tkinter"):
         LineTxtStart += (4 * int(resize))
-    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
+    elif((svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and not cairosvgsupport and imageoutlib == "drawsvg")):
         LineTxtStart += (1 * int(resize))
     upc_print = LeftDigit
     while (NumTxtZero < len(upc_print)):

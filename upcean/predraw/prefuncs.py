@@ -24,6 +24,7 @@ tkintersupport = upcean.support.check_for_tkinter()
 tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
+drawsvgsupport = upcean.support.check_for_drawsvg()
 cairosupport = upcean.support.check_for_cairo()
 qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()
@@ -130,10 +131,19 @@ if skimagesupport:
         magicksupport = False
         logger.warning("skimage support failed to initialize.")
 
+# Initialize drawsvg support if available
+if drawsvgsupport:
+    try:
+        import drawsvg
+        import upcean.predraw.predrawsvg
+    except ImportError:
+        drawsvgsupport = False
+        logger.warning("drawsvg support failed to initialize.")
+
 # Initialize svgwrite support if available
 if svgwritesupport and not enable_internal_svgwrite:
     try:
-        import svgwrite
+        import upcean.svgwrite
         import upcean.predraw.presvgwrite
     except ImportError:
         try:

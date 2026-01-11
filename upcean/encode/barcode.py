@@ -40,6 +40,7 @@ import upcean.getprefix.getprefix
 tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
+drawsvgsupport = upcean.support.check_for_drawsvg()
 cairosupport = upcean.support.check_for_cairo()
 qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()

@@ -62,6 +62,7 @@ if os.path.exists(__config_file__) and __use_ini_file__:
     # Accessing values from the config file
     enable_tkintersupport = config.getboolean('main', 'enable_tkintersupport')
     enable_pilsupport = config.getboolean('main', 'enable_pilsupport')
+    enable_drawsvgsupport = config.getboolean('main', 'enable_drawsvgsupport')
     enable_cairosupport = config.getboolean('main', 'enable_cairosupport')
     enable_qahirahsupport = config.getboolean('main', 'enable_qahirahsupport')
     enable_cairosvgsupport = config.getboolean('main', 'enable_cairosvgsupport')
@@ -75,6 +76,7 @@ if os.path.exists(__config_file__) and __use_ini_file__:
 else:
     enable_tkintersupport = True
     enable_pilsupport = True
+    enable_drawsvgsupport = True
     enable_cairosupport = True
     enable_qahirahsupport = True
     enable_cairosvgsupport = False
@@ -90,6 +92,8 @@ if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), 
     enable_tkintersupport = False
 if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "prepil.py")):
     enable_pilsupport = False
+if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "predrawsvg.py")):
+    enable_drawsvgsupport = False
 if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "precairo.py")):
     enable_cairosupport = False
 if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "preqahirah.py")):
@@ -233,6 +237,21 @@ if enable_tkintersupport:
 else:
     def check_for_tkinter():
         tkintersupport = False
+        return False
+
+if(enable_drawsvgsupport):
+    def check_for_drawsvg():
+        drawsvgsupport = True
+        try:
+            import drawsvg
+            drawsvgsupport = True
+        except ImportError:
+            drawsvgsupport = True
+            return drawsvgsupport
+        return drawsvgsupport
+else:
+    def check_for_drawsvg():
+        drawsvgsupport = False
         return False
 
 if(enable_pilsupport):
@@ -554,6 +573,9 @@ if(pilsupport):
 pillowsupport = check_for_pillow()
 if(pillowsupport):
     imagelibsupport.append("pillow")
+drawsvgsupport = check_for_drawsvg()
+if(drawsvgsupport):
+    imagelibsupport.append("drawsvg")
 cairosupport = check_for_cairo()
 if(cairosupport):
     imagelibsupport.append("cairo")
@@ -590,6 +612,8 @@ if(drawlibsupport):
 defaultdraw = None
 if((pilsupport or pillowsupport) and defaultdraw is None):
     defaultdraw = "pillow"
+if(drawsvgsupport and defaultdraw is None):
+    defaultdraw = "drawsvg"
 if(cairosupport and defaultdraw is None):
     defaultdraw = "cairo"
 if(qahirahsupport and defaultdraw is None):

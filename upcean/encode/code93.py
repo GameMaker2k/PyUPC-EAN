@@ -41,6 +41,7 @@ except ImportError:
 tkintersupport = upcean.support.check_for_tkinter()
 pilsupport = upcean.support.check_for_pil()
 pillowsupport = upcean.support.check_for_pillow()
+drawsvgsupport = upcean.support.check_for_drawsvg()
 cairosupport = upcean.support.check_for_cairo()
 qahirahsupport = upcean.support.check_for_qahirah()
 cairosvgsupport = upcean.support.check_for_cairosvg()
@@ -105,11 +106,11 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         resize = 1
     if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
         vertical_text_fix = 0
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and cairosvgsupport and imageoutlib == "drawsvg") or (qahirahsupport and imageoutlib == "qahirah")):
         vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
         vertical_text_fix = (10 * (int(resize) * barwidth[1]))
-    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
+    elif((svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and not cairosvgsupport and imageoutlib == "drawsvg")):
         vertical_text_fix = (8 * (int(resize) * barwidth[1]))
     elif(tkintersupport and imageoutlib == "tkinter"):
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
@@ -293,12 +294,18 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
+    if(not hidetext):
+        if((svgwritesupport and imageoutlib == "svgwrite") or (drawsvgsupport and imageoutlib == "drawsvg")):
+            try:
+                embed_font(upc_img, fontpathocrb, "OCRB", imageoutlib)
+            except OSError:
+                embed_font(upc_img, fontpathocrbalt, "OCRB", imageoutlib)
     NumTxtZero = 0
     LineTxtStart = ((shiftxy[0] + 18) * int(resize))
     LineTxtStartNorm = 18
     if(tkintersupport and imageoutlib == "tkinter"):
         LineTxtStart += (4 * int(resize))
-    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
+    elif((svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and not cairosvgsupport and imageoutlib == "drawsvg")):
         LineTxtStart += (1 * int(resize))
     while (NumTxtZero < len(upc_matches)):
         texthidden = False
@@ -487,11 +494,11 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         resize = 1
     if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
         vertical_text_fix = 0
-    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (qahirahsupport and imageoutlib == "qahirah")):
+    elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and cairosvgsupport and imageoutlib == "drawsvg") or (qahirahsupport and imageoutlib == "qahirah")):
         vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
         vertical_text_fix = (10 * (int(resize) * barwidth[1]))
-    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
+    elif((svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and not cairosvgsupport and imageoutlib == "drawsvg")):
         vertical_text_fix = (8 * (int(resize) * barwidth[1]))
     elif(tkintersupport and imageoutlib == "tkinter"):
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
@@ -680,12 +687,18 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
     upc_array['barsize'].append(barsizeloop)
     code93extended = {'(%)U': " ", '($)A': " ", '($)B': " ", '($)C': " ", '($)D': " ", '($)E': " ", '($)F': " ", '($)G': " ", '($)H': " ", '($)I': " ", '($)J': " ", '($)K': " ", '($)L': " ", '($)M': " ", '($)N': " ", '($)O': " ", '($)P': " ", '($)Q': " ", '($)R': " ", '($)S': " ", '($)T': " ", '($)U': " ", '($)V': " ", '($)W': " ", '($)X': " ", '($)Y': " ", '($)Z': " ", '(%)A': " ", '(%)B': " ", '(%)C': " ", '(%)D': " ", '(%)E': " ", ' ': " ", '(/)A': "!", '(/)B': "\"", '(/)C': "#", '($)': "$", '(/)F': "&", '(/)G': "'", '(/)H': "(", '(/)I': "", '(/)J': "*", '(/)L': ",", '-': "-", '.': ".", '0': "0", '1': "1", '2': "2", '3': "3", '4': "4", '5': "5", '6': "6", '7': "7", '8': "8", '9': "9", '(/)Z': ":", '(/)': "/", '(%)F': ";", '(%)G': "<", '(%)H': "=", '(%)I': ">", '(%)J': "?",
                       '(%)V': "@", '(%)K': "[", '(%)L': "\\", '(%)M': "]", '(%)N': "^", '(%)O': "_", '(%)W': "`", '(+)A': "a", '(+)B': "b", '(+)C': "c", '(+)D': "d", '(+)E': "e", '(+)F': "f", '(+)G': "g", '(+)H': "h", '(+)I': "i", '(+)J': "j", '(+)K': "k", '(+)L': "l", '(+)M': "m", '(+)N': "n", '(+)O': "o", '(+)P': "p", '(+)Q': "q", '(+)R': "r", '(+)S': "s", '(+)T': "t", '(+)U': "u", '(+)V': "v", '(+)W': "w", '(+)X': "x", '(+)Y': "y", '(+)Z': "z", '(+)': "+", '(%)P': "{", '(%)Q': "|", '(%)R': "}", '(%)S': "~", '(%)T': " ", '(%)X': " ", '(%)Y': " ", '(%)Z': " ", '(%)': "%"}
+    if(not hidetext):
+        if((svgwritesupport and imageoutlib == "svgwrite") or (drawsvgsupport and imageoutlib == "drawsvg")):
+            try:
+                embed_font(upc_img, fontpathocrb, "OCRB", imageoutlib)
+            except OSError:
+                embed_font(upc_img, fontpathocrbalt, "OCRB", imageoutlib)
     NumTxtZero = 0
     LineTxtStart = ((shiftxy[0] + 18) * int(resize))
     LineTxtStartNorm = 18
     if(tkintersupport and imageoutlib == "tkinter"):
         LineTxtStart += (4 * int(resize))
-    elif(svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite"):
+    elif((svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and not cairosvgsupport and imageoutlib == "drawsvg")):
         LineTxtStart += (1 * int(resize))
     while (NumTxtZero < len(upc_matches)):
         texthidden = False
