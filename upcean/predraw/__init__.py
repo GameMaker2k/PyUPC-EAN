@@ -15,18 +15,15 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-import os
-import re
-import logging
-import upcean.fonts
-import upcean.support
-from upcean.predraw.prefuncs import *
 
-# Configure logging
-# logging.basicConfig(level=logging.INFO)
+import logging
+
+import upcean.support
+from upcean.predraw.prefuncs import *  # existing project uses these globals
+
 logger = logging.getLogger(__name__)
 
-# Compatibility for Python 2 and 3
+# Py2/3 compatibility shims
 try:
     basestring
 except NameError:
@@ -38,543 +35,238 @@ except NameError:
     from io import IOBase
     file = IOBase
 
+
 class UnsupportedLibraryError(Exception):
-    """Exception raised when no supported image output library is available."""
+    """Raised when no supported image output library is available."""
     pass
+
+
+# Prefer SVG-ish outputs first (generally easiest to support), then bitmap backends.
+_FALLBACK_ORDER = (
+    "svgwrite",
+    "drawsvg",
+    "cairo",     # cairo is also used for cairosvg path
+    "qahirah",
+    "pillow",
+    "pil",
+    "wand",
+    "magick",
+    "pgmagick",
+    "cv2",
+    "skimage",
+    "tkinter",
+    "drawlib",
+)
+
+# Cache for selection results (Py2/3 friendly)
+_SELECT_CACHE = {}
+
+# Cache backend module imports
+_MODULE_CACHE = {}
+
+
+def _available_libs():
+    """
+    Return the authoritative list of usable backends.
+    support.py populates imagelibsupport only when imports/checks succeed.
+    """
+    libs = getattr(upcean.support, "imagelibsupport", None)
+    if not libs:
+        return []
+    # normalize strings to lower
+    out = []
+    for x in libs:
+        try:
+            out.append(x.lower())
+        except Exception:
+            pass
+    return out
+
 
 def select_image_output_lib(imageoutlib="pillow"):
     """
-    Selects the appropriate image output library based on support flags and user preference.
-
-    Parameters:
-        imageoutlib (str): Preferred image output library. Options: 'pillow', 'cairo', 'cairosvg'.
+    Choose backend based on preference + upcean.support.imagelibsupport.
 
     Returns:
-        str: Selected image output library ('pillow', 'cairo', 'cairosvg').
-
+        str: selected backend name or "none"
     Raises:
-        UnsupportedLibraryError: If neither Pillow nor Cairo is supported.
+        UnsupportedLibraryError if nothing usable exists.
     """
-
-    if imageoutlib == "none" or imageoutlib == None:
+    if imageoutlib == "none" or imageoutlib is None:
         return "none"
 
-    imageoutlib = imageoutlib.lower()
+    try:
+        pref = imageoutlib.lower()
+    except Exception:
+        pref = None
 
-    # Adjust imageoutlib based on support flags
-    if not pilsupport and imageoutlib == "pillow":
-        imageoutlib = "svgwrite"
-        logger.info("pillow not supported. Switching to svgwrite.")
-    if not cairosupport and imageoutlib in ["cairo", "cairosvg"]:
-        imageoutlib = "svgwrite"
-        logger.info("cairo not supported. Switching to svgwrite.")
-    if not qahirahsupport and imageoutlib == "qahirah":
-        imageoutlib = "svgwrite"
-        logger.info("qahirah not supported. Switching to svgwrite.")
-    if not drawsvgsupport and imageoutlib == "drawsvg":
-        imageoutlib = "svgwrite"
-        logger.info("drawsvg not supported. Switching to svgwrite.")
-    if not svgwritesupport and imageoutlib == "svgwrite":
-        imageoutlib = "svgwrite"
-        logger.info("svgwrite not supported. Switching to svgwrite.")
-    if not tkintersupport and imageoutlib == "tkinter":
-        imageoutlib = "svgwrite"
-        logger.info("tkinter not supported. Switching to svgwrite.")
-    if not wandsupport and imageoutlib == "wand":
-        imageoutlib = "svgwrite"
-        logger.info("wand not supported. Switching to svgwrite.")
-    if not magicksupport and imageoutlib == "magick":
-        imageoutlib = "svgwrite"
-        logger.info("magick not supported. Switching to svgwrite.")
-    if not pgmagicksupport and imageoutlib == "pgmagick":
-        imageoutlib = "svgwrite"
-        logger.info("pgmagick not supported. Switching to svgwrite.")
-    if not cv2support and imageoutlib == "cv2":
-        imageoutlib = "svgwrite"
-        logger.info("cv2 not supported. Switching to svgwrite.")
-    if not skimagesupport and imageoutlib == "skimage":
-        imageoutlib = "svgwrite"
-        logger.info("skimage not supported. Switching to svgwrite.")
-    if not drawlibsupport and imageoutlib == "drawlib":
-        imageoutlib = "svgwrite"
-        logger.info("drawlib not supported. Switching to svgwrite.")
-    if imageoutlib not in ["pillow", "cairo", "qahirah", "cairosvg", "drawsvg", "svgwrite", "wand", "magick", "pgmagick", "cv2", "skimage", "tkinter", "drawlib"]:
-        imageoutlib = "svgwrite"
-        logger.info("Invalid library specified. Defaulting to svgwrite.")
+    libs = _available_libs()
+    if not libs:
+        raise UnsupportedLibraryError("No supported image output library available.")
 
-    # If neither library is supported, log the issue and raise an exception
-    if not pilsupport and not cairosupport and not qahirahsupport and not svgwritesupport:
-        logger.error("Neither Pillow nor Cairo is supported.")
-        raise UnsupportedLibraryError("Neither Pillow nor Cairo is supported.")
+    # If requested is available, use it
+    if pref and pref in libs:
+        return pref
 
-    logger.info("Selected image output library: {}".format(imageoutlib))
-    return imageoutlib
+    # Special case: user asks "cairosvg" but imagelibsupport may include it only when cairo is present
+    # (your support.py adds both "cairo" and "cairosvg" if cairo is found).
+    if pref == "cairosvg" and "cairosvg" in libs:
+        return "cairosvg"
 
-def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
+    # Otherwise fall back
+    for candidate in _FALLBACK_ORDER:
+        if candidate in libs:
+            return candidate
+
+    # Last resort: use whatever is available (stable deterministic pick)
+    return libs[0]
+
+
+def _select_cached(imageoutlib):
+    key = "none" if imageoutlib is None else imageoutlib
+    if key in _SELECT_CACHE:
+        return _SELECT_CACHE[key]
+    val = select_image_output_lib(imageoutlib)
+    _SELECT_CACHE[key] = val
+    return val
+
+
+def _get_backend_module(lib):
     """
-    Snaps coordinates using the selected image output library.
+    Lazy-load the backend module for the selected library.
+    This prevents import-order issues and speeds startup.
+    """
+    if lib in _MODULE_CACHE:
+        return _MODULE_CACHE[lib]
+
+    # Map library -> module path
+    # Note: cairosvg uses cairo drawing module for most operations; saving may differ in that module.
+    mod = None
+    try:
+        if lib in ("pillow", "pil"):
+            from upcean.predraw import prepil as mod
+        elif lib in ("cairo", "cairosvg"):
+            from upcean.predraw import precairo as mod
+        elif lib == "qahirah":
+            from upcean.predraw import preqahirah as mod
+        elif lib == "drawsvg":
+            from upcean.predraw import predrawsvg as mod
+        elif lib == "svgwrite":
+            from upcean.predraw import presvgwrite as mod
+        elif lib == "wand":
+            from upcean.predraw import prewand as mod
+        elif lib == "magick":
+            from upcean.predraw import premagick as mod
+        elif lib == "pgmagick":
+            from upcean.predraw import prepgmagick as mod
+        elif lib == "cv2":
+            from upcean.predraw import precv2 as mod
+        elif lib == "skimage":
+            from upcean.predraw import preskimage as mod
+        elif lib == "tkinter":
+            from upcean.predraw import pretkinter as mod
+        elif lib == "drawlib":
+            from upcean.predraw import predrawlib as mod
+        else:
+            mod = None
+    except Exception as e:
+        logger.error("Failed importing backend module for %r: %s", lib, e)
+        mod = None
+
+    _MODULE_CACHE[lib] = mod
+    return mod
+
+
+def _call_backend(fn_name, imageoutlib, args, none_return=True):
+    """
+    Generic dispatcher to call a backend function.
 
     Parameters:
-        ctx: Context object required by the underlying library.
-        x (float): X-coordinate.
-        y (float): Y-coordinate.
-        imageoutlib (str): Preferred image output library.
+        fn_name (str): function name in backend module
+        imageoutlib: preferred backend name
+        args (tuple): positional args for the function call
+        none_return: what to return when lib is "none"
 
     Returns:
-        Result from the corresponding library's snapCoords method.
-
-    Raises:
-        UnsupportedLibraryError: If no supported image output library is available.
+        whatever backend returns, or False on error (legacy-compatible)
     """
     try:
-        selected_lib = select_image_output_lib(imageoutlib)
+        lib = _select_cached(imageoutlib)
     except UnsupportedLibraryError as e:
-        logger.error("snapCoords failed: {}".format(e))
+        logger.error("%s failed: %s", fn_name, e)
         return False
 
-    if selected_lib == "none" or selected_lib == None:
-        return True
-    if selected_lib == "pillow" and pilsupport:
-        return upcean.predraw.prepil.snapCoords(ctx, x, y)
-    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.predraw.precairo.snapCoords(ctx, x, y)
-    if selected_lib == "qahirah" and qahirahsupport:
-        return upcean.predraw.preqahirah.snapCoords(ctx, x, y)
-    elif selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.snapCoords(ctx, x, y)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.snapCoords(ctx, x, y)
-    elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.prewand.snapCoords(ctx, x, y)
-    elif selected_lib == "magick" and magicksupport:
-        return upcean.predraw.premagick.snapCoords(ctx, x, y)
-    elif selected_lib == "pgmagick" and pgmagicksupport:
-        return upcean.predraw.prepgmagick.snapCoords(ctx, x, y)
-    elif selected_lib == "cv2" and cv2support:
-        return upcean.predraw.precv2.snapCoords(ctx, x, y)
-    elif selected_lib == "skimage" and skimagesupport:
-        return upcean.predraw.preskimage.snapCoords(ctx, x, y)
-    elif selected_lib == "tkinter" and tkintersupport:
-        return upcean.predraw.pretkinter.snapCoords(ctx, x, y)
-    elif selected_lib == "drawlib" and drawlibsupport:
-        return upcean.predraw.predrawlib.snapCoords(ctx, x, y)
+    if lib in (None, "none"):
+        return none_return
 
-    logger.error("snapCoords: Selected library is not supported.")
-    return False
+    mod = _get_backend_module(lib)
+    if mod is None:
+        logger.error("%s: Backend module unavailable for %r", fn_name, lib)
+        return False
+
+    func = getattr(mod, fn_name, None)
+    if func is None:
+        logger.error("%s: Backend %r missing function %s", fn_name, lib, fn_name)
+        return False
+
+    return func(*args)
+
+
+# -----------------------------
+# Drawing wrappers (no-op returns True for "none")
+# -----------------------------
+def snapCoords(ctx, x, y, imageoutlib=defaultdraw):
+    return _call_backend("snapCoords", imageoutlib, (ctx, x, y), none_return=True)
+
 
 def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=defaultdraw):
-    """
-    Draws a colored line using the selected image output library.
+    return _call_backend("drawColorLine", imageoutlib, (ctx, x1, y1, x2, y2, width, color), none_return=True)
 
-    Parameters:
-        ctx: Context object required by the underlying library.
-        x1, y1, x2, y2 (float): Coordinates defining the line.
-        width (float): Width of the line.
-        color (tuple or str): Color of the line.
-        imageoutlib (str): Preferred image output library.
-
-    Returns:
-        Result from the corresponding library's drawColorLine method.
-
-    Raises:
-        UnsupportedLibraryError: If no supported image output library is available.
-    """
-    try:
-        selected_lib = select_image_output_lib(imageoutlib)
-    except UnsupportedLibraryError as e:
-        logger.error("drawColorLine failed: {}".format(e))
-        return False
-
-    if selected_lib == "none" or selected_lib == None:
-        return True
-    if selected_lib == "pillow" and pilsupport:
-        return upcean.predraw.prepil.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.predraw.precairo.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "qahirah" and qahirahsupport:
-        return upcean.predraw.preqahirah.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.prewand.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "magick" and magicksupport:
-        return upcean.predraw.premagick.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "pgmagick" and pgmagicksupport:
-        return upcean.predraw.prepgmagick.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "cv2" and cv2support:
-        return upcean.predraw.precv2.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "skimage" and skimagesupport:
-        return upcean.predraw.preskimage.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "tkinter" and tkintersupport:
-        return upcean.predraw.pretkinter.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-    elif selected_lib == "drawlib" and drawlibsupport:
-        return upcean.predraw.predrawlib.drawColorLine(ctx, x1, y1, x2, y2, width, color)
-
-    logger.error("drawColorLine: Selected library is not supported.")
-    return False
 
 def drawColorRectangle(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
-    """
-    Draws a colored rectangle using the selected image output library.
+    return _call_backend("drawColorRectangle", imageoutlib, (ctx, x1, y1, x2, y2, color), none_return=True)
 
-    Parameters:
-        ctx: Context object required by the underlying library.
-        x1, y1, x2, y2 (float): Coordinates defining the rectangle.
-        color (tuple or str): Color of the rectangle.
-        imageoutlib (str): Preferred image output library.
-
-    Returns:
-        Result from the corresponding library's drawColorRectangle method.
-
-    Raises:
-        UnsupportedLibraryError: If no supported image output library is available.
-    """
-    try:
-        selected_lib = select_image_output_lib(imageoutlib)
-    except UnsupportedLibraryError as e:
-        logger.error("drawColorRectangle failed: {}".format(e))
-        return False
-
-    if selected_lib == "none" or selected_lib == None:
-        return True
-    if selected_lib == "pillow" and pilsupport:
-        return upcean.predraw.prepil.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.predraw.precairo.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "qahirah" and qahirahsupport:
-        return upcean.predraw.preqahirah.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.prewand.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "magick" and magicksupport:
-        return upcean.predraw.premagick.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "pgmagick" and pgmagicksupport:
-        return upcean.predraw.prepgmagick.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "cv2" and cv2support:
-        return upcean.predraw.precv2.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "skimage" and skimagesupport:
-        return upcean.predraw.preskimage.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "tkinter" and tkintersupport:
-        return upcean.predraw.pretkinter.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "drawlib" and drawlibsupport:
-        return upcean.predraw.predrawlib.drawColorRectangle(ctx, x1, y1, x2, y2, color)
-
-    logger.error("drawColorRectangle: Selected library is not supported.")
-    return False
 
 def drawColorText(ctx, size, x, y, text, color, ftype="ocrb", imageoutlib=defaultdraw):
-    """
-    Draws colored text using the selected image output library.
+    return _call_backend("drawColorText", imageoutlib, (ctx, size, x, y, text, color, ftype), none_return=True)
 
-    Parameters:
-        ctx: Context object required by the underlying library.
-        size (int): Font size.
-        x, y (float): Coordinates for the text.
-        text (str): Text to draw.
-        color (tuple or str): Color of the text.
-        ftype (str): Font type.
-        imageoutlib (str): Preferred image output library.
-
-    Returns:
-        Result from the corresponding library's drawColorText method.
-
-    Raises:
-        UnsupportedLibraryError: If no supported image output library is available.
-    """
-    try:
-        selected_lib = select_image_output_lib(imageoutlib)
-    except UnsupportedLibraryError as e:
-        logger.error("drawColorText failed: {}".format(e))
-        return False
-
-    if selected_lib == "none" or selected_lib == None:
-        return True
-    if selected_lib == "pillow" and pilsupport:
-        return upcean.predraw.prepil.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.predraw.precairo.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "qahirah" and qahirahsupport:
-        return upcean.predraw.preqahirah.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.prewand.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "magick" and magicksupport:
-        return upcean.predraw.premagick.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "pgmagick" and pgmagicksupport:
-        return upcean.predraw.prepgmagick.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "cv2" and cv2support:
-        return upcean.predraw.precv2.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "skimage" and skimagesupport:
-        return upcean.predraw.preskimage.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "tkinter" and tkintersupport:
-        return upcean.predraw.pretkinter.drawColorText(ctx, size, x, y, text, color, ftype)
-    elif selected_lib == "drawlib" and drawlibsupport:
-        return upcean.predraw.predrawlib.drawColorText(ctx, size, x, y, text, color, ftype)
-
-    logger.error("drawColorText: Selected library is not supported.")
-    return False
 
 def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, imageoutlib=defaultdraw):
-    """
-    Draws an alternative colored rectangle using the selected image output library.
+    return _call_backend("drawColorRectangleAlt", imageoutlib, (ctx, x1, y1, x2, y2, color), none_return=True)
 
-    Parameters:
-        ctx: Context object required by the underlying library.
-        x1, y1, x2, y2 (float): Coordinates defining the rectangle.
-        color (tuple or str): Color of the rectangle.
-        imageoutlib (str): Preferred image output library.
 
-    Returns:
-        Result from the corresponding library's drawColorRectangleAlt method.
-
-    Raises:
-        UnsupportedLibraryError: If no supported image output library is available.
-    """
-    try:
-        selected_lib = select_image_output_lib(imageoutlib)
-    except UnsupportedLibraryError as e:
-        logger.error("drawColorRectangleAlt failed: {}".format(e))
-        return False
-
-    if selected_lib == "none" or selected_lib == None:
-        return True
-    if selected_lib == "pillow" and pilsupport:
-        return upcean.predraw.prepil.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.predraw.precairo.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "qahirah" and qahirahsupport:
-        return upcean.predraw.preqahirah.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.prewand.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "magick" and magicksupport:
-        return upcean.predraw.premagick.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "pgmagick" and pgmagicksupport:
-        return upcean.predraw.prepgmagick.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "cv2" and cv2support:
-        return upcean.predraw.precv2.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "skimage" and skimagesupport:
-        return upcean.predraw.preskimage.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "tkinter" and tkintersupport:
-        return upcean.predraw.pretkinter.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-    elif selected_lib == "drawlib" and drawlibsupport:
-        return upcean.predraw.predrawlib.drawColorRectangleAlt(ctx, x1, y1, x2, y2, color)
-
-    logger.error("drawColorRectangleAlt: Selected library is not supported.")
-    return False
-
+# -----------------------------
+# Functions that must return real values
+# For "none", return False (prevents unpack errors)
+# -----------------------------
 def get_save_filename(outfile, imageoutlib=defaultdraw):
-    """
-    Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files (e.g., images). Returns a tuple (filename, EXTENSION)
-    or the original `outfile` if it's of type None, bool, or a file object. Returns False
-    for unsupported input types.
+    return _call_backend("get_save_filename", imageoutlib, (outfile,), none_return=False)
 
-    Parameters:
-        outfile (str, tuple, list, None, bool, file): The output file specification.
-        imageoutlib (str): Preferred image output library.
-
-    Returns:
-        tuple or original `outfile` or False
-
-    Raises:
-        UnsupportedLibraryError: If no supported image output library is available.
-    """
-    try:
-        selected_lib = select_image_output_lib(imageoutlib)
-    except UnsupportedLibraryError as e:
-        logger.error("get_save_filename failed: {}".format(e))
-        return False
-
-    if selected_lib == "none" or selected_lib == None:
-        return True
-    if selected_lib == "pillow" and pilsupport:
-        return upcean.predraw.prepil.get_save_filename(outfile)
-    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.predraw.precairo.get_save_filename(outfile)
-    elif selected_lib == "qahirah" and qahirahsupport:
-        return upcean.predraw.preqahirah.get_save_filename(outfile)
-    elif selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.get_save_filename(outfile)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.get_save_filename(outfile)
-    elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.prewand.get_save_filename(outfile)
-    elif selected_lib == "magick" and magicksupport:
-        return upcean.predraw.premagick.get_save_filename(outfile)
-    elif selected_lib == "pgmagick" and pgmagicksupport:
-        return upcean.predraw.prepgmagick.get_save_filename(outfile)
-    elif selected_lib == "cv2" and cv2support:
-        return upcean.predraw.precv2.get_save_filename(outfile)
-    elif selected_lib == "skimage" and skimagesupport:
-        return upcean.predraw.preskimage.get_save_filename(outfile)
-    elif selected_lib == "tkinter" and tkintersupport:
-        return upcean.predraw.pretkinter.get_save_filename(outfile)
-    elif selected_lib == "drawlib" and drawlibsupport:
-        return upcean.predraw.predrawlib.get_save_filename(outfile)
-
-    logger.error("get_save_filename: Selected library is not supported.")
-    return False
 
 def get_save_file(outfile, imageoutlib=defaultdraw):
     return get_save_filename(outfile, imageoutlib)
 
+
 def new_image_surface(sizex, sizey, bgcolor, imageoutlib=defaultdraw):
-    try:
-        selected_lib = select_image_output_lib(imageoutlib)
-    except UnsupportedLibraryError as e:
-        logger.error("new_image_surface failed: {}".format(e))
-        return False
+    # Must return (ctx, surface) for most callers; so "none" should not pretend success.
+    return _call_backend("new_image_surface", imageoutlib, (sizex, sizey, bgcolor), none_return=False)
 
-    if selected_lib == "none" or selected_lib == None:
-        return True
-    if selected_lib == "pillow" and pilsupport:
-        return upcean.predraw.prepil.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.predraw.precairo.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "qahirah" and qahirahsupport:
-        return upcean.predraw.preqahirah.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.prewand.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "magick" and magicksupport:
-        return upcean.predraw.premagick.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "pgmagick" and pgmagicksupport:
-        return upcean.predraw.prepgmagick.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "cv2" and cv2support:
-        return upcean.predraw.precv2.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "skimage" and skimagesupport:
-        return upcean.predraw.preskimage.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "tkinter" and tkintersupport:
-        return upcean.predraw.pretkinter.new_image_surface(sizex, sizey, bgcolor)
-    elif selected_lib == "drawlib" and drawlibsupport:
-        return upcean.predraw.predrawlib.new_image_surface(sizex, sizey, bgcolor)
-
-    logger.error("save_to_file: Selected library is not supported.")
-    return False
 
 def embed_font(dwg, font_path, font_family, imageoutlib=defaultdraw):
+    # Only meaningful for SVG backends. Others no-op True.
     try:
-        selected_lib = select_image_output_lib(imageoutlib)
+        lib = _select_cached(imageoutlib)
     except UnsupportedLibraryError as e:
-        logger.error("new_image_surface failed: {}".format(e))
+        logger.error("embed_font failed: %s", e)
         return False
 
-    if selected_lib == "none" or selected_lib == None:
+    if lib in (None, "none"):
         return True
-    if selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.embed_font(dwg, font_path, font_family)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.embed_font(dwg, font_path, font_family)
-    else:
+    if lib not in ("drawsvg", "svgwrite"):
         return True
 
-    logger.error("save_to_file: Selected library is not supported.")
-    return False
+    return _call_backend("embed_font", lib, (dwg, font_path, font_family), none_return=True)
+
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib=defaultdraw):
-    try:
-        selected_lib = select_image_output_lib(imageoutlib)
-    except UnsupportedLibraryError as e:
-        logger.error("save_to_file failed: {}".format(e))
-        return False
-
-    if selected_lib == "none" or selected_lib == None:
-        return True
-    if selected_lib == "pillow" and pilsupport:
-        return upcean.predraw.prepil.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib in ["cairo", "cairosvg"] and cairosupport:
-        return upcean.predraw.precairo.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "qahirah" and qahirahsupport:
-        return upcean.predraw.preqahirah.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "drawsvg" and drawsvgsupport:
-        return upcean.predraw.predrawsvg.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "svgwrite" and svgwritesupport:
-        return upcean.predraw.presvgwrite.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "wand" and wandsupport:
-        return upcean.predraw.prewand.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "magick" and magicksupport:
-        return upcean.predraw.premagick.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "pgmagick" and pgmagicksupport:
-        return upcean.predraw.prepgmagick.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "cv2" and cv2support:
-        return upcean.predraw.precv2.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "skimage" and skimagesupport:
-        return upcean.predraw.preskimage.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "tkinter" and tkintersupport:
-        return upcean.predraw.pretkinter.save_to_file(inimage, outfile, outfileext, imgcomment)
-    elif selected_lib == "drawlib" and drawlibsupport:
-        return upcean.predraw.predrawlib.save_to_file(inimage, outfile, outfileext, imgcomment)
-
-    logger.error("save_to_file: Selected library is not supported.")
-    return False
-
-def save_to_filename(imgout, outfile, imgcomment="barcode"):
-    upc_img = imgout[0]
-    upc_preimg = imgout[1]
-    imageoutlib = None
-    if pilsupport and isinstance(upc_img, ImageDraw.ImageDraw) and isinstance(upc_preimg, Image.Image):
-        imageoutlib = "pillow"
-    elif cairosupport and isinstance(upc_img, cairo.Context) and isinstance(upc_preimg, cairo.Surface):
-        imageoutlib = "cairo"
-    elif qahirahsupport and isinstance(upc_img, qah.Context) and isinstance(upc_preimg, qah.Surface):
-        imageoutlib = "qahirah"
-    elif wandsupport and isinstance(upc_img, wImage):
-        imageoutlib = "wand"
-    elif magicksupport and isinstance(upc_img, PythonMagick.Image):
-        imageoutlib = "magick"
-    elif pgmagicksupport and isinstance(upc_img, pgmagick.Image):
-        imageoutlib = "pgmagick"
-    elif cv2support and upc_preimg=="cv2":
-        imageoutlib = "cv2"
-    elif skimagesupport and upc_preimg=="skimage":
-        imageoutlib = "skimage"
-    elif tkintersupport and upc_preimg=="tkinter":
-        imageoutlib = "tkinter"
-    elif drawsvgsupport and isinstance(upc_img, drawsvg.Drawing):
-        imageoutlib = "svgwrite"
-    elif drawlibsupport and upc_preimg=="drawlib":
-        imageoutlib = "drawlib"
-    elif(imageoutlib != "pillow" and imageoutlib != "cairo" and imageoutlib != "qahirah" and imageoutlib != "cairosvg" and imageoutlib != "drawsvg" and imageoutlib != "svgwrite" and imageoutlib != "wand" and imageoutlib != "magick" and imageoutlib != "pgmagick" and imageoutlib != "cv2" and imageoutlib != "skimage" and imageoutlib != "tkinter" and imageoutlib != "drawlib" and imgout != "none" and imgout is not None):
-        imageoutlib = None
-    elif(imgout == "none" or imgout is None):
-        return False
-    else:
-        return False
-    if(outfile is None):
-        if(imageoutlib == "cairosvg"):
-            oldoutfile = None
-            outfile = None
-            outfileext = "SVG"
-        else:
-            oldoutfile = None
-            outfile = None
-            outfileext = None
-    else:
-        oldoutfile = get_save_filename(
-            outfile, imageoutlib)
-        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-            del(outfile)
-            outfile = oldoutfile[0]
-            outfileext = oldoutfile[1]
-            if(cairosupport and imageoutlib == "cairo" and outfileext == "SVG"):
-                imageoutlib = "cairosvg"
-            if(cairosupport and imageoutlib == "cairosvg" and outfileext != "SVG"):
-                imageoutlib = "cairo"
-    if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, imageoutlib] 
-    return save_to_file(imgout, outfile, outfileext, imgcomment, imageoutlib)
+    return _call_backend("save_to_file", imageoutlib, (inimage, outfile, outfileext, imgcomment), none_return=False)
