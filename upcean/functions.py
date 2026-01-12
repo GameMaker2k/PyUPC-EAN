@@ -14,9 +14,8 @@
     $FileInfo: functions.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
-import os
-import sys
-import logging
+from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
+import os, sys, logging
 
 def VerbosePrintOut(dbgtxt, outtype="log", dbgenable=True, dgblevel=20):
     if(not dbgenable):
