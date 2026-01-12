@@ -114,7 +114,7 @@ def encode_ean5_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
-    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+    vertical_text_fix += shiftxy[1] * int(resize)
     LeftDigit = list(upc_matches[0])
     CheckSum = (int(LeftDigit[0]) * 3) + (int(LeftDigit[1]) * 9) + (
         int(LeftDigit[2]) * 3) + (int(LeftDigit[3]) * 9) + (int(LeftDigit[4]) * 3)
@@ -427,7 +427,7 @@ def draw_ean5sup_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1
     for shift_y in range(numxy[1]):
         for shift_x in range(numxy[0]):
             imgout = encode_ean5_barcode([upc_img, upc_preimg], upc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            shift_x_pos += ((56 * barwidth[0]) + upc_size_add)
+            shift_x_pos += (56 + upc_size_add)
         shift_y_pos += (barheightadd + (9 * barwidth[1]))
         shift_x_pos = 0
     return [upc_img, upc_preimg, imageoutlib]
@@ -543,7 +543,7 @@ def draw_ean5_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), 
     for shift_y in range(numxy[1]):
         for shift_x in range(numxy[0]):
             imgout = encode_ean5_barcode([upc_img, upc_preimg], upc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            shift_x_pos += (((56 + 8) * barwidth[0]) + upc_size_add)
+            shift_x_pos += ((56 + 8) + upc_size_add)
         shift_y_pos += (barheightadd + (9 * barwidth[1]))
         shift_x_pos = 0
     return [upc_img, upc_preimg, imageoutlib]

@@ -116,7 +116,7 @@ def encode_code93_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
-    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+    vertical_text_fix += shiftxy[1] * int(resize)
     upc = upc.upper()
     upc_matches = list(upc)
     if(len(upc_matches) <= 0):
@@ -404,7 +404,7 @@ def draw_code93_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1)
     for shift_y in range(numxy[1]):
         for shift_x in range(numxy[0]):
             imgout = encode_code93_barcode([upc_img, upc_preimg], upc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            shift_x_pos += ((50 * barwidth[0]) + upc_size_add)
+            shift_x_pos += (50 + upc_size_add)
         shift_y_pos += (barheightadd + (9 * barwidth[1]))
         shift_x_pos = 0
     return [upc_img, upc_preimg, imageoutlib]
@@ -504,7 +504,7 @@ def encode_code93extended_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
-    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+    vertical_text_fix += shiftxy[1] * int(resize)
     upc = upc.upper()
     pattern = '\\(\\$\\)|\\(%\\)|\\(/\\)|\\(\\+\\)|[0-9A-Z\\-\\. \\$\\/\\+%]'
     upc_matches = re.findall(pattern, upc)

@@ -117,7 +117,7 @@ def encode_code128_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
-    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+    vertical_text_fix += shiftxy[1] * int(resize)
     upc = upc.lower()
     if(not re.findall("[0-9a-f]{2}", upc)):
         return False
@@ -676,7 +676,7 @@ def draw_code128_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1
     for shift_y in range(numxy[1]):
         for shift_x in range(numxy[0]):
             imgout = encode_code128_barcode([upc_img, upc_preimg], upc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            shift_x_pos += ((29 * barwidth[0]) + upc_size_add)
+            shift_x_pos += (29 + upc_size_add)
         shift_y_pos += (barheightadd + (9 * barwidth[1]))
         shift_x_pos = 0
     return [upc_img, upc_preimg, imageoutlib]
@@ -776,7 +776,7 @@ def encode_code128old_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
-    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+    vertical_text_fix += shiftxy[1] * int(resize)
     upc = upc.lower()
     if(not re.findall("[0-9a-f]{2}", upc)):
         return False
@@ -1249,7 +1249,7 @@ def draw_code128old_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1
     for shift_y in range(numxy[1]):
         for shift_x in range(numxy[0]):
             imgout = encode_code128old_barcode([upc_img, upc_preimg], upc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            shift_x_pos += ((29 * barwidth[0]) + upc_size_add)
+            shift_x_pos += (29 + upc_size_add)
         shift_y_pos += (barheightadd + (9 * barwidth[1]))
         shift_x_pos = 0
     return [upc_img, upc_preimg, imageoutlib]
