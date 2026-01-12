@@ -305,41 +305,76 @@ def drawColorText(dwg, size, x, y, text, color, ftype="ocrb"):
 
 def embed_font(dwg, font_path, font_family):
     """
-    Embeds a custom font into the SVG.
+    Embeds a custom font into the SVG (once per Drawing).
+    Safe to call many times; only embeds the first time.
 
-    Parameters:
-    - dwg: svgwrite.Drawing object.
-    - font_path: Path to the font file (e.g., .ttf or .otf).
-    - font_family: The name to assign to the font family.
+    Compatible with Python 2.7 and Python 3.x
     """
-    # Read the font file
-    with open(font_path, 'rb') as f:
+
+    # --- imports kept local for Py2 safety ---
+    import os
+    import base64
+
+    # --- per-drawing cache (svgwrite-compatible) ---
+    try:
+        cache = dwg._embedded_fonts
+    except AttributeError:
+        cache = set()
+        dwg._embedded_fonts = cache
+
+    key = (os.path.abspath(font_path), unicode(font_family) if 'unicode' in globals() else str(font_family))
+    if key in cache:
+        return  # already embedded
+    cache.add(key)
+
+    # --- read font file ---
+    f = open(font_path, 'rb')
+    try:
         font_data = f.read()
+    finally:
+        f.close()
 
-    # Encode the font data in base64
-    font_base64 = base64.b64encode(font_data).decode('utf-8')
+    # --- base64 encode (Py2/Py3 safe) ---
+    font_base64 = base64.b64encode(font_data)
+    if not isinstance(font_base64, str):
+        font_base64 = font_base64.decode('ascii')
 
-    # Determine the font format based on the file extension
+    # --- determine font format ---
     ext = os.path.splitext(font_path)[1].lower()
     if ext == '.ttf':
         font_format = 'truetype'
+        mime = 'font/ttf'
     elif ext == '.otf':
         font_format = 'opentype'
+        mime = 'font/otf'
     else:
-        raise ValueError("Unsupported font format.")
+        raise ValueError("Unsupported font format: %s" % ext)
 
-    # Create the @font-face CSS
-    font_face = """
-    @font-face {{
-        font-family: '{0}';
-        src: url(data:font/{1};base64,{2}) format('{1}')
-        font-weight: normal;
-        font-style: normal;
-    }}
-    """.format(font_family, font_format, font_base64)
+    # --- build CSS ---
+    font_face = (
+        "@font-face {{\n"
+        "  font-family: '{family}';\n"
+        "  src: url(data:{mime};base64,{b64}) format('{fmt}');\n"
+        "  font-weight: normal;\n"
+        "  font-style: normal;\n"
+        "}}\n"
+    ).format(
+        family=font_family,
+        mime=mime,
+        b64=font_base64,
+        fmt=font_format
+    )
 
-    # Add the style to the SVG
-    dwg.defs.add(dwg.style(font_face))
+    # --- add <style> to defs ---
+    style_el = dwg.style(font_face)
+
+    # Try to assign a stable id (svgwrite-compatible)
+    try:
+        style_el.update(id="fontface-%s" % font_family)
+    except Exception:
+        pass
+
+    dwg.defs.add(style_el)
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     upc_img = inimage[0]
