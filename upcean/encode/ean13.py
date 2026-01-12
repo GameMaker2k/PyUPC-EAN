@@ -64,6 +64,7 @@ def get_ean13_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), ba
         barheightadd = barheight[0] + 6
     else:
         barheightadd = barheight[1]
+    supplement = None
     if(re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)):
         upc_pieces = re.findall("([0-9]+)([ |\\|]{1})([0-9]{2})$", upc)
         upc_pieces = upc_pieces[0]

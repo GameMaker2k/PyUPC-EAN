@@ -67,11 +67,23 @@ def get_binary_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), b
         barheightadd = barheight[1]
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
-    upc_size_add_wo_shift = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
-    upc_size_add_w_shift = (len([item for sublist in upc['code'] for item in sublist]) + shiftxy[0]) * (barwidth[0] * int(resize))
-    reswoshift = (upc_size_add_wo_shift, )
-    reswshift = (upc_size_add_w_shift, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize))
-    return {'without_shift': reswoshift, 'with_shift': reswshift}
+
+    modules = len([item for sublist in upc["code"] for item in sublist])
+
+    # Base tile size in pixels (matches draw_binary_barcode)
+    width_px  = modules * (barwidth[0] * int(resize))
+    height_px = (barheightadd + (upc["heightadd"] * barwidth[1])) * int(resize)
+
+    # Shift adds extra space to the canvas needed to accommodate the offset.
+    # shiftxy[0] is in modules -> convert to pixels via * barwidth[0] * resize
+    # shiftxy[1] is in pre-resize vertical units -> convert to pixels via * resize
+    width_shift_px  = width_px  + (shiftxy[0] * barwidth[0] * int(resize))
+    height_shift_px = height_px + (shiftxy[1] * int(resize))
+
+    return {
+        "without_shift": (width_px, height_px),
+        "with_shift": (width_shift_px, height_shift_px),
+    }
 
 
 def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
