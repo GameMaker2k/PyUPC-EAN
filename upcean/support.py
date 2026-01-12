@@ -608,6 +608,11 @@ drawlibsupport = check_for_drawlib()
 if(drawlibsupport):
     imagelibsupport.append("drawlib")
 
+def list_available_image_backends():
+    """
+    Return a copy of the list of available and usable image backends.
+    """
+    return list(imagelibsupport)
 
 defaultdraw = None
 if((pilsupport or pillowsupport) and defaultdraw is None):
