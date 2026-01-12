@@ -255,15 +255,34 @@ def drawColorText(dwg, size, x, y, text, color, ftype="ocrb"):
 
 def embed_font(dwg, font_path, font_family):
     """
-    Embeds a custom font into the SVG via an @font-face style block.
-
-    Note: This embeds the font in the SVG (base64). Renderers must support it.
+    Embeds a custom font into the SVG via an @font-face style block,
+    but only once per drawing (safe to call many times).
     """
+    import os
+    import base64
+    import drawsvg
+
+    # ---- per-drawing cache ----
+    cache = getattr(dwg, "_embedded_fonts", None)
+    if cache is None:
+        cache = set()
+        setattr(dwg, "_embedded_fonts", cache)
+
+    key = (os.path.abspath(font_path), str(font_family))
+    if key in cache:
+        return
+    cache.add(key)
+
+    # ---- read font file ----
     with open(font_path, 'rb') as f:
         font_data = f.read()
 
-    font_base64 = base64.b64encode(font_data).decode('utf-8')
+    # ---- base64 encode ----
+    font_base64 = base64.b64encode(font_data)
+    if not isinstance(font_base64, str):
+        font_base64 = font_base64.decode('ascii')
 
+    # ---- determine format ----
     ext = os.path.splitext(font_path)[1].lower()
     if ext == '.ttf':
         font_format = 'truetype'
@@ -272,30 +291,40 @@ def embed_font(dwg, font_path, font_family):
         font_format = 'opentype'
         mime = 'font/otf'
     else:
-        raise ValueError("Unsupported font format.")
+        raise ValueError("Unsupported font format: %s" % ext)
 
-    font_face_css = """
-    <style type="text/css"><![CDATA[
-    @font-face {{
-        font-family: '{0}';
-        src: url(data:{1};base64,{2}) format('{3}');
-        font-weight: normal;
-        font-style: normal;
-    }}
-    ]]></style>
-    """.format(font_family, mime, font_base64, font_format)
+    # ---- build CSS (NOTE: braces are literal, no .format() here) ----
+    font_face_css = (
+        '<style type="text/css"><![CDATA[\n'
+        '@font-face {\n'
+        "  font-family: '%(family)s';\n"
+        "  src: url(data:%(mime)s;base64,%(b64)s) format('%(fmt)s');\n"
+        '  font-weight: normal;\n'
+        '  font-style: normal;\n'
+        '}\n'
+        ']]></style>\n'
+    ) % {
+        'family': font_family,
+        'mime': mime,
+        'b64': font_base64,
+        'fmt': font_format,
+    }
 
-    # drawsvg defs: append raw XML to <defs>
+    raw = drawsvg.Raw(font_face_css)
+
+    # ---- attach to defs (best-effort across drawsvg versions) ----
     if hasattr(dwg, 'append_def'):
-        dwg.append_def(drawsvg.Raw(font_face_css))
-    else:
-        # fallback: many versions expose defs as a list-like
-        try:
-            dwg.defs.append(drawsvg.Raw(font_face_css))
-        except Exception:
-            # last resort: just append to drawing (still valid in many viewers)
-            dwg.append(drawsvg.Raw(font_face_css))
-
+        dwg.append_def(raw)
+        return
+    try:
+        dwg.defs.append(raw)
+        return
+    except Exception:
+        pass
+    try:
+        dwg.append(raw)
+    except Exception:
+        return
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
