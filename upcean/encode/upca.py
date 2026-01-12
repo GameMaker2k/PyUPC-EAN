@@ -134,7 +134,7 @@ def encode_upca_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
-    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+    vertical_text_fix += shiftxy[1] * int(resize)
     upc_matches = re.findall("(\\d{1})(\\d{5})(\\d{5})(\\d{1})", upc)
     if(len(upc_matches) <= 0):
         return False
@@ -496,7 +496,7 @@ def draw_upca_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), 
     for shift_y in range(numxy[1]):
         for shift_x in range(numxy[0]):
             imgout = encode_upca_barcode([upc_img, upc_preimg], fullupc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            shift_x_pos += ((113 * barwidth[0]) + upc_size_add)
+            shift_x_pos += (113 + upc_size_add)
         shift_y_pos += (barheightadd + (9 * barwidth[1]))
         shift_x_pos = 0
     return [upc_img, upc_preimg, imageoutlib]
@@ -612,7 +612,7 @@ def encode_upcaean_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
-    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+    vertical_text_fix += shiftxy[1] * int(resize)
     upc_matches = re.findall("(\\d{1})(\\d{5})(\\d{5})(\\d{1})", upc)
     if(len(upc_matches) <= 0):
         return False
@@ -963,7 +963,7 @@ def draw_upcaean_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1
     for shift_y in range(numxy[1]):
         for shift_x in range(numxy[0]):
             imgout = encode_upcaean_barcode([upc_img, upc_preimg], fullupc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            shift_x_pos += ((115 * barwidth[0]) + upc_size_add)
+            shift_x_pos += (115 + upc_size_add)
         shift_y_pos += (barheightadd + (9 * barwidth[1]))
         shift_x_pos = 0
     return [upc_img, upc_preimg, imageoutlib]

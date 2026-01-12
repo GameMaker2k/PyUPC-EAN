@@ -69,7 +69,7 @@ def get_binary_barcode_size(upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), b
         resize = 1
     upc_size_add_wo_shift = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
     upc_size_add_w_shift = (len([item for sublist in upc['code'] for item in sublist]) + shiftxy[0]) * (barwidth[0] * int(resize))
-    reswoshift = (upc_size_add_wo_shift, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize))
+    reswoshift = (upc_size_add_wo_shift, )
     reswshift = (upc_size_add_w_shift, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize))
     return {'without_shift': reswoshift, 'with_shift': reswshift}
 
@@ -105,12 +105,13 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
         vertical_text_fix = (5 * (int(resize) * barwidth[1]))
     else:
         vertical_text_fix = 0
-    vertical_text_fix += (shiftxy[1] * (int(resize) * barwidth[1]))
+    vertical_text_fix += shiftxy[1] * int(resize)
+
     upc_size_add = (len([item for sublist in upc['code'] for item in sublist]) + shiftxy[0]) * (barwidth[0] * int(resize))
     drawColorRectangle(upc_img, 0 + (shiftxy[0] * barwidth[0]) * int(resize), 0 + (shiftxy[1] * barwidth[1]) * int(resize), upc_size_add, ((barheightadd + shiftxy[1]) + ((upc['heightadd'] + shiftxy[1]) * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     bari = 0
     barmax = len(upc['code'])
-    LineStart = shiftxy[0]
+    LineStart = shiftxy[0] * barwidth[0] * resize
     while(bari < barmax):
         subbari = 0
         subbarmax = len(upc['code'][bari])
@@ -141,13 +142,13 @@ def encode_binary_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48,
     if(tkintersupport and imageoutlib == "tkinter"):
         LineFixTxtStart = 4
     elif((svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and not cairosvgsupport and imageoutlib == "drawsvg")):
-        LineTxtStart = 1
+        LineFixTxtStart = 1
     while(txtbari < txtbarmax):
         texthidden = False
         if hidetext or (upc['text']['type'][txtbari] == "sn" and (hidesn is None or hidesn)) or (upc['text']['type'][txtbari] == "cd" and (hidecd is None or hidecd)):
             texthidden = True
         if(not texthidden):
-            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + ((upc['text']['location'][txtbari] + LineFixTxtStart) * int(resize))) * barwidth[0], vertical_text_fix + (barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
+            drawColorText(upc_img, 10 * int(resize * barwidth[1]), (shiftxy[0] + upc['text']['location'][txtbari] + LineFixTxtStart) * barwidth[0] * int(resize), vertical_text_fix + (barheight[0] * int(resize)),  upc['text']['text'][txtbari], barcolor[1], "ocrb", imageoutlib)
         txtbari += 1
     if((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg"))):
         upc_preimg.flush()
@@ -165,7 +166,7 @@ def draw_binary_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barc
     if(imageoutlib not in imagelibsupport):
         imageoutlib = defaultdraw
     upc_size_add = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
-    upc_img, upc_preimg = upcean.predraw.new_image_surface(upc_size_add, (barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(upc_size_add, (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
     imgout = encode_binary_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, imageoutlib]
 
@@ -212,17 +213,19 @@ def draw_binary_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1)
     if(imageoutlib not in imagelibsupport):
         imageoutlib = defaultdraw
     upc_size_add = len([item for sublist in upc['code'] for item in sublist]) * (barwidth[0] * int(resize))
-    upc_img, upc_preimg = upcean.predraw.new_image_surface(upc_size_add * int(numxy[0]), ((barheightadd + (upc['heightadd'] * barwidth[1])) * int(resize)) * int(numxy[1]), barcolor[2], imageoutlib)
+    upc_img, upc_preimg = upcean.predraw.new_image_surface(upc_size_add * int(numxy[0]), ((barheightadd + (9 * barwidth[1])) * int(resize)) * int(numxy[1]), barcolor[2], imageoutlib)
     shift_x = 0
     shift_y = 0
+    modules = len([item for sublist in upc['code'] for item in sublist])
     shift_x_pos = 0
     shift_y_pos = 0
+    row_step = barheightadd + (upc['heightadd'] * barwidth[1])
     for shift_y in range(numxy[1]):
         for shift_x in range(numxy[0]):
             imgout = encode_binary_barcode([upc_img, upc_preimg], upc, resize, (shift_x_pos, shift_y_pos), barheight, barwidth, barcolor, hideinfo, imageoutlib)
-            shift_x_pos += (upc_size_add * barwidth[0])
-        shift_y_pos += (barheightadd + (upc['heightadd'] * barwidth[1]))
-        shift_x_pos = 0
+            shift_x_pos += modules          # move right only
+        shift_y_pos += row_step             # move down once per row
+        shift_x_pos = 0    
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_binary_barcode_sheet(upc, outfile="./binary.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
