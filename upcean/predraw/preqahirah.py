@@ -15,374 +15,424 @@
     $FileInfo: preqahirah.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1  - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-from upcean.downloader import upload_file_to_internet_file
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import re
-import qahirah as qah
+
+from upcean.downloader import upload_file_to_internet_file
 import upcean.fonts
 
-try:
-    import pkg_resources
-    pkgres = True
-except ImportError:
-    pkgres = False
+import qahirah as qah
 
+# -------------------------
+# Py2 / Py3 compatibility
+# -------------------------
 try:
-    basestring
-except NameError:
+    basestring  # Py2
+except NameError:  # Py3
     basestring = str
 
 try:
-    file
-except NameError:
-    from io import IOBase
-    file = IOBase
+    unicode  # Py2
+except NameError:  # Py3
+    unicode = str
+
+try:
+    file  # Py2
+except NameError:  # Py3
+    from io import IOBase as file  # alias
+
 from io import IOBase
 
 try:
-    from io import StringIO, BytesIO
-except ImportError:
+    from io import BytesIO
+except ImportError:  # old Py2
     try:
-        from cStringIO import StringIO
         from cStringIO import StringIO as BytesIO
     except ImportError:
-        from StringIO import StringIO
         from StringIO import StringIO as BytesIO
 
+# -------------------------
+# Font paths (from upcean)
+# -------------------------
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
 fontpathocrb = upcean.fonts.fontpathocrb
 fontpathocrbalt = upcean.fonts.fontpathocrbalt
-fontpath = upcean.fonts.fontpath
+fontpath = upcean.fonts.fontpath  # kept for compatibility
 
+# -------------------------
+# Constants / regex
+# -------------------------
+_RE_URL = re.compile(r"^(ftp|ftps|sftp)://", re.IGNORECASE)
+_RE_DOT_EXT = re.compile(r"^\.(?P<ext>[A-Za-z]+)$")
+_RE_NAME_COLON_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
+
+cairo_valid_extensions = set(["SVG", "PDF", "PS", "EPS", "RAW", "CAIRO", "QAHIRAH"])
+
+
+# -------------------------
+# Helpers (Cairo-compatible)
+# -------------------------
 def snapCoords(x, y):
-    """
-    Snaps the coordinates to the nearest half-pixel for crisp rendering.
-    
-    Parameters:
-    - x, y: Original coordinates.
-    
-    Returns:
-    - Tuple of snapped coordinates.
-    """
+    """Snap to half-pixels for crisp rendering (Cairo style)."""
     return (round(x) + 0.5, round(y) + 0.5)
 
 
+def _set_rgb_255(ctx, color):
+    """Set Qahirah source colour from (R,G,B) in 0..255."""
+    ctx.set_source_colour((color[0] / 255.0, color[1] / 255.0, color[2] / 255.0))
+
+
+def _get_cairo_const(*names):
+    """
+    Qahirah exposes Cairo constants under qah.CAIRO, but exact naming can vary by build/version.
+    Try a list of candidate attribute names and return the first found.
+    """
+    for n in names:
+        if hasattr(qah.CAIRO, n):
+            return getattr(qah.CAIRO, n)
+    return None
+
+
+def _toy_slant_weight_normal():
+    """
+    Return (slant_normal, weight_normal) constants for select_font_face,
+    with fallbacks across possible constant names.
+    """
+    slant = _get_cairo_const("FONT_SLANT_NORMAL", "FontSlant_NORMAL", "FontSlantNormal")
+    weight = _get_cairo_const("FONT_WEIGHT_NORMAL", "FontWeight_NORMAL", "FontWeightNormal")
+    return slant, weight
+
+
+def _select_font_family_string(ftype):
+    """
+    Match the Cairo backend *as written*:
+    it fed a string into ToyFontFace(...). That API expects a family name,
+    but the code supplies a path. We'll supply the same string here.
+    """
+    if ftype == "ocra":
+        primary, alt = fontpathocra, fontpathocraalt
+    else:
+        primary, alt = fontpathocrb, fontpathocrbalt
+
+    # Try to use primary, fall back to alt if primary path doesn't exist/readable.
+    # (Cairo code caught OSError on ToyFontFace creation; here we approximate by checking existence.)
+    try:
+        if primary and os.path.exists(primary):
+            return primary
+    except Exception:
+        pass
+    return alt or primary
+
+
+def _apply_font_options(ctx):
+    """Match Cairo backend font options."""
+    fo = qah.FontOptions()
+    fo.antialias = qah.CAIRO.ANTIALIAS_DEFAULT
+    fo.hint_style = qah.CAIRO.HINT_STYLE_NONE
+    fo.hint_metrics = qah.CAIRO.HINT_METRICS_OFF
+    ctx.set_font_options(fo)
+
+
+# -------------------------
+# Drawing API
+# -------------------------
 def drawColorRectangle(ctx, x1, y1, x2, y2, color):
-    # Set the color as a tuple for qahirah
-    ctx.set_source_colour(color)
-    
-    # Calculate width and height from the given coordinates
-    width = x2 - x1
-    height = y2 - y1
-    
-    # Define the rectangle using the top-left corner and dimensions
-    ctx.rectangle(qah.Rect(x1, y1, width, height))
+    _set_rgb_255(ctx, color)
+    w = x2 - x1
+    h = y2 - y1
+    ctx.rectangle(qah.Rect(x1, y1, w, h))
     ctx.fill()
+    ctx.new_path()
+    return True
+
 
 def drawColorLine(ctx, x1, y1, x2, y2, width, color):
-    # Set the color as a tuple for qahirah
-    ctx.set_source_colour(color)
-    
-    # Calculate width and height for the rectangle based on coordinates
-    rect_x = min(x1, x2)
-    rect_y = min(y1, y2)
-    rect_width = abs(x2 - x1) if x1 != x2 else width
-    rect_height = abs(y2 - y1) if y1 != y2 else width
+    try:
+        width = int(width)
+    except Exception:
+        width = 1
+    if width < 1:
+        width = 1
 
-    # Define the rectangle directly with x, y, width, and height
-    ctx.rectangle(qah.Rect(rect_x, rect_y, rect_width, rect_height))
-    ctx.fill()
+    _set_rgb_255(ctx, color)
+
+    x1, y1 = snapCoords(x1, y1)
+    x2, y2 = snapCoords(x2, y2)
+
+    if x1 == x2:
+        rect_x = x1 - width / 2.0
+        rect_y = min(y1, y2)
+        rect_w = float(width)
+        rect_h = abs(y2 - y1)
+        ctx.rectangle(qah.Rect(rect_x, rect_y, rect_w, rect_h))
+        ctx.fill()
+    elif y1 == y2:
+        rect_x = min(x1, x2)
+        rect_y = y1 - width / 2.0
+        rect_w = abs(x2 - x1)
+        rect_h = float(width)
+        ctx.rectangle(qah.Rect(rect_x, rect_y, rect_w, rect_h))
+        ctx.fill()
+    else:
+        ctx.set_line_width(float(width))
+        ctx.move_to(qah.Vector(x1, y1))
+        ctx.line_to(qah.Vector(x2, y2))
+        ctx.stroke()
+
+    ctx.new_path()
+    return True
+
 
 def drawText(ctx, size, x, y, text, ftype="ocrb"):
     """
-    Draws text at a specified location with given size and font type.
-    
-    Parameters:
-    - ctx: Qahirah context.
-    - size: Font size.
-    - x, y: Coordinates for text position.
-    - text: The text to draw.
-    - ftype: Font type (optional, default is "ocrb").
+    Text rendering aligned to Cairo backend:
+    - Prefer toy API: select_font_face(family_string, NORMAL, NORMAL)
+    - If not available, fall back to file font face
     """
     text = str(text)
-    point1 = snapCoords(x, y)
-    # Create a font face object
-    if ftype == "ocra":
+    px, py = snapCoords(x, y)
+
+    family = _select_font_family_string(ftype)
+    slant, weight = _toy_slant_weight_normal()
+
+    used_toy = False
+    if hasattr(ctx, "select_font_face") and slant is not None and weight is not None:
         try:
-            font = qah.FontFace.create_for_file(fontpathocra)
-        except OSError:
-            font = qah.FontFace.create_for_file(fontpathocraalt)
-    elif ftype == "ocrb":
+            ctx.select_font_face(family, slant, weight)
+            used_toy = True
+        except Exception:
+            used_toy = False
+
+    if not used_toy:
+        # Fallback: load the font file directly (still keeps OCR-A/OCR-B intent).
+        # This is NOT toy-font behavior, but ensures the function works everywhere.
         try:
-            font = qah.FontFace.create_for_file(fontpathocrb)
+            font_face = qah.FontFace.create_for_file(family)
         except OSError:
-            font = qah.FontFace.create_for_file(fontpathocrbalt)
-    else:
-        font = None  # Default font
-    if font is not None:
-        ctx.set_font_face(font)
+            # last-resort: try the other path explicitly
+            if ftype == "ocra":
+                font_face = qah.FontFace.create_for_file(fontpathocraalt)
+            else:
+                font_face = qah.FontFace.create_for_file(fontpathocrbalt)
+        ctx.set_font_face(font_face)
+
     ctx.set_font_size(size)
-    fo = qah.FontOptions()
-    fo.antialias = qah.CAIRO.ANTIALIAS_DEFAULT
-    fo.hint_style = qah.CAIRO.HINT_METRICS_OFF
-    fo.hint_metrics = qah.CAIRO.HINT_STYLE_NONE
-    ctx.set_font_options(fo)
-    ctx.move_to(qah.Vector(point1[0], point1[1]))
+    _apply_font_options(ctx)
+
+    ctx.move_to(qah.Vector(px, py))
     ctx.show_text(text)
     ctx.stroke()
     return True
 
+
 def drawColorText(ctx, size, x, y, text, color, ftype="ocrb"):
-    """
-    Draws colored text at a specified location with given size, color, and font type.
-    
-    Parameters:
-    - ctx: Qahirah context.
-    - size: Font size.
-    - x, y: Coordinates for text position.
-    - text: The text to draw.
-    - color: Tuple of (R, G, B) with values in [0, 255].
-    - ftype: Font type (optional, default is "ocrb").
-    """
-    text = str(text)
-    ctx.set_source_colour((color[0] / 255.0, color[1] / 255.0, color[2] / 255.0))
-    drawText(ctx, size, x, y, text, ftype)
-    return True
+    _set_rgb_255(ctx, color)
+    return drawText(ctx, size, x, y, text, ftype)
+
 
 def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, line_width=1):
-    """
-    Draws an outlined rectangle from (x1, y1) to (x2, y2) with the specified color and line width.
-    
-    Parameters:
-    - ctx: Qahirah context.
-    - x1, y1: Coordinates of the top-left corner.
-    - x2, y2: Coordinates of the bottom-right corner.
-    - color: Tuple of (R, G, B) with values in [0, 255].
-    - line_width: Width of the outline (default is 1).
-    """
-    # Set the outline color (scaling RGB values to [0, 1])
-    ctx.set_source_colour((color[0] / 255.0, color[1] / 255.0, color[2] / 255.0))
-    
-    # Set the line width for the outline
-    ctx.set_line_width(line_width)
-    
-    # Define the rectangle path
-    width_rect = x2 - x1
-    height_rect = y2 - y1
-    ctx.rectangle(qah.Rect(qah.Vector(x1, y1), qah.Vector(width_rect, height_rect)))
-    
-    # Stroke the rectangle outline
-    ctx.stroke()
-    
-    # Start a new path to avoid unintended connections
-    ctx.new_path()
+    _set_rgb_255(ctx, color)
+    try:
+        lw = float(line_width)
+    except Exception:
+        lw = 1.0
+    if lw <= 0:
+        lw = 1.0
+    ctx.set_line_width(lw)
 
+    w = x2 - x1
+    h = y2 - y1
+    ctx.rectangle(qah.Rect(x1, y1, w, h))
+    ctx.stroke()
+    ctx.new_path()
     return True
 
-# Define valid Qahirah output formats
-cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "RAW", "CAIRO", "QAHIRAH"}
 
+# -------------------------
+# Saving helpers
+# -------------------------
 def get_save_filename(outfile):
-    """
-    Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files in Qahirah-compatible formats. Returns a tuple (filename, EXTENSION)
-    or the original `outfile` if it's of type None, bool, or a file object.
-    Defaults to "PNG" if the extension is not supported by Qahirah.
-    
-    Parameters:
-        outfile (str, tuple, list, None, bool, file): The output file specification.
-    
-    Returns:
-        tuple or original `outfile` or False if invalid.
-    """
-    # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
-    
-    # Handle file objects directly
-    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile=="-":
+
+    if outfile == "-" or isinstance(outfile, (file, IOBase)):
         return (outfile, "PNG")
 
-    # Handle string types
-    if isinstance(outfile, str):
-        outfile = outfile.strip()
-        if outfile in ["-", ""]:
-            return (outfile, "PNG")
-    
-        # Extract extension using os.path.splitext
-        base, ext = os.path.splitext(outfile)
+    if isinstance(outfile, basestring):
+        out = outfile.strip()
+        if out in ("", "-"):
+            return (out, "PNG")
+
+        base, ext = os.path.splitext(out)
+        out_ext = None
+
         if ext:
-            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
-            if ext_match:
-                outfileext = ext_match.group('ext').upper()
-            else:
-                outfileext = None
+            m = _RE_DOT_EXT.match(ext)
+            if m:
+                out_ext = m.group("ext").upper()
         else:
-            # Check for custom format 'name:EXT'
-            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
-            if custom_match:
-                outfile = custom_match.group('name')
-                outfileext = custom_match.group('ext').upper()
-            else:
-                outfileext = None
-    
-        # Default to "PNG" if no valid extension was found
-        if not outfileext:
-            outfileext = "PNG"
-    
-        # Check if extension is supported by Qahirah
-        if outfileext not in cairo_valid_extensions:
-            outfileext = "PNG"
-    
-        return (outfile, outfileext)
-    
-    # Handle tuple or list types
+            m = _RE_NAME_COLON_EXT.match(out)
+            if m:
+                out = m.group("name")
+                out_ext = m.group("ext").upper()
+
+        if not out_ext:
+            out_ext = "PNG"
+        if out_ext not in cairo_valid_extensions:
+            out_ext = "PNG"
+
+        return (out, out_ext)
+
     if isinstance(outfile, (tuple, list)):
         if len(outfile) != 2:
-            # Invalid tuple/list length
             return False
-    
+
         filename, ext = outfile
-    
-        # Allow file objects as the first item in tuple
-        if isinstance(filename, file):
-            filename = filename  # fileobj is valid as-is
-        elif isinstance(filename, str):
-            filename = filename.strip()
+
+        if isinstance(filename, (file, IOBase)):
+            fn = filename
+        elif isinstance(filename, basestring):
+            fn = filename.strip()
         else:
             return False
-    
-        # Ensure the extension is a valid string
-        if not isinstance(ext, str):
+
+        if not isinstance(ext, basestring):
             return False
-    
-        ext = ext.strip().upper()
-        # Check if extension is supported by Qahirah
-        if ext not in cairo_valid_extensions:
-            ext = "PNG"
-    
-        return (filename, ext)
-    
-    # Unsupported type
+
+        ext_u = ext.strip().upper()
+        if ext_u not in cairo_valid_extensions:
+            ext_u = "PNG"
+        return (fn, ext_u)
+
     return False
+
 
 def get_save_file(outfile):
     return get_save_filename(outfile)
 
+
 def new_image_surface(sizex, sizey, bgcolor):
-    # Define the content type and create a Rect for the extents
-    content_type = qah.CAIRO.CONTENT_COLOR  # Use COLOR if you don't need transparency; use COLOR_ALPHA if you do
+    content_type = qah.CAIRO.CONTENT_COLOR
     extents = qah.Rect(0, 0, sizex, sizey)
-    # Create the RecordingSurface using the create method
-    upc_preimg = qah.RecordingSurface.create(content=content_type, extents=extents)
-    # Create a drawing context
-    upc_img = qah.Context.create(upc_preimg)
-    # Disable antialiasing
-    upc_img.set_antialias(qah.CAIRO.ANTIALIAS_NONE)
-    # Draw the colored rectangle (assumes drawColorRectangle is defined)
-    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
-    return [upc_img, upc_preimg]
+    surface = qah.RecordingSurface.create(content=content_type, extents=extents)
+    ctx = qah.Context.create(surface)
+    ctx.set_antialias(qah.CAIRO.ANTIALIAS_NONE)
+    drawColorRectangle(ctx, 0, 0, sizex, sizey, bgcolor)
+    return [ctx, surface]
+
+
+def _recording_ink_extents(rec_surface):
+    rect = rec_surface.ink_extents
+    return rect.left, rect.top, rect.width, rect.height
+
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
-    upc_img = inimage[0]
-    upc_preimg = inimage[1]
-    # Access the Rect properties individually
-    rect = upc_preimg.ink_extents
-    x = rect.left
-    y = rect.top
-    width = rect.width
-    height = rect.height
+    rec = inimage[1]
+    outfileext = (outfileext or "PNG").upper()
+
+    x, y, w, h = _recording_ink_extents(rec)
+    iw, ih = int(w), int(h)
+
     uploadfile = None
     outfiletovar = False
-    if re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
+    if outfile is not None and _RE_URL.search(str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
-    elif outfile=="-":
+    elif outfile == "-":
         outfiletovar = True
         outfile = BytesIO()
+
     if outfileext == "SVG":
-        # Instantiate SVGSurface with only the file path
-        image_surface = qah.SVGSurface.create(outfile, (int(width), int(height)))
-        image_context = qah.Context.create(image_surface)
-        image_context.set_source_surface(upc_preimg, (-x, -y))
-        image_context.paint()
-        image_surface.flush()
+        surface = qah.SVGSurface.create(outfile, (iw, ih))
+        ctx = qah.Context.create(surface)
+        ctx.set_source_surface(rec, (-x, -y))
+        ctx.paint()
+        surface.flush()
+
     elif outfileext == "PDF":
-        image_surface = qah.PDFSurface.create(outfile, (int(width), int(height)))
-        image_context = qah.Context.create(image_surface)
-        image_context.set_source_surface(upc_preimg, (-x, -y))
-        image_context.paint()
-        image_surface.flush()
-    elif outfileext == "PS" or outfileext == "EPS":
-        image_surface = qah.PSSurface.create(outfile, (int(width), int(height)))
-        image_context = qah.Context.create(image_surface)
-        image_surface.set_eps(outfileext == "EPS")
-        image_context.set_source_surface(upc_preimg, (-x, -y))
-        image_context.paint()
-        image_surface.flush()
-    elif outfileext == "CAIRO" or outfileext == "QAHIRAH":
-        # Step 1: Create the ScriptDevice, specifying the output file
+        surface = qah.PDFSurface.create(outfile, (iw, ih))
+        ctx = qah.Context.create(surface)
+        ctx.set_source_surface(rec, (-x, -y))
+        ctx.paint()
+        surface.flush()
+
+    elif outfileext in ("PS", "EPS"):
+        surface = qah.PSSurface.create(outfile, (iw, ih))
+        surface.set_eps(outfileext == "EPS")
+        ctx = qah.Context.create(surface)
+        ctx.set_source_surface(rec, (-x, -y))
+        ctx.paint()
+        surface.flush()
+
+    elif outfileext in ("CAIRO", "QAHIRAH"):
         script_device = qah.ScriptDevice.create(outfile)
-        # Step 2: Create a proxy surface linked to the ScriptDevice
-        # The proxy surface acts as an intermediary for drawing operations
-        proxy_surface = script_device.surface_create_for_target(upc_preimg)
-        # Step 3: Create a context for the proxy surface and draw as usual
-        image_context = qah.Context.create(proxy_surface)
-        image_context.set_source_surface(upc_preimg, (-x, -y))
-        image_context.paint()
-    elif(outfileext == "RAW"):
-        # Create an ImageSurface with the exact dimensions of the recorded content
-        image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
-        image_context.paint()
+        proxy_surface = script_device.surface_create_for_target(rec)
+        ctx = qah.Context.create(proxy_surface)
+        ctx.set_source_surface(rec, (-x, -y))
+        ctx.paint()
+
+    elif outfileext == "RAW":
+        # Keep your original approach: use cairo/cairocffi to extract raw bytes.
+        try:
+            import cairo
+        except ImportError:
+            import cairocffi as cairo
+
+        image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, iw, ih)
+        image_ctx = cairo.Context(image_surface)
+        image_ctx.set_source_surface(rec, -x, -y)
+        image_ctx.paint()
         image_surface.flush()
-        # Save as PNG
+
         data = image_surface.get_data()
-        if isinstance(outfile, file) or isinstance(outfile, IOBase):
+        if isinstance(outfile, (file, IOBase)):
             outfile.write(data)
         else:
-            dataout = open(outfile, "wb")
-            dataout.write(data)
-            dataout.close()
+            f = open(outfile, "wb")
+            try:
+                f.write(data)
+            finally:
+                f.close()
         image_surface.finish()
+
     else:
-        # Default to ImageSurface with FORMAT_RGB24 for RGB output
-        image_surface = qah.ImageSurface.create(format=qah.CAIRO.FORMAT_RGB24, dimensions=(int(width), int(height)))
-        image_context = qah.Context.create(image_surface)
-        image_context.set_source_surface(upc_preimg, (-x, -y))
-        image_context.paint()
-        image_surface.flush()
-        image_surface.write_to_png(outfile)
-    if re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile)):
+        surface = qah.ImageSurface.create(format=qah.CAIRO.FORMAT_RGB24, dimensions=(iw, ih))
+        ctx = qah.Context.create(surface)
+        ctx.set_source_surface(rec, (-x, -y))
+        ctx.paint()
+        surface.flush()
+        surface.write_to_png(outfile)
+
+    if uploadfile is not None:
         outfile.seek(0, 0)
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()
-    elif outfiletovar:
+        return True
+
+    if outfiletovar:
         outfile.seek(0, 0)
         outbyte = outfile.read()
         outfile.close()
         return outbyte
+
     return True
+
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    if(outfile is None):
-        oldoutfile = None
-        outfile = None
-        outfileext = None
-    else:
-        oldoutfile = get_save_filename(
-            outfile)
-        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-            del(outfile)
-            outfile = oldoutfile[0]
-            outfileext = oldoutfile[1]
-    if(oldoutfile is None or isinstance(oldoutfile, bool)):
+
+    oldoutfile = None if outfile is None else get_save_filename(outfile)
+
+    if oldoutfile is None or isinstance(oldoutfile, bool):
+        # keep your original return marker for compatibility
         return [upc_img, upc_preimg, "cairo"]
-    save_to_file(imgout, outfile, outfileext, imgcomment)
-    return True
+
+    if not isinstance(oldoutfile, (tuple, list)) or len(oldoutfile) != 2:
+        return False
+
+    outdest, outfmt = oldoutfile
+    return save_to_file(imgout, outdest, outfmt, imgcomment)

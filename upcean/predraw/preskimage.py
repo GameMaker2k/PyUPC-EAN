@@ -14,268 +14,337 @@
     $FileInfo: preskimage.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-from upcean.downloader import upload_file_to_internet_file
-import numpy as np
-import skimage
-import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
-import re
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
-from io import BytesIO
+import re
+
+import numpy as np
+import skimage.draw
+import skimage.io
+
+from upcean.downloader import upload_file_to_internet_file
 import upcean.fonts
-from upcean.downloader import upload_file_to_internet_file  # Assuming this function is available
 
+# -------------------------
+# Py2 / Py3 compatibility
+# -------------------------
 try:
-    import pkg_resources
-    pkgres = True
-except ImportError:
-    pkgres = False
-
-try:
-    basestring
-except NameError:
+    basestring  # Py2
+except NameError:  # Py3
     basestring = str
 
 try:
-    file
+    unicode  # Py2
+except NameError:  # Py3
+    unicode = str
+
+try:
+    file  # Py2
 except NameError:
     from io import IOBase
     file = IOBase
 from io import IOBase
 
 try:
-    from io import StringIO, BytesIO
+    from io import BytesIO
 except ImportError:
     try:
-        from cStringIO import StringIO
         from cStringIO import StringIO as BytesIO
     except ImportError:
-        from StringIO import StringIO
         from StringIO import StringIO as BytesIO
 
+# Text drawing (fast)
+from PIL import Image as PILImage
+from PIL import ImageDraw as PILImageDraw
+from PIL import ImageFont as PILImageFont
+
+# Fonts
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
 fontpathocrb = upcean.fonts.fontpathocrb
 fontpathocrbalt = upcean.fonts.fontpathocrbalt
 fontpath = upcean.fonts.fontpath
 
+# Regex / constants
+_RE_URL = re.compile(r"^(ftp|ftps|sftp)://", re.IGNORECASE)
+_RE_NAME_COLON_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
+
+_SUPPORTED_EXTS = set(["PNG", "JPG", "JPEG", "BMP", "TIFF", "RAW"])
+
+
+# -------------------------
+# Drawing helpers
+# -------------------------
+def _clip_rrcc(rr, cc, h, w):
+    m = (rr >= 0) & (rr < h) & (cc >= 0) & (cc < w)
+    return rr[m], cc[m]
+
+
 def drawColorRectangle(img, x1, y1, x2, y2, color):
     """
-    Draws a filled rectangle from (x1, y1) to (x2, y2) with the specified color using scikit-image.
+    Filled rectangle (x1,y1) -> (x2,y2) in image coords.
+    Uses skimage.draw.rectangle; end is inclusive in skimage rectangle API when given end.
+    Original code used end=(y2-1,x2-1) to make [x1,x2) and [y1,y2) semantics.
     """
-    rr, cc = skimage.draw.rectangle(start=(y1, x1), end=(y2 - 1, x2 - 1))
+    h, w = img.shape[0], img.shape[1]
+    x1 = int(x1); y1 = int(y1); x2 = int(x2); y2 = int(y2)
+    if x2 <= x1 or y2 <= y1:
+        return True
+
+    # clamp to bounds while preserving half-open semantics
+    x1c = max(0, min(w, x1))
+    x2c = max(0, min(w, x2))
+    y1c = max(0, min(h, y1))
+    y2c = max(0, min(h, y2))
+    if x2c <= x1c or y2c <= y1c:
+        return True
+
+    rr, cc = skimage.draw.rectangle(start=(y1c, x1c), end=(y2c - 1, x2c - 1))
     img[rr, cc] = color
     return True
 
+
 def drawColorLine(img, x1, y1, x2, y2, width, color):
     """
-    Draws a line from (x1, y1) to (x2, y2) with the specified width and color using scikit-image.
+    Draws a line and emulates width by drawing offset parallel lines.
+    (Matches your original "offset rr+off, cc+off" look for diagonal-ish lines.)
     """
     width = max(1, int(width))
+    h, w = img.shape[0], img.shape[1]
+
+    x1 = int(x1); y1 = int(y1); x2 = int(x2); y2 = int(y2)
     rr, cc = skimage.draw.line(y1, x1, y2, x2)
-    for offset in range(-width // 2, width // 2 + 1):
-        rr_offset = rr + offset
-        cc_offset = cc + offset
-        # Ensure indices are within image bounds
-        valid_indices = (rr_offset >= 0) & (rr_offset < img.shape[0]) & (cc_offset >= 0) & (cc_offset < img.shape[1])
-        img[rr_offset[valid_indices], cc_offset[valid_indices]] = color
+
+    # symmetric offsets
+    start = -(width // 2)
+    end = start + width
+
+    for off in range(start, end):
+        rr_off = rr + off
+        cc_off = cc + off
+        rr2, cc2 = _clip_rrcc(rr_off, cc_off, h, w)
+        if rr2.size:
+            img[rr2, cc2] = color
+
     return True
+
+
+# Cache PIL fonts: (path, size) -> ImageFont
+_FONT_CACHE = {}
+
+
+def _pick_font_path(ftype):
+    if ftype == "ocra":
+        primary, alt = fontpathocra, fontpathocraalt
+    elif ftype == "ocrb":
+        primary, alt = fontpathocrb, fontpathocrbalt
+    else:
+        primary, alt = fontpath, None
+
+    if primary and os.path.isfile(primary):
+        return primary
+    if alt and os.path.isfile(alt):
+        return alt
+    return primary
+
+
+def _get_pil_font(ftype, size):
+    size = int(size)
+    if size <= 0:
+        size = 12
+    path = _pick_font_path(ftype)
+    key = (path, size)
+    if key in _FONT_CACHE:
+        return _FONT_CACHE[key]
+    try:
+        f = PILImageFont.truetype(path, size) if path else PILImageFont.load_default()
+    except Exception:
+        f = PILImageFont.load_default()
+    _FONT_CACHE[key] = f
+    return f
+
 
 def drawColorText(img, size, x, y, text, color, ftype="ocrb"):
     """
-    Draws text on the image using matplotlib.
+    Fast text drawing using PIL instead of matplotlib figure rendering.
+    Semantics: draw at (x, y) with top-aligned text (like your matplotlib code used verticalalignment='top').
     """
-    # Map ftype to font file path
-    if ftype == "ocra":
-        fontpath = fontpathocra if os.path.isfile(fontpathocra) else fontpathocraalt
-    elif ftype == "ocrb":
-        fontpath = fontpathocrb if os.path.isfile(fontpathocrb) else fontpathocrbalt
-    else:
-        fontpath = fontpathocra
-    # Check if font file exists
-    if not os.path.isfile(fontpath):
-        print("Font file not found:", fontpath)
+    # Ensure uint8 RGB
+    if img.dtype != np.uint8:
+        img[:] = np.clip(img, 0, 255).astype(np.uint8)
+    if img.ndim != 3 or img.shape[2] != 3:
         return False
-    # Load the font
-    font_prop = fm.FontProperties(fname=fontpath, size=size)
-    # Create a matplotlib figure and render text
-    h, w, _ = img.shape
-    dpi = 100  # Dots per inch
-    fig_h = h / dpi
-    fig_w = w / dpi
-    fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=dpi)
-    ax.imshow(img)
-    ax.axis('off')
-    # Invert y-axis to match image coordinates
-    ax.invert_yaxis()
-    # Draw text
-    ax.text(x, y, text, fontproperties=font_prop, color=np.array(color) / 255.0, verticalalignment='top')
-    # Render the figure to a numpy array
-    fig.canvas.draw()
-    text_image = np.frombuffer(fig.canvas.tostring_rgb(), dtype='uint8')
-    text_image = text_image.reshape((h, w, 3))
-    plt.close(fig)
-    # Merge the text image onto the original image
-    img[...] = text_image
+
+    t = str(text)
+    x = int(x); y = int(y)
+
+    # Convert numpy -> PIL (view/copy). Using fromarray copies; acceptable and fast enough.
+    pil = PILImage.fromarray(img, mode="RGB")
+    draw = PILImageDraw.Draw(pil)
+    font = _get_pil_font(ftype, size)
+
+    # PIL expects RGB tuple
+    rgb = (int(color[0]), int(color[1]), int(color[2]))
+    draw.text((x, y), t, font=font, fill=rgb)
+
+    # Write back
+    img[:] = np.asarray(pil, dtype=np.uint8)
     return True
 
+
 def drawColorRectangleAlt(img, x1, y1, x2, y2, color):
-    """
-    Draws a rectangle outline from (x1, y1) to (x2, y2) with the specified color using scikit-image.
-    """
-    # Draw top and bottom lines
+    # Outline rectangle using 1px lines
     drawColorLine(img, x1, y1, x2, y1, 1, color)
     drawColorLine(img, x1, y2 - 1, x2, y2 - 1, 1, color)
-    # Draw left and right lines
     drawColorLine(img, x1, y1, x1, y2, 1, color)
     drawColorLine(img, x2 - 1, y1, x2 - 1, y2, 1, color)
     return True
 
+
+# -------------------------
+# File handling
+# -------------------------
 def get_save_filename(outfile):
     """
-    Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files. Returns a tuple (filename, EXTENSION),
-    the original `outfile` if it's of type None, bool, or a file object, or
-    False for unsupported input types.
+    Returns:
+      - outfile (unchanged) if None or bool
+      - (outfile, "PNG") for file-like objects or "-"
+      - (filename, EXT) for strings / (filename, ext) tuples
+      - False for invalid
     """
-    # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
-    # Handle string types
-    if isinstance(outfile, str):
-        outfile = outfile.strip()
-        if outfile in ["-", ""]:
-            return (outfile, "PNG")
+    # file-like or "-" => default PNG (matches other backends)
+    if outfile == "-" or hasattr(outfile, "write") or isinstance(outfile, (file, IOBase)):
+        return (outfile, "PNG")
 
-        # Extract extension using os.path.splitext
-        base, ext = os.path.splitext(outfile)
+    if isinstance(outfile, basestring):
+        out = outfile.strip()
+        if out in ("", "-"):
+            return (out, "PNG")
+
+        base, ext = os.path.splitext(out)
         if ext:
-            # Match extension pattern and extract if valid
-            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
-            if ext_match:
-                outfileext = ext_match.group('ext').upper()
-            else:
-                outfileext = None
+            ext_u = ext[1:].upper()
         else:
-            # Check for custom format 'name:EXT'
-            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
-            if custom_match:
-                outfile = custom_match.group('name')
-                outfileext = custom_match.group('ext').upper()
+            m = _RE_NAME_COLON_EXT.match(out)
+            if m:
+                out = m.group("name")
+                ext_u = m.group("ext").upper()
             else:
-                outfileext = None
+                ext_u = "PNG"
 
-        # Default to "PNG" if no valid extension was found
-        if not outfileext:
-            outfileext = "PNG"
-        if ext.strip().upper() == ".RAW":
-            return (outfile, outfileext)
-        # Supported formats
-        supported_exts = ["PNG", "JPG", "JPEG", "BMP", "TIFF", "RAW"]
-        if outfileext in supported_exts:
-            return (outfile, outfileext)
-        else:
-            outfileext = "PNG"  # Default to PNG if unsupported
-            return (outfile, outfileext)
+        if not ext_u:
+            ext_u = "PNG"
+        if ext_u not in _SUPPORTED_EXTS:
+            ext_u = "PNG"
+        return (out, ext_u)
 
-    # Handle tuple or list types
-    if isinstance(outfile, (tuple, list)):
-        if len(outfile) != 2:
-            return False  # Invalid tuple/list length
-
+    if isinstance(outfile, (tuple, list)) and len(outfile) == 2:
         filename, ext = outfile
-
-        # Ensure the extension is a valid string
-        if not isinstance(ext, str):
+        if not (isinstance(ext, basestring)):
             return False
+        ext_u = ext.strip().upper()
+        if ext_u not in _SUPPORTED_EXTS:
+            ext_u = "PNG"
+        return (filename, ext_u)
 
-        ext = ext.strip().upper()
-        if ext == "RAW":
-            return (filename, "RAW")
-        # Supported formats
-        supported_exts = ["PNG", "JPG", "JPEG", "BMP", "TIFF", "RAW"]
-        if ext in supported_exts:
-            return (filename, ext)
-        else:
-            ext = "PNG"  # Default to PNG if unsupported
-
-        return (filename, ext)
-
-    # Unsupported type
     return False
 
+
 def new_image_surface(sizex, sizey, bgcolor):
-    """
-    Creates a new image surface with the specified background color using scikit-image.
-    """
-    img = np.zeros((sizey, sizex, 3), dtype=np.uint8)
-    img[:, :] = bgcolor
+    img = np.zeros((int(sizey), int(sizex), 3), dtype=np.uint8)
+    img[:, :] = (int(bgcolor[0]), int(bgcolor[1]), int(bgcolor[2]))
     return [img, "skimage"]
+
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
-    Saves the image to a file or stream using imageio, with support for FTP uploads
-    and returning image data when outfile is '-'.
+    Saves using imageio via skimage.io (plugin=imageio).
+    RAW writes/returns raw RGB bytes (row-major).
     """
     img = inimage[0]
+    ext_u = (outfileext or "PNG").upper()
+    if ext_u not in _SUPPORTED_EXTS:
+        ext_u = "PNG"
+
     uploadfile = None
     outfiletovar = False
 
-    if re.match("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
-        uploadfile = outfile
-        outfile = BytesIO()
-    elif outfile == "-":
-        outfiletovar = True
-        outfile = BytesIO()
+    if isinstance(outfile, basestring):
+        if _RE_URL.match(str(outfile)):
+            uploadfile = outfile
+            outfile = BytesIO()
+        elif outfile == "-":
+            outfiletovar = True
+            outfile = BytesIO()
 
-    # Prepare image saving parameters
-    # Imageio supports saving images with various formats
-
-    # Determine the file extension and format
-    format = outfileext.lower()
-    if format == "jpg":
-        format = "jpeg"
-
-    # Now, save the image
-    if isinstance(outfile, str):
-        # Save to file
-        skimage.io.imsave(outfile, img, plugin='imageio', format=format)
-    elif hasattr(outfile, 'write'):
-        # outfile is a file-like object
-        import imageio
-        imageio.imwrite(outfile, img, format=format)
-    else:
-        # Unsupported outfile type
+    # RAW: just dump bytes (no header)
+    if ext_u == "RAW":
+        data = img.tobytes()
+        if uploadfile:
+            outfile.write(data)
+            outfile.seek(0)
+            upload_file_to_internet_file(outfile, uploadfile)
+            outfile.close()
+            return True
+        if outfiletovar:
+            return data
+        if hasattr(outfile, "write"):
+            outfile.write(data)
+            return True
+        if isinstance(outfile, basestring):
+            with open(outfile, "wb") as f:
+                f.write(data)
+            return True
         return False
 
-    if uploadfile is not None:
-        outfile.seek(0)
-        upload_file_to_internet_file(outfile, uploadfile)
-        outfile.close()
-    elif outfiletovar:
-        outfile.seek(0)
-        outbyte = outfile.read()
-        outfile.close()
-        return outbyte
-    return True
+    # Normalize format string for imageio
+    fmt = ext_u.lower()
+    if fmt == "jpg":
+        fmt = "jpeg"
+
+    # Write out
+    if isinstance(outfile, basestring):
+        skimage.io.imsave(outfile, img, plugin="imageio", format=fmt)
+        return True
+
+    if hasattr(outfile, "write"):
+        import imageio
+        imageio.imwrite(outfile, img, format=fmt)
+
+        if uploadfile:
+            outfile.seek(0)
+            upload_file_to_internet_file(outfile, uploadfile)
+            outfile.close()
+            return True
+
+        if outfiletovar:
+            outfile.seek(0)
+            outbyte = outfile.read()
+            outfile.close()
+            return outbyte
+
+        return True
+
+    return False
+
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
-    """
-    Processes the output filename and saves the image using save_to_file().
-    """
     if outfile is None:
-        oldoutfile = None
-        outfile = None
-        outfileext = None
+        old = None
+        outdest = None
+        ext = None
     else:
-        oldoutfile = get_save_filename(outfile)
-        if isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list):
-            outfile = oldoutfile[0]
-            outfileext = oldoutfile[1]
+        old = get_save_filename(outfile)
+        if isinstance(old, (tuple, list)):
+            outdest, ext = old[0], old[1]
         else:
             return False
-    if oldoutfile is None or isinstance(oldoutfile, bool):
+
+    if old is None or isinstance(old, bool):
         return [imgout[0], imgout[1], "skimage"]
-    return save_to_file(imgout, outfile, outfileext, imgcomment)
+
+    return save_to_file(imgout, outdest, ext, imgcomment)

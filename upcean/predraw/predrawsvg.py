@@ -15,45 +15,59 @@
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
+
 from upcean.downloader import upload_file_to_internet_file
 import upcean.support
-# drawsvg (Python package) docs: https://pypi.org/project/drawsvg/
+
 import drawsvg
 import os
 import re
 import base64
-import io  # For file object type checking
+
+try:
+    basestring
+except NameError:
+    basestring = str
 
 try:
     file
 except NameError:
     from io import IOBase
     file = IOBase
-from io import IOBase
 
 try:
-    from io import StringIO, BytesIO
-except ImportError:
+    from io import IOBase, StringIO, BytesIO
+except ImportError:  # Py2
+    from StringIO import StringIO
     try:
-        from cStringIO import StringIO
         from cStringIO import StringIO as BytesIO
     except ImportError:
-        from StringIO import StringIO
         from StringIO import StringIO as BytesIO
+    try:
+        from io import IOBase
+    except Exception:
+        IOBase = object
 
-# CairoSVG optional (used here for PDF/PS/EPS/PNG conversion exactly like original script)
+# CairoSVG optional conversion
+cairosvgsupport = False
+svgwrite_valid_extensions = set(["SVG"])
 if upcean.support.cairosvgsupport:
     try:
         import cairosvg
         cairosvgsupport = True
-        # Define valid CairoSVG output formats
-        svgwrite_valid_extensions = {"SVG", "PDF", "PS", "EPS", "PNG"}
+        svgwrite_valid_extensions = set(["SVG", "PDF", "PS", "EPS", "PNG"])
     except ImportError:
         cairosvgsupport = False
-        svgwrite_valid_extensions = {"SVG"}
-else:
-    cairosvgsupport = False
-    svgwrite_valid_extensions = {"SVG"}
+        svgwrite_valid_extensions = set(["SVG"])
+
+# regex/constants
+_RE_URL = re.compile(r"^(ftp|ftps|sftp)://", re.IGNORECASE)
+_RE_EXT = re.compile(r"^\.(?P<ext>[A-Za-z]+)$")
+_RE_NAME_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
+
+
+def _is_file_like(x):
+    return hasattr(x, "write") or isinstance(x, (file, IOBase))
 
 
 def _rgb_to_svg(color):
@@ -62,104 +76,111 @@ def _rgb_to_svg(color):
         r = min(max(int(color[0]), 0), 255)
         g = min(max(int(color[1]), 0), 255)
         b = min(max(int(color[2]), 0), 255)
-        return 'rgb({},{},{})'.format(r, g, b)
+        return "rgb({0},{1},{2})".format(r, g, b)
     return color
 
 
 def _drawing_to_svg_text(dwg):
     """
-    Return SVG XML text from a drawsvg.Drawing instance across drawsvg versions.
-    drawsvg 2.x uses d.as_svg(); older 1.x used camelCase methods.
+    Return SVG XML text from a drawsvg.Drawing instance across versions.
+    drawsvg 2.x: as_svg(); older: asSvg()/to_svg()/toSvg().
     """
-    if hasattr(dwg, 'as_svg'):
+    if hasattr(dwg, "as_svg"):
         return dwg.as_svg()
-    if hasattr(dwg, 'asSvg'):
+    if hasattr(dwg, "asSvg"):
         return dwg.asSvg()
-    if hasattr(dwg, 'to_svg'):
+    if hasattr(dwg, "to_svg"):
         return dwg.to_svg()
-    if hasattr(dwg, 'toSvg'):
+    if hasattr(dwg, "toSvg"):
         return dwg.toSvg()
-    # Last resort: try str()
     return str(dwg)
+
+
+def _svg_bytes_from_dwg(dwg):
+    s = _drawing_to_svg_text(dwg)
+    if isinstance(s, bytes):
+        return s
+    return s.encode("utf-8")
+
+
+def _convert_svg_bytes(svg_bytes, fmt, out_fp):
+    """
+    Convert SVG bytes to fmt using CairoSVG, writing into out_fp (file-like or filename).
+    """
+    b = BytesIO(svg_bytes)
+    b.seek(0)
+    fmt = (fmt or "SVG").upper()
+
+    if fmt == "PNG":
+        cairosvg.svg2png(file_obj=b, write_to=out_fp)
+    elif fmt == "PDF":
+        cairosvg.svg2pdf(file_obj=b, write_to=out_fp)
+    elif fmt == "PS":
+        cairosvg.svg2ps(file_obj=b, write_to=out_fp)
+    elif fmt == "EPS":
+        cairosvg.svg2eps(file_obj=b, write_to=out_fp)
+    elif fmt == "SVG":
+        cairosvg.svg2svg(file_obj=b, write_to=out_fp)
+    else:
+        raise ValueError("Unsupported CairoSVG format: {0}".format(fmt))
+
+    try:
+        b.close()
+    except Exception:
+        pass
 
 
 def get_save_filename(outfile):
     """
-    Processes the `outfile` parameter to determine a suitable filename and its corresponding file extension.
-    Returns a tuple (filename, "SVG") or the original `outfile` if it's of type None, bool, or a file object.
-    Defaults to "SVG" as the extension if none is provided or if an unsupported extension is detected.
-    Returns False for unsupported input types.
-
-    Parameters:
-        outfile (str, tuple, list, None, bool, file): The output file specification.
-
-    Returns:
-        tuple: (filename, "SVG") or False if invalid.
+    Determine (filename, EXT) where EXT is one of svgwrite_valid_extensions.
+    Supports:
+      - None/bool -> passthrough
+      - file-like or "-" -> (outfile, "SVG")
+      - "name.ext" or "name:EXT" -> parsed
+      - (name, ext) -> validated
     """
-    # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
-    # Handle file objects directly
-    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile == "-":
+    if _is_file_like(outfile) or outfile == "-":
         return (outfile, "SVG")
 
-    # Handle string types
-    if isinstance(outfile, str):
-        outfile = outfile.strip()
-        if outfile in ["-", ""]:
-            return (outfile, "SVG")
+    if isinstance(outfile, basestring):
+        s = outfile.strip()
+        if s in ("", "-"):
+            return (s, "SVG")
 
-        # Extract extension using os.path.splitext
-        base, ext = os.path.splitext(outfile)
+        base, ext = os.path.splitext(s)
         if ext:
-            ext_match = re.match(r"^\.(?P<ext>[A-Za-z]+)$", ext)
-            if ext_match:
-                outfileext = ext_match.group('ext').upper()
-            else:
-                outfileext = None
+            m = _RE_EXT.match(ext)
+            outfileext = m.group("ext").upper() if m else None
+            name = s  # preserve full string like your originals
         else:
-            # Check for custom format 'name:EXT'
-            custom_match = re.match(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
-            if custom_match:
-                outfile = custom_match.group('name')
-                outfileext = custom_match.group('ext').upper()
+            m = _RE_NAME_EXT.match(s)
+            if m:
+                name = m.group("name")
+                outfileext = m.group("ext").upper()
             else:
+                name = s
                 outfileext = None
 
-        # Default to "SVG" if no valid extension was found
         if not outfileext:
             outfileext = "SVG"
-
-        # Check if extension is supported
         if outfileext not in svgwrite_valid_extensions:
             outfileext = "SVG"
+        return (name, outfileext)
 
-        return (outfile, outfileext)
-
-    # Handle tuple or list types
     if isinstance(outfile, (tuple, list)):
         if len(outfile) != 2:
             return False
-
         filename, ext = outfile
-
-        # Allow file objects as the first item in tuple
-        if isinstance(filename, file) or isinstance(filename, IOBase):
-            filename = filename
-        elif isinstance(filename, str):
-            filename = filename.strip()
-        else:
+        if not (_is_file_like(filename) or isinstance(filename, basestring)):
             return False
-
-        # Ensure the extension is a valid string
-        if not isinstance(ext, str):
+        if not isinstance(ext, basestring):
             return False
-
-        ext = ext.strip().upper()
+        ext = ext.strip().upper() or "SVG"
         if ext not in svgwrite_valid_extensions:
             ext = "SVG"
-
         return (filename, ext)
 
     return False
@@ -173,23 +194,19 @@ def new_image_surface(sizex, sizey, bgcolor):
     """
     Create a new drawsvg.Drawing and paint a solid background rectangle.
     """
-    upc_img = drawsvg.Drawing(sizex, sizey)  # y-axis matches SVG coordinate system in drawsvg 2.x
-    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
-    return [upc_img, None]
+    dwg = drawsvg.Drawing(sizex, sizey)
+    drawColorRectangle(dwg, 0, 0, sizex, sizey, bgcolor)
+    return [dwg, None]
 
 
 def drawColorRectangleAlt(dwg, x1, y1, x2, y2, color):
-    """
-    Draws a rectangle with only an outline (no fill) from (x1, y1) to (x2, y2).
-    """
-    width_rect = x2 - x1
-    height_rect = y2 - y1
-    color = _rgb_to_svg(color)
-
+    w = x2 - x1
+    h = y2 - y1
+    stroke = _rgb_to_svg(color)
     rect = drawsvg.Rectangle(
-        x1, y1, width_rect, height_rect,
-        fill='none',
-        stroke=color,
+        x1, y1, w, h,
+        fill="none",
+        stroke=stroke,
         stroke_width=1
     )
     dwg.append(rect)
@@ -197,56 +214,45 @@ def drawColorRectangleAlt(dwg, x1, y1, x2, y2, color):
 
 
 def drawColorRectangle(dwg, x1, y1, x2, y2, color):
-    """
-    Draws a filled rectangle from (x1, y1) to (x2, y2).
-    """
-    width_rect = x2 - x1
-    height_rect = y2 - y1
-    color = _rgb_to_svg(color)
-
+    w = x2 - x1
+    h = y2 - y1
+    fill = _rgb_to_svg(color)
     rect = drawsvg.Rectangle(
-        x1, y1, width_rect, height_rect,
-        fill=color,
-        stroke='none'
+        x1, y1, w, h,
+        fill=fill,
+        stroke="none"
     )
     dwg.append(rect)
     return True
 
 
 def drawColorLine(dwg, x1, y1, x2, y2, width, color):
-    """
-    Draws a line from (x1, y1) to (x2, y2) with the specified width and color.
-    """
     width = max(1, int(width))
-    color = _rgb_to_svg(color)
-
-    line = drawsvg.Line(
+    stroke = _rgb_to_svg(color)
+    ln = drawsvg.Line(
         x1, y1, x2, y2,
-        stroke=color,
+        stroke=stroke,
         stroke_width=width
     )
-    dwg.append(line)
+    dwg.append(ln)
     return True
 
 
 def drawColorText(dwg, size, x, y, text, color, ftype="ocrb"):
-    """
-    Draws text at (x, y) with the specified size, color, and font type.
-    """
-    color = _rgb_to_svg(color)
-
-    if ftype.lower() == "ocrb":
+    fill = _rgb_to_svg(color)
+    ft = (ftype or "").lower()
+    if ft == "ocrb":
         font_family = "OCRB"
-    elif ftype.lower() == "ocra":
+    elif ft == "ocra":
         font_family = "OCR-A"
     else:
         font_family = "Monospace"
 
     t = drawsvg.Text(
-        text,
+        str(text),
         size,
         x, y,
-        fill=color,
+        fill=fill,
         font_family=font_family
     )
     dwg.append(t)
@@ -255,46 +261,55 @@ def drawColorText(dwg, size, x, y, text, color, ftype="ocrb"):
 
 def embed_font(dwg, font_path, font_family):
     """
-    Embeds a custom font into the SVG via an @font-face style block,
-    but only once per drawing (safe to call many times).
-    """
-    import os
-    import base64
-    import drawsvg
+    Embeds a custom font into the SVG via an @font-face block once per Drawing.
+    Safe to call many times.
 
-    # ---- per-drawing cache ----
+    drawsvg API differences:
+      - some versions support dwg.append_def(...)
+      - some expose dwg.defs
+      - fallback: dwg.append(...)
+    """
+    # per-drawing cache
     cache = getattr(dwg, "_embedded_fonts", None)
     if cache is None:
         cache = set()
         setattr(dwg, "_embedded_fonts", cache)
 
-    key = (os.path.abspath(font_path), str(font_family))
+    try:
+        fam = unicode(font_family)  # Py2
+    except Exception:
+        fam = str(font_family)
+
+    key = (os.path.abspath(font_path), fam)
     if key in cache:
         return
     cache.add(key)
 
-    # ---- read font file ----
-    with open(font_path, 'rb') as f:
+    # read font file
+    f = open(font_path, "rb")
+    try:
         font_data = f.read()
+    finally:
+        f.close()
 
-    # ---- base64 encode ----
-    font_base64 = base64.b64encode(font_data)
-    if not isinstance(font_base64, str):
-        font_base64 = font_base64.decode('ascii')
+    # base64 encode
+    b64 = base64.b64encode(font_data)
+    if not isinstance(b64, str):
+        b64 = b64.decode("ascii")
 
-    # ---- determine format ----
+    # determine format
     ext = os.path.splitext(font_path)[1].lower()
-    if ext == '.ttf':
-        font_format = 'truetype'
-        mime = 'font/ttf'
-    elif ext == '.otf':
-        font_format = 'opentype'
-        mime = 'font/otf'
+    if ext == ".ttf":
+        fmt = "truetype"
+        mime = "font/ttf"
+    elif ext == ".otf":
+        fmt = "opentype"
+        mime = "font/otf"
     else:
-        raise ValueError("Unsupported font format: %s" % ext)
+        raise ValueError("Unsupported font format: {0}".format(ext))
 
-    # ---- build CSS (NOTE: braces are literal, no .format() here) ----
-    font_face_css = (
+    # CSS wrapped in CDATA for SVG
+    css = (
         '<style type="text/css"><![CDATA[\n'
         '@font-face {\n'
         "  font-family: '%(family)s';\n"
@@ -303,140 +318,109 @@ def embed_font(dwg, font_path, font_family):
         '  font-style: normal;\n'
         '}\n'
         ']]></style>\n'
-    ) % {
-        'family': font_family,
-        'mime': mime,
-        'b64': font_base64,
-        'fmt': font_format,
-    }
+    ) % {"family": fam, "mime": mime, "b64": b64, "fmt": fmt}
 
-    raw = drawsvg.Raw(font_face_css)
+    raw = drawsvg.Raw(css)
 
-    # ---- attach to defs (best-effort across drawsvg versions) ----
-    if hasattr(dwg, 'append_def'):
-        dwg.append_def(raw)
-        return
-    try:
-        dwg.defs.append(raw)
-        return
-    except Exception:
-        pass
+    # attach to defs (best-effort)
+    if hasattr(dwg, "append_def"):
+        try:
+            dwg.append_def(raw)
+            return
+        except Exception:
+            pass
+    if hasattr(dwg, "defs"):
+        try:
+            dwg.defs.append(raw)
+            return
+        except Exception:
+            pass
     try:
         dwg.append(raw)
     except Exception:
         return
+
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
     Save drawsvg.Drawing to:
       - SVG directly, or
       - PNG/PDF/PS/EPS via CairoSVG (when available)
-    while preserving the original script’s behaviors for:
+
+    Behaviors preserved:
       - outfile "-" => return bytes/text
       - ftp/ftps/sftp upload
-      - file-like objects
+      - file-like objects supported
     """
-    upc_img = inimage[0]
-    uploadfile = None
-    outfiletovar = False
+    dwg = inimage[0]
+    fmt = (outfileext or "SVG").upper()
+    if fmt not in svgwrite_valid_extensions:
+        fmt = "SVG"
 
-    # Handle upload targets and stdout-to-variable targets
-    if re.findall(r"^(ftp|ftps|sftp):\/\/", str(outfile)):
-        uploadfile = outfile
-        outfile = BytesIO() if cairosvgsupport else StringIO()
+    upload_target = None
+    return_to_var = False
+
+    # Decide destination
+    if isinstance(outfile, basestring) and _RE_URL.match(str(outfile)):
+        upload_target = outfile
+        # Use BytesIO when converting (CairoSVG) else StringIO is fine
+        outfp = BytesIO() if (cairosvgsupport and fmt != "SVG") else StringIO()
     elif outfile == "-":
-        outfiletovar = True
-        outfile = BytesIO() if cairosvgsupport else StringIO()
-
-    svg_text = _drawing_to_svg_text(upc_img)
-
-    def _write_svg_to_filelike(fobj):
-        # If binary stream, write bytes
-        try:
-            if isinstance(fobj, (BytesIO,)) or 'b' in getattr(fobj, 'mode', 'b'):
-                fobj.write(svg_text.encode('utf-8'))
-            else:
-                fobj.write(svg_text)
-        except TypeError:
-            # If it refuses str, try bytes
-            fobj.write(svg_text.encode('utf-8'))
-
-    # If outfile is file-like
-    if isinstance(outfile, file) or isinstance(outfile, IOBase):
-        if cairosvgsupport and outfileext in {"PNG", "PDF", "PS", "EPS", "SVG"}:
-            # CairoSVG wants bytes file_obj
-            byte_buffer = BytesIO(svg_text.encode("utf-8"))
-            byte_buffer.seek(0, 0)
-
-            if outfileext == "PNG":
-                cairosvg.svg2png(file_obj=byte_buffer, write_to=outfile)
-            elif outfileext == "PDF":
-                cairosvg.svg2pdf(file_obj=byte_buffer, write_to=outfile)
-            elif outfileext == "PS":
-                cairosvg.svg2ps(file_obj=byte_buffer, write_to=outfile)
-            elif outfileext == "EPS":
-                cairosvg.svg2eps(file_obj=byte_buffer, write_to=outfile)
-            elif outfileext == "SVG":
-                cairosvg.svg2svg(file_obj=byte_buffer, write_to=outfile)
-
-            byte_buffer.close()
-        else:
-            # Plain SVG only
-            _write_svg_to_filelike(outfile)
+        return_to_var = True
+        outfp = BytesIO() if (cairosvgsupport and fmt != "SVG") else StringIO()
     else:
-        # outfile is a filename/path string
-        if cairosvgsupport and outfileext in {"PNG", "PDF", "PS", "EPS", "SVG"}:
-            byte_buffer = BytesIO(svg_text.encode("utf-8"))
-            byte_buffer.seek(0, 0)
+        outfp = outfile  # filename or file-like
 
-            if outfileext == "PNG":
-                cairosvg.svg2png(file_obj=byte_buffer, write_to=outfile)
-            elif outfileext == "PDF":
-                cairosvg.svg2pdf(file_obj=byte_buffer, write_to=outfile)
-            elif outfileext == "PS":
-                cairosvg.svg2ps(file_obj=byte_buffer, write_to=outfile)
-            elif outfileext == "EPS":
-                cairosvg.svg2eps(file_obj=byte_buffer, write_to=outfile)
-            elif outfileext == "SVG":
-                cairosvg.svg2svg(file_obj=byte_buffer, write_to=outfile)
+    # Write/convert
+    if cairosvgsupport and fmt in ("PNG", "PDF", "PS", "EPS", "SVG"):
+        _convert_svg_bytes(_svg_bytes_from_dwg(dwg), fmt, outfp)
+    else:
+        # Plain SVG
+        svg_text = _drawing_to_svg_text(dwg)
 
-            byte_buffer.close()
-        else:
-            # Save SVG directly
-            if hasattr(upc_img, 'save_svg'):
-                upc_img.save_svg(outfile)
+        if _is_file_like(outfp):
+            # If it's a binary buffer, write bytes
+            if isinstance(outfp, BytesIO):
+                outfp.write(svg_text.encode("utf-8") if not isinstance(svg_text, bytes) else svg_text)
             else:
-                with open(outfile, 'w', encoding='utf-8') as f:
-                    f.write(svg_text)
-
-    # Upload to internet file if needed
-    if re.findall(r"^(ftp|ftps|sftp):\/\/", str(uploadfile)):
-        if cairosvgsupport:
-            # outfile is BytesIO from above conversions or SVG bytes; ensure pointer reset
-            try:
-                outfile.seek(0, 0)
-                upload_file_to_internet_file(outfile, uploadfile)
-                outfile.close()
-            except Exception:
-                # fallback: re-encode from svg_text
-                byte_buffer = BytesIO(svg_text.encode("utf-8"))
-                byte_buffer.seek(0, 0)
-                upload_file_to_internet_file(byte_buffer, uploadfile)
-                byte_buffer.close()
+                try:
+                    outfp.write(svg_text)
+                except TypeError:
+                    outfp.write(svg_text.encode("utf-8"))
         else:
-            outfile.seek(0, 0)
-            byte_buffer = BytesIO(outfile.getvalue().encode("utf-8"))
-            outfile.close()
-            byte_buffer.seek(0, 0)
-            upload_file_to_internet_file(byte_buffer, uploadfile)
-            byte_buffer.close()
+            # filename path
+            if hasattr(dwg, "save_svg") and fmt == "SVG":
+                dwg.save_svg(outfp)
+            else:
+                # Py2: no encoding arg in open()
+                f = open(outfp, "wb")
+                try:
+                    b = svg_text if isinstance(svg_text, bytes) else svg_text.encode("utf-8")
+                    f.write(b)
+                finally:
+                    f.close()
 
-    # Return-to-variable behavior ("-")
-    elif outfiletovar:
-        outfile.seek(0, 0)
-        outbyte = outfile.read()
-        outfile.close()
-        return outbyte
+    # Upload
+    if upload_target:
+        if isinstance(outfp, BytesIO):
+            outfp.seek(0)
+            upload_file_to_internet_file(outfp, upload_target)
+            outfp.close()
+        else:
+            outfp.seek(0)
+            b = BytesIO(outfp.getvalue().encode("utf-8"))
+            outfp.close()
+            b.seek(0)
+            upload_file_to_internet_file(b, upload_target)
+            b.close()
+        return True
+
+    # "-" returns
+    if return_to_var:
+        outfp.seek(0)
+        data = outfp.read()
+        outfp.close()
+        return data
 
     return True
 
@@ -446,18 +430,13 @@ def save_to_filename(imgout, outfile, imgcomment="barcode"):
     upc_preimg = imgout[1]
 
     if outfile is None:
-        oldoutfile = None
-        outfile = None
-        outfileext = None
-    else:
-        oldoutfile = get_save_filename(outfile)
-        if isinstance(oldoutfile, (tuple, list)):
-            del(outfile)
-            outfile = oldoutfile[0]
-            outfileext = oldoutfile[1]
-
-    if oldoutfile is None or isinstance(oldoutfile, bool):
         return [upc_img, upc_preimg, "drawsvg"]
 
-    save_to_file(imgout, outfile, outfileext, imgcomment)
+    parsed = get_save_filename(outfile)
+    if isinstance(parsed, (tuple, list)):
+        outname, ext = parsed[0], parsed[1]
+    else:
+        return [upc_img, upc_preimg, "drawsvg"]
+
+    save_to_file(imgout, outname, ext, imgcomment)
     return True

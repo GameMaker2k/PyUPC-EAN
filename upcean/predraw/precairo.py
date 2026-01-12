@@ -15,431 +15,416 @@
     $FileInfo: precairo.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1  - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-from upcean.downloader import upload_file_to_internet_file
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import re
+
+from upcean.downloader import upload_file_to_internet_file
+import upcean.fonts
+
 try:
     import cairo
 except ImportError:
     import cairocffi as cairo
-import upcean.fonts
 
+# -------------------------
+# Py2 / Py3 compatibility
+# -------------------------
 try:
-    import pkg_resources
-    pkgres = True
-except ImportError:
-    pkgres = False
-
-try:
-    import pkg_resources
-    pkgres = True
-except ImportError:
-    pkgres = False
-
-try:
-    basestring
-except NameError:
+    basestring  # Py2
+except NameError:  # Py3
     basestring = str
 
 try:
-    file
-except NameError:
-    from io import IOBase
-    file = IOBase
+    unicode  # Py2
+except NameError:  # Py3
+    unicode = str
+
+try:
+    file  # Py2
+except NameError:  # Py3
+    from io import IOBase as file  # alias
+
 from io import IOBase
 
 try:
-    from io import StringIO, BytesIO
-except ImportError:
+    from io import BytesIO
+except ImportError:  # old Py2
     try:
-        from cStringIO import StringIO
         from cStringIO import StringIO as BytesIO
     except ImportError:
-        from StringIO import StringIO
         from StringIO import StringIO as BytesIO
 
+# -------------------------
+# Font paths (from upcean)
+# -------------------------
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
 fontpathocrb = upcean.fonts.fontpathocrb
 fontpathocrbalt = upcean.fonts.fontpathocrbalt
-fontpath = upcean.fonts.fontpath
+fontpath = upcean.fonts.fontpath  # kept for compatibility
 
-'''
-http://stevehanov.ca/blog/index.php?id=28
-'''
+# -------------------------
+# Constants / regex
+# -------------------------
+_RE_URL = re.compile(r"^(ftp|ftps|sftp)://", re.IGNORECASE)
+_RE_DOT_EXT = re.compile(r"^\.(?P<ext>[A-Za-z]+)$")
+_RE_NAME_COLON_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
+
+# Define valid Cairo output formats (keep your set)
+cairo_valid_extensions = set(["SVG", "PDF", "PS", "EPS", "RAW", "CAIRO", "QAHIRAH"])
+
+
+def _set_rgb_255(ctx, color):
+    """Set cairo source RGB from (R,G,B) in 0..255."""
+    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
 
 
 def snapCoords(x, y):
     """
-    Snaps the coordinates to the nearest half-pixel for crisp rendering.
-    
-    Parameters:
-    - x, y: Original coordinates.
-    
-    Returns:
-    - Tuple of snapped coordinates.
+    Snaps coords to nearest half-pixel for crisp rendering.
+    (Source mentioned in your original: stevehanov.ca)
     """
     return (round(x) + 0.5, round(y) + 0.5)
 
+
 def drawColorRectangle(ctx, x1, y1, x2, y2, color):
-    """
-    Draws a filled rectangle from (x1, y1) to (x2, y2) with the specified color.
-    
-    Parameters:
-    - ctx: Cairo context.
-    - x1, y1: Coordinates of the top-left corner.
-    - x2, y2: Coordinates of the bottom-right corner.
-    - color: Tuple of (R, G, B) with values in [0, 255].
-    """
-    # Set the color for filling (scaled to [0, 1] for Cairo)
-    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
-    
-    # Calculate width and height
-    width_rect = x2 - x1
-    height_rect = y2 - y1
-    
-    # Define the rectangle path and fill it
-    ctx.rectangle(x1, y1, width_rect, height_rect)
+    """Draw filled rectangle with RGB color in [0,255]."""
+    _set_rgb_255(ctx, color)
+    w = x2 - x1
+    h = y2 - y1
+    ctx.rectangle(x1, y1, w, h)
     ctx.fill()
-    
-    # Start a new path to avoid unintended connections
     ctx.new_path()
+    return True
+
 
 def drawColorLine(ctx, x1, y1, x2, y2, width, color):
     """
-    Draws a colored line from (x1, y1) to (x2, y2) with specified width.
-    Uses rectangles to simulate thick vertical and horizontal lines.
-    
-    Parameters:
-    - ctx: Cairo context.
-    - x1, y1: Starting coordinates.
-    - x2, y2: Ending coordinates.
-    - width: Line width (integer >= 1).
-    - color: Tuple of (R, G, B) with values in [0, 255].
+    Draw a colored line. For perfectly vertical/horizontal lines, draw a filled rectangle
+    for consistent thickness; otherwise stroke a cairo line.
     """
-    # Ensure width is at least 1
-    width = max(1, int(width))
-    
-    # Set the fill color (scaled to [0, 1])
-    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
-    
-    # Snap coordinates for crisp lines
+    try:
+        width = int(width)
+    except Exception:
+        width = 1
+    if width < 1:
+        width = 1
+
+    _set_rgb_255(ctx, color)
+
     x1, y1 = snapCoords(x1, y1)
     x2, y2 = snapCoords(x2, y2)
-    
+
     if x1 == x2:
-        # Vertical line: draw a rectangle with specified width
-        rect_x = x1 - width / 2
+        rect_x = x1 - width / 2.0
         rect_y = min(y1, y2)
-        rect_width = width
-        rect_height = abs(y2 - y1)
-        ctx.rectangle(rect_x, rect_y, rect_width, rect_height)
+        rect_w = float(width)
+        rect_h = abs(y2 - y1)
+        ctx.rectangle(rect_x, rect_y, rect_w, rect_h)
         ctx.fill()
     elif y1 == y2:
-        # Horizontal line: draw a rectangle with specified width
         rect_x = min(x1, x2)
-        rect_y = y1 - width / 2
-        rect_width = abs(x2 - x1)
-        rect_height = width
-        ctx.rectangle(rect_x, rect_y, rect_width, rect_height)
+        rect_y = y1 - width / 2.0
+        rect_w = abs(x2 - x1)
+        rect_h = float(width)
+        ctx.rectangle(rect_x, rect_y, rect_w, rect_h)
         ctx.fill()
     else:
-        # If not purely vertical or horizontal, use Cairo's line with set_line_width
         ctx.set_line_width(width)
         ctx.move_to(x1, y1)
         ctx.line_to(x2, y2)
         ctx.stroke()
-    
-    # Start a new path to avoid unintended connections
+
     ctx.new_path()
+    return True
 
-def drawText(ctx, size, x, y, text, ftype="ocrb"):
-    """
-    Draws text at a specified location with given size and font type.
 
-    Parameters:
-    - ctx: Cairo context.
-    - size: Font size.
-    - x, y: Coordinates for text position.
-    - text: The text to draw.
-    - ftype: Font type (optional, default is "ocrb").
+def _select_toy_font(ftype):
     """
-    text = str(text)
-    point1 = snapCoords(x, y)
-    # Create a font face object
-    if(ftype == "ocra"):
-        try:
-            font = cairo.ToyFontFace(fontpathocra)
-        except OSError:
-            font = cairo.ToyFontFace(fontpathocraalt)
-    if(ftype == "ocrb"):
-        try:
-            font = cairo.ToyFontFace(fontpathocrb)
-        except OSError:
-            font = cairo.ToyFontFace(fontpathocrbalt)
-    ctx.set_font_face(font)
-    ctx.set_font_size(size)
+    Select a Cairo ToyFontFace with fallback paths.
+    Keeps your behavior (try primary else alt).
+    """
+    if ftype == "ocra":
+        primary, alt = fontpathocra, fontpathocraalt
+    else:
+        primary, alt = fontpathocrb, fontpathocrbalt
+
+    try:
+        return cairo.ToyFontFace(primary)
+    except OSError:
+        return cairo.ToyFontFace(alt)
+
+
+def _apply_font_options(ctx):
+    """Apply font options matching your original settings."""
     fo = cairo.FontOptions()
     fo.set_antialias(cairo.ANTIALIAS_DEFAULT)
     fo.set_hint_style(cairo.HINT_STYLE_NONE)
     fo.set_hint_metrics(cairo.HINT_METRICS_OFF)
     ctx.set_font_options(fo)
-    ctx.move_to(point1[0], point1[1])
+
+
+def drawText(ctx, size, x, y, text, ftype="ocrb"):
+    """Draw text (uncolored) at snapped coords."""
+    text = str(text)
+    px, py = snapCoords(x, y)
+
+    ctx.set_font_face(_select_toy_font(ftype))
+    ctx.set_font_size(size)
+    _apply_font_options(ctx)
+
+    ctx.move_to(px, py)
     ctx.show_text(text)
     ctx.stroke()
     return True
 
-def drawColorText(ctx, size, x, y, text, color, ftype="ocrb"):
-    """
-    Draws colored text at a specified location with given size, color, and font type.
 
-    Parameters:
-    - ctx: Cairo context.
-    - size: Font size.
-    - x, y: Coordinates for text position.
-    - text: The text to draw.
-    - color: Tuple of (R, G, B) with values in [0, 255].
-    - ftype: Font type (optional, default is "ocrb").
-    """
-    text = str(text)
-    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
-    drawText(ctx, size, x, y, text, ftype)
-    return True
+def drawColorText(ctx, size, x, y, text, color, ftype="ocrb"):
+    """Draw colored text at position."""
+    _set_rgb_255(ctx, color)
+    return drawText(ctx, size, x, y, text, ftype)
+
 
 def drawColorRectangleAlt(ctx, x1, y1, x2, y2, color, line_width=1):
-    """
-    Draws an outlined rectangle from (x1, y1) to (x2, y2) with the specified color and line width.
-    
-    Parameters:
-    - ctx: Cairo context.
-    - x1, y1: Coordinates of the top-left corner.
-    - x2, y2: Coordinates of the bottom-right corner.
-    - color: Tuple of (R, G, B) with values in [0, 255].
-    - line_width: Width of the outline (default is 1).
-    """
-    # Set the outline color (scaling RGB values to [0, 1])
-    ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
-    
-    # Set the line width for the outline
-    ctx.set_line_width(line_width)
-    
-    # Define the rectangle path (x, y, width, height)
-    width_rect = x2 - x1
-    height_rect = y2 - y1
-    ctx.rectangle(x1, y1, width_rect, height_rect)
-    
-    # Stroke the rectangle outline
-    ctx.stroke()
-    
-    # Start a new path to avoid unintended connections
-    ctx.new_path()
+    """Draw outlined rectangle."""
+    _set_rgb_255(ctx, color)
+    try:
+        lw = float(line_width)
+    except Exception:
+        lw = 1.0
+    if lw <= 0:
+        lw = 1.0
+    ctx.set_line_width(lw)
 
+    w = x2 - x1
+    h = y2 - y1
+    ctx.rectangle(x1, y1, w, h)
+    ctx.stroke()
+    ctx.new_path()
     return True
 
-# Define valid PyCairo output formats
-cairo_valid_extensions = {"SVG", "PDF", "PS", "EPS", "RAW", "CAIRO", "QAHIRAH"}
 
 def get_save_filename(outfile):
     """
-    Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files in PyCairo-compatible formats. Returns a tuple (filename, EXTENSION)
-    or the original `outfile` if it's of type None, bool, or a file object.
-    Defaults to "PNG" if the extension is not supported by PyCairo.
-
-    Parameters:
-        outfile (str, tuple, list, None, bool, file): The output file specification.
-
-    Returns:
-        tuple or original `outfile` or False if invalid.
+    Normalize outfile spec to (destination, EXT).
+    Same behavior as your original:
+    - None/bool passthrough
+    - file-like or "-" -> (outfile, "PNG")
+    - string -> supports "name.ext" and "name:EXT", defaults to PNG,
+               and restricts to cairo_valid_extensions (else PNG)
+    - tuple/list (filename, ext) -> validates ext similarly
+    - invalid -> False
     """
-    # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
-    # Handle file objects directly
-    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile=="-":
+    if outfile == "-" or isinstance(outfile, (file, IOBase)):
         return (outfile, "PNG")
 
-    # Handle string types
-    if isinstance(outfile, str):
-        outfile = outfile.strip()
-        if outfile in ["-", ""]:
-            return (outfile, "PNG")
+    if isinstance(outfile, basestring):
+        out = outfile.strip()
+        if out in ("", "-"):
+            return (out, "PNG")
 
-        # Extract extension using os.path.splitext
-        base, ext = os.path.splitext(outfile)
+        base, ext = os.path.splitext(out)
+
+        out_ext = None
         if ext:
-            ext_match = re.match("^\\.(?P<ext>[A-Za-z]+)$", ext)
-            if ext_match:
-                outfileext = ext_match.group('ext').upper()
-            else:
-                outfileext = None
+            m = _RE_DOT_EXT.match(ext)
+            if m:
+                out_ext = m.group("ext").upper()
         else:
-            # Check for custom format 'name:EXT'
-            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
-            if custom_match:
-                outfile = custom_match.group('name')
-                outfileext = custom_match.group('ext').upper()
-            else:
-                outfileext = None
+            m = _RE_NAME_COLON_EXT.match(out)
+            if m:
+                out = m.group("name")
+                out_ext = m.group("ext").upper()
 
-        # Default to "PNG" if no valid extension was found
-        if not outfileext:
-            outfileext = "PNG"
+        if not out_ext:
+            out_ext = "PNG"
 
-        # Check if extension is supported by PyCairo
-        if outfileext not in cairo_valid_extensions:
-            outfileext = "PNG"
+        if out_ext not in cairo_valid_extensions:
+            out_ext = "PNG"
 
-        return (outfile, outfileext)
+        return (out, out_ext)
 
-    # Handle tuple or list types
     if isinstance(outfile, (tuple, list)):
         if len(outfile) != 2:
-            # Invalid tuple/list length
             return False
-
         filename, ext = outfile
 
-        # Allow file objects as the first item in tuple
-        if isinstance(filename, file):
-            filename = filename  # fileobj is valid as-is
-        elif isinstance(filename, str):
-            filename = filename.strip()
+        if isinstance(filename, (file, IOBase)):
+            fn = filename
+        elif isinstance(filename, basestring):
+            fn = filename.strip()
         else:
             return False
 
-        # Ensure the extension is a valid string
-        if not isinstance(ext, str):
+        if not isinstance(ext, basestring):
             return False
 
-        ext = ext.strip().upper()
-        # Check if extension is supported by PyCairo
-        if ext not in cairo_valid_extensions:
-            ext = "PNG"
+        ext_u = ext.strip().upper()
+        if ext_u not in cairo_valid_extensions:
+            ext_u = "PNG"
 
-        return (filename, ext)
+        return (fn, ext_u)
 
-    # Unsupported type
     return False
+
 
 def get_save_file(outfile):
     return get_save_filename(outfile)
 
+
 def new_image_surface(sizex, sizey, bgcolor):
-    upc_preimg = cairo.RecordingSurface(cairo.CONTENT_COLOR, (0.0, 0.0, float(sizex), float(sizey)))
-    upc_img = cairo.Context(upc_preimg)
-    upc_img.set_antialias(cairo.ANTIALIAS_NONE)
-    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
-    return [upc_img, upc_preimg]
+    """
+    Create a RecordingSurface and a Context, fill background.
+    Returns [ctx, recording_surface].
+    """
+    surface = cairo.RecordingSurface(
+        cairo.CONTENT_COLOR, (0.0, 0.0, float(sizex), float(sizey))
+    )
+    ctx = cairo.Context(surface)
+    ctx.set_antialias(cairo.ANTIALIAS_NONE)
+    drawColorRectangle(ctx, 0, 0, sizex, sizey, bgcolor)
+    return [ctx, surface]
+
+
+def _paint_recording_to_surface(recording_surface, target_surface):
+    """
+    Paint the recorded content onto a concrete surface, accounting for ink extents.
+    Returns (x, y) extents used so caller can apply offsets if needed.
+    """
+    x, y, w, h = recording_surface.ink_extents()
+    ctx = cairo.Context(target_surface)
+    ctx.set_source_surface(recording_surface, -x, -y)
+    ctx.paint()
+    return x, y, w, h
+
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
-    upc_img = inimage[0]
-    upc_preimg = inimage[1]
-    x, y, width, height = upc_preimg.ink_extents()
+    """
+    Save recorded Cairo content.
+    Keeps:
+    - ftp/ftps/sftp upload
+    - outfile == "-" returns bytes
+    - SVG/PDF/PS/EPS/CAIRO/QAHIRAH/RAW/PNG behaviors
+    """
+    recording = inimage[1]
+    outfileext = (outfileext or "PNG").upper()
+
+    # Determine output destination mode
     uploadfile = None
     outfiletovar = False
-    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(outfile))):
+    if outfile is not None and _RE_URL.search(str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
-    elif(outfile=="-"):
+    elif outfile == "-":
         outfiletovar = True
         outfile = BytesIO()
-    if(outfileext == "SVG"):
-        # Create an ImageSurface with the exact dimensions of the recorded content
-        image_surface = cairo.SVGSurface(outfile, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
-        image_context.paint()
-        image_surface.flush()
-        image_surface.finish()
-    elif(outfileext == "PDF"):
-        # Create an ImageSurface with the exact dimensions of the recorded content
-        image_surface = cairo.PDFSurface(outfile, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
-        image_context.paint()
-        image_surface.flush()
-        image_surface.finish()
-    elif(outfileext == "PS" or outfileext == "EPS"):
-        # Create an PDFSurface with the exact dimensions of the recorded content
-        image_surface = cairo.PSSurface(outfile, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
-        if(outfileext == "EPS"):
-            image_surface.set_eps(True)
+
+    # Ink extents give bounding box of drawn content
+    x, y, w, h = recording.ink_extents()
+    iw = int(w)
+    ih = int(h)
+
+    # Helper: create the right target surface, paint, flush, finish
+    if outfileext == "SVG":
+        surface = cairo.SVGSurface(outfile, iw, ih)
+        _paint_recording_to_surface(recording, surface)
+        surface.flush()
+        surface.finish()
+
+    elif outfileext == "PDF":
+        surface = cairo.PDFSurface(outfile, iw, ih)
+        _paint_recording_to_surface(recording, surface)
+        surface.flush()
+        surface.finish()
+
+    elif outfileext in ("PS", "EPS"):
+        surface = cairo.PSSurface(outfile, iw, ih)
+        if outfileext == "EPS":
+            surface.set_eps(True)
         else:
-            image_surface.set_eps(False)
-        image_context.paint()
-        image_surface.flush()
-        image_surface.finish()
-    elif(outfileext == "CAIRO" or outfileext == "QAHIRAH"):
-        # Create an ScriptSurface with the exact dimensions of the recorded content
-        image_surface = cairo.ScriptSurface(cairo.ScriptDevice(outfile), cairo.FORMAT_RGB24, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
-        image_context.paint()
-        image_surface.flush()
-        image_surface.finish()
-    elif(outfileext == "RAW"):
-        # Create an ImageSurface with the exact dimensions of the recorded content
-        image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
-        image_context.paint()
-        image_surface.flush()
-        # Save as PNG
-        data = image_surface.get_data()
-        if isinstance(outfile, file) or isinstance(outfile, IOBase):
+            surface.set_eps(False)
+        _paint_recording_to_surface(recording, surface)
+        surface.flush()
+        surface.finish()
+
+    elif outfileext in ("CAIRO", "QAHIRAH"):
+        # Script output
+        surface = cairo.ScriptSurface(
+            cairo.ScriptDevice(outfile),
+            cairo.FORMAT_RGB24,
+            iw,
+            ih
+        )
+        _paint_recording_to_surface(recording, surface)
+        surface.flush()
+        surface.finish()
+
+    elif outfileext == "RAW":
+        # Raw pixel bytes from an ImageSurface
+        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, iw, ih)
+        _paint_recording_to_surface(recording, surface)
+        surface.flush()
+        data = surface.get_data()
+
+        if isinstance(outfile, (file, IOBase)):
             outfile.write(data)
         else:
-            dataout = open(outfile, "wb")
-            dataout.write(data)
-            dataout.close()
-        image_surface.finish()
+            f = open(outfile, "wb")
+            try:
+                f.write(data)
+            finally:
+                f.close()
+
+        surface.finish()
+
     else:
-        # Create an ImageSurface with the exact dimensions of the recorded content
-        image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width), int(height))
-        image_context = cairo.Context(image_surface)
-        # Transfer the content from the RecordingSurface to the ImageSurface
-        image_context.set_source_surface(upc_preimg, -x, -y)
-        image_context.paint()
-        image_surface.flush()
-        # Save as PNG
-        image_surface.write_to_png(outfile)
-        image_surface.finish()
-    if(re.findall("^(ftp|ftps|sftp):\\/\\/", str(uploadfile))):
+        # Default to PNG via ImageSurface.write_to_png
+        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, iw, ih)
+        _paint_recording_to_surface(recording, surface)
+        surface.flush()
+        surface.write_to_png(outfile)
+        surface.finish()
+
+    # Upload / return bytes behavior
+    if uploadfile is not None:
         outfile.seek(0, 0)
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()
-    elif(outfiletovar):
+        return True
+
+    if outfiletovar:
         outfile.seek(0, 0)
         outbyte = outfile.read()
         outfile.close()
         return outbyte
+
     return True
 
+
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
+    """
+    Wrapper:
+    - if outfile is None OR get_save_filename returns None/bool -> return [ctx, surface, "cairo"]
+    - else save via save_to_file
+    """
     upc_img = imgout[0]
     upc_preimg = imgout[1]
-    if(outfile is None):
-        oldoutfile = None
-        outfile = None
-        outfileext = None
-    else:
-        oldoutfile = get_save_filename(
-            outfile)
-        if(isinstance(oldoutfile, tuple) or isinstance(oldoutfile, list)):
-            del(outfile)
-            outfile = oldoutfile[0]
-            outfileext = oldoutfile[1]
-    if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        return [upc_img, upc_preimg, "cairo"]
-    return save_to_file(imgout, outfile, outfileext, imgcomment)
 
+    if outfile is None:
+        oldoutfile = None
+    else:
+        oldoutfile = get_save_filename(outfile)
+
+    if oldoutfile is None or isinstance(oldoutfile, bool):
+        return [upc_img, upc_preimg, "cairo"]
+
+    if not isinstance(oldoutfile, (tuple, list)) or len(oldoutfile) != 2:
+        return False
+
+    outdest, outfmt = oldoutfile
+    return save_to_file(imgout, outdest, outfmt, imgcomment)

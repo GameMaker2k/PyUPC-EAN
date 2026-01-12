@@ -14,267 +14,244 @@
     $FileInfo: pretkinter.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-
-try:
-    import tkinter
-    from tkinter import font as tkFont
-except ImportError:
-    import Tkinter as tkinter
-    import tkFont
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import re
 
 try:
-    basestring
-except NameError:
+    import tkinter
+    from tkinter import font as tkFont
+except ImportError:  # Py2
+    import Tkinter as tkinter
+    import tkFont
+
+# -------------------------
+# Py2 / Py3 compatibility
+# -------------------------
+try:
+    basestring  # Py2
+except NameError:  # Py3
     basestring = str
 
 try:
-    file
-except NameError:
-    from io import IOBase
-    file = IOBase
+    file  # Py2
+except NameError:  # Py3
+    from io import IOBase as file  # alias
+
 from io import IOBase
 
 try:
-    from io import StringIO, BytesIO
-except ImportError:
+    from io import StringIO
+except ImportError:  # Py2
     try:
         from cStringIO import StringIO
-        from cStringIO import StringIO as BytesIO
     except ImportError:
         from StringIO import StringIO
-        from StringIO import StringIO as BytesIO
 
-''' // Source: http://stevehanov.ca/blog/index.php?id=28 '''
+# -------------------------
+# Regex / constants
+# -------------------------
+_RE_URL = re.compile(r"^(ftp|ftps|sftp)://", re.IGNORECASE)
+_PS_EXT = "PS"
 
+
+# -------------------------
+# Helpers
+# -------------------------
 def color_to_hex(color):
+    """
+    Accepts:
+    - (R,G,B) tuple (0..255)
+    - string like "#RRGGBB" or color names
+    """
     if isinstance(color, tuple):
         return '#%02x%02x%02x' % color
-    elif isinstance(color, str):
+    if isinstance(color, basestring):
         return color
-    else:
-        raise ValueError("Color must be a tuple or string.")
+    raise ValueError("Color must be a tuple or string.")
 
-def drawColorRectangle(canvas, x1, y1, x2, y2, color):
-    """
-    Draws a filled rectangle from (x1, y1) to (x2, y2) with the specified color on a Tkinter Canvas.
 
-    Parameters:
-    - canvas: Tkinter Canvas object.
-    - x1, y1: Top-left corner coordinates.
-    - x2, y2: Bottom-right corner coordinates.
-    - color: String or tuple representing color, e.g., "#RRGGBB" or (R, G, B).
-    """
-    color_hex = color_to_hex(color)
-    # Draw the rectangle
-    canvas.create_rectangle(x1, y1, x2, y2, fill=color_hex, outline=color_hex)
-    return True
+def _safe_destroy(root):
+    try:
+        root.destroy()
+    except Exception:
+        pass
 
-def drawColorLine(canvas, x1, y1, x2, y2, width, color):
-    """
-    Draws a line from (x1, y1) to (x2, y2) with the specified width and color on a Tkinter Canvas.
 
-    Parameters:
-    - canvas: Tkinter Canvas object.
-    - x1, y1: Starting coordinates.
-    - x2, y2: Ending coordinates.
-    - width: Line width (integer >= 1).
-    - color: String or tuple representing color, e.g., "#RRGGBB" or (R, G, B).
-    """
-    # Ensure width is at least 1
-    width = max(1, int(width))
-    color_hex = color_to_hex(color)
-    # Draw the line with the specified width
-    canvas.create_line(x1, y1, x2, y2, fill=color_hex, width=width)
-    return True
+def _canvas_dimensions(canvas):
+    # canvas['width'] and ['height'] are strings; normalize to int
+    return int(canvas['width']), int(canvas['height'])
 
-def drawColorText(canvas, size, x, y, text, color, ftype="ocrb"):
-    """
-    Draws text at (x, y) with the specified size, text, color, and font type on a Tkinter Canvas.
 
-    Parameters:
-    - canvas: Tkinter Canvas object.
-    - size: Font size.
-    - x, y: Position to draw the text.
-    - text: Text to display.
-    - color: String or tuple representing color, e.g., "#RRGGBB" or (R, G, B).
-    - ftype: Font type, default "ocrb".
+def _pick_font(size, ftype):
     """
-    text = str(text)
-    color_hex = color_to_hex(color)
-    # Prepare a list of font families to try
-    font_family_list = []
+    Reuse the same fallback list idea, but avoid recreating fonts more than needed.
+    Note: Tk font lookup can still vary by platform; this matches original intent.
+    """
+    families = []
     if ftype == "ocra":
-        font_family_list.extend(["OCR A Extended", "OCR A"])
+        families.extend(["OCR A Extended", "OCR A"])
     elif ftype == "ocrb":
-        font_family_list.append("OCR B")
-    # Add monospace fonts to the list as fallbacks
-    font_family_list.extend(["Monospace", "Courier New", "Courier", "Consolas", "Lucida Console"])
-    # Try to create the font using the fonts in the list
-    font = None
-    for font_family in font_family_list:
+        families.append("OCR B")
+
+    families.extend(["Monospace", "Courier New", "Courier", "Consolas", "Lucida Console"])
+
+    for fam in families:
         try:
-            font = tkFont.Font(family=font_family, size=size)
-            break
+            return tkFont.Font(family=fam, size=size)
         except Exception:
             continue
-    if font is None:
-        # If none of the fonts are available, use the default font
-        font = tkFont.Font(size=size)
-    canvas.create_text(x, y, text=text, fill=color_hex, font=font)
+
+    return tkFont.Font(size=size)
+
+
+# -------------------------
+# Drawing API
+# -------------------------
+def drawColorRectangle(canvas, x1, y1, x2, y2, color):
+    c = color_to_hex(color)
+    canvas.create_rectangle(x1, y1, x2, y2, fill=c, outline=c)
     return True
+
+
+def drawColorLine(canvas, x1, y1, x2, y2, width, color):
+    try:
+        width = int(width)
+    except Exception:
+        width = 1
+    if width < 1:
+        width = 1
+
+    c = color_to_hex(color)
+    canvas.create_line(x1, y1, x2, y2, fill=c, width=width)
+    return True
+
+
+def drawColorText(canvas, size, x, y, text, color, ftype="ocrb"):
+    text = str(text)
+    c = color_to_hex(color)
+    font = _pick_font(size, ftype)
+    canvas.create_text(x, y, text=text, fill=c, font=font)
+    return True
+
 
 def drawColorRectangleAlt(canvas, x1, y1, x2, y2, color):
-    """
-    Draws a rectangle outline from (x1, y1) to (x2, y2) with the specified color on a Tkinter Canvas.
-
-    Parameters:
-    - canvas: Tkinter Canvas object.
-    - x1, y1: Top-left corner coordinates.
-    - x2, y2: Bottom-right corner coordinates.
-    - color: String or tuple representing color, e.g., "#RRGGBB" or (R, G, B).
-    """
-    color_hex = color_to_hex(color)
-    # Draw the rectangle outline
-    canvas.create_rectangle(x1, y1, x2, y2, outline=color_hex)
+    c = color_to_hex(color)
+    canvas.create_rectangle(x1, y1, x2, y2, outline=c)
     return True
+
 
 def new_image_surface(sizex, sizey, bgcolor):
     """
-    Creates a new Tkinter Canvas of specified size and fills it with the background color.
-
-    Parameters:
-    - sizex: Width of the canvas.
-    - sizey: Height of the canvas.
-    - bgcolor: String or tuple representing color, e.g., "#RRGGBB" or (R, G, B).
-
-    Returns:
-    - canvas: The Tkinter Canvas object.
-    - root: The Tkinter root window.
+    Returns [canvas, root] like the original.
+    Root is hidden (withdrawn).
     """
-    bgcolor_hex = color_to_hex(bgcolor)
+    bg = color_to_hex(bgcolor)
     root = tkinter.Tk()
-    root.withdraw()  # Hide the root window
+    root.withdraw()
     canvas = tkinter.Canvas(root, width=sizex, height=sizey)
     canvas.pack()
-    canvas.create_rectangle(0, 0, sizex, sizey, fill=bgcolor_hex, outline=bgcolor_hex)
+    canvas.create_rectangle(0, 0, sizex, sizey, fill=bg, outline=bg)
     return [canvas, root]
 
+
+# -------------------------
+# Saving helpers
+# -------------------------
 def get_save_filename(outfile):
     """
-    Processes the `outfile` parameter to determine a suitable filename and its corresponding file extension for saving PS files.
-    Returns a tuple (filename, "PS") or the original `outfile` if it's of type None, bool, or a file object.
-    Defaults to "PS" as the extension if none is provided or if an unsupported extension is detected.
-    Returns False for unsupported input types.
-
-    Parameters:
-        outfile (str, tuple, list, None, bool, file): The output file specification.
-
+    Only PS output is supported.
     Returns:
-        tuple: (filename, "PS") or False if invalid.
+    - None/bool passthrough
+    - (outfile, "PS") for file-like or "-" or string paths
+    - False for invalid types
     """
-    svgwrite_valid_extensions = {"PS"}
-    # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
-    # Handle file objects directly
-    if hasattr(outfile, 'write') or outfile == "-":
-        return (outfile, "PS")
+    # file-like or "-"
+    if outfile == "-" or hasattr(outfile, 'write') or isinstance(outfile, (file, IOBase)):
+        return (outfile, _PS_EXT)
 
-    # Handle string types
-    if isinstance(outfile, str):
-        outfile = outfile.strip()
-        if outfile in ["-", ""]:
-            return (outfile, "PS")
+    if isinstance(outfile, basestring):
+        out = outfile.strip()
+        if out in ("", "-"):
+            return (out, _PS_EXT)
 
-        # Extract extension using os.path.splitext
-        base, ext = os.path.splitext(outfile)
-        if ext:
-            ext = ext[1:].upper()  # Remove the '.' and uppercase
-            if ext != "PS":
-                ext = "PS"
-        else:
-            ext = "PS"
+        base, ext = os.path.splitext(out)
+        # force PS regardless of what was provided
+        return (out, _PS_EXT)
 
-        return (outfile, ext)
-
-    # Unsupported type
     return False
+
 
 def get_save_file(outfile):
     return get_save_filename(outfile)
 
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
-    canvas = inimage[0]
-    root = inimage[1]
-    outfiletovar = False
+    """
+    Saves PostScript via canvas.postscript.
+    Preserves original branching:
+    - outfile is a URL => NotImplementedError (FTP upload not implemented)
+    - outfile == "-" => return PS string
+    - outfile is None => return PS string
+    - outfile is file-like => write PS string and return True
+    - outfile is string path => write to that file path and return True
+    """
+    canvas, root = inimage[0], inimage[1]
+    try:
+        c_width, c_height = _canvas_dimensions(canvas)
 
-    # Get the canvas width and height from the canvas properties
-    c_width = int(canvas['width'])
-    c_height = int(canvas['height'])
+        # enforce PS only (same as original expectation)
+        if (outfileext or _PS_EXT).upper() != _PS_EXT:
+            raise ValueError("Only PS output is supported")
 
-    if isinstance(outfile, str):
-        if re.match("^(ftp|ftps|sftp):\\/\\/", outfile):
-            # Handle FTP upload (Not implemented in this code)
-            ps_data = canvas.postscript(width=c_width, height=c_height)
-            # upload_file_to_internet_file(ps_data, outfile)
-            root.destroy()
-            raise NotImplementedError("FTP upload not implemented in this code")
-        elif outfile == "-":
-            outfiletovar = True
-            outfile = StringIO()
-        else:
-            # Save to file with specified width and height
+        # outfile None => return PS string
+        if outfile is None:
+            return canvas.postscript(width=c_width, height=c_height)
+
+        # string destinations
+        if isinstance(outfile, basestring):
+            if _RE_URL.match(outfile):
+                ps_data = canvas.postscript(width=c_width, height=c_height)
+                raise NotImplementedError("FTP upload not implemented in this code")
+            if outfile == "-":
+                return canvas.postscript(width=c_width, height=c_height)
+
+            # path
             canvas.postscript(file=outfile, width=c_width, height=c_height)
-            root.destroy()
             return True
-    elif outfile is None:
-        # Return the PS data as a string
-        ps_data = canvas.postscript(width=c_width, height=c_height)
-        root.destroy()
-        return ps_data
-    elif hasattr(outfile, 'write'):
-        # outfile is a file-like object
-        ps_data = canvas.postscript(width=c_width, height=c_height)
-        outfile.write(ps_data)
-        root.destroy()
-        return True
-    else:
-        # Unsupported outfile type
-        root.destroy()
-        raise ValueError("Invalid outfile type")
 
-    # For the case when outfiletovar is True
-    if outfiletovar:
-        # Generate PostScript data and write to outfile
-        ps_data = canvas.postscript(width=c_width, height=c_height)
-        outfile.write(ps_data)
-        # Read from outfile and return the content
-        outfile.seek(0)
-        outbyte = outfile.read()
-        outfile.close()
-        root.destroy()
-        return outbyte
+        # file-like destinations
+        if hasattr(outfile, 'write') or isinstance(outfile, (file, IOBase)):
+            ps_data = canvas.postscript(width=c_width, height=c_height)
+            outfile.write(ps_data)
+            return True
+
+        raise ValueError("Invalid outfile type")
+    finally:
+        _safe_destroy(root)
+
 
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
-    canvas = imgout[0]
-    root = imgout[1]
+    """
+    Wrapper consistent with original:
+    - parse outfile via get_save_filename
+    - enforce PS
+    - delegate to save_to_file
+    """
     if outfile is None:
-        outfile = None
-        outfileext = None
+        outdest, outfmt = None, None
     else:
-        outfile_info = get_save_filename(outfile)
-        if isinstance(outfile_info, tuple) or isinstance(outfile_info, list):
-            outfile = outfile_info[0]
-            outfileext = outfile_info[1]
+        info = get_save_filename(outfile)
+        if isinstance(info, (tuple, list)):
+            outdest, outfmt = info[0], info[1]
         else:
-            outfile = None
-            outfileext = None
-    if outfileext != "PS":
+            outdest, outfmt = None, None
+
+    if (outfmt or _PS_EXT).upper() != _PS_EXT:
         raise ValueError("Only PS output is supported")
-    result = save_to_file(imgout, outfile, outfileext, imgcomment)
-    return result
+
+    return save_to_file(imgout, outdest, _PS_EXT, imgcomment)

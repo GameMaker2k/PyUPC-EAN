@@ -16,230 +16,270 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import sys
 import os
-import re
-import ctypes
 
-# Compatibility for Python 2 and 3
-try:
-    import pkg_resources
-    pkgres = True
-except ImportError:
-    pkgres = False
-
-try:
-    basestring
-except NameError:
-    basestring = str
-
-try:
-    file
-except NameError:
-    from io import IOBase
-    file = IOBase
-
-try:
-    file
-except NameError:
-    from io import IOBase
-    file = IOBase
-from io import IOBase
-
-try:
-    from io import StringIO, BytesIO
-except ImportError:
-    try:
-        from cStringIO import StringIO
-        from cStringIO import StringIO as BytesIO
-    except ImportError:
-        from StringIO import StringIO
-        from StringIO import StringIO as BytesIO
-
-# Import PySDL2 modules
 import sdl2
 import sdl2.ext
 import sdl2.sdlttf
 
 import upcean.fonts
 
-# Load font paths from upcean.fonts
+# -------------------------
+# Py2 / Py3 compatibility
+# -------------------------
+try:
+    basestring  # Py2
+except NameError:  # Py3
+    basestring = str
+
+try:
+    unicode  # Py2
+except NameError:  # Py3
+    unicode = str
+
+
+# -------------------------
+# Fonts (from upcean.fonts)
+# -------------------------
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocraalt = upcean.fonts.fontpathocraalt
 fontpathocrb = upcean.fonts.fontpathocrb
 fontpathocrbalt = upcean.fonts.fontpathocrbalt
 fontpath = upcean.fonts.fontpath
 
+
+# -------------------------
+# Helpers
+# -------------------------
 def snapCoords(x, y):
-    """
-    Snaps the coordinates to the nearest integer plus 0.5.
+    return (round(x) + 0.5, round(y) + 0.5)
 
-    Parameters:
-    - x, y: Original coordinates.
 
-    Returns:
-    - (snapped_x, snapped_y)
-    """
-    snapped_x = round(x) + 0.5
-    snapped_y = round(y) + 0.5
-    return (snapped_x, snapped_y)
+def _safe_int(v, default=0):
+    try:
+        return int(v)
+    except Exception:
+        return default
 
-def drawColorRectangle(renderer, x1, y1, x2, y2, color, filled=True):
-    """
-    Draws a filled or outlined rectangle on the given renderer.
 
-    Parameters:
-    - renderer: SDL_Renderer object.
-    - x1, y1: Top-left corner coordinates.
-    - x2, y2: Bottom-right corner coordinates.
-    - color: Tuple representing (R, G, B, A).
-    - filled: If True, draws a filled rectangle. If False, draws only the outline.
+def _rgba(color):
     """
-    rect = sdl2.SDL_Rect(int(x1), int(y1), int(x2 - x1), int(y2 - y1))
-    sdl2.SDL_SetRenderDrawColor(renderer, color[0], color[1], color[2], color[3])
-    if filled:
-        sdl2.SDL_RenderFillRect(renderer, rect)
+    Ensure (R,G,B,A). If 3-tuple is passed, assume opaque.
+    """
+    if isinstance(color, tuple) and len(color) == 4:
+        return (int(color[0]), int(color[1]), int(color[2]), int(color[3]))
+    if isinstance(color, tuple) and len(color) == 3:
+        return (int(color[0]), int(color[1]), int(color[2]), 255)
+    # best effort fallback
+    return (255, 255, 255, 255)
+
+
+def _to_text(s):
+    """
+    Ensure we have a unicode text string (works in Py2/Py3).
+    """
+    if isinstance(s, bytes):
+        try:
+            return s.decode("utf-8")
+        except Exception:
+            return s.decode("latin-1", "replace")
+    return str(s)
+
+
+def _fs_path_bytes(path):
+    """
+    SDL_ttf expects a bytes path in most bindings; keep behavior robust.
+    """
+    if path is None:
+        return None
+    if isinstance(path, bytes):
+        return path
+    try:
+        return path.encode("utf-8")
+    except Exception:
+        # last resort
+        return str(path).encode("utf-8")
+
+
+def _pick_font_path(ftype):
+    """
+    Match your original preference:
+    - ocra: primary then alt
+    - ocrb: primary then alt
+    - else: fontpath, else None
+    """
+    if ftype == "ocra":
+        primary, alt = fontpathocra, fontpathocraalt
+    elif ftype == "ocrb":
+        primary, alt = fontpathocrb, fontpathocrbalt
     else:
-        sdl2.SDL_RenderDrawRect(renderer, rect)
-    return True  # Optional
+        primary, alt = fontpath, None
 
-def drawColorLine(renderer, x1, y1, x2, y2, width, color):
-    """
-    Draws a line on the given renderer.
+    if primary and os.path.isfile(primary):
+        return primary
+    if alt and os.path.isfile(alt):
+        return alt
+    return primary  # may be None/invalid, caller handles
 
-    Parameters:
-    - renderer: SDL_Renderer object.
-    - x1, y1: Starting coordinates.
-    - x2, y2: Ending coordinates.
-    - width: Line width (integer >= 1).
-    - color: Tuple representing (R, G, B, A).
+
+# -------------------------
+# Font caching
+# -------------------------
+_FONT_CACHE = {}  # {(ftype, size): TTF_Font*}
+
+
+def close_cached_fonts():
     """
-    # SDL2 does not support line width directly. To emulate width, draw multiple lines offset.
-    sdl2.SDL_SetRenderDrawColor(renderer, color[0], color[1], color[2], color[3])
-    for i in range(width):
-        offset = i - width // 2
-        adjusted_y1 = y1 + offset
-        adjusted_y2 = y2 + offset
-        sdl2.SDL_RenderDrawLine(renderer, int(x1), int(adjusted_y1), int(x2), int(adjusted_y2))
-    return True  # Optional
+    Optional: call at shutdown to release cached fonts.
+    """
+    for k, font in list(_FONT_CACHE.items()):
+        try:
+            if font:
+                sdl2.sdlttf.TTF_CloseFont(font)
+        except Exception:
+            pass
+        _FONT_CACHE.pop(k, None)
+
 
 def load_font(font_type, size):
     """
     Loads the specified font type with the given size.
-
-    Parameters:
-    - font_type: "ocra" or "ocrb".
-    - size: Font size.
-
-    Returns:
-    - TTF_Font pointer.
+    Now cached per (font_type, size) to reduce overhead.
+    Returns: TTF_Font pointer, or raises IOError on failure.
     """
+    try:
+        size_i = int(size)
+    except Exception:
+        size_i = 12
+    if size_i <= 0:
+        size_i = 12
+
+    key = (font_type, size_i)
+    cached = _FONT_CACHE.get(key)
+    if cached:
+        return cached
+
+    path = _pick_font_path(font_type)
+
+    # Fall back logic mirrors your original intent.
     if font_type == "ocra":
-        try:
-            font = sdl2.sdlttf.TTF_OpenFont(fontpathocra.encode('utf-8'), size)
-            if not font:
-                raise IOError
-        except IOError:
-            font = sdl2.sdlttf.TTF_OpenFont(fontpathocraalt.encode('utf-8'), size)
-            if not font:
-                raise IOError("Failed to load ocra fonts.")
+        candidates = [fontpathocra, fontpathocraalt]
     elif font_type == "ocrb":
-        try:
-            font = sdl2.sdlttf.TTF_OpenFont(fontpathocrb.encode('utf-8'), size)
-            if not font:
-                raise IOError
-        except IOError:
-            font = sdl2.sdlttf.TTF_OpenFont(fontpathocrbalt.encode('utf-8'), size)
-            if not font:
-                raise IOError("Failed to load ocrb fonts.")
+        candidates = [fontpathocrb, fontpathocrbalt]
     else:
+        candidates = [fontpath, None]
+
+    font = None
+    for p in candidates:
+        if p is None:
+            continue
+        b = _fs_path_bytes(p)
         try:
-            font = sdl2.sdlttf.TTF_OpenFont(fontpath.encode('utf-8'), size)
-            if not font:
-                raise IOError
-        except IOError:
-            font = sdl2.sdlttf.TTF_OpenFont(None, size)  # Default font
-            if not font:
-                raise IOError("Failed to load default font.")
+            font = sdl2.sdlttf.TTF_OpenFont(b, size_i)
+        except Exception:
+            font = None
+        if font:
+            break
+
+    if not font:
+        # As in your original: try "default font" by passing None (may fail depending on platform)
+        try:
+            font = sdl2.sdlttf.TTF_OpenFont(None, size_i)
+        except Exception:
+            font = None
+
+    if not font:
+        raise IOError("Failed to load font type={!r} size={!r}".format(font_type, size_i))
+
+    _FONT_CACHE[key] = font
     return font
+
+
+# -------------------------
+# Drawing API
+# -------------------------
+def drawColorRectangle(renderer, x1, y1, x2, y2, color, filled=True):
+    r, g, b, a = _rgba(color)
+    rect = sdl2.SDL_Rect(_safe_int(x1), _safe_int(y1), _safe_int(x2 - x1), _safe_int(y2 - y1))
+    sdl2.SDL_SetRenderDrawColor(renderer, r, g, b, a)
+    if filled:
+        sdl2.SDL_RenderFillRect(renderer, rect)
+    else:
+        sdl2.SDL_RenderDrawRect(renderer, rect)
+    return True
+
+
+def drawColorLine(renderer, x1, y1, x2, y2, width, color):
+    """
+    SDL2 doesn't support line width directly; emulate by drawing multiple offset lines.
+    Keeps your approach, but makes width coercion safer and offsets symmetric.
+    """
+    r, g, b, a = _rgba(color)
+    w = _safe_int(width, 1)
+    if w < 1:
+        w = 1
+
+    sdl2.SDL_SetRenderDrawColor(renderer, r, g, b, a)
+
+    x1i, y1i, x2i, y2i = _safe_int(x1), _safe_int(y1), _safe_int(x2), _safe_int(y2)
+
+    # Symmetric offsets: for width=1 -> [0], width=2 -> [-1,0], width=3 -> [-1,0,1], etc.
+    start = -(w // 2)
+    end = start + w
+    for off in range(start, end):
+        sdl2.SDL_RenderDrawLine(renderer, x1i, y1i + off, x2i, y2i + off)
+
+    return True
+
 
 def drawColorText(renderer, size, x, y, text, color, ftype="ocrb"):
     """
-    Draws text on the given renderer with the specified font and color.
-
-    Parameters:
-    - renderer: SDL_Renderer object.
-    - size: Font size.
-    - x, y: Position to draw the text.
-    - text: The text string to render.
-    - color: Tuple representing (R, G, B, A).
-    - ftype: Font type ("ocra" or "ocrb").
+    Render text with SDL_ttf to a surface, convert to texture, copy to renderer.
+    Preserves your behavior, but:
+    - uses cached fonts
+    - centralizes utf-8 conversion
+    - ensures cleanup on all failure paths
     """
     try:
         font = load_font(ftype, size)
-    except IOError as e:
-        print(e)
+    except IOError:
         return False
 
-    # Ensure text is a Unicode string in Python 2
-    if isinstance(text, bytes):
-        text = text.decode('utf-8')
+    t = _to_text(text)
+    r, g, b, a = _rgba(color)
+    sdl_color = sdl2.SDL_Color(r, g, b, a)
 
-    # Render text to surface
-    text_surface = sdl2.sdlttf.TTF_RenderUTF8_Blended(font, text.encode('utf-8'), sdl2.SDL_Color(color[0], color[1], color[2], color[3]))
-    if not text_surface:
-        print("TTF_RenderUTF8_Blended Error: {}".format(sdl2.sdlttf.TTF_GetError()))
-        sdl2.sdlttf.TTF_CloseFont(font)
+    # Render text surface
+    surf = sdl2.sdlttf.TTF_RenderUTF8_Blended(font, t.encode("utf-8"), sdl_color)
+    if not surf:
         return False
 
-    # Create texture from surface
-    texture = sdl2.SDL_CreateTextureFromSurface(renderer, text_surface)
-    if not texture:
-        print("SDL_CreateTextureFromSurface Error: {}".format(sdl2.SDL_GetError()))
-        sdl2.SDL_FreeSurface(text_surface)
-        sdl2.sdlttf.TTF_CloseFont(font)
+    tex = sdl2.SDL_CreateTextureFromSurface(renderer, surf)
+    if not tex:
+        sdl2.SDL_FreeSurface(surf)
         return False
 
-    # Get text dimensions
-    text_rect = sdl2.SDL_Rect(x, y, text_surface.contents.w, text_surface.contents.h)
+    try:
+        w = surf.contents.w
+        h = surf.contents.h
+        dst = sdl2.SDL_Rect(_safe_int(x), _safe_int(y), w, h)
+        sdl2.SDL_RenderCopy(renderer, tex, None, dst)
+    finally:
+        sdl2.SDL_DestroyTexture(tex)
+        sdl2.SDL_FreeSurface(surf)
 
-    # Render the texture
-    sdl2.SDL_RenderCopy(renderer, texture, None, text_rect)
-
-    # Clean up
-    sdl2.SDL_DestroyTexture(texture)
-    sdl2.SDL_FreeSurface(text_surface)
-    sdl2.sdlttf.TTF_CloseFont(font)
     return True
 
-def drawColorRectangleAlt(renderer, x1, y1, x2, y2, color):
-    """
-    Draws an outlined rectangle on the given renderer.
 
-    Parameters:
-    - renderer: SDL_Renderer object.
-    - x1, y1: Top-left corner coordinates.
-    - x2, y2: Bottom-right corner coordinates.
-    - color: Tuple representing (R, G, B, A).
-    """
+def drawColorRectangleAlt(renderer, x1, y1, x2, y2, color):
     return drawColorRectangle(renderer, x1, y1, x2, y2, color, filled=False)
 
-def clear_renderer(renderer, color=(255, 255, 255, 255)):
-    """
-    Clears the renderer with the specified color.
 
-    Parameters:
-    - renderer: SDL_Renderer object.
-    - color: Tuple representing (R, G, B, A).
-    """
-    sdl2.SDL_SetRenderDrawColor(renderer, color[0], color[1], color[2], color[3])
+def clear_renderer(renderer, color=(255, 255, 255, 255)):
+    r, g, b, a = _rgba(color)
+    sdl2.SDL_SetRenderDrawColor(renderer, r, g, b, a)
     sdl2.SDL_RenderClear(renderer)
 
-def present_renderer(renderer):
-    """
-    Presents the current rendering on the screen.
 
-    Parameters:
-    - renderer: SDL_Renderer object.
-    """
+def present_renderer(renderer):
     sdl2.SDL_RenderPresent(renderer)

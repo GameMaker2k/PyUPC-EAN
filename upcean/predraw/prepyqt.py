@@ -14,227 +14,340 @@
     $FileInfo: prepyqt.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
+from __future__ import absolute_import, division, print_function, unicode_literals
 
-from PyQt5.QtGui import QImage, QPainter, QColor, QFont, QFontDatabase
-from PyQt5.QtCore import QRect, QBuffer, QIODevice
 import os
 import re
 
+from PyQt5.QtGui import QImage, QPainter, QColor, QFont, QFontDatabase, QPen
+from PyQt5.QtCore import QRect, QBuffer, QIODevice
+
+from upcean.fonts import (
+    fontpathocra, fontpathocraalt,
+    fontpathocrb, fontpathocrbalt,
+    fontpath
+)
+from upcean.downloader import upload_file_to_internet_file
+
+# -------------------------
+# Py2 / Py3 compatibility
+# -------------------------
 try:
-    basestring
-except NameError:
+    basestring  # Py2
+except NameError:  # Py3
     basestring = str
 
 try:
-    file
-except NameError:
-    from io import IOBase
-    file = IOBase
-from io import StringIO, BytesIO
+    unicode  # Py2
+except NameError:  # Py3
+    unicode = str
 
-# Importing the font paths and upload function from upcean
-from upcean.fonts import fontpathocra, fontpathocraalt, fontpathocrb, fontpathocrbalt, fontpath
-from upcean.downloader import upload_file_to_internet_file
+try:
+    from io import BytesIO
+except ImportError:  # old Py2
+    try:
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO as BytesIO
 
+# -------------------------
+# Regex / constants
+# -------------------------
+_RE_URL = re.compile(r"^(ftp|ftps|sftp)://", re.IGNORECASE)
+_RE_NAME_COLON_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
+
+_VALID_EXTS = set(["PNG", "JPEG", "JPG", "BMP", "GIF", "RAW"])
+
+
+# -------------------------
+# Helpers
+# -------------------------
 def color_to_qcolor(color):
     if isinstance(color, tuple):
-        if len(color) == 3:
+        if len(color) in (3, 4):
             return QColor(*color)
-        elif len(color) == 4:
-            return QColor(*color)  # RGBA
-        else:
-            raise ValueError("Color tuple must be of length 3 or 4.")
-    elif isinstance(color, str):
+        raise ValueError("Color tuple must be of length 3 or 4.")
+    if isinstance(color, basestring):
         return QColor(color)
-    else:
-        raise ValueError("Color must be a tuple or string.")
+    raise ValueError("Color must be a tuple or string.")
 
+
+def _rect_from_coords(x1, y1, x2, y2):
+    return QRect(int(x1), int(y1), int(x2 - x1), int(y2 - y1))
+
+
+def _with_painter(image):
+    """
+    Small helper to ensure painter.end() always happens.
+    Usage:
+        painter = _with_painter(img)
+        ...
+        painter.end()
+    (Kept explicit end() calls to remain close to original behavior.)
+    """
+    return QPainter(image)
+
+
+# Cache loaded application fonts so we don't re-add them every draw call.
+# Key: absolute path -> family name (or None if failed)
+_FONT_FAMILY_CACHE = {}
+
+
+def _load_font_family(path):
+    """
+    Add a font file to the QFontDatabase once and cache its family name.
+    Returns family name or None.
+    """
+    if not path:
+        return None
+
+    cached = _FONT_FAMILY_CACHE.get(path, None)
+    # Use a sentinel to distinguish "not attempted" vs "failed"
+    if path in _FONT_FAMILY_CACHE:
+        return cached
+
+    try:
+        font_id = QFontDatabase.addApplicationFont(path)
+    except Exception:
+        font_id = -1
+
+    if font_id == -1:
+        _FONT_FAMILY_CACHE[path] = None
+        return None
+
+    families = QFontDatabase.applicationFontFamilies(font_id)
+    fam = families[0] if families else None
+    _FONT_FAMILY_CACHE[path] = fam
+    return fam
+
+
+def _pick_qfont(ftype, size):
+    """
+    Match your original preference order:
+    - ocra: try primary then alt
+    - ocrb: try primary then alt
+    - else: try fontpath, else default system font
+    """
+    size = int(size) if int(size) > 0 else 12
+
+    if ftype == "ocra":
+        fam = _load_font_family(fontpathocra) or _load_font_family(fontpathocraalt)
+    elif ftype == "ocrb":
+        fam = _load_font_family(fontpathocrb) or _load_font_family(fontpathocrbalt)
+    else:
+        fam = _load_font_family(fontpath)
+
+    if fam:
+        return QFont(fam, size)
+
+    # fallback default font
+    f = QFont()
+    f.setPointSize(size)
+    return f
+
+
+def _qimage_to_bytes(image, fmt_upper):
+    """
+    Encode via QBuffer for normal formats.
+    """
+    buf = QBuffer()
+    buf.open(QIODevice.ReadWrite)
+    ok = image.save(buf, fmt_upper)
+    if not ok:
+        buf.close()
+        raise IOError("Failed to encode image.")
+    data = bytes(buf.data().data())
+    buf.close()
+    return data
+
+
+# -------------------------
+# Drawing API
+# -------------------------
 def drawColorRectangle(image, x1, y1, x2, y2, color):
-    color_qcolor = color_to_qcolor(color)
-    painter = QPainter(image)
-    painter.setPen(color_qcolor)
-    painter.setBrush(color_qcolor)
-    rect = QRect(x1, y1, x2 - x1, y2 - y1)
-    painter.drawRect(rect)
+    c = color_to_qcolor(color)
+    painter = _with_painter(image)
+    painter.setPen(c)
+    painter.setBrush(c)
+    painter.drawRect(_rect_from_coords(x1, y1, x2, y2))
     painter.end()
     return True
+
 
 def drawColorLine(image, x1, y1, x2, y2, width, color):
-    width = max(1, int(width))
-    color_qcolor = color_to_qcolor(color)
-    painter = QPainter(image)
-    pen = painter.pen()
-    pen.setWidth(width)
-    pen.setColor(color_qcolor)
+    w = int(width)
+    if w < 1:
+        w = 1
+    c = color_to_qcolor(color)
+
+    painter = _with_painter(image)
+    pen = QPen(c)
+    pen.setWidth(w)
     painter.setPen(pen)
-    painter.drawLine(x1, y1, x2, y2)
+    painter.drawLine(int(x1), int(y1), int(x2), int(y2))
     painter.end()
     return True
+
 
 def drawColorText(image, size, x, y, text, color, ftype="ocrb"):
-    text = str(text)
-    color_qcolor = color_to_qcolor(color)
-    painter = QPainter(image)
-    painter.setPen(color_qcolor)
+    """
+    Keeps original baseline adjustment: draws at (x, y + size).
+    """
+    c = color_to_qcolor(color)
+    t = str(text)
 
-    # Load custom fonts
-    font_db = QFontDatabase()
+    painter = _with_painter(image)
+    painter.setPen(c)
 
-    font = None
-    if ftype == "ocra":
-        # Try loading the primary OCR A font
-        font_id = font_db.addApplicationFont(fontpathocra)
-        if font_id == -1:
-            # If failed, try the alternate font
-            font_id = font_db.addApplicationFont(fontpathocraalt)
-    elif ftype == "ocrb":
-        # Try loading the primary OCR B font
-        font_id = font_db.addApplicationFont(fontpathocrb)
-        if font_id == -1:
-            # If failed, try the alternate font
-            font_id = font_db.addApplicationFont(fontpathocrbalt)
-    else:
-        # Load the default font
-        font_id = font_db.addApplicationFont(fontpath)
-
-    if font_id != -1:
-        # Get the family name and create the font
-        font_family = font_db.applicationFontFamilies(font_id)[0]
-        font = QFont(font_family, size)
-    else:
-        # If custom font loading failed, use a default font
-        font = QFont()
-        font.setPointSize(size)
-
+    font = _pick_qfont(ftype, size)
     painter.setFont(font)
-    # Adjust the position to account for the text baseline
-    painter.drawText(x, y + size, text)
+
+    painter.drawText(int(x), int(y) + int(size), t)
     painter.end()
     return True
+
 
 def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
-    color_qcolor = color_to_qcolor(color)
-    painter = QPainter(image)
-    painter.setPen(color_qcolor)
-    rect = QRect(x1, y1, x2 - x1, y2 - y1)
-    painter.drawRect(rect)
+    c = color_to_qcolor(color)
+    painter = _with_painter(image)
+    painter.setPen(c)
+    painter.drawRect(_rect_from_coords(x1, y1, x2, y2))
     painter.end()
     return True
 
-def new_image_surface(sizex, sizey, bgcolor):
-    bgcolor_qcolor = color_to_qcolor(bgcolor)
-    image = QImage(sizex, sizey, QImage.Format_ARGB32)
-    image.fill(bgcolor_qcolor)
-    return image
 
+def new_image_surface(sizex, sizey, bgcolor):
+    """
+    Keeps original: ARGB32 QImage filled with bgcolor.
+    """
+    bg = color_to_qcolor(bgcolor)
+    img = QImage(int(sizex), int(sizey), QImage.Format_ARGB32)
+    img.fill(bg)
+    return img
+
+
+# -------------------------
+# Filename parsing
+# -------------------------
 def get_save_filename(outfile):
-    valid_extensions = {"PNG", "JPEG", "JPG", "BMP", "GIF", "RAW"}
     if outfile is None or isinstance(outfile, bool):
         return outfile
 
-    if hasattr(outfile, 'write') or outfile == "-":
-        return (outfile, "PNG")  # Default to PNG
+    # file-like or "-" => default PNG
+    if outfile == "-" or hasattr(outfile, "write"):
+        return (outfile, "PNG")
 
-    if isinstance(outfile, str):
-        outfile = outfile.strip()
-        if outfile in ["-", ""]:
-            return (outfile, "PNG")
+    if isinstance(outfile, basestring):
+        out = outfile.strip()
+        if out in ("", "-"):
+            return (out, "PNG")
 
-        # Extract extension
-        base, ext = os.path.splitext(outfile)
+        base, ext = os.path.splitext(out)
         if ext:
-            ext = ext[1:].upper()
-            if ext not in valid_extensions:
-                ext = "PNG"
+            ext_u = ext[1:].upper()
         else:
-            # Check for custom format 'name:EXT'
-            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
-            if custom_match:
-                outfile = custom_match.group('name')
-                ext = custom_match.group('ext').upper()
+            m = _RE_NAME_COLON_EXT.match(out)
+            if m:
+                out = m.group("name")
+                ext_u = m.group("ext").upper()
             else:
-                ext = "PNG"
+                ext_u = "PNG"
 
-        return (outfile, ext)
+        if ext_u not in _VALID_EXTS:
+            ext_u = "PNG"
+        return (out, ext_u)
 
     return False
+
 
 def get_save_file(outfile):
     return get_save_filename(outfile)
 
+
+# -------------------------
+# Saving
+# -------------------------
 def save_to_file(image, outfile, outfileext, imgcomment="barcode"):
     """
-    Saves the QImage to a file, uploads it, or returns the image data.
+    Saves the QImage to a file, uploads it, writes to a file-like object,
+    or returns bytes when outfile is '-' or None.
+    RAW behavior: returns/writes image.bits() (ARGB32 bytes) rather than an encoded file.
     """
-    if outfileext.upper() not in ["PNG", "JPEG", "JPG", "BMP", "GIF", "RAW"]:
-        outfileext = "PNG"  # Default to PNG
+    ext_u = (outfileext or "PNG").upper()
+    if ext_u not in _VALID_EXTS:
+        ext_u = "PNG"
 
     uploadfile = None
     outfiletovar = False
 
-    if isinstance(outfile, str):
-        if re.match("^(ftp|ftps|sftp):\\/\\/", outfile):
+    if isinstance(outfile, basestring):
+        if _RE_URL.match(outfile):
             uploadfile = outfile
             outfile = BytesIO()
         elif outfile == "-":
             outfiletovar = True
             outfile = BytesIO()
         else:
-            # Save to file
-            result = image.save(outfile, outfileext)
-            if not result:
+            # Save directly to filename unless RAW
+            if ext_u == "RAW":
+                # Write raw pixel bytes to path
+                data = bytes(image.bits().asstring(image.byteCount()))
+                with open(outfile, "wb") as f:
+                    f.write(data)
+                return True
+
+            ok = image.save(outfile, ext_u)
+            if not ok:
                 raise IOError("Failed to save image to file.")
             return True
-    elif outfile is None:
-        # Return image data as bytes
-        buffer = QBuffer()
-        buffer.open(QIODevice.ReadWrite)
-        image.save(buffer, outfileext)
-        image_data = buffer.data().data()
-        buffer.close()
-        return image_data
-    elif hasattr(outfile, 'write'):
-        # outfile is a file-like object
-        buffer = QBuffer()
-        buffer.open(QIODevice.ReadWrite)
-        image.save(buffer, outfileext)
-        image_data = buffer.data().data()
-        outfile.write(image_data)
-        buffer.close()
-        return True
-    else:
-        # Unsupported outfile type
-        raise ValueError("Invalid outfile type")
 
-    if uploadfile:
-        # Upload the image data
-        outfile.seek(0, 0)
-        upload_file_to_internet_file(outfile, uploadfile)
-        outfile.close()
+    # outfile is None => return bytes
+    if outfile is None:
+        if ext_u == "RAW":
+            return bytes(image.bits().asstring(image.byteCount()))
+        return _qimage_to_bytes(image, ext_u)
+
+    # file-like => write bytes
+    if hasattr(outfile, "write"):
+        if ext_u == "RAW":
+            data = bytes(image.bits().asstring(image.byteCount()))
+        else:
+            data = _qimage_to_bytes(image, ext_u)
+        outfile.write(data)
         return True
-    elif outfiletovar:
-        # Return image data as bytes
-        outfile.seek(0, 0)
+
+    # If we got here, outfile was turned into BytesIO for upload or "-" return
+    if uploadfile or outfiletovar:
+        if ext_u == "RAW":
+            data = bytes(image.bits().asstring(image.byteCount()))
+            outfile.write(data)
+        else:
+            data = _qimage_to_bytes(image, ext_u)
+            outfile.write(data)
+
+        if uploadfile:
+            outfile.seek(0)
+            upload_file_to_internet_file(outfile, uploadfile)
+            outfile.close()
+            return True
+
+        # "-" semantics: return bytes
+        outfile.seek(0)
         outbyte = outfile.read()
         outfile.close()
         return outbyte
 
-    return True
+    raise ValueError("Invalid outfile type")
+
 
 def save_to_filename(image, outfile, imgcomment="barcode"):
-    if outfile is None:
-        outfile = None
-        outfileext = None
+    info = get_save_filename(outfile) if outfile is not None else None
+    if isinstance(info, (tuple, list)):
+        outdest, ext_u = info[0], info[1]
     else:
-        outfile_info = get_save_filename(outfile)
-        if isinstance(outfile_info, tuple) or isinstance(outfile_info, list):
-            outfile = outfile_info[0]
-            outfileext = outfile_info[1]
-        else:
-            outfile = None
-            outfileext = None
-    if outfileext is None:
-        outfileext = "PNG"  # Default to PNG
-    result = save_to_file(image, outfile, outfileext, imgcomment)
-    return result
+        outdest, ext_u = outfile, "PNG"
+
+    if ext_u is None:
+        ext_u = "PNG"
+
+    return save_to_file(image, outdest, ext_u, imgcomment)

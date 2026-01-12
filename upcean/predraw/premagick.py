@@ -14,216 +14,264 @@
     $FileInfo: premagick.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
-from upcean.downloader import upload_file_to_internet_file
-import PythonMagick
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import re
-from io import BytesIO
-import upcean.fonts
 
-# Compatibility for Python 2 and 3
+from upcean.downloader import upload_file_to_internet_file
+import upcean.fonts
+import PythonMagick
+
+# -------------------------
+# Py2 / Py3 compatibility
+# -------------------------
 try:
-    basestring
-except NameError:
+    basestring  # Py2
+except NameError:  # Py3
     basestring = str
 
 try:
-    file
-except NameError:
-    from io import IOBase
-    file = IOBase
+    file  # Py2
+except NameError:  # Py3
+    from io import IOBase as file  # alias
+
 from io import IOBase
 
 try:
-    from io import StringIO, BytesIO
-except ImportError:
+    from io import BytesIO
+except ImportError:  # old Py2
     try:
-        from cStringIO import StringIO
         from cStringIO import StringIO as BytesIO
     except ImportError:
-        from StringIO import StringIO
         from StringIO import StringIO as BytesIO
 
-# Font paths for different font types
+# -------------------------
+# Font paths
+# -------------------------
 fontpathocra = upcean.fonts.fontpathocra
 fontpathocrb = upcean.fonts.fontpathocrb
 
-# Common file extensions supported by PythonMagick
+# -------------------------
+# Supported extensions / regex
+# -------------------------
 PYTHONMAGICK_SUPPORTED_EXTENSIONS = {
     'PNG': 'PNG', 'JPG': 'JPEG', 'JPEG': 'JPEG', 'GIF': 'GIF', 'WEBP': 'WEBP',
     'BMP': 'BMP', 'ICO': 'ICO', 'TIFF': 'TIFF', 'HEIC': 'HEIC', 'XPM': 'XPM',
     'XBM': 'XBM', 'PBM': 'PBM', 'PGM': 'PGM'
 }
 
+_RE_URL = re.compile(r"^(ftp|ftps|sftp)://", re.IGNORECASE)
+_RE_NAME_COLON_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
+
+
+# -------------------------
+# Helpers
+# -------------------------
+def _to_magick_color(rgb):
+    """
+    Convert (R,G,B) where components are 0..255 into PythonMagick.Color using 16-bit scaling.
+    ImageMagick uses QuantumRange (often 16-bit); 255 -> 65535 by *257.
+    """
+    r, g, b = rgb
+    return PythonMagick.Color(int(r) * 257, int(g) * 257, int(b) * 257)
+
+
+def _normalize_ext(ext):
+    """Normalize an extension string to a supported magick format, default PNG."""
+    if not ext:
+        return "PNG"
+    ext_u = ext.strip().upper()
+    if ext_u.startswith("."):
+        ext_u = ext_u[1:]
+    # map JPG -> JPEG etc (values are canonical format names)
+    return PYTHONMAGICK_SUPPORTED_EXTENSIONS.get(ext_u, "PNG")
+
+
+# -------------------------
+# Public API
+# -------------------------
 def snapCoords(ctx, x, y):
+    # ctx unused; kept for signature compatibility
     return (round(x) + 0.5, round(y) + 0.5)
 
+
 def drawColorRectangle(image, x1, y1, x2, y2, color):
-    """Draws a filled rectangle on the image."""
-    r, g, b = [int(c * 257) for c in color]
-    draw_color = PythonMagick.Color(r, g, b)
+    """Draw a filled rectangle on the image. `color` is (R,G,B) in 0..255."""
+    draw_color = _to_magick_color(color)
     image.fillColor(draw_color)
-    image.strokeColor("none")  # No border
-    drawable = PythonMagick.DrawableRectangle(x1, y1, x2, y2)
-    image.draw(drawable)
+    image.strokeColor("none")  # no border
+    image.draw(PythonMagick.DrawableRectangle(x1, y1, x2, y2))
     return True
+
 
 def drawColorLine(image, x1, y1, x2, y2, width, color):
-    """Draws a line on the image."""
-    r, g, b = [int(c * 257) for c in color]
-    stroke_color = PythonMagick.Color(r, g, b)
+    """Draw a line on the image. `color` is (R,G,B) in 0..255."""
+    try:
+        width = int(width)
+    except Exception:
+        width = 1
+    if width < 1:
+        width = 1
+
+    stroke_color = _to_magick_color(color)
     image.strokeColor(stroke_color)
     image.strokeWidth(width)
-    drawable = PythonMagick.DrawableLine(x1, y1, x2, y2)
-    image.draw(drawable)
+    image.draw(PythonMagick.DrawableLine(x1, y1, x2, y2))
     return True
 
+
 def drawColorText(image, size, x, y, text, color, ftype="ocrb"):
-    # If color is a tuple of RGB values in the range 0-255
+    """
+    Draw colored text using OCR-A or OCR-B font.
+    Behavior preserved:
+    - If `color` is a 3-tuple, treat as RGB 0..255.
+    - Otherwise pass through as a string to PythonMagick.Color (names/hex).
+    - No stroke/outline.
+    """
+    text = str(text)
+
     if isinstance(color, tuple) and len(color) == 3:
-        # Scale the color components to 0-65535 (assuming 16-bit QuantumRange)
-        r, g, b = [int(c * 257) for c in color]
-        fill_color = PythonMagick.Color(r, g, b)
+        fill_color = _to_magick_color(color)
     else:
-        fill_color = PythonMagick.Color(color)  # For color names or hex strings
+        fill_color = PythonMagick.Color(color)
 
-    if ftype == "ocrb":
-        font_path = fontpathocrb
-    else:
-        font_path = fontpathocra
+    font_path = fontpathocrb if ftype == "ocrb" else fontpathocra
 
-    # Set the fill color, stroke color, and stroke width
     image.fillColor(fill_color)
-    image.strokeColor('none')  # Disable stroke color (outline)
-    image.strokeWidth(0)       # Set stroke width to zero
+    image.strokeColor("none")
+    image.strokeWidth(0)
 
     image.fontPointsize(size)
     image.font(font_path)
 
-    draw = PythonMagick.DrawableText(x, y, text)
-    image.draw(draw)
+    image.draw(PythonMagick.DrawableText(x, y, text))
     return True
 
 
 def drawColorRectangleAlt(image, x1, y1, x2, y2, color):
-    """Draws a rectangle outline on the image."""
-    r, g, b = [int(c * 257) for c in color]
-    stroke_color = PythonMagick.Color(r, g, b)
-    image.fillColor("none")  # No fill
+    """Draw a rectangle outline (no fill). `color` is (R,G,B) in 0..255."""
+    stroke_color = _to_magick_color(color)
+    image.fillColor("none")
     image.strokeColor(stroke_color)
-    drawable = PythonMagick.DrawableRectangle(x1, y1, x2, y2)
-    image.draw(drawable)
+    image.draw(PythonMagick.DrawableRectangle(x1, y1, x2, y2))
     return True
 
+
 def new_image_surface(sizex, sizey, bgcolor):
-    """Creates a new image surface with the given dimensions and background color."""
-    r, g, b = [int(c * 257) for c in bgcolor]
-    background_color = PythonMagick.Color(r, g, b)
-    geometry = PythonMagick.Geometry(sizex, sizey)
-    upc_img = PythonMagick.Image(geometry, background_color)
-    upc_img.depth(24)
-    drawColorRectangle(upc_img, 0, 0, sizex, sizey, bgcolor)
-    return [upc_img, None]
+    """Create a new image with background color. Returns [image, None] (same as original)."""
+    background_color = _to_magick_color(bgcolor)
+    geometry = PythonMagick.Geometry(int(sizex), int(sizey))
+    img = PythonMagick.Image(geometry, background_color)
+    img.depth(24)
+    # keep the explicit fill call as in original
+    drawColorRectangle(img, 0, 0, sizex, sizey, bgcolor)
+    return [img, None]
+
 
 def get_save_filename(outfile):
     """
-    Processes the `outfile` parameter to determine a suitable filename and its corresponding
-    file extension for saving files. Returns a tuple (filename, EXTENSION),
-    the original `outfile` if it's of type None, bool, or a file object, or
-    False for unsupported input types.
+    Normalize outfile spec to (destination, EXT).
+    Same behavior as original:
+    - None/bool passthrough
+    - file-like or "-" -> (outfile, "PNG")
+    - string -> supports "name.ext" and "name:EXT" and defaults to PNG if unsupported
+    - tuple/list (filename, ext) -> defaults to PNG if unsupported
+    - invalid -> False
     """
-    # Handle None or boolean types directly
     if outfile is None or isinstance(outfile, bool):
         return outfile
-    # Handle file objects directly
-    if isinstance(outfile, file) or isinstance(outfile, IOBase) or outfile == "-":
-        return (outfile, "PNG")
-    # Handle string types
-    if isinstance(outfile, basestring):
-        outfile = outfile.strip()
-        if outfile in ["-", ""]:
-            return (outfile, "PNG")
-        # Extract extension using os.path.splitext
-        base, ext = os.path.splitext(outfile)
-        if ext:
-            ext = ext[1:].upper()  # Remove the dot and convert to uppercase
-        else:
-            # Check for custom format 'name:EXT'
-            custom_match = re.match("^(?P<name>.+):(?P<ext>[A-Za-z]+)$", outfile)
-            if custom_match:
-                outfile = custom_match.group('name')
-                ext = custom_match.group('ext').upper()
-            else:
-                ext = None
 
-        # Default to "PNG" if no valid extension was found or if unsupported
-        if not ext or ext not in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
-            ext = "PNG"
-        return (outfile, ext)
-    # Handle tuple or list types
-    if isinstance(outfile, (tuple, list)) and len(outfile) == 2:
+    if outfile == "-" or isinstance(outfile, (file, IOBase)):
+        return (outfile, "PNG")
+
+    if isinstance(outfile, basestring):
+        out = outfile.strip()
+        if out in ("", "-"):
+            return (out, "PNG")
+
+        base, ext = os.path.splitext(out)
+        if ext:
+            ext_norm = _normalize_ext(ext)
+            return (out, ext_norm)
+
+        m = _RE_NAME_COLON_EXT.match(out)
+        if m:
+            name = m.group("name")
+            ext_norm = _normalize_ext(m.group("ext"))
+            return (name, ext_norm)
+
+        return (out, "PNG")
+
+    if isinstance(outfile, (tuple, list)):
+        if len(outfile) != 2:
+            return False
         filename, ext = outfile
-        # Allow file objects or strings as the first element
-        if isinstance(filename, file) or filename == "-":
-            pass  # file object is valid as-is
+
+        if isinstance(filename, (file, IOBase)) or filename == "-":
+            fn = filename
         elif isinstance(filename, basestring):
-            filename = filename.strip()
+            fn = filename.strip()
         else:
-            return False  # Invalid first element type
-        # Ensure the extension is a valid string
+            return False
+
         if not isinstance(ext, basestring):
             return False
 
-        ext = ext.strip().upper()
-        if ext not in PYTHONMAGICK_SUPPORTED_EXTENSIONS:
-            ext = "PNG"  # Default to PNG if unsupported
-        return (filename, ext)
-    # Unsupported type
+        return (fn, _normalize_ext(ext))
+
     return False
+
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
-    Saves the given image to a file with the specified format.
-
-    Parameters:
-        inimage (list): List containing the main image and pre-image (if any).
-        outfile (str or file): Output file path or file-like object.
-        outfileext (str): The image format (e.g., 'PNG', 'JPEG').
-        imgcomment (str): Comment or metadata to embed in the image.
+    Save image with comment and format.
+    Keeps:
+    - ftp/ftps/sftp upload via BytesIO buffer
+    - outfile == "-" returns bytes
+    - file-like objects: write via Blob
     """
-    upc_img = inimage[0]  # Extract the main image (PythonMagick.Image)
-    upc_preimg = inimage[1]  # This may be None or additional image data
+    img = inimage[0]
+    outfmt = _normalize_ext(outfileext)
 
-    # Set the comment for the image
-    upc_img.comment(imgcomment)
-    upc_img.magick(outfileext.upper())
+    # set metadata/format
+    img.comment(imgcomment)
+    img.magick(outfmt)
 
-    # Handle output destinations
     uploadfile = None
     outfiletovar = False
-    if re.match("^(ftp|ftps|sftp):\\/\\/", str(outfile)):
+
+    if outfile is not None and _RE_URL.search(str(outfile)):
         uploadfile = outfile
         outfile = BytesIO()
     elif outfile == "-":
         outfiletovar = True
         outfile = BytesIO()
 
-    # Handle output destinations
-    if isinstance(outfile, file) or isinstance(outfile, IOBase):
+    # Write to destination
+    if isinstance(outfile, (file, IOBase)):
         blob = PythonMagick.Blob()
-        upc_img.write(blob)
-        data = blob.data
-        outfile.write(data)  # Save to a file-like object
+        img.write(blob)
+        # PythonMagick.Blob().data is bytes-like
+        outfile.write(blob.data)
     else:
-        upc_img.write(outfile)  # Save to a file path
+        # outfile is path OR BytesIO; PythonMagick can write to a filename,
+        # and for in-memory we handle via blob below.
+        if isinstance(outfile, BytesIO):
+            blob = PythonMagick.Blob()
+            img.write(blob)
+            outfile.write(blob.data)
+        else:
+            img.write(outfile)
 
-    # Handle FTP uploads or variable output
-    if uploadfile:
+    # Upload / return bytes
+    if uploadfile is not None:
         outfile.seek(0)
         upload_file_to_internet_file(outfile, uploadfile)
         outfile.close()
-    elif outfiletovar:
+        return True
+
+    if outfiletovar:
         outfile.seek(0)
         outbyte = outfile.read()
         outfile.close()
@@ -231,11 +279,15 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
 
     return True
 
+
 def save_to_filename(imgout, outfile, imgcomment="barcode"):
-    """Saves the image to a filename."""
+    """
+    Wrapper consistent with your original:
+    - If outfile parses to (dest, ext): save.
+    - Else: return [imgout, "pythonmagick"].
+    """
     oldoutfile = get_save_filename(outfile)
-    if isinstance(oldoutfile, tuple):
-        outfile, outfileext = oldoutfile
-    else:
-        return [imgout, "pythonmagick"]
-    return save_to_file(imgout, outfile, outfileext, imgcomment)
+    if isinstance(oldoutfile, (tuple, list)):
+        outdest, outfmt = oldoutfile
+        return save_to_file(imgout, outdest, outfmt, imgcomment)
+    return [imgout, "pythonmagick"]
