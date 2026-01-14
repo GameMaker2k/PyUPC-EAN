@@ -354,21 +354,164 @@ def convert_hex_code128_to_ascii_code128(upc, reverse=False):
         barcodeout = barcodeout + hextoascii.get(upcpart, '')
     return barcodeout
 
-# Build the mapping dictionaries
-char_to_code_set_a = {}
-for i in range(0, 96):
-    char = chr(i)
-    char_to_code_set_a[char] = i
+# ----------------------------
+# Build mapping dictionaries
+# ----------------------------
+char_to_code_set_a = {chr(i): i for i in range(0, 96)}           # ASCII 0..95 -> 0..95
+char_to_code_set_b = {chr(i): i - 32 for i in range(32, 128)}    # ASCII 32..127 -> 0..95
+pair_to_code_set_c = {'%02d' % i: i for i in range(0, 100)}      # "00".."99" -> 0..99
 
-char_to_code_set_b = {}
-for i in range(32, 128):
-    char = chr(i)
-    char_to_code_set_b[char] = i - 32
+# Code128 special codes
+START_A, START_B, START_C = 103, 104, 105
+CODE_A,  CODE_B,  CODE_C  = 101, 100, 99
+SHIFT = 98
 
-pair_to_code_set_c = {}
-for i in range(0, 100):
-    pair = '{:02d}'.format(i)
-    pair_to_code_set_c[pair] = i
+# Python 2/3 string type compat
+try:
+    string_types = (basestring,)  # noqa: F821  (Python 2)
+except NameError:
+    string_types = (str,)         # Python 3
+
+
+def _to_text(x):
+    """Return a 'text' string in both Py2/Py3 without being too clever about encoding."""
+    if isinstance(x, string_types):
+        return x
+    return str(x)
+
+
+def _hex_join(values):
+    return ''.join('{:02x}'.format(v) for v in values)
+
+
+def convert_text_to_hex_code128_optimized(text, reverse=False, return_values=False):
+    """
+    Optimal Code128 "data" encoder.
+    - Emits Start + (Switch/Shift/Data) code values
+    - Returns as concatenated 2-digit hex bytes (like your current function)
+    - Does NOT add checksum or stop (wrapper can do that)
+
+    If return_values=True, returns (hex_string, values_list).
+    """
+    s = _to_text(text)
+    if reverse:
+        s = s[::-1]
+
+    n = len(s)
+
+    # State names
+    A, B, C = 'A', 'B', 'C'
+    states = (A, B, C)
+
+    # Helper: encode a single char in A/B if possible
+    def encode_char(state, ch):
+        if state == A:
+            return char_to_code_set_a.get(ch)
+        if state == B:
+            return char_to_code_set_b.get(ch)
+        return None  # C doesn't encode single chars
+
+    # Helper: encode two digits in C if possible
+    def encode_pair_in_c(i):
+        if i + 1 >= n:
+            return None
+        ch1, ch2 = s[i], s[i + 1]
+        if ch1.isdigit() and ch2.isdigit():
+            return pair_to_code_set_c.get(ch1 + ch2)
+        return None
+
+    # Dijkstra over (pos, code_set) with edge cost = number of emitted symbols.
+    # We minimize emitted symbol count, which is what "optimized hex" means.
+    import heapq
+
+    INF = 10**12
+    dist = {}
+    prev = {}  # (pos,state) -> (prev_pos, prev_state, emitted_values_list)
+
+    # Initialize: choose best start set at pos 0
+    heap = []
+    for st, start_code in ((A, START_A), (B, START_B), (C, START_C)):
+        dist[(0, st)] = 1
+        prev[(0, st)] = (None, None, [start_code])
+        heapq.heappush(heap, (1, 0, st))
+
+    def relax(cost, pos, st, new_pos, new_st, emitted):
+        nd = cost + len(emitted)
+        key = (new_pos, new_st)
+        if nd < dist.get(key, INF):
+            dist[key] = nd
+            prev[key] = (pos, st, emitted)
+            heapq.heappush(heap, (nd, new_pos, new_st))
+
+    while heap:
+        cost, pos, st = heapq.heappop(heap)
+        if cost != dist.get((pos, st), INF):
+            continue
+        if pos == n:
+            # reached end in some state with minimal cost for that state
+            continue
+
+        ch = s[pos]
+
+        # 1) Emit data in current set if possible
+        if st in (A, B):
+            code_val = encode_char(st, ch)
+            if code_val is not None:
+                relax(cost, pos, st, pos + 1, st, [code_val])
+
+            # 2) SHIFT for one-off opposite-set char (stays in same set)
+            if st == A:
+                bval = char_to_code_set_b.get(ch)
+                if bval is not None:
+                    relax(cost, pos, st, pos + 1, A, [SHIFT, bval])
+            else:  # st == B
+                aval = char_to_code_set_a.get(ch)
+                if aval is not None:
+                    relax(cost, pos, st, pos + 1, B, [SHIFT, aval])
+
+        else:  # st == C
+            pair_val = encode_pair_in_c(pos)
+            if pair_val is not None:
+                relax(cost, pos, st, pos + 2, C, [pair_val])
+
+        # 3) Switch code sets (A<->B<->C)
+        #    (We allow switching even if no immediate encoding happens; DP will decide.)
+        if st != A:
+            relax(cost, pos, st, pos, A, [CODE_A])
+        if st != B:
+            relax(cost, pos, st, pos, B, [CODE_B])
+        if st != C:
+            relax(cost, pos, st, pos, C, [CODE_C])
+
+    # Pick best ending state at pos n
+    best_key = None
+    best_cost = INF
+    for st in states:
+        key = (n, st)
+        cst = dist.get(key, INF)
+        if cst < best_cost:
+            best_cost = cst
+            best_key = key
+
+    if best_key is None:
+        raise ValueError("Cannot encode: input contains characters not supported by Code128 A/B, or invalid sequence.")
+
+    # Reconstruct emitted values
+    values = []
+    cur_pos, cur_st = best_key
+    while True:
+        ppos, pst, emitted = prev[(cur_pos, cur_st)]
+        values.extend(reversed(emitted))  # we reverse later; easiest to build backwards
+        if ppos is None:
+            break
+        cur_pos, cur_st = ppos, pst
+    values.reverse()
+
+    hex_str = _hex_join(values)
+    if return_values:
+        return hex_str, values
+    return hex_str
+
 
 def can_use_code_b(text):
     for c in text:
@@ -1190,6 +1333,18 @@ def convert_text_to_hex_code128_with_checksum(upc, hidecs=True, reverse=False, s
     if(reverse):
         stopcode = "6b"
     code128out = convert_text_to_hex_code128(upc, reverse)
+    if(not code128out):
+        return False
+    hidecschar = ""
+    if(hidecs):
+        hidecschar = "6d"
+    return code128out+hidecschar+upcean.validate.get_code128_checksum(code128out)+stopcode
+
+
+def convert_text_to_hex_code128_optimized_with_checksum(upc, hidecs=True, reverse=False, stopcode="6c"):
+    if(reverse):
+        stopcode = "6b"
+    code128out = convert_text_to_hex_code128_optimized(upc, reverse)
     if(not code128out):
         return False
     hidecschar = ""
