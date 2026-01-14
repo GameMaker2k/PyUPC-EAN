@@ -357,9 +357,21 @@ def convert_hex_code128_to_ascii_code128(upc, reverse=False):
 # ----------------------------
 # Build mapping dictionaries
 # ----------------------------
-char_to_code_set_a = {chr(i): i for i in range(0, 96)}           # ASCII 0..95 -> 0..95
-char_to_code_set_b = {chr(i): i - 32 for i in range(32, 128)}    # ASCII 32..127 -> 0..95
-pair_to_code_set_c = {'%02d' % i: i for i in range(0, 100)}      # "00".."99" -> 0..99
+# Code Set A mapping:
+#  - ASCII 0..31   -> 64..95  (control chars)
+#  - ASCII 32..95  -> 0..63   (printables)
+#  - ASCII 127     -> 95      (DEL)  (optional)
+char_to_code_set_a = {}
+for i in range(0, 32):
+    char_to_code_set_a[chr(i)] = i + 64
+for i in range(32, 96):
+    char_to_code_set_a[chr(i)] = i - 32
+# Optional DEL support
+char_to_code_set_a[chr(127)] = 95
+
+# Code Set B mapping is correct:
+char_to_code_set_b = {chr(i): i - 32 for i in range(32, 128)}
+pair_to_code_set_c = {'%02d' % i: i for i in range(0, 100)}
 
 # Code128 special codes
 START_A, START_B, START_C = 103, 104, 105
