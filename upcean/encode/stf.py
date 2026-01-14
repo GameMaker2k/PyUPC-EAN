@@ -290,7 +290,7 @@ def draw_stf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolo
     if(len(upc_matches) <= 0):
         return False
     upc_img, upc_preimg = upcean.predraw.new_image_surface(((46 * barwidth[0]) + upc_size_add) * int(resize), (barheightadd + (9 * barwidth[1])) * int(resize), barcolor[2], imageoutlib)
-    imgout = encode_stf_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor)
+    imgout = encode_stf_barcode([upc_img, upc_preimg], upc, resize, (0, 0), barheight, barwidth, barcolor, hideinfo, imageoutlib)
     return [upc_img, upc_preimg, imageoutlib]
 
 def create_stf_barcode(upc, outfile="./stf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
