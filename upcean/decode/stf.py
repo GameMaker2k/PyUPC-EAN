@@ -30,6 +30,7 @@ except Exception:
         from StringIO import StringIO as BytesIO
 
 
+# 14-module digit patterns (threewidebar=True)
 _STF_DIGITS = {
     "10101110111010": "0",
     "11101010101110": "1",
@@ -43,13 +44,18 @@ _STF_DIGITS = {
     "10111010111010": "9",
 }
 
+# Your encoder's end guard begins with these 8 modules:
+_END_PREFIX = "11010110"
+
+_START_GUARD_LEN = 21
+_START_FALLBACK_OFFSET = 8   # your prior heuristic returned x + 8 modules
+_DIGIT_LEN = 14
+
 
 def _clamp_resize(resize):
     try:
         r = float(resize)
-        if r < 1.0:
-            return 1.0
-        return r
+        return 1.0 if r < 1.0 else r
     except Exception:
         return 1.0
 
@@ -127,8 +133,13 @@ def decode_stf_barcode(
     cairosupport=False,
     color_tolerance=0,
     scanlines=1,
-    digits_count=None,   # None => auto-detect
-    max_digits=64,       # safety cap for auto-detect
+    digits_count=None,     # if set, decode exactly N digits (like your working one)
+    max_digits=128,        # cap for safety
+    enforce_even=False,    # set True if you want to mirror your encoder rule
+    min_digits=0,          # set 6 if you want to mirror your encoder rule
+    use_end_guard=True,    # True = decode between start and end; False = old "until fail"
+    end_search_pad_digits=2,   # skip first few digits before looking for end prefix
+    quiet_zero_modules=0,      # optional: require some zeros after end prefix (0 = don't require)
 ):
     r = _clamp_resize(resize)
     module = float(barwidth[0]) * r
@@ -178,31 +189,68 @@ def decode_stf_barcode(
     if step < 1:
         step = 1
 
-    default_startx = int(round(21 * module + shiftxy[0]))
+    # Same default as your working version
+    default_startx = int(round(_START_GUARD_LEN * module + shiftxy[0]))
+
+    def read_bits(x, y, n):
+        bits = []
+        i = 0
+        while i < n:
+            b = bit_at(x + i * step, y)
+            if b is None:
+                return None
+            bits.append(b)
+            i += 1
+        return "".join(bits)
 
     def find_startx(y):
+        """
+        Keep your original cheap heuristic (fast, worked for your generated images):
+          find a black pixel then 7 modules later white, return x + 8 modules
+        """
         x = max(0, int(shiftxy[0]))
         limit = w - int(round(8 * module)) - 1
         while x < limit:
             if bit_at(x, y) == "1":
                 x7 = x + 7 * step
                 if bit_at(x7, y) == "0":
-                    return x + int(round(8 * module))
+                    return x + int(round(_START_FALLBACK_OFFSET * module))
             x += 1
         return None
 
     def decode_digit_at(x, y):
-        bits = []
-        j = 0
-        while j < 14:
-            b = bit_at(x, y)
-            if b is None:
-                return None
-            bits.append(b)
-            x += step
-            j += 1
-        pat = "".join(bits)
+        pat = read_bits(x, y, _DIGIT_LEN)
+        if pat is None:
+            return None
         return _STF_DIGITS.get(pat)
+
+    def find_end_by_alignment(y, payload_x):
+        """
+        Robust end finder:
+        - search for end prefix on module grid
+        - choose the RIGHTMOST prefix whose distance from payload_x is a multiple of 14 modules
+        - optionally require some zeros after the prefix if requested
+        This survives partial clipping of the far-right quiet zone / tail.
+        """
+        best = None
+        # don't let an early accidental prefix end the decode
+        x = payload_x + int(end_search_pad_digits) * _DIGIT_LEN * step
+        if x < payload_x:
+            x = payload_x
+
+        max_x = w - (8 * step) - 1
+        while x <= max_x:
+            if read_bits(x, y, 8) == _END_PREFIX:
+                modules = int(round((x - payload_x) / float(step)))
+                if modules > 0 and (modules % _DIGIT_LEN) == 0:
+                    if quiet_zero_modules and quiet_zero_modules > 0:
+                        tail = read_bits(x + 8 * step, y, int(quiet_zero_modules))
+                        if tail != ("0" * int(quiet_zero_modules)):
+                            x += step
+                            continue
+                    best = x  # rightmost aligned candidate wins
+            x += step
+        return best
 
     def decode_line(y):
         sx = default_startx
@@ -212,7 +260,7 @@ def decode_stf_barcode(
                 return None
             sx = got
 
-        # If fixed length requested, decode exactly that many digits
+        # Fixed length mode (exactly like your working version)
         if digits_count is not None:
             try:
                 n = int(digits_count)
@@ -221,7 +269,7 @@ def decode_stf_barcode(
             if n <= 0:
                 return None
             x = sx
-            endx = x + int(round(n * 14 * module))
+            endx = x + int(round(n * _DIGIT_LEN * module))
             if endx > w:
                 return None
             out = []
@@ -231,30 +279,59 @@ def decode_stf_barcode(
                 if d is None:
                     return None
                 out.append(d)
-                x += 14 * step
+                x += _DIGIT_LEN * step
                 i += 1
             return ("".join(out), sx, endx)
 
-        # Auto-detect: keep decoding 14-module chunks until we fail
+        # Start/end-guard mode
+        if use_end_guard:
+            end_prefix_x = find_end_by_alignment(y, sx)
+            if end_prefix_x is None:
+                return None
+
+            payload_modules = int(round((end_prefix_x - sx) / float(step)))
+            if payload_modules <= 0 or (payload_modules % _DIGIT_LEN) != 0:
+                return None
+
+            n_digits = payload_modules // _DIGIT_LEN
+            if n_digits > int(max_digits):
+                return None
+            if enforce_even and (n_digits % 2) != 0:
+                return None
+            if n_digits < int(min_digits):
+                return None
+
+            out = []
+            x = sx
+            i = 0
+            while i < n_digits:
+                d = decode_digit_at(x, y)
+                if d is None:
+                    return None
+                out.append(d)
+                x += _DIGIT_LEN * step
+                i += 1
+
+            # endx at start of end prefix (like other decoders: payload bounds)
+            return ("".join(out), sx, end_prefix_x)
+
+        # Fallback: old behavior (decode until fail)
         out = []
         x = sx
         nread = 0
         while nread < int(max_digits):
-            # ensure there is room to read another 14-module digit
-            if x + (14 * step) > w:
+            if x + (_DIGIT_LEN * step) > w:
                 break
             d = decode_digit_at(x, y)
             if d is None:
                 break
             out.append(d)
-            x += 14 * step
+            x += _DIGIT_LEN * step
             nread += 1
 
         if not out:
             return None
-
-        endx = x
-        return ("".join(out), sx, endx)
+        return ("".join(out), sx, x)
 
     # vote across scanlines
     codes = []
@@ -294,7 +371,7 @@ def decode_stf_barcode(
     if meta is None:
         return False
     sx, ex, y0 = meta
-    prestartx = int(round(sx - 8 * module))
+    prestartx = int(round(sx - _START_FALLBACK_OFFSET * module))
     if prestartx < 0:
         prestartx = 0
 
@@ -314,13 +391,14 @@ def decode_stf_barcode(
             top, round(top / 2.0), round(bottom * 2.0), bottom, top, len(chosen))
 
 
-# wrappers (keep your API style)
 def get_stf_barcode_location(*args, **kwargs):
     kwargs["locatebarcode"] = True
     return decode_stf_barcode(*args, **kwargs)
 
+
 def decode_code25_barcode(*args, **kwargs):
     return decode_stf_barcode(*args, **kwargs)
+
 
 def get_code25_barcode_location(*args, **kwargs):
     kwargs["locatebarcode"] = True
