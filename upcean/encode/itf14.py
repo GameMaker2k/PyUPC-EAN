@@ -109,17 +109,17 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
     if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
-        vertical_text_fix = 0
+        vertical_text_fix = 10
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and cairosvgsupport and imageoutlib == "drawsvg") or (qahirahsupport and imageoutlib == "qahirah")):
-        vertical_text_fix = (9 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (13 * (int(resize) * barwidth[1]))
     elif((wandsupport and imageoutlib == "wand") or (magicksupport and imageoutlib == "magick") or (pgmagicksupport and imageoutlib == "pgmagick")):
-        vertical_text_fix = (10 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (14 * (int(resize) * barwidth[1]))
     elif((svgwritesupport and not cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and not cairosvgsupport and imageoutlib == "drawsvg")):
-        vertical_text_fix = (8 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (12 * (int(resize) * barwidth[1]))
     elif(tkintersupport and imageoutlib == "tkinter"):
-        vertical_text_fix = (5 * (int(resize) * barwidth[1]))
+        vertical_text_fix = (9 * (int(resize) * barwidth[1]))
     else:
-        vertical_text_fix = 0
+        vertical_text_fix = 10
     vertical_text_fix += shiftxy[1] * int(resize)
     upc_matches = re.findall("([0-9]{2})", upc)
     if(threewidebar):
@@ -283,13 +283,13 @@ def encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 
         LineStart += barwidth[0] * int(resize)
         BarNum += 1
     upc_array['barsize'].append(barsizeloop)
-    RectAltLoop = 4 * resize
+    RectAltLoop = 4 * int(resize)
     RectAltLoopSpin = 1
     while(RectAltLoopSpin <= RectAltLoop):
-        RectAltLoopSpinAlt = RectAltLoopSpin + 10
+        RectAltLoopSpinAlt = RectAltLoopSpin + (10 * int(resize))
         RectAltLoopSpinDown = RectAltLoopSpin - 1
         drawColorRectangleAlt(upc_img, RectAltLoopSpinDown + shiftxy[0], RectAltLoopSpinDown + shiftxy[1], ((
-        ((44 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize)) - RectAltLoopSpin, ((barheight[0] + ((15 + shiftxy[1]) * barwidth[0])) - RectAltLoopSpinAlt), barcolor[0], imageoutlib)
+        ((44 + shiftxy[0]) * barwidth[0]) + upc_size_add) * int(resize)) - RectAltLoopSpin, ((((barheight[0] + ((15 + shiftxy[1]) * barwidth[1])) * int(resize)) - RectAltLoopSpinAlt) - (1 + resize)), barcolor[0], imageoutlib)
         RectAltLoopSpin += 1
     if(not hidetext):
         if((svgwritesupport and imageoutlib == "svgwrite") or (drawsvgsupport and imageoutlib == "drawsvg")):
