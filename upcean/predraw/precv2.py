@@ -144,39 +144,61 @@ def load_freetype():
 
 def drawColorText(img, size, x, y, text, color, ftype="ocrb", ft2=None):
     """
-    Draws text using OpenCV's freetype module for custom fonts.
-    Behavior preserved:
-    - returns False if ft2 not provided/available
-    - chooses OCR-A/OCR-B path with fallback
-    - loads font each call (same behavior as original; safe but slower)
+    Draw text using cv2.freetype when available (OCR fonts),
+    otherwise fall back to cv2.putText.
+    Text uses antialiasing (LINE_AA) as requested.
     """
-    if ft2 is None:
-        return False
+    text = str(text)
+    x = int(x); y = int(y)
+    size = int(size)
+    if size <= 0:
+        size = 12
 
-    font_path = _pick_font_path(ftype)
-    if not font_path or not os.path.isfile(font_path):
-        return False
+    color_bgr = (int(color[2]), int(color[1]), int(color[0]))
 
-    try:
-        ft2.loadFontData(fontFileName=font_path, id=0)
-    except Exception:
-        return False
+    # --- Preferred: FreeType module (best font fidelity) ---
+    if ft2 is not None:
+        if ftype == "ocra":
+            fpath = fontpathocra if os.path.isfile(fontpathocra) else fontpathocraalt
+        elif ftype == "ocrb":
+            fpath = fontpathocrb if os.path.isfile(fontpathocrb) else fontpathocrbalt
+        else:
+            fpath = fontpathocra if os.path.isfile(fontpathocra) else fontpathocraalt
 
-    bgr = _rgb_to_bgr(color)
-    try:
-        ft2.putText(
-            img,
-            str(text),
-            (int(x), int(y)),
-            fontHeight=int(size),
-            color=bgr,
-            thickness=-1,
-            line_type=cv2.LINE_AA,
-            bottomLeftOrigin=False
-        )
-    except Exception:
-        return False
+        if fpath and os.path.isfile(fpath):
+            try:
+                # Cache the loaded font on the ft2 object (avoids reloading every call)
+                last = getattr(ft2, "_upcean_font", None)
+                if last != fpath:
+                    ft2.loadFontData(fontFileName=fpath, id=0)
+                    ft2._upcean_font = fpath
 
+                # FreeType uses baseline origin; keep same baseline behavior as other backends
+                ft2.putText(
+                    img, text, (x, y + size),
+                    fontHeight=size,
+                    color=color_bgr,
+                    thickness=-1,
+                    line_type=cv2.LINE_AA,   # <-- AA for text
+                    bottomLeftOrigin=False
+                )
+                return True
+            except Exception:
+                pass  # fall through
+
+    # --- Fallback: built-in Hershey (always available) ---
+    # Approximate pixel size -> fontScale/thickness
+    font_scale = max(0.1, size / 30.0)
+    thickness = max(1, int(round(size / 12.0)))
+
+    cv2.putText(
+        img, text, (x, y + size),
+        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+        fontScale=font_scale,
+        color=color_bgr,
+        thickness=thickness,
+        lineType=cv2.LINE_AA,      # <-- AA for text
+    )
     return True
 
 
