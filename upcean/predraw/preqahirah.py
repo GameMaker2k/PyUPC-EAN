@@ -72,6 +72,57 @@ _RE_NAME_COLON_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
 cairo_valid_extensions = set(["SVG", "PDF", "PS", "EPS", "RAW", "CAIRO", "QAHIRAH"])
 
 
+# Cache: (abspath, face_index) -> qah.FontFace (or None)
+_QAH_FONTFACE_CACHE = {}
+
+def _qah_font_face_from_file(path, face_index=0):
+    """
+    Best-effort create a Qahirah FontFace from a font file path.
+    Safe to call repeatedly: caches per absolute path.
+    Returns FontFace or None.
+    """
+    if not path:
+        return None
+
+    ap = os.path.abspath(path)
+    key = (ap, int(face_index))
+    if key in _QAH_FONTFACE_CACHE:
+        return _QAH_FONTFACE_CACHE[key]
+
+    face = None
+    try:
+        # Different qahirah versions expose different factory names.
+        if hasattr(qah.FontFace, "create_for_file"):
+            face = qah.FontFace.create_for_file(ap)  # common
+        elif hasattr(qah.FontFace, "create_for_ft_face"):
+            # requires an FT_Face; qahirah usually hides this, so rarely used here
+            face = None
+        elif hasattr(qah, "FontFace") and hasattr(qah.FontFace, "create_for_filename"):
+            face = qah.FontFace.create_for_filename(ap)
+        elif hasattr(qah, "freetype") and hasattr(qah.freetype, "FontFace"):
+            # Some builds expose freetype module
+            if hasattr(qah.freetype.FontFace, "create_for_file"):
+                face = qah.freetype.FontFace.create_for_file(ap)
+    except Exception:
+        face = None
+
+    _QAH_FONTFACE_CACHE[key] = face
+    return face
+
+
+def _pick_font_path(ftype):
+    if ftype == "ocra":
+        primary, alt = fontpathocra, fontpathocraalt
+    else:
+        primary, alt = fontpathocrb, fontpathocrbalt
+
+    if primary and os.path.isfile(primary):
+        return primary
+    if alt and os.path.isfile(alt):
+        return alt
+    return primary or alt
+
+
 # -------------------------
 # Helpers (Cairo-compatible)
 # -------------------------
@@ -186,45 +237,40 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color):
     return True
 
 
+def _select_qahirah_font_face(ctx, ftype):
+    """
+    Prefer font file face (non-system font). Fall back to toy face by family name.
+    """
+    path = _pick_font_path(ftype)
+    face = _qah_font_face_from_file(path) if path else None
+    if face is not None:
+        ctx.set_font_face(face)
+        return True
+
+    # fallback: toy family names (system fonts only)
+    family = "OCR-A" if ftype == "ocra" else "OCRB"
+    slant = qah.CAIRO.FONT_SLANT_NORMAL
+    weight = qah.CAIRO.FONT_WEIGHT_NORMAL
+    try:
+        ctx.select_font_face(family, slant, weight)
+    except Exception:
+        # older qahirah might not have select_font_face; ignore
+        pass
+    return False
+
+
 def drawText(ctx, size, x, y, text, ftype="ocrb"):
-    """
-    Text rendering aligned to Cairo backend:
-    - Prefer toy API: select_font_face(family_string, NORMAL, NORMAL)
-    - If not available, fall back to file font face
-    """
     text = str(text)
     px, py = snapCoords(x, y)
 
-    family = _select_font_family_string(ftype)
-    slant, weight = _toy_slant_weight_normal()
+    _select_qahirah_font_face(ctx, ftype)
 
-    used_toy = False
-    if hasattr(ctx, "select_font_face") and slant is not None and weight is not None:
-        try:
-            ctx.select_font_face(family, slant, weight)
-            used_toy = True
-        except Exception:
-            used_toy = False
-
-    if not used_toy:
-        # Fallback: load the font file directly (still keeps OCR-A/OCR-B intent).
-        # This is NOT toy-font behavior, but ensures the function works everywhere.
-        try:
-            font_face = qah.FontFace.create_for_file(family)
-        except OSError:
-            # last-resort: try the other path explicitly
-            if ftype == "ocra":
-                font_face = qah.FontFace.create_for_file(fontpathocraalt)
-            else:
-                font_face = qah.FontFace.create_for_file(fontpathocrbalt)
-        ctx.set_font_face(font_face)
-
-    ctx.set_font_size(size)
+    ctx.set_font_size(float(size))
     _apply_font_options(ctx)
 
     ctx.move_to(qah.Vector(px, py))
     ctx.show_text(text)
-    ctx.stroke()
+    # NOTE: no ctx.stroke() needed after show_text()
     return True
 
 

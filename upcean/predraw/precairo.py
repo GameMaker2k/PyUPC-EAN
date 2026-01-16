@@ -76,6 +76,65 @@ _RE_NAME_COLON_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
 cairo_valid_extensions = set(["SVG", "PDF", "PS", "EPS", "RAW", "CAIRO", "QAHIRAH"])
 
 
+# --- optional freetype support (runtime-detected) ---
+try:
+    import freetype  # pip install freetype-py
+except Exception:
+    freetype = None
+
+# Cache: (abspath, face_index) -> cairo.FontFace (or None if not possible)
+_FT_FONTFACE_CACHE = {}
+
+def _cairo_font_face_from_ttf(ttf_path, face_index=0):
+    """
+    Best-effort: create a cairo.FontFace from a font file without installing it.
+    Returns cairo.FontFace or None if freetype/cairo-ft bridge not available.
+    Safe to call repeatedly (cached).
+    """
+    if not ttf_path:
+        return None
+    ttf_path = os.path.abspath(ttf_path)
+    key = (ttf_path, int(face_index))
+    if key in _FT_FONTFACE_CACHE:
+        return _FT_FONTFACE_CACHE[key]
+
+    if freetype is None:
+        _FT_FONTFACE_CACHE[key] = None
+        return None
+
+    # We need cairo's FT bridge. pycairo doesn't expose it directly,
+    # but cairocffi often can via its ffi + lib.
+    try:
+        import cairocffi
+        from cairocffi import ffi, lib
+    except Exception:
+        _FT_FONTFACE_CACHE[key] = None
+        return None
+
+    # Ensure this cairocffi build has FT functions
+    if not hasattr(lib, "cairo_ft_font_face_create_for_ft_face"):
+        _FT_FONTFACE_CACHE[key] = None
+        return None
+
+    try:
+        ft_face = freetype.Face(ttf_path)
+        # Select the face index if needed (freetype-py supports it via Face(..., index))
+        # Some versions: freetype.Face(ttf_path, index=face_index)
+        # If not supported, ignore face_index.
+
+        # Create cairo FT font face
+        cairo_face_ptr = lib.cairo_ft_font_face_create_for_ft_face(
+            ffi.cast("FT_Face", ft_face._FT_Face), 0
+        )
+        # Wrap pointer into a cairocffi FontFace object
+        cairo_face = cairocffi.FontFace._from_pointer(cairo_face_ptr, incref=False)
+
+        _FT_FONTFACE_CACHE[key] = cairo_face
+        return cairo_face
+    except Exception:
+        _FT_FONTFACE_CACHE[key] = None
+        return None
+
 def _set_rgb_255(ctx, color):
     """Set cairo source RGB from (R,G,B) in 0..255."""
     ctx.set_source_rgb(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0)
@@ -157,6 +216,40 @@ def _select_toy_font(ftype):
         return cairo.ToyFontFace(alt)
 
 
+def _select_font_face(ctx, ftype):
+    """
+    Prefer a real FT font face from a font file if possible.
+    Fall back to ToyFontFace with family names if not.
+    """
+    if ftype == "ocra":
+        primary, alt = fontpathocra, fontpathocraalt
+        family_fallback = "OCR-A"
+    else:
+        primary, alt = fontpathocrb, fontpathocrbalt
+        family_fallback = "OCRB"
+
+    # pick an existing file path
+    path = primary if (primary and os.path.isfile(primary)) else alt
+
+    # Try FT font face from file
+    face = _cairo_font_face_from_ttf(path) if path else None
+    if face is not None:
+        # IMPORTANT: this face is a cairocffi FontFace; it works with cairocffi Context.
+        # If you're using pycairo Context, it may not accept it.
+        try:
+            ctx.set_font_face(face)
+            return True
+        except Exception:
+            pass
+
+    # Fall back: family-name based toy face
+    try:
+        ctx.set_font_face(cairo.ToyFontFace(family_fallback))
+    except Exception:
+        ctx.select_font_face(family_fallback)
+    return False
+
+
 def _apply_font_options(ctx):
     """Apply font options matching your original settings."""
     fo = cairo.FontOptions()
@@ -171,13 +264,12 @@ def drawText(ctx, size, x, y, text, ftype="ocrb"):
     text = str(text)
     px, py = snapCoords(x, y)
 
-    ctx.set_font_face(_select_toy_font(ftype))
+    _select_font_face(ctx, ftype)
     ctx.set_font_size(size)
     _apply_font_options(ctx)
 
     ctx.move_to(px, py)
     ctx.show_text(text)
-    ctx.stroke()
     return True
 
 
