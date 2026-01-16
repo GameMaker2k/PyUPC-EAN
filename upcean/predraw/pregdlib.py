@@ -27,7 +27,7 @@ from PIL import PngImagePlugin
 
 # Your GD-like Pillow wrapper
 # (adjust import path/module name as needed)
-import upcean.predraw.gdlib as gd
+import upcean.gdlib as gd
 
 
 # -------------------------
