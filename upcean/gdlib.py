@@ -14,28 +14,6 @@
     $FileInfo: predraw.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
-'''
-Advanced GD-like wrapper on top of Pillow (PIL fork).
-
-Goals vs your current version:
-- Keep Python 2 + 3 support.
-- Fix stdout saving (binary-safe).
-- Fix Pillow deprecations (ANTIALIAS -> Resampling.* when available).
-- Make imagefilter() robust for RGBA (invert preserves alpha).
-- Make color handling safer across modes (P/RGB/RGBA/L/1).
-- Make clipping actually apply (optional but implemented for most drawing ops).
-- Make antialias meaningful for common primitives (draw at higher scale then downsample).
-- Make font parameters respected (built-in fonts still map to a default; TTF supported).
-- Make affine matrix API consistent and less error-prone.
-
-Notes:
-- This is still an emulation layer; exact PHP-GD behavior is not always possible in Pillow.
-- Some GD features (brush/tile/style) are partially supported; you can extend further.
-
-Copyright:
-  Based on your original predraw.py structure.
-'''
-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
