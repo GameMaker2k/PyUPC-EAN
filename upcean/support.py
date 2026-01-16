@@ -106,7 +106,6 @@ DEFAULTS = {
     "enable_cv2support": True,
     "enable_skimagesupport": True,
     "enable_internal_svgwrite": False,
-    "enable_drawlibsupport": False,
 }
 
 
@@ -215,7 +214,6 @@ enable_pgmagicksupport   = _settings["enable_pgmagicksupport"]
 enable_cv2support        = _settings["enable_cv2support"]
 enable_skimagesupport    = _settings["enable_skimagesupport"]
 enable_internal_svgwrite = _settings["enable_internal_svgwrite"]
-enable_drawlibsupport    = _settings["enable_drawlibsupport"]
 
 if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "pretkinter.py")):
     enable_tkintersupport = False
@@ -237,8 +235,6 @@ if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), 
     enable_cv2support = False
 if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "preskimage.py")):
     enable_skimagesupport = False
-if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "predrawlib.py")):
-    enable_drawlibsupport = False
 
 ''' // Barcode Support List '''
 bctype_dict = {'EAN2': "ean2", 'UPC2': "upc2", 'UPCS2': "ean2", 'EAN5': "ean5", 'UPC5': "upc5", 'UPCS5': "ean5", 'UPCA': "upca", 'UPCAEan': "upcaean", 'UPCE': "upce", 'EAN13': "ean13", 'EAN8': "ean8", 'STF': "stf", 'ITF': "itf", 'ITF6': "itf6", 'ITF14': "itf14",
@@ -516,19 +512,6 @@ else:
         skimagesupport = False
         return False
 
-if(enable_drawlibsupport):
-    def check_for_drawlib():
-        drawlibsupport = True
-        try:
-            import drawlib
-            drawlibsupport = True
-        except ImportError:
-            drawlibsupport = False
-        return drawlibsupport
-else:
-    def check_for_drawlib():
-        drawlibsupport = False
-        return False
 
 def check_pil_is_pillow():
     pilsupport = False
@@ -733,9 +716,6 @@ if(cv2support):
 skimagesupport = check_for_skimage()
 if(skimagesupport):
     imagelibsupport.append("skimage")
-drawlibsupport = check_for_drawlib()
-if(drawlibsupport):
-    imagelibsupport.append("drawlib")
 
 def list_available_image_backends():
     """
@@ -764,7 +744,5 @@ if(skimagesupport and defaultdraw is None):
     defaultdraw = "skimage"
 if(svgwritesupport and defaultdraw is None):
     defaultdraw = "svgwrite"
-if(drawlibsupport and defaultdraw is None):
-    defaultdraw = "drawlib"
 if(defaultdraw is None):
     defaultdraw = "svgwrite"
