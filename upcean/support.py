@@ -20,6 +20,13 @@ import upcean.functions
 import platform
 import inspect
 try:
+    import ujson as json
+except ImportError:
+    try:
+        import simplejson as json
+    except ImportError:
+        import json
+try:
     import configparser
 except ImportError:
     try:
@@ -38,55 +45,177 @@ def get_importing_script_path():
             return os.path.abspath(filename)
     return None
 
+
+# --------------------
+# Config selection flags
+# --------------------
 __use_env_file__ = True
 __use_ini_file__ = True
 __use_ini_name__ = "upcean.ini"
-if('PYUPCEAN_CONFIG_FILE' in os.environ and os.path.exists(os.environ['PYUPCEAN_CONFIG_FILE']) and __use_env_file__):
+__use_json_file__ = False
+__use_json_name__ = "upcean.json"
+
+# If both enabled, prefer INI (your existing behavior)
+if __use_ini_file__ and __use_json_file__:
+    __use_json_file__ = False
+
+
+# --------------------
+# Find config file path
+# --------------------
+if ('PYUPCEAN_CONFIG_FILE' in os.environ and
+        os.path.exists(os.environ['PYUPCEAN_CONFIG_FILE']) and
+        __use_env_file__):
     scriptconf = os.environ['PYUPCEAN_CONFIG_FILE']
 else:
     prescriptpath = get_importing_script_path()
-    if(prescriptpath is not None):
-        scriptconf = os.path.join(os.path.dirname(prescriptpath), __use_ini_name__)
+    if prescriptpath is not None:
+        if __use_ini_file__ and not __use_json_file__:
+            scriptconf = os.path.join(os.path.dirname(prescriptpath), __use_ini_name__)
+        elif __use_json_file__ and not __use_ini_file__:
+            scriptconf = os.path.join(os.path.dirname(prescriptpath), __use_json_name__)
+        else:
+            scriptconf = ""
+            prescriptpath = None
     else:
         scriptconf = ""
+
 if os.path.exists(scriptconf):
     __config_file__ = scriptconf
+elif __use_ini_file__ and not __use_json_file__:
+    __config_file__ = os.path.join(os.path.dirname(os.path.realpath(__file__)), __use_ini_name__)
+elif (not __use_ini_file__) and __use_json_file__:
+    __config_file__ = os.path.join(os.path.dirname(os.path.realpath(__file__)), __use_json_name__)
 else:
     __config_file__ = os.path.join(os.path.dirname(os.path.realpath(__file__)), __use_ini_name__)
 
-if os.path.exists(__config_file__) and __use_ini_file__:
-    # Create a ConfigParser object
-    config = configparser.ConfigParser()
-    # Read the configuration file
-    config.read(__config_file__)
-    # Accessing values from the config file
-    enable_tkintersupport = config.getboolean('main', 'enable_tkintersupport')
-    enable_pilsupport = config.getboolean('main', 'enable_pilsupport')
-    enable_drawsvgsupport = config.getboolean('main', 'enable_drawsvgsupport')
-    enable_cairosupport = config.getboolean('main', 'enable_cairosupport')
-    enable_qahirahsupport = config.getboolean('main', 'enable_qahirahsupport')
-    enable_cairosvgsupport = config.getboolean('main', 'enable_cairosvgsupport')
-    enable_wandsupport = config.getboolean('main', 'enable_wandsupport')
-    enable_magicksupport = config.getboolean('main', 'enable_magicksupport')
-    enable_pgmagicksupport = config.getboolean('main', 'enable_pgmagicksupport')
-    enable_cv2support = config.getboolean('main', 'enable_cv2support')
-    enable_skimagesupport = config.getboolean('main', 'enable_skimagesupport')
-    enable_internal_svgwrite = config.getboolean('main', 'enable_internal_svgwrite')
-    enable_drawlibsupport = config.getboolean('main', 'enable_drawlibsupport')
-else:
-    enable_tkintersupport = True
-    enable_pilsupport = True
-    enable_drawsvgsupport = True
-    enable_cairosupport = True
-    enable_qahirahsupport = True
-    enable_cairosvgsupport = False
-    enable_wandsupport = True
-    enable_magicksupport = True
-    enable_pgmagicksupport = True
-    enable_cv2support = False
-    enable_skimagesupport = False
-    enable_internal_svgwrite = False
-    enable_drawlibsupport = False
+
+# --------------------
+# Defaults
+# --------------------
+DEFAULTS = {
+    "enable_tkintersupport": True,
+    "enable_pilsupport": True,
+    "enable_drawsvgsupport": True,
+    "enable_cairosupport": True,
+    "enable_qahirahsupport": True,
+    "enable_cairosvgsupport": False,
+    "enable_wandsupport": True,
+    "enable_magicksupport": True,
+    "enable_pgmagicksupport": True,
+    "enable_cv2support": True,
+    "enable_skimagesupport": True,
+    "enable_internal_svgwrite": False,
+    "enable_drawlibsupport": False,
+}
+
+
+def _as_bool(value, default_value):
+    """Coerce JSON values (bool/int/str) into bool safely for Py2/3."""
+    if isinstance(value, bool):
+        return value
+    # Py2: bool is a subclass of int, but we already handled bool above.
+    if isinstance(value, (int, float)):
+        return bool(value)
+    try:
+        basestring  # py2
+        string_types = (basestring,)
+    except NameError:
+        string_types = (str,)  # py3
+
+    if isinstance(value, string_types):
+        s = value.strip().lower()
+        if s in ("1", "true", "yes", "y", "on"):
+            return True
+        if s in ("0", "false", "no", "n", "off"):
+            return False
+    return default_value
+
+
+def load_settings(config_path):
+    settings = dict(DEFAULTS)
+
+    if not config_path or not os.path.exists(config_path):
+        return settings
+
+    ext = os.path.splitext(config_path)[1].lower()
+
+    # Decide format:
+    # - If JSON enabled and file looks like .json OR INI disabled -> JSON
+    # - Else if INI enabled -> INI
+    use_json = (__use_json_file__ and (ext == ".json" or not __use_ini_file__))
+    use_ini = (__use_ini_file__ and not use_json)
+
+    if use_json:
+        if json is None:
+            return settings  # json module missing (very rare)
+        try:
+            # Py2: no encoding arg; Py3: use encoding.
+            try:
+                f = open(config_path, "r", encoding="utf-8")
+            except TypeError:
+                f = open(config_path, "r")
+            with f:
+                data = json.load(f)
+        except Exception:
+            return settings
+
+        # Support {"main": {...}} or flat {"enable_x": ...}
+        if isinstance(data, dict) and "main" in data and isinstance(data.get("main"), dict):
+            main = data["main"]
+        elif isinstance(data, dict):
+            main = data
+        else:
+            main = {}
+
+        for k, dflt in DEFAULTS.items():
+            settings[k] = _as_bool(main.get(k, dflt), dflt)
+
+        return settings
+
+    if use_ini:
+        try:
+            config = configparser.ConfigParser()
+            config.read(config_path)
+        except Exception:
+            return settings
+
+        for k, dflt in DEFAULTS.items():
+            # getboolean fallback exists in py3; in py2 it's not always available as a kwarg.
+            try:
+                settings[k] = config.getboolean("main", k, fallback=dflt)  # py3
+            except TypeError:
+                # py2: emulate fallback
+                try:
+                    settings[k] = config.getboolean("main", k)
+                except Exception:
+                    settings[k] = dflt
+            except Exception:
+                settings[k] = dflt
+
+        return settings
+
+    return settings
+
+
+# --------------------
+# Apply settings to variables (same names you already use)
+# --------------------
+_settings = load_settings(__config_file__)
+
+enable_tkintersupport    = _settings["enable_tkintersupport"]
+enable_pilsupport        = _settings["enable_pilsupport"]
+enable_drawsvgsupport    = _settings["enable_drawsvgsupport"]
+enable_cairosupport      = _settings["enable_cairosupport"]
+enable_qahirahsupport    = _settings["enable_qahirahsupport"]
+enable_cairosvgsupport   = _settings["enable_cairosvgsupport"]
+enable_wandsupport       = _settings["enable_wandsupport"]
+enable_magicksupport     = _settings["enable_magicksupport"]
+enable_pgmagicksupport   = _settings["enable_pgmagicksupport"]
+enable_cv2support        = _settings["enable_cv2support"]
+enable_skimagesupport    = _settings["enable_skimagesupport"]
+enable_internal_svgwrite = _settings["enable_internal_svgwrite"]
+enable_drawlibsupport    = _settings["enable_drawlibsupport"]
 
 if not os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "predraw", "pretkinter.py")):
     enable_tkintersupport = False
