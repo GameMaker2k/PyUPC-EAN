@@ -421,20 +421,21 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
         ctx.paint()
 
     elif outfileext == "RAW":
-        # Keep your original approach: use cairo/cairocffi to extract raw bytes.
-        try:
-            import cairo
-        except ImportError:
-            import cairocffi as cairo
+        # Use qahirah to extract raw Cairo bytes.
+        from qahirah import CAIRO as cairo
 
-        image_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, iw, ih)
-        image_ctx = cairo.Context(image_surface)
+        image_surface = cairo.ImageSurface.create(
+            cairo.Format.RGB24,
+            iw,
+            ih
+        )
+        image_ctx = cairo.Context.create(image_surface)
         image_ctx.set_source_surface(rec, -x, -y)
         image_ctx.paint()
         image_surface.flush()
 
         data = image_surface.get_data()
-        if isinstance(outfile, (file, IOBase)):
+        if isinstance(outfile, IOBase):
             outfile.write(data)
         else:
             f = open(outfile, "wb")
