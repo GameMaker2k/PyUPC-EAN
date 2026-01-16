@@ -98,17 +98,33 @@ def drawColorRectangle(img, x1, y1, x2, y2, color):
 
 
 def drawColorLine(img, x1, y1, x2, y2, width, color):
-    """
-    Line, `color` is (R,G,B) 0..255.
-    """
-    try:
-        width = int(width)
-    except Exception:
-        width = 1
-    if width < 1:
-        width = 1
+    width = max(1, int(width))
+    bgr = (int(color[2]), int(color[1]), int(color[0]))
 
-    cv2.line(img, (int(x1), int(y1)), (int(x2), int(y2)), _rgb_to_bgr(color), thickness=width)
+    x1 = int(x1); y1 = int(y1); x2 = int(x2); y2 = int(y2)
+
+    # Vertical bar
+    if x1 == x2:
+        half = width // 2
+        xL = x1 - half
+        xR = x1 + (width - half)  # keeps exact width for odd/even
+        yT = min(y1, y2)
+        yB = max(y1, y2)
+        cv2.rectangle(img, (xL, yT), (xR - 1, yB), bgr, thickness=cv2.FILLED, lineType=cv2.LINE_8)
+        return True
+
+    # Horizontal bar
+    if y1 == y2:
+        half = width // 2
+        yT = y1 - half
+        yB = y1 + (width - half)
+        xL = min(x1, x2)
+        xR = max(x1, x2)
+        cv2.rectangle(img, (xL, yT), (xR, yB - 1), bgr, thickness=cv2.FILLED, lineType=cv2.LINE_8)
+        return True
+
+    # Fallback for diagonal/general lines
+    cv2.line(img, (x1, y1), (x2, y2), bgr, thickness=width, lineType=cv2.LINE_8)
     return True
 
 

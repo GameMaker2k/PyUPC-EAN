@@ -21,7 +21,6 @@ import re
 
 import numpy as np
 import skimage.draw
-import skimage.io
 
 from upcean.downloader import upload_file_to_internet_file
 import upcean.fonts
@@ -105,27 +104,55 @@ def drawColorRectangle(img, x1, y1, x2, y2, color):
     return True
 
 
+import math
+import skimage.draw
+
 def drawColorLine(img, x1, y1, x2, y2, width, color):
     """
-    Draws a line and emulates width by drawing offset parallel lines.
-    (Matches your original "offset rr+off, cc+off" look for diagonal-ish lines.)
+    Draw a line and emulate thickness by drawing parallel lines offset
+    perpendicular to the line direction (fixes diagonal "teeth" artifacts).
     """
     width = max(1, int(width))
     h, w = img.shape[0], img.shape[1]
 
     x1 = int(x1); y1 = int(y1); x2 = int(x2); y2 = int(y2)
-    rr, cc = skimage.draw.line(y1, x1, y2, x2)
 
-    # symmetric offsets
-    start = -(width // 2)
-    end = start + width
+    def _plot_line(ax1, ay1, ax2, ay2):
+        rr, cc = skimage.draw.line(ay1, ax1, ay2, ax2)
+        m = (rr >= 0) & (rr < h) & (cc >= 0) & (cc < w)
+        rr = rr[m]; cc = cc[m]
+        if rr.size:
+            img[rr, cc] = color
 
-    for off in range(start, end):
-        rr_off = rr + off
-        cc_off = cc + off
-        rr2, cc2 = _clip_rrcc(rr_off, cc_off, h, w)
-        if rr2.size:
-            img[rr2, cc2] = color
+    half = width // 2
+
+    # Fast/common cases (barcodes are usually vertical)
+    if x1 == x2:
+        for dx in range(-half, half + 1):
+            _plot_line(x1 + dx, y1, x2 + dx, y2)
+        return True
+
+    if y1 == y2:
+        for dy in range(-half, half + 1):
+            _plot_line(x1, y1 + dy, x2, y2 + dy)
+        return True
+
+    # General case: offset along the unit normal
+    dx = float(x2 - x1)
+    dy = float(y2 - y1)
+    length = math.hypot(dx, dy)
+    if length <= 0.0:
+        _plot_line(x1, y1, x2, y2)
+        return True
+
+    # Normal vector (perpendicular)
+    nx = -dy / length
+    ny =  dx / length
+
+    for off in range(-half, half + 1):
+        ox = int(round(nx * off))
+        oy = int(round(ny * off))
+        _plot_line(x1 + ox, y1 + oy, x2 + ox, y2 + oy)
 
     return True
 
@@ -262,7 +289,7 @@ def new_image_surface(sizex, sizey, bgcolor):
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     """
-    Saves using imageio via skimage.io (plugin=imageio).
+    Saves using imageio directly (no skimage.io plugin warnings).
     RAW writes/returns raw RGB bytes (row-major).
     """
     img = inimage[0]
@@ -296,8 +323,11 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
             outfile.write(data)
             return True
         if isinstance(outfile, basestring):
-            with open(outfile, "wb") as f:
+            f = open(outfile, "wb")
+            try:
                 f.write(data)
+            finally:
+                f.close()
             return True
         return False
 
@@ -306,13 +336,19 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     if fmt == "jpg":
         fmt = "jpeg"
 
-    # Write out
+    # Use imageio directly (avoid skimage.io plugin infra)
+    try:
+        import imageio.v2 as imageio  # preferred: stable "v2" API, no deprecation spam
+    except Exception:
+        import imageio  # fallback
+
     if isinstance(outfile, basestring):
-        skimage.io.imsave(outfile, img, plugin="imageio", format=fmt)
+        # Let imageio infer from filename; still pass format for consistency
+        imageio.imwrite(outfile, img, format=fmt)
         return True
 
     if hasattr(outfile, "write"):
-        import imageio
+        # file-like object
         imageio.imwrite(outfile, img, format=fmt)
 
         if uploadfile:
