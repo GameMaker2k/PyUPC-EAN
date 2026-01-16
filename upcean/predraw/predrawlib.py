@@ -43,6 +43,11 @@ except ImportError:  # Py2
     except Exception:
         IOBase = object
 
+try:
+    import gzip
+except ImportError:
+    gzip = None
+
 # -------------------------
 # Fonts
 # -------------------------
@@ -80,6 +85,28 @@ def _get_fontfile(ftype):
 
 def _is_file_like(x):
     return hasattr(x, "write") or isinstance(x, IOBase)
+
+
+def _to_bytes(data):
+    # Py2/3 safe: ensure bytes
+    if isinstance(data, bytes):
+        return data
+    try:
+        return data.encode("utf-8")
+    except Exception:
+        return bytes(data)
+
+
+def _gzip_bytes(data_bytes, compresslevel=9):
+    if gzip is None:
+        raise ImportError("gzip module not available")
+    out = BytesIO()
+    gz = gzip.GzipFile(filename="", mode="wb", fileobj=out, compresslevel=compresslevel)
+    try:
+        gz.write(data_bytes)
+    finally:
+        gz.close()
+    return out.getvalue()
 
 
 def snapCoords(ctx, x, y):
@@ -146,7 +173,8 @@ def get_save_filename(outfile, imageoutlib=None):
       - outfile unchanged if None/bool
       - (outfile, "png") for file-like objects or "-"
       - (name_or_path_or_url, ext) for strings/tuples
-      - False on invalid
+
+    Now also supports: .svgz (or :svgz) returning ext "svgz"
     """
     if outfile is None or isinstance(outfile, bool):
         return outfile
@@ -205,22 +233,69 @@ def _normalize_local_path(path, outfileext):
     return p
 
 
+def _save_svgz_to_destination(outfile, upload_target=None, return_bytes=False):
+    """
+    drawlib doesn't directly write SVGZ. We:
+      1) save SVG into a BytesIO
+      2) gzip it
+      3) write/upload/return
+    """
+    # 1) render SVG to bytes
+    svg_buf = BytesIO()
+    save(file=svg_buf, format="svg")  # SVG XML
+    svg_buf.seek(0)
+    svg_bytes = svg_buf.read()
+    svg_buf.close()
+
+    # 2) gzip
+    gz_bytes = _gzip_bytes(_to_bytes(svg_bytes))
+
+    # 3) deliver
+    if upload_target:
+        tmp = BytesIO()
+        tmp.write(gz_bytes)
+        tmp.seek(0)
+        upload_file_to_internet_file(tmp, upload_target)
+        tmp.close()
+        return True
+
+    if return_bytes:
+        return gz_bytes
+
+    # file-like object
+    if _is_file_like(outfile):
+        outfile.write(gz_bytes)
+        return True
+
+    # path
+    f = open(outfile, "wb")
+    try:
+        f.write(gz_bytes)
+    finally:
+        f.close()
+    return True
+
+
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib=None):
     """
     drawlib save() can write to:
       - path string
       - file-like (e.g., BytesIO)
-    We keep your behaviors:
-      - ftp/ftps/sftp URL -> save to BytesIO -> upload
-      - outfile == "-" -> return bytes
-      - local path -> normalize and ensure extension exists
+
+    Added: SVGZ support
+      - if outfileext is "svgz" or parsed from .svgz
+      - produces gzip-compressed SVG bytes
+      - supports: local path, file-like, ftp upload, "-" return bytes
     """
     upload_target = None
     return_bytes = False
 
+    ext = (outfileext or _DEFAULT_EXT).lower()
+
     # remote upload via URL
     if isinstance(outfile, basestring) and _RE_URL.match(outfile):
         upload_target = outfile
+        # svgz and binary outputs need BytesIO
         outfile = BytesIO()
     elif outfile == "-":
         outfile = BytesIO()
@@ -228,10 +303,18 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
 
     # local path normalization
     if isinstance(outfile, basestring) and not _RE_URL.match(outfile) and outfile not in ("-", ""):
-        outfile = _normalize_local_path(outfile, outfileext)
+        outfile = _normalize_local_path(outfile, ext)
 
-    # Perform save
-    save(file=outfile, format=str(outfileext).lower())
+    # --- SVGZ handling ---
+    if ext == "svgz":
+        # If outfile is a path string, ensure it ends with .svgz
+        if isinstance(outfile, basestring) and not _RE_URL.match(outfile) and outfile not in ("-", ""):
+            if not outfile.lower().endswith(".svgz"):
+                outfile = outfile + ".svgz"
+        return _save_svgz_to_destination(outfile, upload_target=upload_target, return_bytes=return_bytes)
+
+    # --- Normal formats ---
+    save(file=outfile, format=ext)
 
     # Upload / bytes handling
     if upload_target:

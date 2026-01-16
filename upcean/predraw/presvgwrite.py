@@ -42,6 +42,11 @@ except NameError:
     basestring = str
 
 try:
+    unicode  # Py2
+except NameError:
+    unicode = str
+
+try:
     file
 except NameError:
     from io import IOBase
@@ -60,27 +65,32 @@ except ImportError:  # Py2
     except Exception:
         IOBase = object
 
+try:
+    import gzip
+except ImportError:
+    gzip = None
+
 # -------------------------
 # CairoSVG optional
 # -------------------------
 cairosvgsupport = False
-svgwrite_valid_extensions = set(["SVG"])
+svgwrite_valid_extensions = set(["SVG", "SVGZ"])
 
 if upcean.support.cairosvgsupport:
     try:
         import cairosvg
         cairosvgsupport = True
-        svgwrite_valid_extensions = set(["SVG", "PDF", "PS", "EPS", "PNG"])
+        svgwrite_valid_extensions = set(["SVG", "SVGZ", "PDF", "PS", "EPS", "PNG"])
     except ImportError:
         cairosvgsupport = False
-        svgwrite_valid_extensions = set(["SVG"])
+        svgwrite_valid_extensions = set(["SVG", "SVGZ"])
 
 # -------------------------
 # regex/constants
 # -------------------------
 _RE_URL = re.compile(r"^(ftp|ftps|sftp)://", re.IGNORECASE)
-_RE_EXT = re.compile(r"^\.(?P<ext>[A-Za-z]+)$")
-_RE_NAME_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
+_RE_EXT = re.compile(r"^\.(?P<ext>[A-Za-z0-9]+)$")
+_RE_NAME_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z0-9]+)$")
 
 # -------------------------
 # helpers
@@ -112,7 +122,10 @@ def _svg_text_from_dwg(dwg):
             dwg.write(buf)
         except Exception:
             # last fallback: tostring
-            return dwg.tostring()
+            try:
+                return dwg.tostring()
+            except Exception:
+                return str(dwg)
     val = buf.getvalue()
     buf.close()
     return val
@@ -123,6 +136,17 @@ def _svg_bytes_from_dwg(dwg):
     if isinstance(s, bytes):
         return s
     return s.encode("utf-8")
+
+def _gzip_bytes(data_bytes, compresslevel=9):
+    if gzip is None:
+        raise ImportError("gzip module not available")
+    out = BytesIO()
+    gz = gzip.GzipFile(filename="", mode="wb", fileobj=out, compresslevel=compresslevel)
+    try:
+        gz.write(data_bytes)
+    finally:
+        gz.close()
+    return out.getvalue()
 
 def _convert_svg_bytes(svg_bytes, fmt, out_fp):
     """
@@ -142,12 +166,40 @@ def _convert_svg_bytes(svg_bytes, fmt, out_fp):
     elif fmt == "SVG":
         cairosvg.svg2svg(file_obj=b, write_to=out_fp)
     else:
-        # should not happen due to validation
         raise ValueError("Unsupported CairoSVG format: {0}".format(fmt))
     try:
         b.close()
     except Exception:
         pass
+
+def _write_bytes_to_target(data, target):
+    """
+    Write bytes to:
+      - file-like object
+      - filename path
+    """
+    if _is_file_like(target):
+        target.write(data)
+        return True
+    f = open(target, "wb")
+    try:
+        f.write(data)
+    finally:
+        f.close()
+    return True
+
+def _normalize_local_path(path, ext_upper):
+    """
+    For local filesystem paths:
+      - expand ~ and env vars
+      - make absolute
+      - append extension if missing (case-insensitive)
+    """
+    p = os.path.abspath(os.path.expandvars(os.path.expanduser(path)))
+    ext_l = ext_upper.lower()
+    if ext_l and not p.lower().endswith("." + ext_l):
+        p = p + "." + ext_l
+    return p
 
 # -------------------------
 # API functions
@@ -159,6 +211,10 @@ def get_save_filename(outfile):
       - (outfile, "SVG") for file-like or "-"
       - (path_or_url_or_name, EXT) for strings / (name, ext)
       - False on invalid
+
+    Adds SVGZ support:
+      - ".svgz" extension
+      - "name:svgz"
     """
     if outfile is None or isinstance(outfile, bool):
         return outfile
@@ -171,6 +227,8 @@ def get_save_filename(outfile):
         if s in ("", "-"):
             return (s, "SVG")
 
+        # Keep URL as-is; ext defaults to SVG unless :EXT is used
+        # (this matches your original behavior)
         base, ext = os.path.splitext(s)
         if ext:
             m = _RE_EXT.match(ext)
@@ -272,11 +330,7 @@ def embed_font(dwg, font_path, font_family):
         cache = set()
         dwg._embedded_fonts = cache
 
-    try:
-        fam = unicode(font_family)  # Py2
-    except Exception:
-        fam = str(font_family)
-
+    fam = unicode(font_family)
     key = (os.path.abspath(font_path), fam)
     if key in cache:
         return
@@ -319,6 +373,18 @@ def embed_font(dwg, font_path, font_family):
     dwg.defs.add(style_el)
 
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
+    """
+    Save behavior:
+      - SVG: write svg text as before
+      - SVGZ: gzip-compressed SVG
+      - PNG/PDF/PS/EPS (if cairosvg available): convert from SVG bytes
+
+    Preserves:
+      - ftp/ftps/sftp URL upload
+      - outfile "-" => return data
+      - file-like objects
+      - local path normalization (append extension if missing)
+    """
     dwg = inimage[0]
     fmt = (outfileext or "SVG").upper()
     if fmt not in svgwrite_valid_extensions:
@@ -330,22 +396,39 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
     # Decide destination: URL upload / "-" / file-like / filename
     if isinstance(outfile, basestring) and _RE_URL.match(str(outfile)):
         upload_target = outfile
-        # For cairo conversions we want bytes; otherwise text is OK but we upload bytes anyway.
-        outfp = BytesIO() if cairosvgsupport and fmt != "SVG" else StringIO()
+        # SVGZ and conversions are binary; SVG is text (but we'll upload bytes anyway)
+        outfp = BytesIO() if (fmt in ("SVGZ", "PNG", "PDF", "PS", "EPS") or cairosvgsupport) else StringIO()
     elif outfile == "-":
         return_to_var = True
-        outfp = BytesIO() if cairosvgsupport and fmt != "SVG" else StringIO()
+        outfp = BytesIO() if (fmt in ("SVGZ", "PNG", "PDF", "PS", "EPS") or cairosvgsupport) else StringIO()
     else:
         outfp = outfile  # file-like or filename
 
-    # Write or convert
-    if cairosvgsupport and fmt in ("PNG", "PDF", "PS", "EPS", "SVG"):
+    # Normalize local filesystem path strings (not URLs, not "-" / "")
+    if isinstance(outfp, basestring) and not _RE_URL.match(str(outfp)) and outfp not in ("", "-"):
+        # If caller gave "file.svgz" we'll keep it; otherwise append correct ext
+        outfp = _normalize_local_path(outfp, fmt)
+
+    # --- Render/convert/write ---
+    if fmt == "SVGZ":
         svg_bytes = _svg_bytes_from_dwg(dwg)
-        # ensure binary output target for cairo conversion when writing to file-like
+        gz_bytes = _gzip_bytes(svg_bytes)
+
+        # If writing to a path, ensure it ends with .svgz (normalize may have appended already)
+        if isinstance(outfp, basestring) and not outfp.lower().endswith(".svgz"):
+            outfp = outfp + ".svgz"
+
+        _write_bytes_to_target(gz_bytes, outfp)
+
+    elif cairosvgsupport and fmt in ("PNG", "PDF", "PS", "EPS", "SVG"):
+        svg_bytes = _svg_bytes_from_dwg(dwg)
+
+        # Ensure binary stream for cairo conversion when writing to file-like
         if _is_file_like(outfp) and isinstance(outfp, StringIO):
-            # shouldn't happen in our branches, but keep safe
             outfp = BytesIO()
+
         _convert_svg_bytes(svg_bytes, fmt, outfp)
+
     else:
         # Plain SVG write
         if _is_file_like(outfp):
@@ -353,7 +436,10 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
             if isinstance(outfp, BytesIO):
                 outfp.write(_svg_bytes_from_dwg(dwg))
             else:
-                dwg.write(outfp, True)
+                try:
+                    dwg.write(outfp, True)
+                except TypeError:
+                    dwg.write(outfp)
         else:
             # filename path
             try:
@@ -361,24 +447,41 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode"):
             except TypeError:
                 dwg.saveas(outfp)
 
-    # Upload to URL
+    # --- Upload to URL ---
     if upload_target:
         # We must upload bytes
         if isinstance(outfp, BytesIO):
             outfp.seek(0)
             upload_file_to_internet_file(outfp, upload_target)
             outfp.close()
-        else:
-            # StringIO -> bytes
-            outfp.seek(0)
-            b = BytesIO(outfp.getvalue().encode("utf-8"))
-            outfp.close()
+        elif _is_file_like(outfp):
+            # Some file-like may be text; convert to bytes best-effort
+            try:
+                outfp.seek(0)
+                data = outfp.read()
+            except Exception:
+                data = _svg_bytes_from_dwg(dwg)
+            if not isinstance(data, bytes):
+                data = data.encode("utf-8")
+            b = BytesIO()
+            b.write(data)
             b.seek(0)
             upload_file_to_internet_file(b, upload_target)
             b.close()
+            try:
+                outfp.close()
+            except Exception:
+                pass
+        else:
+            # If it was a filename, re-open as bytes and upload
+            f = open(outfp, "rb")
+            try:
+                upload_file_to_internet_file(f, upload_target)
+            finally:
+                f.close()
         return True
 
-    # Return to variable for "-"
+    # --- Return to variable for "-" ---
     if return_to_var:
         outfp.seek(0)
         data = outfp.read()
