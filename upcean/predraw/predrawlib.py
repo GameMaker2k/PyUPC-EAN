@@ -18,6 +18,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os
 import re
+import math
 
 from drawlib.apis import (
     clear, config, rectangle, line, text, save,
@@ -151,9 +152,10 @@ class DrawlibContext(object):
     IMPORTANT: drawlib's coordinate system is (0,0) bottom-left. Upcean renderers are top-left.
     We convert incoming coords from image-space to drawlib-space here.
     """
-    def __init__(self, width, height):
+    def __init__(self, width, height, dpi=100):
         self.width = float(width)
         self.height = float(height)
+        self.dpi = int(dpi)
 
     def user_to_device(self, x, y):
         # keep signature compatibility; return drawlib coords
@@ -255,7 +257,16 @@ def drawColorLine(ctx, x1, y1, x2, y2, width, color, imageoutlib=None):
 
 def drawColorText(ctx, size, x, y, txt, color, ftype="ocrb", imageoutlib=None):
     font_file = _get_fontfile(ftype)
-    ctx.text((x, y), str(txt), font=font_file, fill=color, size=size)
+
+    # drawlib’s “normal” look is around dpi=100
+    base_dpi = 100
+    dpi = getattr(ctx, "dpi", base_dpi) or base_dpi
+
+    scaled_size = int(round(float(size) * (float(base_dpi) / float(dpi))))
+    if scaled_size < 1:
+        scaled_size = 1
+
+    ctx.text((x, y), str(txt), font=font_file, fill=color, size=scaled_size)
     return True
 
 
@@ -268,8 +279,6 @@ def get_save_filename(outfile, imageoutlib=None):
       - outfile unchanged if None/bool
       - (outfile, "png") for file-like objects or "-"
       - (name_or_path_or_url, ext) for strings/tuples
-
-    Supports: .svgz (or :svgz) returning ext "svgz"
     """
     if outfile is None or isinstance(outfile, bool):
         return outfile
@@ -315,8 +324,15 @@ get_save_file = get_save_filename
 # -------------------------
 def new_image_surface(sizex, sizey, bgcolor, imageoutlib=None):
     clear()
-    config(width=sizex, height=sizey, background_color=bgcolor)
-    return [DrawlibContext(sizex, sizey), None]
+
+    dpi = int(math.ceil(float(sizex) / 10.0))
+    if dpi < 1:
+        dpi = 1
+
+    config(width=sizex, height=sizey, dpi=dpi, background_color=bgcolor)
+    print(sizex, sizey, "dpi=", dpi)
+
+    return [DrawlibContext(sizex, sizey, dpi=dpi), None]
 
 
 # -------------------------
@@ -330,51 +346,11 @@ def _normalize_local_path(path, outfileext):
     return p
 
 
-def _save_svgz_to_destination(outfile, upload_target=None, return_bytes=False):
-    """
-    drawlib doesn't directly write SVGZ. We:
-      1) save SVG into a BytesIO
-      2) gzip it
-      3) write/upload/return
-    """
-    svg_buf = BytesIO()
-    save(file=svg_buf, format="svg")
-    svg_buf.seek(0)
-    svg_bytes = svg_buf.read()
-    svg_buf.close()
-
-    gz_bytes = _gzip_bytes(_to_bytes(svg_bytes))
-
-    if upload_target:
-        tmp = BytesIO()
-        tmp.write(gz_bytes)
-        tmp.seek(0)
-        upload_file_to_internet_file(tmp, upload_target)
-        tmp.close()
-        return True
-
-    if return_bytes:
-        return gz_bytes
-
-    if _is_file_like(outfile):
-        outfile.write(gz_bytes)
-        return True
-
-    f = open(outfile, "wb")
-    try:
-        f.write(gz_bytes)
-    finally:
-        f.close()
-    return True
-
-
 def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib=None):
     """
     drawlib save() can write to:
       - path string
       - file-like (e.g., BytesIO)
-
-    Added: SVGZ support.
     """
     upload_target = None
     return_bytes = False
@@ -390,12 +366,6 @@ def save_to_file(inimage, outfile, outfileext, imgcomment="barcode", imageoutlib
 
     if isinstance(outfile, basestring) and not _RE_URL.match(outfile) and outfile not in ("-", ""):
         outfile = _normalize_local_path(outfile, ext)
-
-    if ext == "svgz":
-        if isinstance(outfile, basestring) and not _RE_URL.match(outfile) and outfile not in ("-", ""):
-            if not outfile.lower().endswith(".svgz"):
-                outfile = outfile + ".svgz"
-        return _save_svgz_to_destination(outfile, upload_target=upload_target, return_bytes=return_bytes)
 
     save(file=outfile, format=ext)
 
