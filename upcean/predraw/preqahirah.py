@@ -360,10 +360,27 @@ def get_save_file(outfile):
     return get_save_filename(outfile)
 
 
-def new_image_surface(sizex, sizey, bgcolor):
+def new_image_surface(sizex, sizey, bgcolor, imtype=None):
     content_type = qah.CAIRO.CONTENT_COLOR
     extents = qah.Rect(0, 0, sizex, sizey)
-    surface = qah.RecordingSurface.create(content=content_type, extents=extents)
+    if(imtype is None):
+        surface = qah.RecordingSurface.create(content=content_type, extents=extents)
+    elif(imtype=="image"):
+        qah.ImageSurface.create(format=qah.CAIRO.FORMAT_RGB24, dimensions=(sizex, sizey))
+    elif(imtype=="pdf"):
+        surface = qah.PDFSurface.create(
+            None, (sizex, sizey)
+        )
+    elif(imtype=="ps" or imtype=="eps"):
+        surface = qah.PSSurface.create(
+            None, (sizex, sizey)
+        )
+    elif(imtype=="svg"):
+        surface = qah.SVGSurface.create(
+            None, (sizex, sizey)
+        )
+    else:
+        surface = qah.RecordingSurface.create(content=content_type, extents=extents)
     ctx = qah.Context.create(surface)
     ctx.set_antialias(qah.CAIRO.ANTIALIAS_NONE)
     drawColorRectangle(ctx, 0, 0, sizex, sizey, bgcolor)

@@ -369,14 +369,35 @@ def get_save_file(outfile):
     return get_save_filename(outfile)
 
 
-def new_image_surface(sizex, sizey, bgcolor):
+def new_image_surface(sizex, sizey, bgcolor, imtype=None):
     """
     Create a RecordingSurface and a Context, fill background.
     Returns [ctx, recording_surface].
     """
-    surface = cairo.RecordingSurface(
-        cairo.CONTENT_COLOR, (0.0, 0.0, float(sizex), float(sizey))
-    )
+    if(imtype is None):
+        surface = cairo.RecordingSurface(
+            cairo.CONTENT_COLOR, float(sizex), float(sizey)
+        )
+    elif(imtype=="image"):
+        surface = cairo.ImageSurface(
+            cairo.FORMAT_RGB24, float(sizex), float(sizey)
+        )
+    elif(imtype=="pdf"):
+        surface = cairo.PDFSurface(
+            None, float(sizex), float(sizey)
+        )
+    elif(imtype=="ps" or imtype=="eps"):
+        surface = cairo.PSSurface(
+            None, float(sizex), float(sizey)
+        )
+    elif(imtype=="svg"):
+        surface = cairo.SVGSurface(
+            None, float(sizex), float(sizey)
+        )
+    else:
+        surface = cairo.RecordingSurface(
+            cairo.CONTENT_COLOR, float(sizex), float(sizey)
+        )
     ctx = cairo.Context(surface)
     ctx.set_antialias(cairo.ANTIALIAS_NONE)
     drawColorRectangle(ctx, 0, 0, sizex, sizey, bgcolor)
