@@ -117,7 +117,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
         return False
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
-    if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+    if(pilsupport and imageoutlib == "pillow"):
         try:
             pil_ver = Image.PILLOW_VERSION
             pil_ver = pil_ver.split(".")
@@ -155,7 +155,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
         if(pil_is_pillow and pil_vercheck >= 210 and pil_vercheck < 220):
             pil_addon_fix = int(resize) * 2
             cairo_addon_fix = 0
-    elif((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+    elif(pilsupport and imageoutlib == "pillow"):
         pil_addon_fix = 0
         cairo_addon_fix = 0
     elif(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
@@ -195,7 +195,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
         upc_size_add = 29
     if(supplement is not None and len(supplement) == 5):
         upc_size_add = 56
-    if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+    if(pilsupport and imageoutlib == "pillow"):
         upc_preimg = Image.new(
             "RGB", (113 + upc_size_add, barheight[1] + (45 * barwidth[0])))
         upc_img = ImageDraw.Draw(upc_preimg)
@@ -242,7 +242,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
         upc_size_add = -30
     drawColorText(upc_img, 16 * int(resize * barwidth[0]), 36 + upc_size_add + (23 * (int(resize) - 1)) - (4 * (int(
         resize * barwidth[0]) - 1)), (75 * int(resize * barwidth[0])), "$"+goodwillinfo['pricewdnz'], barcolor[1], "ocrb", imageoutlib)
-    if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+    if(pilsupport and imageoutlib == "pillow"):
         if(supplement is not None and len(supplement) == 2):
             upc_sup_img = upcean.encode.ean2.draw_ean2sup_barcode(
                 supplement, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
@@ -270,7 +270,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
             del(upc_sup_img)
     exargdict = {'comment': "upca; goodwill; "+upc}
     if(oldoutfile is None or isinstance(oldoutfile, bool)):
-        if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+        if(pilsupport and imageoutlib == "pillow"):
             return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
         if(cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")):
             return [upc_img, upc_preimg, {'upc': upc, 'outfile': outfile, 'resize': resize, 'shiftxy': shiftxy, 'barheight': barheight, 'barwidth': barwidth, 'barcolor': barcolor, 'hideinfo': hideinfo, 'imageoutlib': imageoutlib}, upc_array]
@@ -288,7 +288,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
             else:
                 exargdict = {'comment': "upca; goodwill; "+upc}
             try:
-                if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+                if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
                         stdoutfile.write(upc_preimg.tobytes())
                         stdoutfile.seek(0)
@@ -341,7 +341,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
             else:
                 exargdict = {'comment': upc}
             try:
-                if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+                if(pilsupport and imageoutlib == "pillow"):
                     if(outfileext == "BYTES"):
                         stdoutfile.write(upc_preimg.tobytes())
                         stdoutfile.seek(0)
@@ -401,7 +401,7 @@ def create_goodwill_barcode(upc, outfile="./goodwill.png", resize=1, shiftxy=(0,
         else:
             exargdict = {'comment': upc}
         try:
-            if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+            if(pilsupport and imageoutlib == "pillow"):
                 if(outfileext == "BYTES"):
                     with open(outfile, 'wb+') as f:
                         f.write(upc_preimg.tobytes())

@@ -124,7 +124,7 @@ def encode_ean8_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 5
         return False
     if(not re.findall("^([0-9]*[\\.]?[0-9])", str(resize)) or int(resize) < 1):
         resize = 1
-    if((pilsupport and imageoutlib == "pillow") or (drawlibsupport and imageoutlib == "drawlib")):
+    if(pilsupport and imageoutlib == "pillow"):
         vertical_text_fix = 0
     elif((cairosupport and (imageoutlib == "cairo" or imageoutlib == "cairosvg")) or (svgwritesupport and cairosvgsupport and imageoutlib == "svgwrite") or (drawsvgsupport and cairosvgsupport and imageoutlib == "drawsvg") or (qahirahsupport and imageoutlib == "qahirah")):
         vertical_text_fix = (9 * (int(resize) * barwidth[1]))
