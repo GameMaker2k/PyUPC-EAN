@@ -16,50 +16,110 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import os
+import sys
+import tempfile
+import atexit
+import shutil
 
-implib = False
-pkgres = False
-try:
-    import importlib.resources
-    implib = True
-except ImportError:
-    implib = False
+# Process-lifetime extract dir (only used when resources aren't on the filesystem)
+_EXTRACT_DIR = None
+
+def _get_extract_dir():
+    global _EXTRACT_DIR
+    if _EXTRACT_DIR is None:
+        _EXTRACT_DIR = tempfile.mkdtemp(prefix="gm2k-xml-")
+        atexit.register(lambda: shutil.rmtree(_EXTRACT_DIR, ignore_errors=True))
+    return _EXTRACT_DIR
+
+def _atomic_write(path, data):
+    tmp = path + ".tmp"
+    f = open(tmp, "wb")
+    try:
+        f.write(data)
+    finally:
+        f.close()
+
+    try:
+        # Py3
+        os.replace(tmp, path)
+    except Exception:
+        # Py2 / fallback
+        try:
+            if os.path.exists(path):
+                os.remove(path)
+        except Exception:
+            pass
+        os.rename(tmp, path)
+
+def resource_path(package_name, filename):
+    """
+    Return a REAL filesystem path to a resource inside this package.
+
+    - If package is installed normally on disk: returns the existing path (no copy).
+    - If package is imported from zip/egg: extracts to a temp dir once and returns that path.
+    - Falls back to pkg_resources if needed.
+    """
+    files = None
+    try:
+        try:
+            from importlib.resources import files as _files  # Py3.9+ (and sometimes available)
+            files = _files
+        except Exception:
+            from importlib_resources import files as _files  # backport
+            files = _files
+    except Exception:
+        files = None
+
+    if files is not None:
+        try:
+            ref = files(package_name).joinpath(filename)
+
+            # If backed by filesystem, return that path
+            try:
+                return os.fspath(ref)  # Py3 only
+            except Exception:
+                # zipped/non-path traversable -> extract bytes
+                out = os.path.join(_get_extract_dir(), filename)
+                if not os.path.exists(out):
+                    data = ref.read_bytes()
+                    _atomic_write(out, data)
+                return out
+        except Exception:
+            pass
+
+    # setuptools fallback
     try:
         import pkg_resources
-        pkgres = True
-    except ImportError:
-        pkgres = False
+        return pkg_resources.resource_filename(package_name, filename)
+    except Exception:
+        pass
 
-if(implib):
-    barcodedtd = os.path.join(
-        importlib.resources.files(__name__), "barcodes.dtd")
-    barcodexsl = os.path.join(
-        importlib.resources.files(__name__), "barcodes.xsl")
-    barcodexsd = os.path.join(
-        importlib.resources.files(__name__), "barcodes.xsd")
-    barcoderng = os.path.join(
-        importlib.resources.files(__name__), "barcodes.rng")
-    barcodernc = os.path.join(
-        importlib.resources.files(__name__), "barcodes.rnc")
-    bcxmlpath = os.path.dirname(barcodedtd)
-elif(pkgres):
-    barcodedtd = pkg_resources.resource_filename(__name__, "barcodes.dtd")
-    barcodexsl = pkg_resources.resource_filename(__name__, "barcodes.xsl")
-    barcodexsd = pkg_resources.resource_filename(__name__, "barcodes.xsd")
-    barcoderng = pkg_resources.resource_filename(__name__, "barcodes.rng")
-    barcodernc = pkg_resources.resource_filename(__name__, "barcodes.rnc")
-    bcxmlpath = os.path.dirname(barcodedtd)
-elif(not pkgres):
-    barcodedtd = os.path.dirname(__file__)+os.sep+"barcodes.dtd"
-    barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl"
-    barcodexsd = os.path.dirname(__file__)+os.sep+"barcodes.xsd"
-    barcoderng = os.path.dirname(__file__)+os.sep+"barcodes.rng"
-    barcodernc = os.path.dirname(__file__)+os.sep+"barcodes.rnc"
-    bcxmlpath = os.path.dirname(barcodedtd)
-else:
-    barcodedtd = os.path.dirname(__file__)+os.sep+"barcodes.dtd"
-    barcodexsl = os.path.dirname(__file__)+os.sep+"barcodes.xsl"
-    barcodexsd = os.path.dirname(__file__)+os.sep+"barcodes.xsd"
-    barcoderng = os.path.dirname(__file__)+os.sep+"barcodes.rng"
-    barcodernc = os.path.dirname(__file__)+os.sep+"barcodes.rnc"
-    bcxmlpath = os.path.dirname(barcodedtd)
+    # last resort: __file__ relative (works only when not zipped)
+    mod = sys.modules.get(package_name)
+    base = os.path.dirname(getattr(mod, "__file__", __file__))
+    return os.path.join(base, filename)
+
+def resource_dir(package_name, filenames):
+    """
+    Ensure a set of resources exist as real files in one directory.
+    Returns that directory path.
+    """
+    paths = [resource_path(package_name, fn) for fn in filenames]
+    return os.path.dirname(paths[0])
+
+
+# ---- XML-related resources ----
+# Extract/ensure the full set so relative includes/imports work reliably.
+bcxmlpath = resource_dir(__name__, [
+    "barcodes.dtd",
+    "barcodes.xsl",
+    "barcodes.xsd",
+    "barcodes.rng",
+    "barcodes.rnc",
+])
+
+barcodedtd = os.path.join(bcxmlpath, "barcodes.dtd")
+barcodexsl = os.path.join(bcxmlpath, "barcodes.xsl")
+barcodexsd = os.path.join(bcxmlpath, "barcodes.xsd")
+barcoderng = os.path.join(bcxmlpath, "barcodes.rng")
+barcodernc = os.path.join(bcxmlpath, "barcodes.rnc")
