@@ -150,11 +150,18 @@ else:
         svgwritesupport = False
 
 # Initialize pkg_resources support
+implib = False
+pkgres = False
 try:
-    import pkg_resources
-    pkgres = True
+    import importlib.resources
+    implib = True
 except ImportError:
-    pkgres = False
+    implib = False
+    try:
+        import pkg_resources
+        pkgres = True
+    except ImportError:
+        pkgres = False
 
 # Initialize font paths
 fontpathocra = upcean.fonts.fontpathocra
