@@ -16,47 +16,172 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import os
+import sys
+import tempfile
+import atexit
+import shutil
 
-implib = False
-pkgres = False
-try:
-    import importlib.resources
-    implib = True
-except ImportError:
-    implib = False
+# -----------------------------
+# Zip-safe package resource -> real filesystem path
+# -----------------------------
+
+_EXTRACT_DIR = None
+
+def _get_extract_dir():
+    global _EXTRACT_DIR
+    if _EXTRACT_DIR is None:
+        _EXTRACT_DIR = tempfile.mkdtemp(prefix="gm2k-fonts-")
+        atexit.register(lambda: shutil.rmtree(_EXTRACT_DIR, ignore_errors=True))
+    return _EXTRACT_DIR
+
+def _atomic_write(path, data):
+    tmp = path + ".tmp"
+    f = open(tmp, "wb")
+    try:
+        f.write(data)
+    finally:
+        f.close()
+
+    # Py3 has os.replace; Py2 doesn't. Make best effort.
+    try:
+        os.replace(tmp, path)
+    except Exception:
+        try:
+            if os.path.exists(path):
+                os.remove(path)
+        except Exception:
+            pass
+        os.rename(tmp, path)
+
+def resource_path(package_name, filename):
+    """
+    Return a REAL filesystem path to a resource shipped inside this package.
+
+    - If package is on disk: returns the existing path (no extraction).
+    - If package is in a zip/egg: extracts to a process-lifetime temp dir once.
+    - Falls back to pkg_resources if needed.
+    """
+    files = None
+    try:
+        try:
+            from importlib.resources import files as _files  # Py3.9+ (and some envs)
+            files = _files
+        except Exception:
+            from importlib_resources import files as _files  # backport
+            files = _files
+    except Exception:
+        files = None
+
+    if files is not None:
+        try:
+            ref = files(package_name).joinpath(filename)
+
+            # If already a real filesystem path, return it directly
+            try:
+                return os.fspath(ref)  # Py3
+            except Exception:
+                # Zipped/non-path traversable: extract
+                out = os.path.join(_get_extract_dir(), filename)
+                if not os.path.exists(out):
+                    data = ref.read_bytes()
+                    _atomic_write(out, data)
+                return out
+        except Exception:
+            pass
+
+    # pkg_resources fallback
     try:
         import pkg_resources
-        pkgres = True
-    except ImportError:
-        pkgres = False
+        return pkg_resources.resource_filename(package_name, filename)
+    except Exception:
+        pass
 
-if(implib):
-    fontpathocra = os.path.join(
-        importlib.resources.files(__name__), "OCRA.otf")
-    fontpathocraalt = os.path.join(
-        importlib.resources.files(__name__), "OCRA.ttf")
-    fontpathocrb = os.path.join(
-        importlib.resources.files(__name__), "OCRB.otf")
-    fontpathocrbalt = os.path.join(
-        importlib.resources.files(__name__), "OCRB.ttf")
-    fontpath = os.path.dirname(fontpathocrb)
-elif(pkgres):
-    fontpathocra = pkg_resources.resource_filename(__name__, "OCRA.otf")
-    fontpathocraalt = pkg_resources.resource_filename(__name__, "OCRA.ttf")
-    fontpathocrb = pkg_resources.resource_filename(__name__, "OCRB.otf")
-    fontpathocrbalt = pkg_resources.resource_filename(__name__, "OCRB.ttf")
-    fontpath = os.path.dirname(fontpathocrb)
-elif(not pkgres):
-    fontpathocra = os.path.dirname(__file__)+os.sep+"OCRA.otf"
-    fontpathocraalt = os.path.dirname(__file__)+os.sep+"OCRA.ttf"
-    fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf"
-    fontpathocrbalt = os.path.dirname(__file__)+os.sep+"OCRB.ttf"
-    fontpath = os.path.dirname(fontpathocrb)
-else:
-    fontpathocra = os.path.dirname(__file__)+os.sep+"OCRA.otf"
-    fontpathocraalt = os.path.dirname(__file__)+os.sep+"OCRA.ttf"
-    fontpathocrb = os.path.dirname(__file__)+os.sep+"OCRB.otf"
-    fontpathocrbalt = os.path.dirname(__file__)+os.sep+"OCRB.ttf"
-    fontpath = os.path.dirname(fontpathocrb)
+    # last resort: relative to __file__ (works only when not zipped)
+    mod = sys.modules.get(package_name)
+    base = os.path.dirname(getattr(mod, "__file__", __file__))
+    return os.path.join(base, filename)
 
-os.environ['FONTCONFIG_PATH'] = fontpath
+
+# -----------------------------
+# Fontconfig helper (optional)
+# -----------------------------
+
+def _xml_escape(s):
+    # minimal XML escaping; works for str/unicode
+    if s is None:
+        return ""
+    return (s.replace("&", "&amp;")
+             .replace("<", "&lt;")
+             .replace(">", "&gt;")
+             .replace('"', "&quot;")
+             .replace("'", "&apos;"))
+
+def setup_fontconfig_for_dir(font_dir, keep=False):
+    """
+    Create a temporary fontconfig config that scans `font_dir`.
+    Returns (tmpdir, conf_path). Call cleanup_fontconfig_tmp(tmpdir) when done
+    unless keep=True.
+    """
+    tmpdir = tempfile.mkdtemp(prefix="fontconfig_")
+    conf_path = os.path.join(tmpdir, "fonts.conf")
+
+    xml = u"""<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <description>Generated by Python</description>
+
+  <!-- Only use the fonts we explicitly add -->
+  <reset-dirs/>
+
+  <!-- Add our font directory -->
+  <dir>{font_dir}</dir>
+
+  <!-- Put cache in the temp dir (writeable) -->
+  <cachedir>{cache_dir}</cachedir>
+</fontconfig>
+""".format(
+        font_dir=_xml_escape(font_dir),
+        cache_dir=_xml_escape(tmpdir),
+    )
+
+    # Write UTF-8 (Py2/3)
+    f = open(conf_path, "wb")
+    try:
+        f.write(xml.encode("utf-8"))
+    finally:
+        f.close()
+
+    # Tell fontconfig to use it
+    os.environ["FONTCONFIG_PATH"] = tmpdir
+    os.environ["FONTCONFIG_FILE"] = conf_path
+
+    # Optional: reduce debug spam
+    os.environ.setdefault("FC_DEBUG", "0")
+
+    if keep:
+        print("Fontconfig temp dir:", tmpdir)
+        print("Fontconfig file:", conf_path)
+
+    return tmpdir, conf_path
+
+def cleanup_fontconfig_tmp(tmpdir):
+    shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+# -----------------------------
+# Your package font paths (real paths; zip-safe)
+# -----------------------------
+
+fontpathocra    = resource_path(__name__, "OCRA.otf")
+fontpathocraalt = resource_path(__name__, "OCRA.ttf")
+fontpathocrb    = resource_path(__name__, "OCRB.otf")
+fontpathocrbalt = resource_path(__name__, "OCRB.ttf")
+
+fontpath = os.path.dirname(fontpathocrb)
+
+# If you want fontconfig to scan *this* dir for libs that rely on fontconfig:
+# (You can leave this off if you don't need fontconfig)
+_fontconfig_tmpdir, _fontconfig_conf = setup_fontconfig_for_dir(fontpath, keep=False)
+
+# If you prefer automatic cleanup at interpreter exit:
+atexit.register(lambda: cleanup_fontconfig_tmp(_fontconfig_tmpdir))
