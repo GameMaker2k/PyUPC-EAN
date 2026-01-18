@@ -376,7 +376,7 @@ def new_image_surface(sizex, sizey, bgcolor, imtype=None):
     """
     if(imtype is None):
         surface = cairo.RecordingSurface(
-            cairo.CONTENT_COLOR, float(sizex), float(sizey)
+            cairo.CONTENT_COLOR, (0.0, 0.0, float(sizex), float(sizey))
         )
     elif(imtype=="image"):
         surface = cairo.ImageSurface(
@@ -396,7 +396,7 @@ def new_image_surface(sizex, sizey, bgcolor, imtype=None):
         )
     else:
         surface = cairo.RecordingSurface(
-            cairo.CONTENT_COLOR, float(sizex), float(sizey)
+            cairo.CONTENT_COLOR, (0.0, 0.0, float(sizex), float(sizey))
         )
     ctx = cairo.Context(surface)
     ctx.set_antialias(cairo.ANTIALIAS_NONE)
