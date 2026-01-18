@@ -156,7 +156,10 @@ def setup_fontconfig_for_dir(font_dir, keep=False):
     os.environ["FONTCONFIG_FILE"] = conf_path
 
     # Optional: reduce debug spam
-    os.environ.setdefault("FC_DEBUG", "0")
+    # os.environ.setdefault("FC_DEBUG", "0")
+    # Avoid triggering buggy fontconfig debug output
+    os.environ.pop("FC_DEBUG", None)
+
 
     if keep:
         print("Fontconfig temp dir:", tmpdir)
