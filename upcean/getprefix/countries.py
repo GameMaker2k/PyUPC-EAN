@@ -65,7 +65,7 @@ def get_gs1_prefix(upc):
         "^(389)": "Montenegro",
         "^(390)": "Kosovo",
         "^(4[0-3][0-9]|440)": "Germany",
-        "^(4[0-5][0-9])": "Japan",
+        "^(45[0-9])": "Japan",
         "^(46[0-9])": "Russia",
         "^(470)": "Kyrgyzstan",
         "^(471)": "Taiwan",
