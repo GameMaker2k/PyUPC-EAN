@@ -82,28 +82,42 @@ try:
 except Exception:
     freetype = None
 
-# Cache: (abspath, face_index) -> cairo.FontFace (or None if not possible)
+# Cache: (abspath, face_index) -> (cairo_face, ft_face) OR None
 _FT_FONTFACE_CACHE = {}
 
 def _cairo_font_face_from_ttf(ttf_path, face_index=0):
     """
     Best-effort: create a cairo.FontFace from a font file without installing it.
-    Returns cairo.FontFace or None if freetype/cairo-ft bridge not available.
-    Safe to call repeatedly (cached).
+
+    Returns:
+        - cairocffi.FontFace on success
+        - None if freetype/cairo-ft bridge not available or creation fails
+
+    Important:
+        We cache BOTH the cairo_face and the freetype Face object so the underlying
+        FT_Face stays alive for as long as the cairo_face might be used.
     """
     if not ttf_path:
         return None
+
     ttf_path = os.path.abspath(ttf_path)
     key = (ttf_path, int(face_index))
-    if key in _FT_FONTFACE_CACHE:
-        return _FT_FONTFACE_CACHE[key]
 
+    # Cache hit
+    cached = _FT_FONTFACE_CACHE.get(key, None)
+    if cached is None and key in _FT_FONTFACE_CACHE:
+        # explicitly cached failure
+        return None
+    if cached is not None:
+        cairo_face, ft_face = cached  # keep ft_face referenced via cache
+        return cairo_face
+
+    # No freetype -> cannot do FT loading
     if freetype is None:
         _FT_FONTFACE_CACHE[key] = None
         return None
 
-    # We need cairo's FT bridge. pycairo doesn't expose it directly,
-    # but cairocffi often can via its ffi + lib.
+    # Need cairocffi + cairo-ft bridge
     try:
         import cairocffi
         from cairocffi import ffi, lib
@@ -111,26 +125,36 @@ def _cairo_font_face_from_ttf(ttf_path, face_index=0):
         _FT_FONTFACE_CACHE[key] = None
         return None
 
-    # Ensure this cairocffi build has FT functions
     if not hasattr(lib, "cairo_ft_font_face_create_for_ft_face"):
         _FT_FONTFACE_CACHE[key] = None
         return None
 
     try:
-        ft_face = freetype.Face(ttf_path)
-        # Select the face index if needed (freetype-py supports it via Face(..., index))
-        # Some versions: freetype.Face(ttf_path, index=face_index)
-        # If not supported, ignore face_index.
+        # freetype-py Face supports different signatures depending on version.
+        # Prefer using the requested face_index if supported.
+        try:
+            ft_face = freetype.Face(ttf_path, index=int(face_index))
+        except TypeError:
+            ft_face = freetype.Face(ttf_path)
+            # If we couldn't pass index, try selecting a face if API provides it
+            # (not always available). Safe no-op if missing.
+            try:
+                ft_face.face_index = int(face_index)
+            except Exception:
+                pass
 
-        # Create cairo FT font face
         cairo_face_ptr = lib.cairo_ft_font_face_create_for_ft_face(
-            ffi.cast("FT_Face", ft_face._FT_Face), 0
+            ffi.cast("FT_Face", ft_face._FT_Face),
+            0  # load_flags; keep 0 unless you know you need FT_LOAD_* flags
         )
+
         # Wrap pointer into a cairocffi FontFace object
         cairo_face = cairocffi.FontFace._from_pointer(cairo_face_ptr, incref=False)
 
-        _FT_FONTFACE_CACHE[key] = cairo_face
+        # Cache both to keep FT_Face alive
+        _FT_FONTFACE_CACHE[key] = (cairo_face, ft_face)
         return cairo_face
+
     except Exception:
         _FT_FONTFACE_CACHE[key] = None
         return None

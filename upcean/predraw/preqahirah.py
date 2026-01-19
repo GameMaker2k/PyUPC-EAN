@@ -72,42 +72,85 @@ _RE_NAME_COLON_EXT = re.compile(r"^(?P<name>.+):(?P<ext>[A-Za-z]+)$")
 cairo_valid_extensions = set(["SVG", "PDF", "PS", "EPS", "RAW", "CAIRO", "QAHIRAH"])
 
 
-# Cache: (abspath, face_index) -> qah.FontFace (or None)
+# Sentinel to mean "we tried and it failed"
+_QAH_FAIL = object()
+
+# Cache: (abspath, face_index) -> (qah_face, keepalive) OR _QAH_FAIL
 _QAH_FONTFACE_CACHE = {}
 
 def _qah_font_face_from_file(path, face_index=0):
     """
-    Best-effort create a Qahirah FontFace from a font file path.
-    Safe to call repeatedly: caches per absolute path.
-    Returns FontFace or None.
+    Best-effort: create a Qahirah FontFace from a font file path.
+
+    Returns:
+        - qah.FontFace on success
+        - None on failure
+
+    Caching:
+        - On success, caches (qah_face, keepalive)
+        - On failure, caches _QAH_FAIL
+
+    Keepalive:
+        - Usually None (when Qahirah loads from filename internally)
+        - If we go through a FreeType FT_Face route, we keep the FT object alive
     """
     if not path:
         return None
 
     ap = os.path.abspath(path)
     key = (ap, int(face_index))
-    if key in _QAH_FONTFACE_CACHE:
-        return _QAH_FONTFACE_CACHE[key]
 
-    face = None
+    cached = _QAH_FONTFACE_CACHE.get(key, None)
+    if cached is _QAH_FAIL:
+        return None
+    if cached is not None:
+        qah_face, keepalive = cached
+        return qah_face
+
+    qah_face = None
+    keepalive = None
+
     try:
-        # Different qahirah versions expose different factory names.
-        if hasattr(qah.FontFace, "create_for_file"):
-            face = qah.FontFace.create_for_file(ap)  # common
-        elif hasattr(qah.FontFace, "create_for_ft_face"):
-            # requires an FT_Face; qahirah usually hides this, so rarely used here
-            face = None
-        elif hasattr(qah, "FontFace") and hasattr(qah.FontFace, "create_for_filename"):
-            face = qah.FontFace.create_for_filename(ap)
-        elif hasattr(qah, "freetype") and hasattr(qah.freetype, "FontFace"):
-            # Some builds expose freetype module
-            if hasattr(qah.freetype.FontFace, "create_for_file"):
-                face = qah.freetype.FontFace.create_for_file(ap)
-    except Exception:
-        face = None
+        # 1) Best case: Qahirah can load directly from a filename.
+        # In this case Qahirah should manage any underlying lifetime itself.
+        if hasattr(qah, "FontFace") and hasattr(qah.FontFace, "create_for_file"):
+            qah_face = qah.FontFace.create_for_file(ap)
 
-    _QAH_FONTFACE_CACHE[key] = face
-    return face
+        elif hasattr(qah, "FontFace") and hasattr(qah.FontFace, "create_for_filename"):
+            qah_face = qah.FontFace.create_for_filename(ap)
+
+        # 2) Alternative: some builds expose a freetype submodule that can create a face.
+        elif hasattr(qah, "freetype") and hasattr(qah.freetype, "FontFace"):
+            FF = qah.freetype.FontFace
+            if hasattr(FF, "create_for_file"):
+                qah_face = FF.create_for_file(ap)
+            elif hasattr(FF, "create_for_filename"):
+                qah_face = FF.create_for_filename(ap)
+
+        # 3) Last resort: FreeType-based route if exposed.
+        # This is the only case where "keep FT_Face alive" matters.
+        elif hasattr(qah, "FontFace") and hasattr(qah.FontFace, "create_for_ft_face"):
+            # Only attempt if we have freetype available and can open the font.
+            # This assumes you already have `freetype` imported (freetype-py),
+            # or Qahirah exposes something compatible.
+            if freetype is not None:
+                try:
+                    ft_face = freetype.Face(ap, index=int(face_index))
+                except TypeError:
+                    ft_face = freetype.Face(ap)
+                qah_face = qah.FontFace.create_for_ft_face(ft_face._FT_Face)
+                keepalive = ft_face  # keep FT_Face alive
+
+    except Exception:
+        qah_face = None
+        keepalive = None
+
+    if qah_face is None:
+        _QAH_FONTFACE_CACHE[key] = _QAH_FAIL
+        return None
+
+    _QAH_FONTFACE_CACHE[key] = (qah_face, keepalive)
+    return qah_face
 
 
 def _pick_font_path(ftype):
