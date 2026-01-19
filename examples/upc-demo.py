@@ -35,7 +35,7 @@ def rot_center(image, rect, angle):
     return rot_image, rot_rect
 
 
-numbarcodes = 12
+NUM_BARCODES = random.randint(12, 24)
 barcodesize = 1
 pygame.init()
 '''
@@ -62,7 +62,7 @@ randbarcode = {}
 randsubbarcode = {}
 randchck = {}
 count = 0
-maxnum = numbarcodes
+maxnum = NUM_BARCODES
 print("Python Version: "+platform.python_version())
 pygamesdlver = pygame.get_sdl_version()
 pygamesdlstr = str(pygamesdlver[0])+"." + \
