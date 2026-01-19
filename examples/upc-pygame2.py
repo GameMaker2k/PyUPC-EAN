@@ -35,19 +35,21 @@ print("PyUPC-EAN Version: {upcean.__version__}")
 
 # Barcode and Position Initialization Functions
 def create_barcode():
-    barcode = upcean.oopfuncs.barcode()
-    barcode_type = random.choice(["upca", "upce", "ean13", "ean8", "itf14"])
-    barcode.type = barcode_type
-
-    # Assign code based on type
-    code_length = {"upca": 11, "upce": 7, "ean13": 12, "ean8": 7, "itf14": 13}[barcode_type]
-    barcode.code = str(random.randint(0, 10**code_length - 1)).zfill(code_length)
+    while(True):
+        barcode = upcean.oopfuncs.barcode()
+        barcode_type = random.choice(["upca", "upce", "ean13", "ean8", "itf14"])
+        barcode.type = barcode_type
+        # Assign code based on type
+        code_length = {"upca": 11, "upce": 7, "ean13": 12, "ean8": 7, "itf14": 13}[barcode_type]
+        barcode.code = str(random.randint(0, 10**code_length - 1)).zfill(code_length)
+        if(barcode.validate_checksum()):
+            break;
     barcode.code = barcode.fix_checksum()
     return barcode
 
 def generate_barcode_image(barcode):
     barcode.size = BARCODE_SIZE
-    barcode_img = barcode.validate_draw_barcode().convert("RGBA")
+    barcode_img = barcode.validate_draw_barcode()[1].convert("RGBA")
     barcode_img = barcode_img.rotate(random.randint(0, 360), Image.BICUBIC, True)
     return pygame.image.fromstring(barcode_img.tobytes(), barcode_img.size, barcode_img.mode)
 

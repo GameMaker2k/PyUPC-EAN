@@ -11,6 +11,7 @@ import sdl2.ext
 from PIL import Image
 import PIL
 import upcean
+import ctypes
 
 # Constants
 NUM_BARCODES = 12
@@ -35,42 +36,55 @@ print("PyUPC-EAN Version: {}".format(upcean.__version__))
 
 # Barcode and Position Initialization Functions
 def create_barcode():
-    barcode = upcean.oopfuncs.barcode()
-    barcode_type = random.choice(["upca", "upce", "ean13", "ean8", "itf14"])
-    barcode.type = barcode_type
-
-    # Assign code based on type
-    code_length = {"upca": 11, "upce": 7, "ean13": 12, "ean8": 7, "itf14": 13}[barcode_type]
-    barcode.code = str(random.randint(0, 10**code_length - 1)).zfill(code_length)
+    while(True):
+        barcode = upcean.oopfuncs.barcode()
+        barcode_type = random.choice(["upca", "upce", "ean13", "ean8", "itf14"])
+        barcode.type = barcode_type
+        # Assign code based on type
+        code_length = {"upca": 11, "upce": 7, "ean13": 12, "ean8": 7, "itf14": 13}[barcode_type]
+        barcode.code = str(random.randint(0, 10**code_length - 1)).zfill(code_length)
+        if(barcode.validate_checksum()):
+            break;
     barcode.code = barcode.fix_checksum()
     return barcode
 
 def generate_barcode_image(barcode):
     barcode.size = BARCODE_SIZE
-    barcode_img = barcode.validate_draw_barcode().convert("RGBA")
+    barcode_img = barcode.validate_draw_barcode()[1].convert("RGBA")
     barcode_img = barcode_img.rotate(random.randint(0, 360), Image.BICUBIC, True)
     return barcode_img
 
-def convert_pillow_to_sdl2_surface(image):
-    """Converts a Pillow Image to an SDL2 Surface"""
-    image_data = image.tobytes()
+def pillow_to_sdl_texture(renderer: sdl2.ext.Renderer, pil_img):
+    img = pil_img.convert("RGBA")
+    w, h = img.size
+    pitch = w * 4
+
+    buf = ctypes.create_string_buffer(img.tobytes())
     surface = sdl2.SDL_CreateRGBSurfaceWithFormatFrom(
-        image_data, image.width, image.height, 32, image.width * 4, sdl2.SDL_PIXELFORMAT_RGBA32)
-    return surface
+        buf, w, h, 32, pitch, sdl2.SDL_PIXELFORMAT_RGBA32
+    )
+    if not surface:
+        raise RuntimeError(sdl2.SDL_GetError().decode())
+
+    # NOTE: Texture wants (renderer, surface)
+    tex = sdl2.ext.Texture(renderer, surface)
+
+    sdl2.SDL_FreeSurface(surface)
+    return tex
 
 def random_position():
     return [random.randint(0, WIDTH), random.randint(0, HEIGHT)]
 
-# Initialize Barcodes, Images, Positions, and Directions
-barcodes = [create_barcode() for _ in range(NUM_BARCODES)]
-barcode_images = [generate_barcode_image(barcode) for barcode in barcodes]
-sdl_surfaces = [convert_pillow_to_sdl2_surface(image) for image in barcode_images]
-positions = [random_position() for _ in range(NUM_BARCODES)]
-directions = [(random.choice([-2, -1, 1, 2]), random.choice([-2, -1, 1, 2])) for _ in range(NUM_BARCODES)]
-
 # Renderer
 renderer = sdl2.ext.Renderer(window)
 running = True
+
+# Initialize Barcodes, Images, Positions, and Directions
+barcodes = [create_barcode() for _ in range(NUM_BARCODES)]
+barcode_images = [generate_barcode_image(barcode) for barcode in barcodes]
+sdl_textures = [pillow_to_sdl_texture(renderer, image) for image in barcode_images]
+positions = [random_position() for _ in range(NUM_BARCODES)]
+directions = [(random.choice([-2, -1, 1, 2]), random.choice([-2, -1, 1, 2])) for _ in range(NUM_BARCODES)]
 
 # Animation Loop
 while running:
@@ -90,11 +104,11 @@ while running:
             directions[i] = (random.choice([-2, -1, 1, 2]), random.choice([-2, -1, 1, 2]))
             barcodes[i] = create_barcode()
             barcode_images[i] = generate_barcode_image(barcodes[i])
-            sdl_surfaces[i] = convert_pillow_to_sdl2_surface(barcode_images[i])
+            sdl_textures[i] = pillow_to_sdl_texture(renderer, barcode_images[i])
 
         # Convert position and draw on screen
         dst_rect = sdl2.SDL_Rect(pos[0], pos[1], barcode_images[i].width, barcode_images[i].height)
-        renderer.copy(sdl_surfaces[i], None, dst_rect)
+        renderer.copy(sdl_textures[i], None, dst_rect)
 
     # Present the renderer
     renderer.present()
@@ -109,7 +123,4 @@ while running:
             if event.key.keysym.sym in {sdl2.SDLK_ESCAPE, sdl2.SDLK_q}:
                 running = False
 
-# Clean up and quit
-for surface in sdl_surfaces:
-    sdl2.SDL_FreeSurface(surface)
 sdl2.ext.quit()
