@@ -580,7 +580,7 @@ def validate_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(4
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return create_itf_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -588,7 +588,7 @@ def validate_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1)
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return draw_itf_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_itf_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf_barcode_sheet(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -596,7 +596,7 @@ def validate_create_itf_barcode_sheet(upc, outfile="./itf.png", resize=1, barhei
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return create_itf_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -604,7 +604,7 @@ def validate_draw_itf_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return draw_itf_barcode_sheet(fullfullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_itf_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
@@ -612,7 +612,7 @@ def validate_encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheigh
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return encode_itf_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_itf_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -620,7 +620,7 @@ def validate_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return create_itf6_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf6_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -628,7 +628,7 @@ def validate_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return draw_itf6_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_itf6_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf6_barcode_sheet(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -636,7 +636,7 @@ def validate_create_itf6_barcode_sheet(upc, outfile="./itf6.png", resize=1, barh
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return create_itf6_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf6_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf6_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -644,7 +644,7 @@ def validate_draw_itf6_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return draw_itf6_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_itf6_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
@@ -652,7 +652,7 @@ def validate_encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheig
         return False
     if(not upcean.validate.validate_itf6_checksum(upc)):
         return False
-    return encode_itf6_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_itf6_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -660,7 +660,7 @@ def validate_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheigh
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return create_itf14_barcode(fullupc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf14_barcode(upc, outfile, resize, barheight, barwidth, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -668,7 +668,7 @@ def validate_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return draw_itf14_barcode(fullupc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return draw_itf14_barcode(upc, resize, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def validate_create_itf14_barcode_sheet(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -676,7 +676,7 @@ def validate_create_itf14_barcode_sheet(upc, outfile="./itf14.png", resize=1, ba
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return create_itf14_barcode_sheet(fullupc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
+    return create_itf14_barcode_sheet(upc, outfile, resize, barheight, barwidth, numxy, barcolor, hideinfo, imagecomment, imageoutlib)
 
 
 def validate_draw_itf14_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
@@ -684,7 +684,7 @@ def validate_draw_itf14_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidt
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return draw_itf14_barcode_sheet(fullupc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
+    return draw_itf14_barcode_sheet(upc, resize, barheight, barwidth, numxy, barcolor, hideinfo, imageoutlib)
 
 
 def validate_encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
@@ -692,7 +692,7 @@ def validate_encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barhei
         return False
     if(not upcean.validate.validate_itf14_checksum(upc)):
         return False
-    return encode_itf14_barcode(inimage, fullupc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
+    return encode_itf14_barcode(inimage, upc, resize, shiftxy, barheight, barwidth, barcolor, hideinfo, imageoutlib)
 
 
 def fix_create_upca_barcode(upc, outfile="./upca.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
@@ -1299,101 +1299,101 @@ def fix_create_itf_barcode(upc, outfile="./itf.png", resize=1, barheight=(48, 54
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return create_itf_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return create_itf_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return draw_itf_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return draw_itf_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 def fix_create_itf_barcode_sheet(upc, outfile="./itf.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return create_itf_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return create_itf_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return draw_itf_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return draw_itf_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_encode_itf_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return encode_itf_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return encode_itf_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_create_itf6_barcode(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return create_itf6_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return create_itf6_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf6_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return draw_itf6_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return draw_itf6_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_create_itf6_barcode_sheet(upc, outfile="./itf6.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return create_itf6_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return create_itf6_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf6_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return draw_itf6_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return draw_itf6_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_encode_itf6_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     if(len(upc) > 6 or len(upc) < 5):
         return False
     upc = upcean.validate.fix_itf6_checksum(upc)
-    return encode_itf6_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return encode_itf6_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_create_itf14_barcode(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return create_itf14_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return create_itf14_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf14_barcode(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return draw_itf14_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return draw_itf14_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
 
 
 def fix_create_itf14_barcode_sheet(upc, outfile="./itf14.png", resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imagecomment=None, imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return create_itf14_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return create_itf14_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_draw_itf14_barcode_sheet(upc, resize=1, barheight=(48, 54), barwidth=(1, 1), numxy=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=defaultdraw):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return draw_itf14_barcode_sheet(fullupc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
+    return draw_itf14_barcode_sheet(upc, outfile, resize, hideinfo, barheight, barwidth, numxy, textxy, barcolor, imageoutlib)
 
 
 def fix_encode_itf14_barcode(inimage, upc, resize=1, shiftxy=(0, 0), barheight=(48, 54), barwidth=(1, 1), barcolor=((0, 0, 0), (0, 0, 0), (255, 255, 255)), hideinfo=(False, False, False), imageoutlib=None):
     if(len(upc) > 14 or len(upc) < 13):
         return False
     upc = upcean.validate.fix_itf14_checksum(upc)
-    return encode_itf14_barcode(fullupc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
+    return encode_itf14_barcode(upc, outfile, resize, hideinfo, barheight, barwidth, textxy, barcolor, imageoutlib)
