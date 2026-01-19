@@ -106,24 +106,46 @@ def make_upce_barcode(numbersystem, manufacturer, product):
     return upc + str(checksum)
 
 
+_UPCE_RE = re.compile(r"^([01])(\d)(\d)(\d)(\d)(\d)(\d)(\d)$")
+
 def convert_barcode_from_upce_to_upca(upc):
-    upc = str(upc).zfill(8)  # Zero-pad to 8 digits if needed
-    if len(upc) != 8 or not re.match(r"^[01]", upc):
+    upc = str(upc).strip().zfill(8)
+
+    m = _UPCE_RE.match(upc)
+    if not m:
         return False
+
     if not upcean.validate.validate_upce_checksum(upc):
         return False
-    
-    upc_matches = re.match("(0|1)(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d{1})(\\d)(\\d)", upc).groups()
-    base = upc_matches[0] + upc_matches[1] + upc_matches[2]
-    
-    if upc_matches[6] in "012":
-        upca = "{}0000{}{}".format(base, upc_matches[3], upc_matches[4])
-    elif upc_matches[6] == "3":
-        upca = "{}00000{}".format(base, upc_matches[4])
-    else:
-        upca = "{}0000{}".format(upc_matches[0] + upc_matches[1] + upc_matches[2] + upc_matches[3] + upc_matches[4], upc_matches[6])
-    
-    return upca + upc_matches[7]
+
+    ns, d1, d2, d3, d4, d5, d6, chk = m.groups()
+
+    if d6 in "012":
+        mfg  = d1 + d2 + d6 + "00"      # FIXED (5 digits)
+        item = "00" + d3 + d4 + d5      # 5 digits
+    elif d6 == "3":
+        mfg  = d1 + d2 + d3 + "00"      # 5 digits
+        item = "000" + d4 + d5          # 5 digits
+    elif d6 == "4":
+        mfg  = d1 + d2 + d3 + d4 + "0"  # 5 digits
+        item = "0000" + d5              # 5 digits
+    else:  # 5-9
+        mfg  = d1 + d2 + d3 + d4 + d5   # 5 digits
+        item = "0000" + d6              # 5 digits
+
+    upca11 = ns + mfg + item
+    if len(upca11) != 11:
+        return False
+
+    upca12 = upca11 + chk
+    if len(upca12) != 12:
+        return False
+
+    if not upcean.validate.validate_upca_checksum(upca12):
+        return False
+
+    return upca12
+
 
 def convert_barcode_from_upca_to_ean13(upc):
     upc = str(upc).zfill(12)
@@ -164,18 +186,31 @@ def convert_barcode_from_upca_to_upce(upc):
     if len(upc) != 12 or not upcean.validate.validate_upca_checksum(upc):
         return False
 
-    patterns = [
-        ("(0|1)(\\d{2})00000(\\d{3})(\\d{1})", "{}{}{}0{}"),
-        ("(0|1)(\\d{3})00000(\\d{2})(\\d{1})", "{}{}{}3{}"),
-        ("(0|1)(\\d{4})00000(\\d{1})(\\d{1})", "{}{}{}4{}"),
-        ("(0|1)(\\d{5})00005(\\d{1})", "{}{}5{}"),
-    ]
-    
-    for pattern, fmt in patterns:
-        match = re.match(pattern, upc)
-        if match:
-            return fmt.format(*match.groups())
-    
+    ns = upc[0]
+    if ns not in "01":
+        return False
+
+    mfg  = upc[1:6]   # 5 digits
+    prod = upc[6:11]  # 5 digits
+    chk  = upc[11]
+
+    # UPC-E "mode" 0,1,2
+    if mfg[2] in "012" and mfg[3:5] == "00" and prod[0:2] == "00":
+        # NS + (mfg[0:2]) + (prod[2:5]) + (mfg[2]) + check
+        return (ns + mfg[0:2] + prod[2:5] + mfg[2] + chk).zfill(8)
+
+    # mode 3
+    if mfg[3:5] == "00" and prod[0:3] == "000":
+        return (ns + mfg[0:3] + prod[3:5] + "3" + chk).zfill(8)
+
+    # mode 4
+    if mfg[4] == "0" and prod[0:4] == "0000":
+        return (ns + mfg[0:4] + prod[4] + "4" + chk).zfill(8)
+
+    # mode 5-9
+    if prod[0:4] == "0000" and prod[4] in "56789":
+        return (ns + mfg + prod[4] + chk).zfill(8)
+
     return False
 
 def convert_barcode_from_ean13_to_upce(upc):
