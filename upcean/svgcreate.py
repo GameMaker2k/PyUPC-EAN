@@ -11,32 +11,66 @@
     Copyright 2011-2025 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2011-2025 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: predraw.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
+    $FileInfo: svgcreate.py - Last Update: 7/2/2025 Ver. 2.20.2 RC 1 - Author: cooldude2k $
 '''
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 
-version = (1, 4, 3, 'release')
-VERSION = "1.4.3"
-
-try:
-    # For Python 2 and 3 compatibility
-    from xml.dom.minidom import Document
-except ImportError:
-    from xml.dom.minidom import Document
-
+import sys
 import base64
 import os
 import re
 
+try:
+    from xml.dom.minidom import Document
+except ImportError:
+    # Very old/odd environments only; keeps the intent explicit
+    from xml.dom.minidom import Document
+
 # Import 'open' from 'io' to support 'encoding' parameter in both Python 2 and Python 3
 from io import open
 
-# Import the download functions from upcean.downloader
-from upcean.downloader import (
-    download_file_from_internet_file,
-    download_file_from_internet_string
-)
+# Optional dependency: used only for web font embedding
+try:
+    from upcean.downloader import (
+        download_file_from_internet_file,
+        download_file_from_internet_string
+    )
+except ImportError:
+    download_file_from_internet_file = None
+    download_file_from_internet_string = None
+
+version = (1, 4, 3, 'release')
+VERSION = "1.4.3"
+
+
+def _ensure_text(s, encoding='utf-8', errors='strict'):
+    """
+    Return a unicode/text string on both Py2 and Py3.
+    - Py3: str
+    - Py2: unicode
+    """
+    if sys.version_info[0] < 3:
+        # Py2
+        try:
+            text_type = unicode  # noqa: F821
+        except NameError:
+            text_type = str
+        if isinstance(s, text_type):
+            return s
+        # If it's bytes/str in Py2, decode
+        try:
+            return s.decode(encoding, errors)
+        except Exception:
+            return text_type(s)
+    else:
+        # Py3
+        if isinstance(s, str):
+            return s
+        if isinstance(s, (bytes, bytearray)):
+            return s.decode(encoding, errors)
+        return str(s)
+
 
 class BaseElement(object):
     """
@@ -46,62 +80,33 @@ class BaseElement(object):
         self.tag_name = tag_name
         self.kwargs = kwargs
         self.children = []
-        self._attribs = {}  # Renamed from 'attribs' to '_attribs'
-        # Set attributes from kwargs
+        self._attribs = {}
         for k, v in kwargs.items():
             self._attribs[k.replace('_', '-')] = v
 
     def set_iri(self, name, value):
-        """
-        Set an Internationalized Resource Identifier (IRI) attribute.
-        """
         self._attribs[name.replace('_', '-')] = value
 
     def get_iri(self, name):
-        """
-        Get an IRI attribute.
-        """
         return self._attribs.get(name.replace('_', '-'))
 
     def update(self, kwargs):
-        """
-        Update attributes.
-        """
         for k, v in kwargs.items():
             self._attribs[k.replace('_', '-')] = v
 
     def set_desc(self, desc):
-        """
-        Set a description for the element.
-        """
-        desc_el = Description(desc)
-        self.add(desc_el)
+        self.add(Description(desc))
 
     def set_title(self, title):
-        """
-        Set a title for the element.
-        """
-        title_el = Title(title)
-        self.add(title_el)
+        self.add(Title(title))
 
     def set_metadata(self, metadata):
-        """
-        Set metadata for the element.
-        """
-        metadata_el = Metadata(metadata)
-        self.add(metadata_el)
+        self.add(Metadata(metadata))
 
     def add(self, element):
-        """
-        Add a child element.
-        """
-        # Default behavior; overridden in container classes
         self.children.append(element)
 
     def elements(self, descend=False):
-        """
-        Iterate over child elements.
-        """
         for child in self.children:
             yield child
             if descend and hasattr(child, 'elements'):
@@ -109,18 +114,20 @@ class BaseElement(object):
                     yield subchild
 
     def to_xml(self, doc):
-        """
-        Convert the element to an XML element.
-        """
         el = doc.createElement(self.tag_name)
         for k, v in self._attribs.items():
-            el.setAttribute(k, str(v))
+            # Use robust text conversion to avoid Py2 UnicodeEncodeError
+            el.setAttribute(k, _ensure_text(v))
         for child in self.children:
             el.appendChild(child.to_xml(doc))
         return el
 
     def __str__(self):
-        return "<{}>".format(self.tag_name)
+        s = "<{0}>".format(self.tag_name)
+        if sys.version_info[0] < 3:
+            return s.encode('utf-8')
+        return s
+
 
 class Drawing(BaseElement):
     def __init__(self, filename=None, size=('100%', '100%'), profile='full', **kwargs):
@@ -133,9 +140,11 @@ class Drawing(BaseElement):
         self.root.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
         self.root.setAttribute('version', '1.1')
         self.set_size(size)
+
         self._elements = []
-        self._element_ids = set()  # To track added elements
+        self._element_ids = set()
         self.defs = Defs()
+
         self.doc.appendChild(self.root)
 
     @property
@@ -143,7 +152,8 @@ class Drawing(BaseElement):
         return self._size
 
     @property
-    def elements(self):
+    def elements_list(self):
+        # avoid name collision with elements() method
         return self._elements
 
     @property
@@ -164,87 +174,76 @@ class Drawing(BaseElement):
 
     def set_size(self, size):
         self._size = size
-        self._attribs['width'] = str(size[0])
-        self._attribs['height'] = str(size[1])
-        self.root.setAttribute('width', str(size[0]))
-        self.root.setAttribute('height', str(size[1]))
+        self._attribs['width'] = _ensure_text(size[0])
+        self._attribs['height'] = _ensure_text(size[1])
+        self.root.setAttribute('width', _ensure_text(size[0]))
+        self.root.setAttribute('height', _ensure_text(size[1]))
 
     def set_profile(self, name):
         self.profile = name
 
     def set_viewport(self, width, height):
-        self._attribs['width'] = str(width)
-        self._attribs['height'] = str(height)
-        self.root.setAttribute('width', str(width))
-        self.root.setAttribute('height', str(height))
+        self._attribs['width'] = _ensure_text(width)
+        self._attribs['height'] = _ensure_text(height)
+        self.root.setAttribute('width', _ensure_text(width))
+        self.root.setAttribute('height', _ensure_text(height))
 
     def set_viewbox(self, minx, miny, width, height, aspectratio='none'):
-        viewbox_value = '{} {} {} {}'.format(minx, miny, width, height)
+        viewbox_value = '{0} {1} {2} {3}'.format(minx, miny, width, height)
         self._attribs['viewBox'] = viewbox_value
         self._attribs['preserveAspectRatio'] = aspectratio
-        self.root.setAttribute('viewBox', viewbox_value)
-        self.root.setAttribute('preserveAspectRatio', aspectratio)
+        self.root.setAttribute('viewBox', _ensure_text(viewbox_value))
+        self.root.setAttribute('preserveAspectRatio', _ensure_text(aspectratio))
 
     def set_desc(self, desc):
-        desc_el = Description(desc)
-        self.add(desc_el)
+        self.add(Description(desc))
 
     def set_title(self, title):
-        title_el = Title(title)
-        self.add(title_el)
+        self.add(Title(title))
 
     def set_metadata(self, metadata_content):
-        metadata_el = Metadata(metadata_content)
-        self.add(metadata_el)
+        self.add(Metadata(metadata_content))
 
     def add_stylesheet(self, href, title=None, alternate='no', media='screen'):
-        # Check if stylesheet is already added
         key = ('stylesheet', href)
         if key in self.defs.child_elements:
-            return  # Stylesheet already added
+            return
 
         style_el = ProcessingInstruction(
             'xml-stylesheet',
-            'type="text/css" href="{}" title="{}" alternate="{}" media="{}"'.format(
-                href, title or '', alternate, media))
+            'type="text/css" href="{0}" title="{1}" alternate="{2}" media="{3}"'.format(
+                href, title or '', alternate, media
+            )
+        )
         self.doc.insertBefore(style_el.to_xml(self.doc), self.root)
-        # Record in defs to prevent duplicates
         self.defs.child_elements[key] = style_el
 
     def add_external_stylesheet(self, href):
-        # Check if external stylesheet is already added
         key = ('external_stylesheet', href)
         if key in self.defs.child_elements:
-            return  # Stylesheet already added
+            return
 
         link_el = BaseElement('link', rel='stylesheet', href=href)
         self.root.appendChild(link_el.to_xml(self.doc))
-        # Record in defs to prevent duplicates
         self.defs.child_elements[key] = link_el
 
     def embed_stylesheet(self, css):
-        # Check if the stylesheet has already been embedded
-        key = ('embedded_stylesheet', css.strip())
+        key = ('embedded_stylesheet', _ensure_text(css).strip())
         if key in self.defs.child_elements:
-            return  # Stylesheet already embedded
-
+            return
         style_el = Style(css)
         self.defs.add(style_el, key=key)
 
     def embed_font(self, name, font_file):
-        # Check if the font has already been embedded
         font_key = ('font', name)
         if font_key in self.defs.child_elements:
-            return  # Font already embedded
+            return
 
-        # Read the font file
         with open(font_file, 'rb') as f:
             font_data = f.read()
 
-        # Encode the font data in base64
-        font_base64 = base64.b64encode(font_data).decode('utf-8')
+        font_base64 = base64.b64encode(font_data).decode('ascii')
 
-        # Determine the font format based on the file extension
         ext = os.path.splitext(font_file)[1].lower()
         if ext == '.ttf':
             font_format = 'truetype'
@@ -253,7 +252,6 @@ class Drawing(BaseElement):
         else:
             raise ValueError("Unsupported font format.")
 
-        # Create the @font-face CSS
         font_face = """
         @font-face {{
             font-family: '{0}';
@@ -263,66 +261,55 @@ class Drawing(BaseElement):
         }}
         """.format(name, font_format, font_base64)
 
-        # Add the style to the SVG
         style_element = self.style(font_face)
         self.defs.add(style_element, key=font_key)
 
     def embed_google_web_font(self, name, uri=None):
         """
-        Embeds a Google Web Font into the SVG.
+        Embeds a Google Web Font into the SVG (as data URIs).
 
-        Parameters:
-        - name: The name of the font family.
-        - uri: The URI of the font CSS. If None, a default URI is constructed.
+        Requires optional dependency: upcean (upcean.downloader).
         """
-        # Check if the font has already been embedded
+        if download_file_from_internet_string is None or download_file_from_internet_file is None:
+            raise ImportError("upcean is required for embed_google_web_font()")
+
         font_key = ('google_font', name)
         if font_key in self.defs.child_elements:
-            return  # Font already embedded
+            return
 
-        # If no URI is provided, construct the default Google Fonts URI
         if uri is None:
-            # Replace spaces with '+', encode special characters
             font_name_encoded = re.sub(r'\s+', '+', name)
-            uri = "https://fonts.googleapis.com/css?family={}".format(font_name_encoded)
+            uri = "https://fonts.googleapis.com/css?family={0}".format(font_name_encoded)
 
-        # Fetch the CSS from the URI
         try:
-            # Use the provided function to download the CSS as bytes
             css_bytes = download_file_from_internet_string(uri)
             if not css_bytes:
                 raise Exception("Failed to fetch Google Font CSS.")
-            css = css_bytes.decode('utf-8')
+            css = _ensure_text(css_bytes)
         except Exception as e:
-            raise Exception("Error fetching Google Font: {}".format(e))
+            raise Exception("Error fetching Google Font: {0}".format(e))
 
-        # Modify the CSS to embed fonts as data URIs
         css = self._embed_font_data_in_css(css)
 
-        # Add the style to the SVG
         style_element = self.style(css)
         self.defs.add(style_element, key=font_key)
 
     def _embed_font_data_in_css(self, css):
-        """
-        Helper function to modify CSS by embedding font files as data URIs.
-        """
-        # Find all URLs in the CSS
+        if download_file_from_internet_file is None:
+            raise ImportError("upcean is required for _embed_font_data_in_css()")
+
         url_pattern = re.compile(r'url\(([^)]+)\)')
         matches = url_pattern.findall(css)
 
-        # For each URL, fetch the font file and encode it
         for match in matches:
             font_url = match.strip('\'"')
-            # Fetch the font file
             try:
-                # Use the provided function to download the font file as BytesIO
                 font_file_obj = download_file_from_internet_file(font_url)
                 if not font_file_obj:
-                    continue  # Skip if failed to fetch
-                # Read the font data from the BytesIO object
+                    continue
+
                 font_data = font_file_obj.read()
-                # Determine the font format
+
                 if '.woff2' in font_url:
                     font_format = 'woff2'
                 elif '.woff' in font_url:
@@ -332,16 +319,15 @@ class Drawing(BaseElement):
                 elif '.otf' in font_url:
                     font_format = 'opentype'
                 else:
-                    continue  # Unsupported format
-                # Encode font data in base64
-                font_base64 = base64.b64encode(font_data).decode('utf-8')
-                # Create data URI
-                data_uri = 'url(data:font/{0};base64,{1}) format(\'{0}\')'.format(font_format, font_base64)
-                # Replace the URL in CSS
-                css = css.replace('url({})'.format(match), data_uri)
+                    continue
+
+                font_base64 = base64.b64encode(font_data).decode('ascii')
+                data_uri = "url(data:font/{0};base64,{1}) format('{0}')".format(font_format, font_base64)
+
+                css = css.replace('url({0})'.format(match), data_uri)
             except Exception as e:
-                print("Error embedding font from URL '{}': {}".format(font_url, e))
-                continue  # Skip on any error
+                print("Error embedding font from URL '{0}': {1}".format(font_url, e))
+                continue
 
         return css
 
@@ -351,7 +337,7 @@ class Drawing(BaseElement):
         """
         element_id = getattr(element, 'id', id(element))
         if element_id in self._element_ids:
-            return  # Element already added
+            return
         self._element_ids.add(element_id)
         self._elements.append(element)
 
@@ -366,17 +352,24 @@ class Drawing(BaseElement):
         return self.root
 
     def tostring(self, pretty=False, indent=2):
-        # Append defs if it has children and not already appended
-        if self.defs.children and not any(child.tagName == 'defs' for child in self.root.childNodes):
+        # Append defs once
+        if self.defs.children and not any(
+            getattr(child, 'tagName', None) == 'defs' for child in self.root.childNodes
+        ):
             self.root.insertBefore(self.defs.to_xml(self.doc), self.root.firstChild)
-        # Append other elements
+
+        # Append other elements (NOTE: if tostring() is called multiple times, this will append again)
+        # Keeping your original behavior; if you want idempotent tostring(), I can adjust it.
         for element in self._elements:
             self.root.appendChild(element.to_xml(self.doc))
+
         if pretty:
-            xml_str = self.doc.toprettyxml(indent=" " * indent)
+            xml_out = self.doc.toprettyxml(indent=" " * indent)
         else:
-            xml_str = self.doc.toxml()
-        return xml_str
+            xml_out = self.doc.toxml()
+
+        # Normalize to text/unicode for both Py2/3 callers
+        return _ensure_text(xml_out)
 
     def save(self, pretty=False, indent=2, encoding='utf-8'):
         svg_string = self.tostring(pretty=pretty, indent=indent)
@@ -392,61 +385,42 @@ class Drawing(BaseElement):
 
     def write(self, fileobj, pretty=False, indent=2, encoding='utf-8'):
         """
-        Write XML string to a file-like object.
-
-        Parameters:
-        - fileobj: a file-like object with a write method.
-        - pretty: True for pretty-printed output.
-        - indent: indentation level for pretty-printed output.
-        - encoding: character encoding for the output.
+        Write XML to a file-like object.
+        Works with both:
+          - text mode streams (expects text)
+          - binary mode streams (expects bytes)
         """
         svg_string = self.tostring(pretty=pretty, indent=indent)
-        if isinstance(svg_string, str):
-            svg_string = svg_string.encode(encoding)
-        fileobj.write(svg_string)
+
+        # Try text first
+        try:
+            fileobj.write(svg_string)
+            return
+        except TypeError:
+            pass
+
+        # Then bytes
+        if isinstance(svg_string, (bytes, bytearray)):
+            fileobj.write(svg_string)
+        else:
+            fileobj.write(svg_string.encode(encoding))
 
     # Factory methods to create SVG elements
-    def line(self, start, end, **kwargs):
-        return Line(start, end, **kwargs)
+    def line(self, start, end, **kwargs): return Line(start, end, **kwargs)
+    def circle(self, center, r, **kwargs): return Circle(center, r, **kwargs)
+    def rect(self, insert, size, **kwargs): return Rect(insert, size, **kwargs)
+    def text(self, text_content, insert, **kwargs): return Text(text_content, insert, **kwargs)
+    def path(self, d='', **kwargs): return Path(d, **kwargs)
+    def polygon(self, points, **kwargs): return Polygon(points, **kwargs)
+    def polyline(self, points, **kwargs): return Polyline(points, **kwargs)
+    def ellipse(self, center, r, **kwargs): return Ellipse(center, r, **kwargs)
+    def g(self, **kwargs): return Group(**kwargs)
+    def style(self, css_text): return Style(css_text)
+    def linearGradient(self, **kwargs): return LinearGradient(**kwargs)
+    def radialGradient(self, **kwargs): return RadialGradient(**kwargs)
+    def pattern(self, **kwargs): return Pattern(**kwargs)
+    def stop(self, offset, **kwargs): return Stop(offset, **kwargs)
 
-    def circle(self, center, r, **kwargs):
-        return Circle(center, r, **kwargs)
-
-    def rect(self, insert, size, **kwargs):
-        return Rect(insert, size, **kwargs)
-
-    def text(self, text_content, insert, **kwargs):
-        return Text(text_content, insert, **kwargs)
-
-    def path(self, d='', **kwargs):
-        return Path(d, **kwargs)
-
-    def polygon(self, points, **kwargs):
-        return Polygon(points, **kwargs)
-
-    def polyline(self, points, **kwargs):
-        return Polyline(points, **kwargs)
-
-    def ellipse(self, center, r, **kwargs):
-        return Ellipse(center, r, **kwargs)
-
-    def g(self, **kwargs):
-        return Group(**kwargs)
-
-    def style(self, css_text):
-        return Style(css_text)
-
-    def linearGradient(self, **kwargs):
-        return LinearGradient(**kwargs)
-
-    def radialGradient(self, **kwargs):
-        return RadialGradient(**kwargs)
-
-    def pattern(self, **kwargs):
-        return Pattern(**kwargs)
-
-    def stop(self, offset, **kwargs):
-        return Stop(offset, **kwargs)
 
 class ProcessingInstruction(object):
     """
@@ -457,40 +431,41 @@ class ProcessingInstruction(object):
         self.data = data
 
     def to_xml(self, doc):
-        return doc.createProcessingInstruction(self.target, self.data)
+        return doc.createProcessingInstruction(self.target, _ensure_text(self.data))
+
 
 class Description(BaseElement):
     def __init__(self, desc):
         super(Description, self).__init__('desc')
-        self.desc = desc
+        self.desc = _ensure_text(desc)
 
     def to_xml(self, doc):
         el = super(Description, self).to_xml(doc)
-        text_node = doc.createTextNode(self.desc)
-        el.appendChild(text_node)
+        el.appendChild(doc.createTextNode(self.desc))
         return el
+
 
 class Title(BaseElement):
     def __init__(self, title):
         super(Title, self).__init__('title')
-        self.title = title
+        self.title = _ensure_text(title)
 
     def to_xml(self, doc):
         el = super(Title, self).to_xml(doc)
-        text_node = doc.createTextNode(self.title)
-        el.appendChild(text_node)
+        el.appendChild(doc.createTextNode(self.title))
         return el
+
 
 class Metadata(BaseElement):
     def __init__(self, metadata):
         super(Metadata, self).__init__('metadata')
-        self.metadata = metadata
+        self.metadata = _ensure_text(metadata)
 
     def to_xml(self, doc):
         el = super(Metadata, self).to_xml(doc)
-        text_node = doc.createTextNode(self.metadata)
-        el.appendChild(text_node)
+        el.appendChild(doc.createTextNode(self.metadata))
         return el
+
 
 class Defs(BaseElement):
     def __init__(self):
@@ -499,12 +474,12 @@ class Defs(BaseElement):
 
     def add(self, element, key=None):
         if key is None:
-            key = ('type', str(element))
+            key = ('type', _ensure_text(str(element)))
         if key in self.child_elements:
             return
-        else:
-            self.child_elements[key] = element
-            self.children.append(element)
+        self.child_elements[key] = element
+        self.children.append(element)
+
 
 class Group(BaseElement):
     def __init__(self, **kwargs):
@@ -514,11 +489,11 @@ class Group(BaseElement):
     def add(self, element):
         element_id = getattr(element, 'id', id(element))
         if element_id in self._element_ids:
-            return  # Element already added
+            return
         self._element_ids.add(element_id)
         self.children.append(element)
 
-# Element classes remain the same, inheriting from BaseElement
+
 class Line(BaseElement):
     def __init__(self, start, end, **kwargs):
         super(Line, self).__init__('line', **kwargs)
@@ -527,12 +502,14 @@ class Line(BaseElement):
         self._attribs['x2'] = end[0]
         self._attribs['y2'] = end[1]
 
+
 class Circle(BaseElement):
     def __init__(self, center, r, **kwargs):
         super(Circle, self).__init__('circle', **kwargs)
         self._attribs['cx'] = center[0]
         self._attribs['cy'] = center[1]
         self._attribs['r'] = r
+
 
 class Rect(BaseElement):
     def __init__(self, insert, size, **kwargs):
@@ -542,35 +519,39 @@ class Rect(BaseElement):
         self._attribs['width'] = size[0]
         self._attribs['height'] = size[1]
 
+
 class Text(BaseElement):
     def __init__(self, text_content, insert, **kwargs):
         super(Text, self).__init__('text', **kwargs)
-        self.text_content = text_content
+        self.text_content = _ensure_text(text_content)
         self._attribs['x'] = insert[0]
         self._attribs['y'] = insert[1]
 
     def to_xml(self, doc):
         el = super(Text, self).to_xml(doc)
-        text_node = doc.createTextNode(self.text_content)
-        el.appendChild(text_node)
+        el.appendChild(doc.createTextNode(self.text_content))
         return el
+
 
 class Path(BaseElement):
     def __init__(self, d='', **kwargs):
         super(Path, self).__init__('path', **kwargs)
         self._attribs['d'] = d
 
+
 class Polygon(BaseElement):
     def __init__(self, points, **kwargs):
         super(Polygon, self).__init__('polygon', **kwargs)
-        points_str = ' '.join(['{},{}'.format(p[0], p[1]) for p in points])
+        points_str = ' '.join(['{0},{1}'.format(p[0], p[1]) for p in points])
         self._attribs['points'] = points_str
+
 
 class Polyline(BaseElement):
     def __init__(self, points, **kwargs):
         super(Polyline, self).__init__('polyline', **kwargs)
-        points_str = ' '.join(['{},{}'.format(p[0], p[1]) for p in points])
+        points_str = ' '.join(['{0},{1}'.format(p[0], p[1]) for p in points])
         self._attribs['points'] = points_str
+
 
 class Ellipse(BaseElement):
     def __init__(self, center, r, **kwargs):
@@ -580,37 +561,40 @@ class Ellipse(BaseElement):
         self._attribs['rx'] = r[0]
         self._attribs['ry'] = r[1]
 
+
 class Style(BaseElement):
     def __init__(self, css_text):
         super(Style, self).__init__('style', type='text/css')
-        self.css_text = css_text
+        self.css_text = _ensure_text(css_text)
 
     def to_xml(self, doc):
         el = super(Style, self).to_xml(doc)
-        # Wrap the CSS content in a CDATA section
-        cdata_section = doc.createCDATASection(self.css_text)
-        el.appendChild(cdata_section)
+        el.appendChild(doc.createCDATASection(self.css_text))
         return el
+
 
 class LinearGradient(BaseElement):
     def __init__(self, **kwargs):
         super(LinearGradient, self).__init__('linearGradient', **kwargs)
 
+
 class RadialGradient(BaseElement):
     def __init__(self, **kwargs):
         super(RadialGradient, self).__init__('radialGradient', **kwargs)
+
 
 class Stop(BaseElement):
     def __init__(self, offset, **kwargs):
         super(Stop, self).__init__('stop', **kwargs)
         self._attribs['offset'] = offset
 
+
 class Pattern(BaseElement):
     def __init__(self, **kwargs):
         super(Pattern, self).__init__('pattern', **kwargs)
 
+
 def rgb(r, g, b, mode='%'):
     if mode == '%':
-        return 'rgb({}%, {}%, {}%)'.format(r, g, b)
-    else:
-        return 'rgb({}, {}, {})'.format(r, g, b)
+        return 'rgb({0}%, {1}%, {2}%)'.format(r, g, b)
+    return 'rgb({0}, {1}, {2})'.format(r, g, b)
