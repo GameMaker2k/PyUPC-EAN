@@ -14,13 +14,22 @@ import upcean
 import ctypes
 
 # Constants
-NUM_BARCODES = 12
+NUM_BARCODES = random.randint(12, 24)
 BARCODE_SIZE = 1
-WIDTH, HEIGHT = 800, 600  # Assuming a fixed resolution for this example
-
 # Initialize SDL2
 sdl2.ext.init()
-window = sdl2.ext.Window("PyUPC-EAN Demo - {}".format(upcean.__version__), size=(WIDTH, HEIGHT))
+
+# Get desktop (maximum) resolution
+mode = sdl2.SDL_DisplayMode()
+sdl2.SDL_GetDesktopDisplayMode(0, mode)
+
+WIDTH, HEIGHT = mode.w, mode.h
+
+window = sdl2.ext.Window(
+    "PyUPC-EAN Demo",
+    flags=sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP,
+    size=(WIDTH, HEIGHT)
+)
 window.show()
 
 # Print Version Information

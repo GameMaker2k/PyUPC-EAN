@@ -12,7 +12,7 @@ import PIL
 import upcean
 
 # Constants
-NUM_BARCODES = 12
+NUM_BARCODES = random.randint(12, 24)
 BARCODE_SIZE = 1
 
 # Initialize Pygame and Display
