@@ -50,6 +50,7 @@ print('checking upca2e ...')
 for i in a.keys():
     t1 = a[i]
     t2 = upcean.convert.convert_barcode("upca", "upce", t1)
+    print(t1, t2)
     ip = str(i).zfill(2)
     print('key ', ip, ':', t1+" ", upcean.validate.validate_checksum("upca", t1))
     print('upce', ip, ':', t2+"     ",
@@ -60,6 +61,7 @@ print('Checking upce2a ...')
 for i in e.keys():
     t1 = e[i]
     t2 = upcean.convert.convert_barcode("upce", "upca", t1)
+    print(t1, t2)
     ip = str(i).zfill(2)
     print('key ', ip, ':', t1+"     ",
           upcean.validate.validate_checksum("upce", t1))
